@@ -722,7 +722,7 @@ return
             <h1>Status der Bestandsbearbeitung (HS: D-KA, D-KAsa)</h1>
         </div>
         <div class="container">
-        {transform:transform($object,doc("/db/contents/baudi/resources/xslt/rismxml2html.xsl"), ())}
+        {transform:transform($object,doc("/db/apps/baudi/resources/xslt/rismxml2html.xsl"), ())}
     </div>
     </div>
 )
