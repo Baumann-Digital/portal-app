@@ -97,7 +97,7 @@ return
 declare function app:letter($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("letter-id", "Fehler")
-let $letter := collection("/db/contents/baudi/sources/documents/letters")/tei:TEI[@xml:id=$id]
+let $letter := collection("/db/contents/baudi/sources/documents/letters")//tei:TEI[@xml:id=$id]
 let $pages := $letter/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
 return
@@ -354,7 +354,7 @@ return
 (
 <div class="row">
     <div class="page-header">
-        <a href="http://localhost:8080/exist/apps/baudi/html/registryPersons.html">&#8592; zum Personenverzeichnis</a>
+        <a href="../registryPersons.html">&#8592; zum Personenverzeichnis</a>
         <h1>{$name}</h1>
         <h5>{$id}</h5>
     </div>
@@ -429,7 +429,7 @@ let $name := $ort//tei:title/normalize-space(data(.))
 return
 (
     <div class="container">
-    <a href="http://localhost:8080/exist/apps/baudi/html/registryPlaces.html">&#8592; zum Ortsverzeichnis</a>
+    <a href="../registryPlaces.html">&#8592; zum Ortsverzeichnis</a>
         <div class="page-header">
             <h1>{$name}</h1>
             <h5>{$id}</h5>
@@ -470,7 +470,7 @@ let $name := $institution//tei:title/normalize-space(data(.))
 return
 (
     <div class="container">
-    <a href="http://localhost:8080/exist/apps/baudi/html/registryInstitutions.html">&#8592; zum Institutionenverzeichnis</a>
+    <a href="../registryInstitutions.html">&#8592; zum Institutionenverzeichnis</a>
         <div class="page-header">
             <h1>{$name}</h1>
             <h5>{$id}</h5>
