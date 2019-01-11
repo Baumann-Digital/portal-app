@@ -15,7 +15,7 @@ if ($exist:path eq '') then
 	</dispatch>
 	
 	
-	(: if its a letter :)
+	(: if it's a letter :)
 else
 	if (matches($exist:path, "/letter/")) then
 		<dispatch
@@ -43,7 +43,7 @@ else
 			</error-handler>
 		</dispatch>
 		
-		(: if its a document :)
+		(: if it's a document :)
 else
 	if (matches($exist:path, "/document/")) then
 		<dispatch
@@ -71,7 +71,7 @@ else
 			</error-handler>
 		</dispatch>
 		
-		(: if its a person :)
+		(: if it's a person :)
 	else
 		if (matches($exist:path, "/person/")) then
 			<dispatch
@@ -99,7 +99,7 @@ else
 				</error-handler>
 			</dispatch>
 			
-			(: if its an place :)
+			(: if it's a place :)
 		else
 			if (matches($exist:path, "/place/")) then
 				<dispatch
@@ -127,7 +127,7 @@ else
 					</error-handler>
 				</dispatch>
 				
-				(: if its an institution :)
+				(: if it's an institution :)
 			else
 				if (matches($exist:path, "/institution/")) then
 					<dispatch
@@ -155,7 +155,7 @@ else
 						</error-handler>
 					</dispatch>
 					
-						(: if its a work :)
+						(: if it's a work :)
 			else
 				if (matches($exist:path, "/work/")) then
 					<dispatch
@@ -184,7 +184,7 @@ else
 					</dispatch>
 					
 						
-						(: if its an manuskript :)
+						(: if it's a manuskript :)
 					else
 						if (matches($exist:path, "/sources/manuscript/")) then
 							<dispatch
@@ -213,7 +213,7 @@ else
 							</dispatch>
 							
 							
-							(: if its an druck :)
+							(: if it's a print :)
 						else
 							if (matches($exist:path, "/sources/print/")) then
 								<dispatch
