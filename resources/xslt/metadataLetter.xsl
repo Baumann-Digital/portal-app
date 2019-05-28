@@ -9,7 +9,7 @@
                 <td>Verfasser:</td>
                 <td>
                     <xsl:choose>
-                        <xsl:when test="doc-available(concat('../../../../contents/texts/persons/', //correspAction[@type = 'sent']/persName/@key, '.xml'))">
+                        <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', //correspAction[@type = 'sent']/persName/@key, '.xml'))">
                             <a href="{concat($registerRootPerson, //correspAction[@type = 'sent']/persName/@key)}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'sent']/persName"/>
                             </a>
@@ -19,7 +19,7 @@
                         </xsl:otherwise>
                     </xsl:choose>
                     <xsl:choose>
-                        <xsl:when test="doc-available(concat('../../../../contents/texts/institutions/', //correspAction[@type = 'sent']/orgName/@key, '.xml'))">
+                        <xsl:when test="doc-available(concat('../../../../contents/baudi/institutions/', //correspAction[@type = 'sent']/orgName/@key, '.xml'))">
                             <a href="{concat($registerRootInstitution, //correspAction[@type = 'sent']/persName/@key)}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'sent']/orgName"/>
                             </a>
@@ -61,7 +61,7 @@
                 <td>Adressat:</td>
                 <td>
                     <xsl:choose>
-                        <xsl:when test="doc-available(concat('../../../../contents/texts/persons/', //correspAction[@type = 'received']/persName/@key, '.xml'))">
+                        <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', //correspAction[@type = 'received']/persName/@key, '.xml'))">
                             <a href="{concat($registerRootPerson, //correspAction[@type = 'received']/persName/@key)}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'received']/persName"/>
                             </a>
@@ -71,7 +71,7 @@
                         </xsl:otherwise>
                     </xsl:choose>
                     <xsl:choose>
-                        <xsl:when test="doc-available(concat('../../../../contents/texts/institutions/', //correspAction[@type = 'received']/persName/@key, '.xml'))">
+                        <xsl:when test="doc-available(concat('../../../../contents/baudi/institutions/', //correspAction[@type = 'received']/persName/@key, '.xml'))">
                             <a href="{concat($registerRootInstitution, //correspAction[@type = 'received']/orgName/@key)}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'received']/orgName"/>
                             </a>

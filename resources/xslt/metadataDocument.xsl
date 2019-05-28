@@ -10,7 +10,7 @@
                 <td>
                     <xsl:value-of select="//sourceDesc/bibl/title"/>
                     <xsl:choose>
-                        <xsl:when test="doc-available(concat('../../../../contents/texts/persons/', //sourceDesc/bibl/title/@key, '.xml'))">
+                        <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', //sourceDesc/bibl/title/@key, '.xml'))">
                             <a href="{concat($registerRootPerson, //sourceDesc/bibl/title/@key, '.html')}" target="_blank">
                                 <xsl:value-of select="//sourceDesc/bibl/title"/>
                             </a>

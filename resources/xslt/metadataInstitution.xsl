@@ -42,7 +42,7 @@
     <!--    <xsl:include href="linking.xsl"/>-->
     <xsl:template match="persName">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('../../../../contents/texts/persons/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', ./@key, '.xml'))">
                 <a href="{concat($registerRootPerson, ./@key, '.html')}" target="_blank">
                     <xsl:apply-templates/>
                 </a>
@@ -54,7 +54,7 @@
     </xsl:template>
     <xsl:template match="orgName">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('../../../../contents/texts/institutions/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('../../../../contents/baudi/institutions/', ./@key, '.xml'))">
                 <a href="{concat($registerRootInstitution, ./@key, '.html')}" target="_blank">
                     <xsl:apply-templates/>
                 </a>
@@ -66,7 +66,7 @@
     </xsl:template>
     <xsl:template match="settlement">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('../../../../contents/texts/loci/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('../../../../contents/baudi/places/', ./@key, '.xml'))">
                 <a href="{concat($registerRootOrt, ./@key, '.html')}" target="_blank">
                     <xsl:apply-templates/>
                 </a>

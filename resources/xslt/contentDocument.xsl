@@ -84,7 +84,7 @@
     </xsl:template>
     <xsl:template match="persName">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('../../../../contents/texts/persons/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', ./@key, '.xml'))">
                 <a href="{concat($registerRootPerson, ./@key, '.html')}" target="_blank">
                     <xsl:apply-templates/>
                 </a>
@@ -96,7 +96,7 @@
     </xsl:template>
     <xsl:template match="orgName">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('../../../../contents/texts/institutions/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('../../../../contents/baudi/institutions/', ./@key, '.xml'))">
                 <a href="{concat($registerRootInstitution, ./@key, '.html')}" target="_blank">
                     <xsl:apply-templates/>
                 </a>
@@ -108,7 +108,7 @@
     </xsl:template>
     <xsl:template match="settlement">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('../../../../contents/texts/loci/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('../../../../contents/baudi/places/', ./@key, '.xml'))">
                 <a href="{concat($registerRootOrt, ./@key, '.html')}" target="_blank">
                     <xsl:apply-templates/>
                 </a>
@@ -149,7 +149,7 @@
                                                     <xsl:when test="cell[2][@rows]">
                                                         <xsl:variable name="rows" select="cell[2]/@rows/data(.)"/>
                                                         <td rowspan="{$rows}" class="rowspanned">
-                                                            <img src="http://baumann-digital.de:8080/exist/apps/baudi/resources/img/rightBracket.svg" height="55"/>
+                                                            <img src="http://localhost:8080/exist/apps/baudi/resources/img/rightBracket.svg" height="55"/>
                                                             <xsl:value-of select="cell[2]"/>
                                                         </td>
                                                     </xsl:when>

@@ -41,7 +41,7 @@
     <!--    <xsl:include href="linking.xsl"/>-->
     <xsl:template match="persName">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('../../../../contents/texts/persons/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', ./@key, '.xml'))">
                 <a href="{concat('../baudi/html/person/', ./@key, '.html')}" target="_blank">
                     <xsl:apply-templates/>
                 </a>
@@ -53,7 +53,7 @@
     </xsl:template>
     <xsl:template match="orgName">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('../../../../contents/texts/institutions/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('../../../../contents/baudi/institutions/', ./@key, '.xml'))">
                 <a href="{concat('../baudi/html/institution/', ./@key, '.html')}" target="_blank">
                     <xsl:apply-templates/>
                 </a>
