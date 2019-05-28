@@ -139,8 +139,8 @@ return
                 <br/><br/>
                 <img src="{
                 if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('../../../baudi-images/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('../../../baudi-images/documents/',$id,'-1','.jpeg'))}" class="img-thumbnail" width="400"/>
+                then(concat('http://localhost:8081/digilib/Scaler/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
+                else(concat('http://localhost:8081/digilib/Scaler/documents/',$id,'-1','?dw=500'))}" class="img-thumbnail" width="400"/>
             </div>
         <div class="col">
                 <br/>
@@ -158,8 +158,8 @@ return
       <div class="modal-body">
         <img src="{
                 if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('../../../baudi-images/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('../../../baudi-images/documents/',$id,'-1','.jpeg'))}" class="img-thumbnail"/>
+                then(concat('http://localhost:8081/digilib/Scaler/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
+                else(concat('http://localhost:8081/digilib/Scaler/documents/',$id,'-1','?dw=1000'))}" class="img-thumbnail center"/>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Zurück</button>
@@ -172,8 +172,8 @@ return
     )
     else(
         for $page in $pages
-        let $letterOrigFacs := concat('../../../baudi-images/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
-        let $letterOrigLink := concat('../../../baudi-images/documents/',$id,'-',$page,'.jpeg')
+        let $letterOrigFacs := concat('http://localhost:8081/digilib/Scaler/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
+        let $letterOrigLink := concat('http://localhost:8081/digilib/Scaler/documents/',$id,'-',$page,'?dw=500')
      
         return
         
