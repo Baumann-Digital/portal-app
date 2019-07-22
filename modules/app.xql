@@ -106,7 +106,7 @@ return
     <div class="page-header">
         <a href="../registryLetters.html">&#8592; zum Briefeverzeichnis</a>
             <h1>{$letter//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.))}</h1>
-            <h5>{$id}</h5>
+            <h5><a href="{document-uri($letter)}" download="{concat($id,'.xml')}">{$id}</a></h5>
     </div>
  <ul class="nav nav-pills" role="tablist">
     <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#datenblatt" role="tab" aria-controls="home" aria-selected="true">Datenblatt</a></li>

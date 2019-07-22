@@ -40,7 +40,7 @@
                 <td>Erstellungsort:</td>
                 <td>
                     <xsl:choose>
-                        <xsl:when test="doc-available(concat('../../../../contents/texts/loci/', //correspAction[@type = 'sent']/settlement/@key, '.xml'))">
+                        <xsl:when test="doc-available(concat('../../../../contents/baudi/places/', //correspAction[@type = 'sent']/settlement/@key, '.xml'))">
                             <a href="{concat($registerRootOrt, //correspAction[@type = 'sent']/settlement/@key)}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'sent']/settlement"/>
                             </a>
@@ -92,7 +92,7 @@
                 <td>Ankunftsort</td>
                 <td>
                     <xsl:choose>
-                        <xsl:when test="doc-available(concat('../../../../contents/texts/loci/', //correspAction[@type = 'received']/settlement/@key, '.xml'))">
+                        <xsl:when test="doc-available(concat('../../../../contents/baudi/places/', //correspAction[@type = 'received']/settlement/@key, '.xml'))">
                             <a href="{concat($registerRootOrt,//correspAction[@type = 'received']/settlement/@key)}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'received']/settlement"/>
                             </a>
