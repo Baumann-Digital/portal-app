@@ -482,32 +482,48 @@ return
 
 declare function app:registrySources($node as node(), $model as map(*)) {
     
-    let $sources-manuscripts := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestation[contains(@class,'#ms')]/ancestor::mei:mei
-    let $sources-manuscripts-Coll := collection("/db/contents/baudi/sources/music/collections")/mei:mei//mei:term[@type='source' and .='Manuskript']/ancestor::mei:mei
-    let $sources-prints := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='source' and .='Druck']/ancestor::mei:mei
-    let $sources-lieder := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='Lied']/ancestor::mei:mei
-    let $sources-choere := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='Chor']/ancestor::mei:mei
+    let $sourcesToDo := collection("/db/contents/baudi/sources/music")//mei:mei//mei:term[@type='todo']/ancestor::mei:mei
+    let $sources-manuscripts := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and not(contains(@class,'#coll'))]/ancestor::mei:mei
+    let $sources-manuscripts-Coll := collection("/db/contents/baudi/sources/music/collections")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and contains(@class,'#coll')]/ancestor::mei:mei
+    let $sources-prints := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#pr') and not(contains(@class,'#coll'))]/ancestor::mei:mei
+    let $sources-songs := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='Lied']/ancestor::mei:mei
+    let $sources-choirs := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='Chor']/ancestor::mei:mei
     
 return
 (
     <div class="container">
          <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#manuskripte">Manuskripte ({count($sources-manuscripts)})</a></li>  
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#drucke">Drucke ({count($sources-prints)})</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lieder">Lieder ({count($sources-lieder)})</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#choere">Chöre ({count($sources-choere)})</a></li>
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#manuscripts">Manuskripte ({count($sources-manuscripts)})</a></li>  
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#prints">Drucke ({count($sources-prints)})</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#songs">Lieder ({count($sources-songs)})</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#choirs">Chöre ({count($sources-choirs)})</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#todos">ToDos ({count($sourcesToDo)})</a></li>
     </ul>
     <!-- Tab panels -->
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="manuskripte" >
-        <p>Im Manuskripteverzeichnis sind aktuell {count($sources-manuscripts)} Quellen erfasst.</p>
+        <div class="tab-pane fade show active" id="manuscripts" >
+        <br/>
             <ul>
         {
         for $manuscript in $sources-manuscripts
         let $name :=
-            if(exists($manuscript//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
-            then($manuscript//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
-            else($manuscript//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
+            $manuscript//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
+        
+        let $id := $manuscript/@xml:id/normalize-space(data(.))
+        order by $name ascending
+        return
+            <li>
+                {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
+            </li>
+        }
+            </ul>
+            <br/>
+            <h2>Sammelquellen</h2>
+            <br/>
+            <ul>
+        {
+        for $manuscript in $sources-manuscripts-Coll
+        let $name := $manuscript//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(text())
         
         let $id := $manuscript/@xml:id/normalize-space(data(.))
         order by $name ascending
@@ -518,15 +534,15 @@ return
         }
             </ul>
         </div>
-        <div class="tab-pane fade" id="drucke" >
-         <p>Im Druckeverzeichnis sind aktuell {count($sources-prints)} Quellen erfasst.</p>
+        <div class="tab-pane fade" id="prints" >
+         <br/>
             <ul>
         {
         for $print in $sources-prints
         let $name :=
             if(exists($print//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
-            then($print//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(data(.)))
-            else($print//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
+            then($print//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
+            else($print//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
         
         let $id := $print/@xml:id/normalize-space(data(.))
         order by $name ascending
@@ -537,30 +553,30 @@ return
         }
             </ul>
         </div>
-        <div class="tab-pane fade" id="lieder" >
-         <p>Im Quellenverzeichnis sind aktuell {count($sources-lieder)} Quellen zu Lieder erfasst.</p>
+        <div class="tab-pane fade" id="songs" >
+        <br/>
             <ul>
         {
-        for $lied in $sources-lieder
+        for $song in $sources-songs
         let $name :=
-            if(exists($lied//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
-            then($lied//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(data(.)))
-            else($lied//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
+            if(exists($song//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
+            then($song//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
+            else($song//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
         
-        let $id := $lied/@xml:id/normalize-space(data(.))
+        let $id := $song/@xml:id/normalize-space(data(.))
         order by $name ascending
         return
         (
-            if($lied//mei:term[@type='source']/contains(.,'Manuskript') = true()) 
+            if($song//mei:term[@type='source']/contains(.,'Manuskript') = true()) 
             then(
             <li>
                 {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
             </li>
             )
-            else if($lied//mei:term[@type='source']/contains(.,'Druck') = true())
+            else if($song//mei:term[@type='source']/contains(.,'Druck') = true())
             then(
             <li>
-                {$name} (<a href="sources/print/{$id}">{$id}</a>)<br/>
+                {$name} ({if($song//mei:manifestation[contains(@class,'#ms')])then(<a href="sources/manuscript/{$id}">{$id}</a>)else if($song//mei:manifestation[contains(@class,'#pr')])then(<a href="sources/print/{$id}">{$id}</a>)else('error')})<br/>
             </li>
             )
             else()
@@ -568,21 +584,40 @@ return
         }
             </ul>
         </div>
-        <div class="tab-pane fade" id="choere" >
-         <p>Im Quellenverzeichnis sind aktuell {count($sources-choere)} Quellen zu Chören erfasst.</p>
+        <div class="tab-pane fade" id="choirs" >
+         <br/>
             <ul>
         {
-        for $chor in $sources-choere
+        for $choir in $sources-choirs
         let $name :=
-            if(exists($chor//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
-            then($chor//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(data(.)))
-            else($chor//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
+            if(exists($choir//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
+            then($choir//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(data(.)))
+            else($choir//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
         
-        let $id := $chor/@xml:id/normalize-space(data(.))
+        let $id := $choir/@xml:id/normalize-space(data(.))
         order by $name ascending
         return
             <li>
-                {$name} (<a href="sources/print/{$id}">{$id}</a>)<br/>
+                {$name} ({if($choir//mei:manifestation[contains(@class,'#ms')])then(<a href="sources/manuscript/{$id}">{$id}</a>)else if($choir//mei:manifestation[contains(@class,'#pr')])then(<a href="sources/print/{$id}">{$id}</a>)else('error')})<br/>
+            </li>
+        }
+            </ul>
+        </div>
+         <div class="tab-pane fade" id="todos" >
+         <br/>
+            <ul>
+        {
+        for $source in $sourcesToDo
+        let $name :=
+            if(exists($source//mei:term[contains(@type,'source') and contains(@type,'collection')]))
+            then($source//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/text())
+            else($source//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
+        
+        let $id := $source/@xml:id/normalize-space(data(.))
+        order by $name ascending
+        return
+            <li>
+                {$name} ({if($source//mei:manifestation[contains(@class,'#ms')])then(<a href="sources/manuscript/{$id}">{$id}</a>)else if($source//mei:manifestation[contains(@class,'#pr')])then(<a href="sources/print/{$id}">{$id}</a>)else('error')})<br/>
             </li>
         }
             </ul>

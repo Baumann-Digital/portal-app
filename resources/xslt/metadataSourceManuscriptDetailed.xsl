@@ -179,19 +179,7 @@
                             </td>
                         </tr>
                     </xsl:if>
-                    <tr>
-                        <td>Besetzung</td>
-                        <td>
-                            <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes">
-<!--                             <xsl:sort select="." order="ascending" data-type="text"/>-->
-                                <li>
-                                    <xsl:value-of select="."/>
-                                    <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>)</xsl:if>
-                                </li>
-                            </xsl:for-each>
-                        </td>
-                    </tr>
-                </xsl:if>
+                    </xsl:if>
                 <xsl:if test="exists(//mei:term[@type='source' and @subtype='special' and contains(.,'Sammelquelle')])">
                     <tr>
                         <td colspan="2">Enthaltene Quellen:</td>
