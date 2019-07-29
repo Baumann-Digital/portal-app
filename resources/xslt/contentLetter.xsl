@@ -78,12 +78,12 @@
     <xsl:template match="note[@type = 'editor']">
         <i>[<xsl:apply-templates/>]</i>
     </xsl:template>
-    <xsl:template match="ex">[<xsl:value-of select="."/>]</xsl:template>
     <xsl:template match="//choice">
         <xsl:for-each select=".">
-            <a tabindex="0" data-toggle="popover" data-trigger="focus" title="Abkürzung" data-content="Erklärung">
+            <xsl:variable name="expan" select="expan"/>
+            <span class="abk" data-toggle="tooltip" data-placement="top" title="{$expan}">
                 <xsl:value-of select="abbr"/>
-            </a>
+            </span>
         </xsl:for-each>
     </xsl:template>
 </xsl:stylesheet>
