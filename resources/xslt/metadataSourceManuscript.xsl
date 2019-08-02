@@ -58,13 +58,18 @@
                         </tr>
                     </xsl:if>
                 <tr>
-                        <td valign="top">Besetzung</td>
+                        <td valign="top">Besetzung:</td>
                         <td>
                             <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes">
                                 <xsl:sort select="." order="ascending" data-type="text"/>
                                 <li>
-                                    <xsl:variable name="auth.uri" select="./@auth.uri/string()"/>
-                                    <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>) </xsl:if> <xsl:value-of select="doc(concat('/db/contents/baudi/dicts/',substring-before($auth.uri,'#')))//mei:perfResList/mei:perfRes[@auth.uri=substring-after($auth.uri,'#')]/text()"/>
+                                    <xsl:variable name="auth" select="./@auth"/>
+                                    <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>)
+                                    </xsl:if>
+                                    <xsl:value-of select="$dictInstruments//mei:perfResList/mei:perfRes[@auth=$auth]/mei:name[1]/text()"/>
+                                    <xsl:if test="./@solo='true'">
+                                        (Solo)
+                                    </xsl:if>
                                 </li>
                             </xsl:for-each>
                         </td>

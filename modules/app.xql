@@ -487,8 +487,8 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     let $sources-manuscripts := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and not(contains(@class,'#coll'))]/ancestor::mei:mei
     let $sources-manuscripts-Coll := collection("/db/contents/baudi/sources/music/collections")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and contains(@class,'#coll')]/ancestor::mei:mei
     let $sources-prints := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#pr') and not(contains(@class,'#coll'))]/ancestor::mei:mei
-    let $sources-songs := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='Lied']/ancestor::mei:mei
-    let $sources-choirs := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='Chor']/ancestor::mei:mei
+    let $sources-songs := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='song']/ancestor::mei:mei
+    let $sources-choirs := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='choir']/ancestor::mei:mei
     
 return
 (
@@ -695,7 +695,7 @@ return
         <p/>
         {transform:transform($manuscript,doc("/db/apps/baudi/resources/xslt/metadataSourceManuscript.xsl"), ())}
         <p/>
-        {if(exists($manuscript//mei:workDesc/mei:work/mei:incip/mei:score))
+        {if(exists($manuscript//mei:workList/mei:work/mei:incip/mei:score))
         then(<b>INCIPIT available (soon)</b>)
         else(<b>No INCIPIT available</b>)}
         </div>
@@ -708,6 +708,9 @@ return
             {transform:transform($manuscript,doc("/db/apps/baudi/resources/xslt/contentLyrics.xsl"), ())}
         </div>
     </div>
+    </div>
+    <div class="col-2">
+        <small><b>Zitiervorschlag:</b><br/> <i>{$name} (Quelle); http://localhost:8080/exist/apps/baudi/html/sources/manuscript/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}</i></small>
     </div>
     </div>
     </div>
@@ -923,11 +926,12 @@ return
                 <h5>Eintrag zitieren</h5>
                 <p>Werk: {$name}; http://localhost:8080/exist/apps/baudi/html/work/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}</p>
             </div>-->
+        
+        
+            <div class="col-2">
+                <small><b>Zitiervorschlag:</b><br/><i>{$name} (Werk); http://localhost:8080/exist/apps/baudi/html/work/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}</i></small>
+            </div>
         </div>
-        <br/><br/>
-        <div class="row">
-        Eintrag zitieren: {$name} (Werk); http://localhost:8080/exist/apps/baudi/html/work/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}
-    </div>
     </div>
 )
 };
