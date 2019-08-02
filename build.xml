@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project default="load-target" name="baudi-data-migrate" xmlns:xdb="http://exist-db.org/ant">
     <tstamp>
         <format property="buildDateTime" pattern="yyyyMMdd-HHmm"  locale="en,UK" />
