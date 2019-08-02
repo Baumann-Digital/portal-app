@@ -19,7 +19,7 @@
                 </xsl:if>
                 <xsl:if test="not(//mei:titleStmt/mei:title/mei:titlePart[@type = 'desc']/data(.) = '')">
                     <tr>
-                        <td>Werkbeschreibung:</td>
+                        <td>Besetzungshinweis:</td>
                         <td>
                             <xsl:value-of select="//mei:titleStmt/mei:title/mei:titlePart[@type = 'desc' and @xml:lang = 'de']"/>
                         </td>
@@ -118,7 +118,7 @@
                                     <xsl:value-of select="lower-case(//mei:workList/mei:work/mei:key/@pname)"/>-<xsl:value-of select="//mei:workList/mei:work/mei:key/@mode"/>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    [unbekannt]
+                                    [nicht erfasst]
                                 </xsl:otherwise>
                             </xsl:choose>
                         </td>
@@ -161,22 +161,23 @@
                 <tr>
                     <td colspan="2">
                         <ul style="list-style-type:circle">
-                            <xsl:for-each select="//mei:componentList/mei:manifestation">
+                            <xsl:for-each select="//mei:relation">
                                 <xsl:variable name="sourceTarget" select="@target"/>
-                                <xsl:choose>
-                                    <xsl:when test="doc-available(concat('../../../../contents/sources/music/', $sourceTarget, '.xml'))">
+                                <xsl:variable name="sourceRel" select="@rel"/>
+                               <!-- <xsl:choose>
+                                    <xsl:when test="doc-available(concat('/db/contents/baudi/sources/music/', $sourceTarget, '.xml'))">-->
                                         <li>
-                                            <xsl:value-of select="mei:titleStmt/mei:title"/> | <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@target,$sourceTarget)]/@rel"/> (<a href="{concat($registerRootManuskript,$sourceTarget)}" target="_blank">
-<xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@target,$sourceTarget)]/@target"/>
-                                            </a>)
+                                    <xsl:value-of select="//mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type = 'main']/normalize-space(.)"/> | <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@target,$sourceTarget)]/@rel"/> (<a href="{concat('http://localhost:8080/exist/apps/baudi/html/sources/manuscript/',$sourceTarget)}" target="_blank">
+                                        <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@target,$sourceTarget)]/@target"/>
+                                    </a>)
                                         </li>
-                                    </xsl:when>
+                            <!--</xsl:when>
                                     <xsl:otherwise>
                                         <li>
                                             <xsl:value-of select="mei:contents/mei:contentItem"/> | <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@source,$sourceTarget)]/@rel"/> | <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@source,$sourceTarget)]/@source"/>
                                         </li>
                                     </xsl:otherwise>
-                                </xsl:choose>
+                                </xsl:choose>-->
                             </xsl:for-each>
                         </ul>
                     </td>
