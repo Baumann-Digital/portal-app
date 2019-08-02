@@ -509,9 +509,10 @@ return
         for $manuscript in $sources-manuscripts
         let $name :=
             $manuscript//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $manuscript/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
             <li>
                 {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
@@ -525,9 +526,10 @@ return
         {
         for $manuscript in $sources-manuscripts-Coll
         let $name := $manuscript//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(text())
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $manuscript/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
             <li>
                 {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
@@ -544,9 +546,10 @@ return
             if(exists($print//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
             then($print//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
             else($print//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $print/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
             <li>
                 {$name} (<a href="sources/print/{$id}">{$id}</a>)<br/>
@@ -563,9 +566,10 @@ return
             if(exists($song//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
             then($song//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
             else($song//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $song/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
         (
             if($song//mei:term[@type='source']/contains(.,'Manuskript') = true()) 
@@ -594,9 +598,10 @@ return
             if(exists($choir//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
             then($choir//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(data(.)))
             else($choir//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $choir/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
             <li>
                 {$name} ({if($choir//mei:manifestation[contains(@class,'#ms')])then(<a href="sources/manuscript/{$id}">{$id}</a>)else if($choir//mei:manifestation[contains(@class,'#pr')])then(<a href="sources/print/{$id}">{$id}</a>)else('error')})<br/>
@@ -611,9 +616,10 @@ return
         for $source in $sourcesToDo
         let $name :=
             $source//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $source/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
             <li>
                 {$name} ({if($source//mei:manifestation[contains(@class,'#ms')])then(<a href="sources/manuscript/{$id}">{$id}</a>)else if($source//mei:manifestation[contains(@class,'#pr')])then(<a href="sources/print/{$id}">{$id}</a>)else('error')})<br/>
@@ -627,9 +633,10 @@ return
         {
         for $source in $sourcesToDo-Coll
         let $name := $source//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(text())
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $source/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
             <li>
                 {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
@@ -858,9 +865,10 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         {
         for $work in $works
         let $name := $work//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $work/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
             <li>
                 {$name} (<a href="work/{$id}">{$id}</a>)<br/>
@@ -874,9 +882,10 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         {
         for $work in $todos
         let $name := $work//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
-        
+        let $nameLC := lower-case($name)
+        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
         let $id := $work/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        order by $nameForSort ascending
         return
             <li>
                 {$name} (<a href="work/{$id}">{$id}</a>)<br/>
