@@ -38,6 +38,4 @@
             </fileset>
         </xdb:store>
     </target>
-    <target name="check-env" description="check env and dependencies are installed">
-    </target>
 </project>
