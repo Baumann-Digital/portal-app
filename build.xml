@@ -1,11 +1,43 @@
-<project default="xar" name="baudi">
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="load-target" name="baudi-data-migrate" xmlns:xdb="http://exist-db.org/ant">
+    <tstamp>
+        <format property="buildDateTime" pattern="yyyyMMdd-HHmm"  locale="en,UK" />
+    </tstamp>
     <xmlproperty file="expath-pkg.xml"/>
     <property name="project.version" value="${package(version)}"/>
     <property name="project.app" value="baudi"/>
     <property name="build.dir" value="build"/>
-    <tstamp/>
+    <property name="p.exist.dir" value="/../Library/eXist/"/>
+    <property name="p.target.exist.url" value="xmldb:exist://localhost:8080/exist/xmlrpc/db/"/>
+    <property name="p.target.user" value="admin"/>
+    <property name="p.target.pass" value="DWksm@3Q!"/>
+    <property name="p.export.dir" location="../baudi-contents"/>
+    <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
+        <classpath>
+            <fileset dir="${p.exist.dir}/lib/core">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${p.exist.dir}/lib/endorsed">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${p.exist.dir}/lib/optional">
+                <include name="*.jar"/>
+            </fileset>
+            <pathelement location="${p.exist.dir}/exist.jar"/>
+            <pathelement location="${p.exist.dir}/exist-optional.jar"/>
+        </classpath>
+    </typedef>
     <target name="xar">
         <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="${build.dir}/*"/>
+        <zip basedir="." destfile="${build.dir}/${project.app}_${project.version}_${buildDateTime}.xar" excludes="${build.dir}/*"/>
+    </target>
+    <target name="load-target" description="store xml to target eXist-db instance">
+        <xdb:store uri="${p.target.exist.url}contents/baudi/" user="${p.target.user}" password="${p.target.pass}" createcollection="true" createsubcollections="true">
+            <fileset dir="${p.export.dir}">
+                <include name="*.xml"/>
+            </fileset>
+        </xdb:store>
+    </target>
+    <target name="check-env" description="check env and dependencies are installed">
     </target>
 </project>
