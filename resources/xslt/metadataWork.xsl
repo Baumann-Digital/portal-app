@@ -164,10 +164,11 @@
                             <xsl:for-each select="//mei:relation">
                                 <xsl:variable name="sourceTarget" select="@target"/>
                                 <xsl:variable name="sourceRel" select="@rel"/>
+                                <xsl:variable name="sourceFile" select="doc(concat('/db/contents/baudi/sources/music/',$sourceTarget,'.xml'))//mei:mei"/>
                                <!-- <xsl:choose>
                                     <xsl:when test="doc-available(concat('/db/contents/baudi/sources/music/', $sourceTarget, '.xml'))">-->
                                         <li>
-                                            <xsl:value-of select="//mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type = 'main']/normalize-space(.)"/> | <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@target,$sourceTarget)]/@rel"/> (<a href="{concat('http://localhost:8080/exist/apps/baudi/html/sources/manuscript/',$sourceTarget)}" target="_blank">
+                                            <xsl:value-of select="$sourceFile//mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type = 'main']/normalize-space(.)"/> | <xsl:value-of select="$sourceRel"/> (<a href="{concat('http://localhost:8080/exist/apps/baudi/html/sources/manuscript/',$sourceTarget)}" target="_blank">
 <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@target,$sourceTarget)]/@target"/>
                                             </a>)
                                         </li>
@@ -187,11 +188,14 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <ul style="list-style-type:circle">
+                        <table border="1">
                             <xsl:for-each select="//mei:term">
-                                <li><xsl:value-of select="@type"/>: <xsl:value-of select="text()"/></li>
+                                <tr>
+                                    <td><xsl:value-of select="@type"/></td>
+                                    <td><xsl:value-of select="text()"/></td>
+                                </tr>
                             </xsl:for-each>
-                        </ul>
+                        </table>
                     </td>
                 </tr>
             </table>
