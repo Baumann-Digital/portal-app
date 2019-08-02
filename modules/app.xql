@@ -482,7 +482,8 @@ return
 
 declare function app:registrySources($node as node(), $model as map(*)) {
     
-    let $sourcesToDo := collection("/db/contents/baudi/sources/music")//mei:mei//mei:term[@type='todo']/ancestor::mei:mei
+    let $sourcesToDo := collection("/db/contents/baudi/sources/music")//mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and not(contains(@class,'#coll'))]//mei:term[@type='todo']/ancestor::mei:mei
+    let $sourcesToDo-Coll := collection("/db/contents/baudi/sources/music/collections")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and contains(@class,'#coll')]//mei:term[@type='todo']/ancestor::mei:mei
     let $sources-manuscripts := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and not(contains(@class,'#coll'))]/ancestor::mei:mei
     let $sources-manuscripts-Coll := collection("/db/contents/baudi/sources/music/collections")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and contains(@class,'#coll')]/ancestor::mei:mei
     let $sources-prints := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#pr') and not(contains(@class,'#coll'))]/ancestor::mei:mei
@@ -497,7 +498,7 @@ return
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#prints">Drucke ({count($sources-prints)})</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#songs">Lieder ({count($sources-songs)})</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#choirs">Chöre ({count($sources-choirs)})</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#todos">ToDos ({count($sourcesToDo)})</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#todos">ToDos ({count($sourcesToDo) + count($sourcesToDo-Coll)})</a></li>
     </ul>
     <!-- Tab panels -->
     <div class="tab-content">
@@ -609,15 +610,29 @@ return
         {
         for $source in $sourcesToDo
         let $name :=
-            if(exists($source//mei:term[contains(@type,'source') and contains(@type,'collection')]))
-            then($source//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/text())
-            else($source//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
+            $source//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
         
         let $id := $source/@xml:id/normalize-space(data(.))
         order by $name ascending
         return
             <li>
                 {$name} ({if($source//mei:manifestation[contains(@class,'#ms')])then(<a href="sources/manuscript/{$id}">{$id}</a>)else if($source//mei:manifestation[contains(@class,'#pr')])then(<a href="sources/print/{$id}">{$id}</a>)else('error')})<br/>
+            </li>
+        }
+            </ul>
+             <br/>
+            <h2>Sammelquellen</h2>
+            <br/>
+            <ul>
+        {
+        for $source in $sourcesToDo-Coll
+        let $name := $source//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(text())
+        
+        let $id := $source/@xml:id/normalize-space(data(.))
+        order by $name ascending
+        return
+            <li>
+                {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
             </li>
         }
             </ul>
@@ -825,12 +840,14 @@ return
 
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
-    let $works := collection("/db/contents/baudi/works")/mei:mei
+    let $works := collection("/db/contents/baudi/works")/mei:mei//mei:term[last()][not(@type='todo')]/ancestor::mei:mei
+    let $todos := collection("/db/contents/baudi/works")/mei:mei//mei:term[@type='todo']/ancestor::mei:mei
     
     let $content := <div class="container">
     <br/>
          <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#works">Werke ({count($works)})</a></li>  
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#works">Werke ({count($works)})</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#todo">Todo ({count($todos)})</a></li>
        
     </ul>
     <!-- Tab panels -->
@@ -840,7 +857,23 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
             <ul>
         {
         for $work in $works
-        let $name := $works//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
+        let $name := $work//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
+        
+        let $id := $work/@xml:id/normalize-space(data(.))
+        order by $name ascending
+        return
+            <li>
+                {$name} (<a href="work/{$id}">{$id}</a>)<br/>
+            </li>
+        }
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="todo" >
+        <br/>
+            <ul>
+        {
+        for $work in $todos
+        let $name := $work//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
         
         let $id := $work/@xml:id/normalize-space(data(.))
         order by $name ascending
@@ -873,8 +906,18 @@ return
             <h5>ID: {$id}</h5>
         </div>
         <br/>
-    <div class="col">
-        {transform:transform($work,doc("/db/apps/baudi/resources/xslt/metadataWork.xsl"), ())}
+        <div class="row">
+            <div class="col">
+                {transform:transform($work,doc("/db/apps/baudi/resources/xslt/metadataWork.xsl"), ())}
+            </div>
+            <!--<div class="col-3">
+                <h5>Eintrag zitieren</h5>
+                <p>Werk: {$name}; http://localhost:8080/exist/apps/baudi/html/work/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}</p>
+            </div>-->
+        </div>
+        <br/><br/>
+        <div class="row">
+        Eintrag zitieren: {$name} (Werk); http://localhost:8080/exist/apps/baudi/html/work/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}
     </div>
     </div>
 )
