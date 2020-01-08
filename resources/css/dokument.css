@@ -3,21 +3,19 @@
 	width: 75%;
 	border: 2px solid grey;
 	padding: 5px;
-	position: center;
 }
 div.page {
     margin: auto;
     width: 80%;
     border: 2px solid grey;
     padding: 5px;
-    position: center;
+    position:absolute;
 }
 div.titlepage {
     margin: auto;
     width: 80%;
     border: 2px solid grey;
     padding: 5px;
-    position: center;
 }
 
 table {

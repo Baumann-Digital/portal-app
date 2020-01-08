@@ -299,7 +299,7 @@ return
 
 declare function app:registryPersons($node as node(), $model as map(*)) {
 
-    let $personen := collection("/db/contents/baudi/persons")//tei:TEI
+    let $personen := collection("/db/contents/baudi/persons")//tei:person
     let $namedPersonsDist := functx:distinct-deep(collection("/db/contents/baudi/sources")//tei:text//tei:persName[normalize-space(.)])
     let $namedPersons := collection("/db/contents/baudi/sources")//tei:text//tei:persName[normalize-space(.)]
     
@@ -316,11 +316,12 @@ return
       <ul>
         {
         for $person in $personen
-        let $name := $person//tei:title
-        let $id := $person/@xml:id
-        order by $name
+        let $surname := $person//tei:surname[1]
+        let $forename := $person//tei:forename[1]
+        let $id := $person/@id
+        order by $surname, $forename
         return
-        <li><a href="person/{$id}">{$name/normalize-space(data(.))}</a> ({$id/normalize-space(data(.))})</li>
+        <li><a href="person/{$id}">{concat(normalize-space(data($surname)),', ',normalize-space(data($forename)))}</a> ({normalize-space($id)})</li>
         }
       </ul>
     </div>
@@ -345,10 +346,10 @@ return
 declare function app:person($node as node(), $model as map(*)) {
  
 let $id := request:get-parameter("person-id", "Fehler")
-let $person := collection("/db/contents/baudi/persons")/tei:TEI[@xml:id=$id]
+let $person := collection("/db/contents/baudi/persons")//tei:person[@id=$id]
 let $name := $person//tei:title/normalize-space(data(.))
-let $namedPersons := collection("/db/contents/baudi/sources")//tei:text//tei:persName[@key=$id]
-let $namedPersonsDist := functx:distinct-deep(collection("/db/contents/baudi/sources")//tei:text//tei:persName[@key=$id])
+(:let $namedPersons := collection("/db/contents/baudi/sources")//tei:text//tei:persName[@key=$id]:)
+(:let $namedPersonsDist := functx:distinct-deep(collection("/db/contents/baudi/sources")//tei:text//tei:persName[@key=$id]):)
 
 return
 (
@@ -361,11 +362,12 @@ return
     <div class="container">
             <ul class="nav nav-pills" role="tablist">
                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">Zur Person</a></li>  
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">Erwähnungen</a></li>
+                <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">Erwähnungen</a></li>-->
             </ul>
           <div class="tab-content">
             <div class="tab-pane fade show active" id="tab1">
                 {transform:transform($person,doc("/db/apps/baudi/resources/xslt/metadataPerson.xsl"), ())}
+                <!--
                 <h4>Bezeichnungen</h4>
                 <ul>
                 {
@@ -379,7 +381,9 @@ return
                 )
                 }
                 </ul>
+                -->
             </div>
+            <!--
             <div class="tab-pane fade" id="tab2" >
                 <ul>
                 {
@@ -392,6 +396,7 @@ return
                     }
                 </ul>
             </div>
+            -->
           </div>
     </div>
 </div>
@@ -400,7 +405,7 @@ return
 
 declare function app:registryPlaces($node as node(), $model as map(*)) {
 
-    let $orte := collection("/db/contents/baudi/places")//tei:TEI
+    let $orte := collection("/db/contents/baudi/loci")//tei:place
 
 return
 (
@@ -409,11 +414,11 @@ return
       <ul>
         {
         for $ort in $orte
-        let $name := $ort//tei:fileDesc/tei:titleStmt/tei:title
-        let $id := $ort/@xml:id
+        let $name := $ort/tei:placeName
+        let $id := $ort/@id
         order by $name
         return
-        <li><a href="place/{$id}">{$name/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
+        <li><a href="locus/{$id}">{$name/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
         }
       </ul>
     </div>
@@ -422,8 +427,8 @@ return
 
 declare function app:place($node as node(), $model as map(*)) {
 
-let $id := request:get-parameter("place-id", "Fehler")
-let $ort := collection("/db/contents/baudi/places")/tei:TEI[@xml:id=$id]
+let $id := request:get-parameter("locus-id", "Fehler")
+let $ort := collection("/db/contents/baudi/loci")/tei:place[@id=$id]
 let $name := $ort//tei:title/normalize-space(data(.))
 
 return
@@ -441,7 +446,7 @@ return
 };
 
 declare function app:registryInstitutions($node as node(), $model as map(*)) {
-    let $institutionen := collection("/db/contents/baudi/institutions")//tei:TEI
+    let $institutionen := collection("/db/contents/baudi/institutions")//tei:institution
 
 return
 (
@@ -450,8 +455,8 @@ return
       <ul>
         {
         for $institution in $institutionen
-        let $name := $institution//tei:fileDesc/tei:titleStmt/tei:title
-        let $id := $institution/@xml:id
+        let $name := $institution/tei:orgName[@type="used"]
+        let $id := $institution/@id
         order by $name
         return
         <li><a href="institution/{$id}">{$name/normalize-space(data(.))}</a> ({$id/normalize-space(data(.))})</li>
@@ -464,8 +469,8 @@ return
 declare function app:institution($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("institution-id", "Fehler")
-let $institution := collection("/db/contents/baudi/institutions")/tei:TEI[@xml:id=$id]
-let $name := $institution//tei:title/normalize-space(data(.))
+let $institution := collection("/db/contents/baudi/institutions")/tei:institution[@id=$id]
+let $name := $institution/tei:orgName[@type="used"]
 
 return
 (
@@ -482,8 +487,7 @@ return
 
 declare function app:registrySources($node as node(), $model as map(*)) {
     
-    let $sourcesToDo := collection("/db/contents/baudi/sources/music")//mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and not(contains(@class,'#coll'))]//mei:term[@type='todo']/ancestor::mei:mei
-    let $sourcesToDo-Coll := collection("/db/contents/baudi/sources/music/collections")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and contains(@class,'#coll')]//mei:term[@type='todo']/ancestor::mei:mei
+    let $sourcesToDo := collection("/db/contents/baudi/sources/music")//mei:mei//mei:term[@type='todo']/ancestor::mei:mei
     let $sources-manuscripts := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and not(contains(@class,'#coll'))]/ancestor::mei:mei
     let $sources-manuscripts-Coll := collection("/db/contents/baudi/sources/music/collections")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and contains(@class,'#coll')]/ancestor::mei:mei
     let $sources-prints := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#pr') and not(contains(@class,'#coll'))]/ancestor::mei:mei
@@ -498,7 +502,7 @@ return
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#prints">Drucke ({count($sources-prints)})</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#songs">Lieder ({count($sources-songs)})</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#choirs">Chöre ({count($sources-choirs)})</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#todos">ToDos ({count($sourcesToDo) + count($sourcesToDo-Coll)})</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#todos">ToDos ({count($sourcesToDo)})</a></li>
     </ul>
     <!-- Tab panels -->
     <div class="tab-content">
@@ -509,10 +513,9 @@ return
         for $manuscript in $sources-manuscripts
         let $name :=
             $manuscript//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
+        
         let $id := $manuscript/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
+        order by $name ascending
         return
             <li>
                 {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
@@ -526,10 +529,9 @@ return
         {
         for $manuscript in $sources-manuscripts-Coll
         let $name := $manuscript//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(text())
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
+        
         let $id := $manuscript/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
+        order by $name ascending
         return
             <li>
                 {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
@@ -546,10 +548,9 @@ return
             if(exists($print//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
             then($print//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
             else($print//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
+        
         let $id := $print/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
+        order by $name ascending
         return
             <li>
                 {$name} (<a href="sources/print/{$id}">{$id}</a>)<br/>
@@ -566,10 +567,9 @@ return
             if(exists($song//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
             then($song//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
             else($song//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()))
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
+        
         let $id := $song/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
+        order by $name ascending
         return
         (
             if($song//mei:term[@type='source']/contains(.,'Manuskript') = true()) 
@@ -598,10 +598,9 @@ return
             if(exists($choir//mei:term[@type='source' and @subtype='special' and contains(./text(),'Sammelquelle')]))
             then($choir//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(data(.)))
             else($choir//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
+        
         let $id := $choir/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
+        order by $name ascending
         return
             <li>
                 {$name} ({if($choir//mei:manifestation[contains(@class,'#ms')])then(<a href="sources/manuscript/{$id}">{$id}</a>)else if($choir//mei:manifestation[contains(@class,'#pr')])then(<a href="sources/print/{$id}">{$id}</a>)else('error')})<br/>
@@ -615,31 +614,15 @@ return
         {
         for $source in $sourcesToDo
         let $name :=
-            $source//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
+            if(exists($source//mei:term[contains(@type,'source') and contains(@type,'collection')]))
+            then($source//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/text())
+            else($source//mei:sourceDesc/mei:source[1]/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.)))
+        
         let $id := $source/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
+        order by $name ascending
         return
             <li>
                 {$name} ({if($source//mei:manifestation[contains(@class,'#ms')])then(<a href="sources/manuscript/{$id}">{$id}</a>)else if($source//mei:manifestation[contains(@class,'#pr')])then(<a href="sources/print/{$id}">{$id}</a>)else('error')})<br/>
-            </li>
-        }
-            </ul>
-             <br/>
-            <h2>Sammelquellen</h2>
-            <br/>
-            <ul>
-        {
-        for $source in $sourcesToDo-Coll
-        let $name := $source//mei:fileDesc/mei:titleStmt/mei:title[@type="uniform" and @xml:lang='de']/normalize-space(text())
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
-        let $id := $source/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
-        return
-            <li>
-                {$name} (<a href="sources/manuscript/{$id}">{$id}</a>)<br/>
             </li>
         }
             </ul>
@@ -654,7 +637,7 @@ return
 declare function app:sources-manuscript($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("source-id", "Fehler")
-let $manuscript := collection("/db/contents/baudi/sources/music")/mei:mei[@xml:id=$id]
+let $manuscript := collection("/db/contents/baudi/sources/music")//mei:mei[@xml:id=$id]
 let $name := $manuscript//mei:manifestation/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.))
 let $manuscriptOrig := concat('../../../../../baudi-images/music/',$manuscript/@xml:id)
 let $manuscriptOrigBLB := "https://digital.blb-karlsruhe.de/blbihd/image/view/"
@@ -695,7 +678,7 @@ return
         <p/>
         {transform:transform($manuscript,doc("/db/apps/baudi/resources/xslt/metadataSourceManuscript.xsl"), ())}
         <p/>
-        {if(exists($manuscript//mei:workList/mei:work/mei:incip/mei:score))
+        {if(exists($manuscript//mei:workDesc/mei:work/mei:incip/mei:score))
         then(<b>INCIPIT available (soon)</b>)
         else(<b>No INCIPIT available</b>)}
         </div>
@@ -708,9 +691,6 @@ return
             {transform:transform($manuscript,doc("/db/apps/baudi/resources/xslt/contentLyrics.xsl"), ())}
         </div>
     </div>
-    </div>
-    <div class="col-2">
-        <small><b>Zitiervorschlag:</b><br/> <i>{$name} (Quelle); http://localhost:8080/exist/apps/baudi/html/sources/manuscript/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}</i></small>
     </div>
     </div>
     </div>
@@ -850,28 +830,29 @@ return
 
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
-    let $works := collection("/db/contents/baudi/works")/mei:mei//mei:term[last()][not(@type='todo')]/ancestor::mei:mei
-    let $todos := collection("/db/contents/baudi/works")/mei:mei//mei:term[@type='todo']/ancestor::mei:mei
+    let $works := collection("/db/contents/baudi/works")/mei:mei
+    let $choirs := collection("/db/contents/baudi/works")/mei:mei//mei:term[@type="choir"]/ancestor::mei:mei
+    let $songs := collection("/db/contents/baudi/works")/mei:mei//mei:term[@type="song"]/ancestor::mei:mei
     
     let $content := <div class="container">
     <br/>
          <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#works">Werke ({count($works)})</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#todo">Todo ({count($todos)})</a></li>
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Alle Werke ({count($works)})</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#choirs">Chöre ({count($choirs)})</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#songs">Lieder ({count($songs)})</a></li>
        
     </ul>
     <!-- Tab panels -->
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="works" >
+        <div class="tab-pane fade show active" id="main" >
         <br/>
             <ul>
         {
         for $work in $works
-        let $name := $work//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
+        let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
+        
         let $id := $work/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
+        order by $name ascending
         return
             <li>
                 {$name} (<a href="work/{$id}">{$id}</a>)<br/>
@@ -879,16 +860,31 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         }
             </ul>
         </div>
-        <div class="tab-pane fade" id="todo" >
+        <div class="tab-pane fade" id="choirs" >
         <br/>
             <ul>
         {
-        for $work in $todos
-        let $name := $work//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
-        let $nameLC := lower-case($name)
-        let $nameForSort := if(starts-with($nameLC,'der') or starts-with($nameLC,'die') or starts-with($nameLC,'das') or starts-with($nameLC,'dem') or starts-with($nameLC,'den')or starts-with($nameLC,'des') or starts-with($nameLC,'the')) then(string-join(subsequence(tokenize($nameLC,' '),2),' ')) else($nameLC)
+        for $work in $choirs
+        let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
+        
         let $id := $work/@xml:id/normalize-space(data(.))
-        order by $nameForSort ascending
+        order by $name ascending
+        return
+            <li>
+                {$name} (<a href="work/{$id}">{$id}</a>)<br/>
+            </li>
+        }
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="songs" >
+        <br/>
+            <ul>
+        {
+        for $work in $songs
+        let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
+        
+        let $id := $work/@xml:id/normalize-space(data(.))
+        order by $name ascending
         return
             <li>
                 {$name} (<a href="work/{$id}">{$id}</a>)<br/>
@@ -899,14 +895,15 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         </div>
    </div>
        
-       return $content
+       return
+        $content
        };
        
 declare function app:work($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("work-id", "Fehler")
 let $work := collection("/db/contents/baudi/works")/mei:mei[@xml:id=$id]
-let $name := $work//mei:fileDesc/mei:titleStmt/mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text())
+let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
 
 return
 (
@@ -918,20 +915,9 @@ return
             <h5>ID: {$id}</h5>
         </div>
         <br/>
-        <div class="row">
-            <div class="col">
-                {transform:transform($work,doc("/db/apps/baudi/resources/xslt/metadataWork.xsl"), ())}
-            </div>
-            <!--<div class="col-3">
-                <h5>Eintrag zitieren</h5>
-                <p>Werk: {$name}; http://localhost:8080/exist/apps/baudi/html/work/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}</p>
-            </div>-->
-        
-        
-            <div class="col-2">
-                <small><b>Zitiervorschlag:</b><br/><i>{$name} (Werk); http://localhost:8080/exist/apps/baudi/html/work/{$id}, abgerufen am {format-date(current-date(), "[D]. [M]. [Y]", "de", (), ())}</i></small>
-            </div>
-        </div>
+    <div class="col">
+        {transform:transform($work,doc("/db/apps/baudi/resources/xslt/metadataWork.xsl"), ())}
+    </div>
     </div>
 )
 };

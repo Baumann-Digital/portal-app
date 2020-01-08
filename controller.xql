@@ -99,22 +99,22 @@ else
 				</error-handler>
 			</dispatch>
 			
-			(: if it's a place :)
+			(: if it's a locus :)
 		else
-			if (matches($exist:path, "/place/")) then
+			if (matches($exist:path, "/locus/")) then
 				<dispatch
 					xmlns="http://exist.sourceforge.net/NS/exist">
 					<forward
 						url="{$exist:controller}/html/viewPlace.html">
 						<add-parameter
-							name="place-id"
+							name="locus-id"
 							value="{$exist:resource}"/>
 					</forward>
 					<view>
 						<forward
 							url="{$exist:controller}/modules/view.xql">
 							<add-parameter
-								name="place-id"
+								name="locus-id"
 								value="{$exist:resource}"/>
 						</forward>
 					</view>

@@ -1,6 +1,5 @@
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0">
-    <xsl:output method="xhtml" encoding="UTF-8" indent="yes"/>
-    <xsl:variable name="dictInstruments" select="doc('/db/contents/baudi/dicts/instruments.xml')"/>
+    <xsl:output method="xhtml" encoding="UTF-8"/>
     <xsl:template match="/">
         <div>
             <table border="0" width="100%">
@@ -58,18 +57,13 @@
                         </tr>
                     </xsl:if>
                 <tr>
-                        <td valign="top">Besetzung:</td>
+                        <td valign="top">Besetzung</td>
                         <td>
                             <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes">
                                 <xsl:sort select="." order="ascending" data-type="text"/>
                                 <li>
-                                    <xsl:variable name="auth" select="./@auth"/>
-                                    <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>)
-                                    </xsl:if>
-                                    <xsl:value-of select="$dictInstruments//mei:perfResList/mei:perfRes[@auth=$auth]/mei:name[1]/text()"/>
-                                    <xsl:if test="./@solo='true'">
-                                        (Solo)
-                                    </xsl:if>
+                                    <xsl:variable name="auth.uri" select="./@auth.uri/string()"/>
+                                    <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>) </xsl:if> <xsl:value-of select="."/>
                                 </li>
                             </xsl:for-each>
                         </td>

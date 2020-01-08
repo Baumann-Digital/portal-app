@@ -4,18 +4,8 @@
     <xsl:template match="/" name="namedPlace">
         <xsl:for-each select="//div[@type='page' or @type='titlepage']//settlement[@key]/distinct-values(@key)">
             <xsl:sort select="lower-case(.)" data-type="text" order="ascending"/>
-            <xsl:choose>
-                <xsl:when test="doc-available(concat('../../../../contents/baudi/places/', ., '.xml'))">
-                    <a href="{concat($registerRootOrt, .)}" target="_blank">
-                        <xsl:value-of select="doc(concat('../../../../contents/baudi/places/', ., '.xml'))/TEI/teiHeader/fileDesc/titleStmt/title"/>
-                    </a>
-                    <br/>
-                </xsl:when>
-                <xsl:otherwise>
                     <xsl:value-of select="normalize-space(.)"/>
                     <br/>
-                </xsl:otherwise>
-            </xsl:choose>
         </xsl:for-each>
         <xsl:for-each select="//div[@type='page' or @type='titlepage']//settlement[not(@key)]/distinct-values(.)">
             <xsl:value-of select="normalize-space(.)"/>
