@@ -1,9 +1,9 @@
 xquery version "3.0";
 
-module namespace app="http://baumann-digital.de:8080/exist/apps/baudi/templates";
+module namespace app="/templates";
 
 import module namespace templates="http://exist-db.org/xquery/templates" ;
-import module namespace config="http://baumann-digital.de:8080/exist/apps/baudi/config" at "config.xqm";
+import module namespace config="/config" at "config.xqm";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";

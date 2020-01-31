@@ -1,4 +1,4 @@
-<project default="load-target" name="baudi-data-migrate" xmlns:xdb="http://exist-db.org/ant">
+<project default="xar" name="baudi-data-migrate" xmlns:xdb="http://exist-db.org/ant">
     <tstamp>
         <format property="buildDateTime" pattern="yyyyMMdd-HHmm"  locale="en,UK" />
     </tstamp>

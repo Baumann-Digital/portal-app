@@ -1,10 +1,10 @@
 <xsl:stylesheet xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0">
-    <xsl:variable name="viewPerson" select="'http://localhost:8080/exist/apps/baudi/html/person/'"/>
-    <xsl:variable name="viewInstitution" select="'http://localhost:8080/exist/apps/baudi/html/institution/'"/>
-    <xsl:variable name="viewWork" select="'http://localhost:8080/exist/apps/baudi/html/work/'"/>
-    <xsl:variable name="viewLocus" select="'http://localhost:8080/exist/apps/baudi/html/locus/'"/>
-    <xsl:variable name="viewManuscript" select="'http://localhost:8080/exist/apps/baudi/html/sources/manuscript/'"/>
-    <xsl:variable name="viewPrint" select="'http://localhost:8080/exist/apps/baudi/html/sources/print/'"/>
+    <xsl:variable name="viewPerson" select="'/html/person/'"/>
+    <xsl:variable name="viewInstitution" select="'/html/institution/'"/>
+    <xsl:variable name="viewWork" select="'/html/work/'"/>
+    <xsl:variable name="viewLocus" select="'/html/locus/'"/>
+    <xsl:variable name="viewManuscript" select="'/html/sources/manuscript/'"/>
+    <xsl:variable name="viewPrint" select="'/html/sources/print/'"/>
     
     <!-- Linking persons -->
     <xsl:template match="tei:persName">

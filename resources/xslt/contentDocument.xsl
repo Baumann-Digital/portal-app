@@ -62,7 +62,7 @@
                                                     <xsl:when test="cell[2][@rows]">
                                                         <xsl:variable name="rows" select="cell[2]/@rows/data(.)"/>
                                                         <td rowspan="{$rows}" class="rowspanned">
-                                                            <img src="http://localhost:8080/exist/apps/baudi/resources/img/rightBracket.svg" height="55"/>
+                                                            <img src="/resources/img/rightBracket.svg" height="55"/>
                                                             <xsl:value-of select="cell[2]"/>
                                                         </td>
                                                     </xsl:when>
