@@ -1,5 +1,5 @@
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>baudi</description>
+    <description>baudiApp</description>
     <author>Tobias Bachmann</author>
     <author>Dennis Ried</author>
     <website>https://baumann-digital.de</website>
@@ -7,9 +7,9 @@
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
     <type>application</type>
-    <target>baudi</target>
+    <target>baudiApp</target>
     <prepare>pre-install.xql</prepare>
     <finish/>
-    <permissions user="baudi" group="baudi" mode="rw-rw-r--"/>
+    <permissions user="baudi" group="baudi" mode="rwxrwxr-x"/>
     
 <deployed>2018-12-16T22:41:40.099+01:00</deployed></meta>

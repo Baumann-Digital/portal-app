@@ -1,40 +1,59 @@
-<project default="xar" name="baudi-data-migrate" xmlns:xdb="http://exist-db.org/ant">
-    <tstamp>
-        <format property="buildDateTime" pattern="yyyyMMdd-HHmm"  locale="en,UK" />
-    </tstamp>
+<project default="xar" name="${package(abbrev)}">
     <xmlproperty file="expath-pkg.xml"/>
+    <tstamp>
+        <format property="buildDateTime" pattern="yyyyMMdd-HHmmss" locale="en,UK"/>
+    </tstamp>
     <property name="project.version" value="${package(version)}"/>
-    <property name="project.app" value="baudi"/>
+    <property name="project.app" value="${package(abbrev)}"/>
     <property name="build.dir" value="build"/>
-    <property name="p.exist.dir" value="/../Library/eXist/"/>
-    <property name="p.target.exist.url" value="xmldb:exist://localhost:8080/exist/xmlrpc/db/"/>
+    <!--    <property name="p.exist.dir" value="/../Library/eXist/"/>-->
     <property name="p.target.user" value="admin"/>
-    <property name="p.target.pass" value="DWksm@3Q!"/>
-    <property name="p.export.dir" location="../baudi-contents"/>
+    <property name="p.target.pass" value=""/>
+    <property name="p.target.exist.url" value="xmldb:exist://localhost:8080/exist/xmlrpc/db/"/>
+    <property name="p.target.exist.tmp" value="installer"/>
+    <property name="xar.name" value="${project.app}-${project.version}-${DATETIME}.xar"/>
+    <!--    <property name="p.export.dir" location="../baudi-contents"/>-->
+    <property name="xar.destination" value=""/>
+    <property environment="env"/>
+    <!--    -->
+    <!-- export EXIST_PATH=/opt/exist/exist-distribution-5.2.0 -->
     <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
         <classpath>
-            <fileset dir="${p.exist.dir}/lib/core">
+            <fileset dir="${env.EXIST_PATH}/lib">
                 <include name="*.jar"/>
             </fileset>
-            <fileset dir="${p.exist.dir}/lib/endorsed">
-                <include name="*.jar"/>
-            </fileset>
-            <fileset dir="${p.exist.dir}/lib/optional">
-                <include name="*.jar"/>
-            </fileset>
-            <pathelement location="${p.exist.dir}/exist.jar"/>
-            <pathelement location="${p.exist.dir}/exist-optional.jar"/>
         </classpath>
     </typedef>
-    <target name="xar">
-        <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/${project.app}_${project.version}_${buildDateTime}.xar" excludes="${build.dir}/*"/>
-    </target>
-    <target name="load-target" description="store xml to target eXist-db instance">
-        <xdb:store uri="${p.target.exist.url}contents/baudi/" user="${p.target.user}" password="${p.target.pass}" createcollection="true" createsubcollections="true">
-            <fileset dir="${p.export.dir}">
-                <include name="*.xml"/>
+    <target name="upload" depends="xar">
+        <echo message="Uploading packages ..."/>
+        <xdb:store xmlns:xdb="http://exist-db.org/ant"
+            uri="${p.target.exist.url}${p.target.exist.tmp}" user="${p.target.user}"
+            password="${p.target.pass}" createcollection="true">
+            <fileset dir="${build.dir}">
+                <include name="${xar.name}"/>
             </fileset>
         </xdb:store>
+    </target>
+    <target name="deploy-xar" depends="upload">
+        <echo message="Deploying xar ${xar.name}"/>
+        <xdb:xquery xmlns:xdb="http://exist-db.org/ant"
+            uri="${p.target.exist.url}${p.target.exist.tmp}" user="${p.target.user}"
+            password="${p.target.pass}" queryFile="scripts/deploy.xql"
+            outputproperty="deploy.output">
+            <variable name="temp" value="${p.target.exist.tmp}"/>
+            <variable name="xar" value="${xar.name}"/>
+        </xdb:xquery>
+        <echo message="${deploy.output}"/>
+        <xdb:remove xmlns:xdb="http://exist-db.org/ant"
+            uri="${p.target.exist.url}${p.target.exist.tmp}" resource="${xar.name}"
+            user="${p.target.user}" password="${p.target.pass}"/>
+    </target>
+    <target name="xar">
+        <mkdir dir="${build.dir}"/>
+        <zip basedir="." destfile="${build.dir}/${xar.name}"
+            excludes="${build.dir}/* exclude/ scripts/"/>
+    </target>
+    <target name="copy-xar" depends="xar">
+        <copy file="${build.dir}/${xar.name}" todir="${xar.destination}"/>
     </target>
 </project>
