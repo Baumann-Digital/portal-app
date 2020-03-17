@@ -1,9 +1,10 @@
 xquery version "3.0";
 
-module namespace app="/templates";
+module namespace app="http://baumann-digital.de/ns/templates";
 
 import module namespace templates="http://exist-db.org/xquery/templates" ;
-import module namespace config="/config" at "config.xqm";
+import module namespace config="http://baumann-digital.de/ns/config" at "config.xqm";
+import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
@@ -745,6 +746,7 @@ let $text := doc("/db/contents/baudi/texts/portal/aboutBaumann.xml")/tei:TEI
 return
 (
     <div class="container">
+    <p>TEST: {$baudiVersions:versions}</p>
         {transform:transform($text,doc("/db/apps/baudi/resources/xslt/portal.xsl"), ())}
     </div>
 )
