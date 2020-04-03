@@ -1,0 +1,208 @@
+
+<!--<script type="text/javascript" src="resources/select2/js/i18n/de.js"/>-->
+
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="i18n:translate" data-template-lang="en" data-template-catalogues="/db/apps/baudiApp/resources/i18n" data-template-with="templates/page.html" data-template-at="content">
+    
+    <!-- Translate/localize where indicated --> 
+    <div data-template="i18n:translate" data-template-lang="en" data-template-catalogues="/db/apps/mriCat/resources/lang">
+        
+        <!-- Bound data to view -->
+        <div data-template="mriPersonalia:personData">
+            
+            <!-- View head section -->
+            <div class="row">
+                <div class="col-md-3"/>
+                <div class="col-md-9">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="http://reger-max.mri.intern:8087/exist/apps/mrpApp/index.html">MRP</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="index.html">
+                                    <i18n:text key="breadCrumb.catalogue"/>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="search-person.html">
+                                    <i18n:text key="breadCrumb.persons"/>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <span data-template="mriPersonalia:showUsedName"/>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- View main section -->
+            <div class="row mt-5">
+                
+                <!-- View navigation -->
+                <div class="col-md-3">
+                    <nav data-template="templates:include" data-template-path="templates/view-mriPerson-nav.html"/>
+                </div>
+                
+                <!-- View main content -->
+                <div class="col-md-9">
+                    <div class="entryHeader">
+                        <h3>
+                            <span data-template="mriPersonalia:showUsedName"/>
+                        </h3>
+                    </div>
+                    
+                    <!-- Meta and ID infos -->
+                    <div>
+                        
+                        <!-- Meta infos -->
+                        <div data-template="templates:each" data-template-from="metaInfos" data-template-to="metaInfos">
+                            <div class="row mb-1">
+                                <div class="col-sm-3 catEntryLabel" data-template="mriPersonalia:printMetaInfoType"/>
+                                <div class="col-sm-9" data-template="mriPersonalia:printMetaInfoString"/>
+                            </div>
+                        </div>
+                        <!-- ID infos -->
+                        <div class="row mb-1">
+                            <div class="col-sm-3 catEntryLabel">GND</div>
+                            <div class="col-sm-9" data-template="mriPersonalia:showGND"/>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-sm-3 catEntryLabel">MRI-Identifier</div>
+                            <div class="col-sm-9">
+                                <code>
+                                    <span data-template="mriPersonalia:getMRIIdentifier"/>
+                                </code>
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
+                    
+                    <div class="tab-content">
+                        
+                        <!-- Panel: Overview -->
+                        <div role="tabpanel" class="tab-pane fade show active" id="summary" aria-labelledby="nav-summary-tab">
+                            <!-- Names -->
+                            <div data-template="templates:each" data-template-from="names" data-template-to="names">
+                                <div class="row mb-1">
+                                    <div class="col-sm-3 catEntryLabel" data-template="mriPersonalia:printNametype"/>
+                                    <div class="col-sm-9" data-template="mriPersonalia:printNamestring"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <!-- References -->
+                            <div class="row mb-1">
+                                <div class="col-sm-3 catEntryLabel">
+                                    <i18n:text key="refsTo"/> Max Reger</div>
+                                <div class="col-sm-9">
+                                    <div data-template="mriPersonalia:showPersonaReferencesToRegerfromMap"/>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-sm-3 catEntryLabel">
+                                    <i18n:text key="refsToOther"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <ul class="list-unstyled" data-template="mriPersonalia:listPersonOrgas"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <!--<dl class="row">
+                                <dt class="col-sm-3"><i18n:text key="dedicationsReger"/></dt>
+                                <dd class="col-sm-9">
+                                    <i>
+                                        <span data-template="mriPersonalia:getDedications"/>
+                                    </i>
+                                </dd>
+                            </dl>
+                            <hr/>-->
+                            <!-- Literature -->
+                            <dl class="row">
+                                <dt class="col-sm-3">
+                                    <i18n:text key="entryLiterature"/>
+                                </dt>
+                                <dd class="col-sm-9">
+                                    <div data-template="mriPersonalia:getBibl"/>
+                                </dd>
+                            </dl>
+                        </div>
+                        
+                        <!-- Panel: Biography -->
+                        <div role="tabpanel" class="tab-pane fade" id="bio" aria-labelledby="nav-bio-tab">
+                            <div data-template="mriPersonalia:showPersonaBioRWA"/>
+                        </div>
+                        
+                        <!-- Panel: References Reger -->
+                        <div role="tabpanel" class="tab-pane fade" id="refReger" aria-labelledby="nav-refReger-tab">
+                            <div class="row mb-1">
+                                <div class="col-sm-3 catEntryLabel">
+                                    <i18n:text key="refsTo"/> Max Reger</div>
+                                <div class="col-sm-9">
+                                    <div data-template="mriPersonalia:showPersonaReferencesToRegerfromMap"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div data-template="mriPersonalia:showPersonaRefToRegerRWA"/>
+                        </div>
+                        
+                        <!-- Panel: References Other -->
+                        <div role="tabpanel" class="tab-pane fade" id="refOther" aria-labelledby="nav-refOther-tab">
+                            <div class="row mb-1">
+                                <div class="col-sm-3 catEntryLabel">
+                                    <i18n:text key="refsToOther"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <ul class="list-unstyled" data-template="mriPersonalia:listPersonOrgas"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Panel: Internal -->
+                        <!--<div role="tabpanel" class="tab-pane fade" id="internals" aria-labelledby="nav-internals-tab">
+                            <dl class="row">
+                                <dt class="col-sm-3">Regesten</dt>
+                                <dd class="col-sm-9">
+                                    <div data-template="mriPersonalia:getDescription"/>
+                                </dd>
+                            </dl>
+                        </div>-->
+                        
+                        <!-- Panel: Correspondence -->
+                        <!--<div role="tabpanel" class="tab-pane fade" id="correspondence" aria-labelledby="nav-correspondence-tab">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center" id="paginationCorresp">
+                                </ul>
+                            </nav>
+                            <div id="resultListCorresp">
+                            </div>
+                        </div>-->
+                        
+                        <!-- Panel: Images -->
+                        <div role="tabpanel" class="tab-pane fade" id="images" aria-labelledby="nav-images-tab">
+                            <p class="lead">Die <a href="http://maxreger.info/bild">Max Reger Bildgalerie</a> enthält folgende Bilder (Ein Klick auf ein Bild öffnet den Eintrag in der Max Reger Bildgalerie).</p>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center" id="paginationImages">
+                                </ul>
+                            </nav>
+                            <div id="resultListImages">
+                            </div>
+                        </div>
+                        
+                        <!-- Corresp from/to Reger  -->
+                        <div role="tabpanel" class="tab-pane fade" id="correspondence" aria-labelledby="nav-correspondence-tab">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center" id="paginationCorresp">
+                                </ul>
+                            </nav>
+                            <div id="resultListCorresp">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" data-template="mriPersonalia:listCorrespForPersID"/>
+    <script type="text/javascript" data-template="mriPersonalia:listImagesForPersID"/>
+    <script type="text/javascript" data-template="mriPersonalia:listCorrespWithReger"/>
+</div>

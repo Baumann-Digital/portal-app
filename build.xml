@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="xar" name="${package(abbrev)}">
-    <xmlproperty file="expath-pkg.xml"/>
+    <xmlproperty file="./expath-pkg.xml"/>
     <tstamp>
-        <format property="buildDateTime" pattern="yyyyMMdd-HHmmss" locale="en,UK"/>
+        <format property="DATETIME" pattern="yyyyMMdd-HHmm"  locale="en,UK" />
     </tstamp>
+    <property name="env.EXIST_PATH" value="/opt/exist/exist-distribution-5.2.0"></property>
     <property name="project.version" value="${package(version)}"/>
     <property name="project.app" value="${package(abbrev)}"/>
-    <property name="build.dir" value="build"/>
-    <!--    <property name="p.exist.dir" value="/../Library/eXist/"/>-->
-    <property name="env.EXIST_PATH" value="/opt/exist/exist-distribution-5.2.0"/>
+    <property name="build.dir" value="./build"/>
     <property name="p.target.user" value="admin"/>
     <property name="p.target.pass" value=""/>
-    <property name="p.target.exist.url" value="xmldb:exist://localhost:8080/exist/xmlrpc/db/"/>
-    <property name="p.target2.exist.url" value="xmldb:exist://baumann-digital.de:8081/exist/xmlrpc/db/"/>
+    <property name="p.target.exist.url" value="xmldb:exist://baumann-digital.de:8081/exist/xmlrpc/db/"/>
     <property name="p.target.exist.tmp" value="installer"/>
-    <property name="xar.name" value="${project.app}-${project.version}-${buildDateTime}.xar"/>
-    <!--    <property name="p.export.dir" location="../baudi-contents"/>-->
+    <property name="xar.name" value="${project.app}-${project.version}-${DATETIME}.xar"/>
     <property name="xar.destination" value=""/>
-    <property environment="env"/>
-    <!--    -->
+    <property environment="env" />
+    
     <!-- export EXIST_PATH=/opt/exist/exist-distribution-5.2.0 -->
     <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
         <classpath>
@@ -29,48 +26,24 @@
     </typedef>
     <target name="upload" depends="xar">
         <echo message="Uploading packages ..."/>
-        <xdb:store xmlns:xdb="http://exist-db.org/ant"
-            uri="${p.target.exist.url}${p.target.exist.tmp}" user="${p.target.user}"
-            password="${p.target.pass}" createcollection="true">
+        <xdb:store xmlns:xdb="http://exist-db.org/ant" uri="${p.target.exist.url}${p.target.exist.tmp}" user="${p.target.user}" password="${p.target.pass}" createcollection="true">
             <fileset dir="${build.dir}">
                 <include name="${xar.name}"/>
             </fileset>
         </xdb:store>
     </target>
-    <target name="deployLocal" depends="upload">
-        <echo message="Deploying xar ${xar.name}"/>
-        <xdb:xquery xmlns:xdb="http://exist-db.org/ant"
-            uri="${p.target.exist.url}${p.target.exist.tmp}" user="${p.target.user}"
-            password="${p.target.pass}" queryFile="scripts/deploy.xql"
-            outputproperty="deploy.output">
-            <variable name="temp" value="${p.target.exist.tmp}"/>
-            <variable name="xar" value="${xar.name}"/>
-        </xdb:xquery>
-        <echo message="${deploy.output}"/>
-        <xdb:remove xmlns:xdb="http://exist-db.org/ant"
-            uri="${p.target.exist.url}${p.target.exist.tmp}" resource="${xar.name}"
-            user="${p.target.user}" password="${p.target.pass}"/>
-    </target>
     <target name="deployDev" depends="upload">
         <echo message="Deploying xar ${xar.name}"/>
-        <xdb:xquery xmlns:xdb="http://exist-db.org/ant"
-            uri="${p.target2.exist.url}${p.target.exist.tmp}" user="${p.target.user}"
-            password="${p.target.pass}" queryFile="scripts/deploy.xql"
-            outputproperty="deploy.output">
+        <xdb:xquery xmlns:xdb="http://exist-db.org/ant" uri="${p.target.exist.url}${p.target.exist.tmp}" user="${p.target.user}" password="${p.target.pass}"
+            queryFile="scripts/deploy.xql" outputproperty="deploy.output">
             <variable name="temp" value="${p.target.exist.tmp}"/>
             <variable name="xar" value="${xar.name}"/>
         </xdb:xquery>
         <echo message="${deploy.output}"/>
-        <xdb:remove xmlns:xdb="http://exist-db.org/ant"
-            uri="${p.target2.exist.url}${p.target.exist.tmp}" resource="${xar.name}"
-            user="${p.target.user}" password="${p.target.pass}"/>
+        <xdb:remove xmlns:xdb="http://exist-db.org/ant" uri="${p.target.exist.url}${p.target.exist.tmp}" resource="${xar.name}" user="${p.target.user}" password="${p.target.pass}"/>
     </target>
     <target name="xar">
         <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/${xar.name}"
-            excludes="${build.dir}/* exclude/ scripts/"/>
-    </target>
-    <target name="copy-xar" depends="xar">
-        <copy file="${build.dir}/${xar.name}" todir="${xar.destination}"/>
+        <zip basedir="." destfile="${build.dir}/${xar.name}" excludes="build/ .existdb.json build.sh"/>
     </target>
 </project>

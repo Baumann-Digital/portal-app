@@ -6,7 +6,7 @@
 xquery version "3.0";
 
 import module namespace templates="http://exist-db.org/xquery/templates" ;
-
+import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 (: 
  : The following modules provide functions which will be called by the 
  : templating.
@@ -43,5 +43,7 @@ let $lookup := function($functionName as xs:string, $arity as xs:int) {
  : Run it through the templating system and return the result.
  :)
 let $content := request:get-data()
+
 return
     templates:apply($content, $lookup, (), $config)
+    

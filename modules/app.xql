@@ -4,7 +4,7 @@ module namespace app="http://baumann-digital.de/ns/templates";
 
 import module namespace templates="http://exist-db.org/xquery/templates" ;
 import module namespace config="http://baumann-digital.de/ns/config" at "config.xqm";
-import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";
+(:import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";:)
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
@@ -27,7 +27,7 @@ declare function functx:distinct-deep
  
 declare function app:registryLetters($node as node(), $model as map(*)) {
    
-    let $letters := collection("/db/contents/baudi/sources/documents/letters")//tei:TEI
+    let $letters := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI
     let $datum := $letters//tei:correspAction[@type="sent"]//tei:date/@when/xs:date(.)
     let $datum-first := min($datum)
     let $datum-last := max($datum)
@@ -98,7 +98,7 @@ return
 declare function app:letter($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("letter-id", "Fehler")
-let $letter := collection("/db/contents/baudi/sources/documents/letters")//tei:TEI[@xml:id=$id]
+let $letter := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI[@xml:id=$id]
 let $pages := $letter/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
 return
@@ -123,7 +123,7 @@ return
     <!-- Tab panels -->
     <div class="tab-content">
     <div class="tab-pane fade show active" id="datenblatt" role="tabpanel">
-        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudi/resources/xslt/metadataLetter.xsl"), ())}
+        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudiApp/resources/xslt/metadataLetter.xsl"), ())}
     </div>
     
     {if (count($pages)=1)
@@ -140,14 +140,14 @@ return
                 <br/><br/>
                 <img src="{
                 if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('http://localhost:8081/digilib/Scaler/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('http://localhost:8081/digilib/Scaler/documents/',$id,'-1','?dw=500'))}" class="img-thumbnail" width="400"/>
+                then(concat('http://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
+                else(concat('http://digilib.baumann-digital.de/documents/',$id,'-1','?dw=500'))}" class="img-thumbnail" width="400"/>
             </div>
         <div class="col">
                 <br/>
                 <strong>Transkription</strong>
                 <br/><br/>
-                {transform:transform($letter//tei:div[@type='page' and @n='1'],doc("/db/apps/baudi/resources/xslt/contentLetter.xsl"), ())}
+                {transform:transform($letter//tei:div[@type='page' and @n='1'],doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
         </div>
         <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="bigPicture" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -159,8 +159,8 @@ return
       <div class="modal-body">
         <img src="{
                 if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('http://localhost:8081/digilib/Scaler/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('http://localhost:8081/digilib/Scaler/documents/',$id,'-1','?dw=1000'))}" class="img-thumbnail center"/>
+                then(concat('http://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
+                else(concat('http://digilib.baumann-digital.de/documents/',$id,'-1','?dw=1000'))}" class="img-thumbnail center"/>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Zurück</button>
@@ -173,8 +173,8 @@ return
     )
     else(
         for $page in $pages
-        let $letterOrigFacs := concat('http://localhost:8081/digilib/Scaler/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
-        let $letterOrigLink := concat('http://localhost:8081/digilib/Scaler/documents/',$id,'-',$page,'?dw=500')
+        let $letterOrigFacs := concat('http://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
+        let $letterOrigLink := concat('http://digilib.baumann-digital.de/documents/',$id,'-',$page,'?dw=500')
      
         return
         
@@ -194,7 +194,7 @@ return
                 <br/>
                 <strong>Transkription</strong>
                 <br/><br/>
-                {transform:transform($letter//tei:div[@type='page' and @n=$page],doc("/db/apps/baudi/resources/xslt/contentLetter.xsl"), ())}
+                {transform:transform($letter//tei:div[@type='page' and @n=$page],doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
        </div>
 <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="{concat('bigPicture',$page)}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -223,7 +223,7 @@ return
 
 declare function app:registryDocuments($node as node(), $model as map(*)) {
    
-    let $dokumente := collection("/db/contents/baudi/sources/documents")//tei:TEI[@type='certificate' or @type='Bericht']
+    let $dokumente := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@type='certificate' or @type='Bericht']
     let $datum := $dokumente//tei:correspAction[@type="sent"]//tei:date/@when/xs:date(.)
     let $datum-first := min($datum)
     let $datum-last := max($datum)
@@ -254,7 +254,7 @@ return
 
 declare function app:document($node as node(), $model as map(*)) {
 let $id := request:get-parameter("document-id", "Fehler")
-let $dokument := collection("/db/contents/baudi/sources/documents")/tei:TEI[@xml:id=$id]
+let $dokument := collection("/db/apps/baudiSources/data/documents")/tei:TEI[@xml:id=$id]
 let $pages := $dokument/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
 return
@@ -276,22 +276,22 @@ return
     <!-- Tab panels -->
     <div class="tab-content">
       <!--  <div class="tab-pane fade show active" id="datenblatt" >
-        {transform:transform($dokument,doc("/db/apps/baudi/resources/xslt/dokumentDatenblatt.xsl"), ())}
+        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/dokumentDatenblatt.xsl"), ())}
         </div>-->
         <div class="tab-pane fade show active" id="inhalt" >
-        {transform:transform($dokument//tei:text,doc("/db/apps/baudi/resources/xslt/contentDocument.xsl"), ())}
+        {transform:transform($dokument//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="daten" >
-        {transform:transform($dokument,doc("/db/apps/baudi/resources/xslt/namedDate.xsl"), ())}
+        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/namedDate.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="personen" >
-        {transform:transform($dokument,doc("/db/apps/baudi/resources/xslt/namedPers.xsl"), ())}
+        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/namedPers.xsl"), ())}
         </div>
          <div class="tab-pane fade" id="institutionen" >
-        {transform:transform($dokument,doc("/db/apps/baudi/resources/xslt/namedInst.xsl"), ())}
+        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/namedInst.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="orte" >
-        {transform:transform($dokument,doc("/db/apps/baudi/resources/xslt/namedPlace.xsl"), ())}
+        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/namedPlace.xsl"), ())}
         </div>
    </div>
 </div>
@@ -300,9 +300,9 @@ return
 
 declare function app:registryPersons($node as node(), $model as map(*)) {
 
-    let $personen := collection("/db/contents/baudi/persons")//tei:person
-    let $namedPersonsDist := functx:distinct-deep(collection("/db/contents/baudi/sources")//tei:text//tei:persName[normalize-space(.)])
-    let $namedPersons := collection("/db/contents/baudi/sources")//tei:text//tei:persName[normalize-space(.)]
+    let $personen := collection("/db/apps/baudiPersons/data")//tei:person
+    let $namedPersonsDist := functx:distinct-deep(collection("/db/apps/baudiSources/data")//tei:text//tei:persName[normalize-space(.)])
+    let $namedPersons := collection("/db/apps/baudiSources/data")//tei:text//tei:persName[normalize-space(.)]
     
 return
 (
@@ -347,10 +347,10 @@ return
 declare function app:person($node as node(), $model as map(*)) {
  
 let $id := request:get-parameter("person-id", "Fehler")
-let $person := collection("/db/contents/baudi/persons")//tei:person[@id=$id]
+let $person := collection("/db/apps/baudiPersons/data")//tei:person[@id=$id]
 let $name := $person//tei:title/normalize-space(data(.))
-(:let $namedPersons := collection("/db/contents/baudi/sources")//tei:text//tei:persName[@key=$id]:)
-(:let $namedPersonsDist := functx:distinct-deep(collection("/db/contents/baudi/sources")//tei:text//tei:persName[@key=$id]):)
+(:let $namedPersons := collection("/db/apps/baudiSources/data")//tei:text//tei:persName[@key=$id]:)
+(:let $namedPersonsDist := functx:distinct-deep(collection("/db/apps/baudiSources/data")//tei:text//tei:persName[@key=$id]):)
 
 return
 (
@@ -367,7 +367,7 @@ return
             </ul>
           <div class="tab-content">
             <div class="tab-pane fade show active" id="tab1">
-                {transform:transform($person,doc("/db/apps/baudi/resources/xslt/metadataPerson.xsl"), ())}
+                {transform:transform($person,doc("/db/apps/baudiApp/resources/xslt/metadataPerson.xsl"), ())}
                 <!--
                 <h4>Bezeichnungen</h4>
                 <ul>
@@ -406,7 +406,7 @@ return
 
 declare function app:registryPlaces($node as node(), $model as map(*)) {
 
-    let $orte := collection("/db/contents/baudi/loci")//tei:place
+    let $orte := collection("/db/apps/baudiLoci/data")//tei:place
 
 return
 (
@@ -429,7 +429,7 @@ return
 declare function app:place($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("locus-id", "Fehler")
-let $ort := collection("/db/contents/baudi/loci")/tei:place[@id=$id]
+let $ort := collection("/db/apps/baudiLoci/data")/tei:place[@id=$id]
 let $name := $ort//tei:title/normalize-space(data(.))
 
 return
@@ -441,13 +441,13 @@ return
             <h5>{$id}</h5>
         </div>
         Hier wirds irgendwann noch ein paar Infos zu <br/>{$name}<br/> geben.
-        {transform:transform($ort,doc("/db/apps/baudi/resources/xslt/metadataPlace.xsl"), ())}
+        {transform:transform($ort,doc("/db/apps/baudiApp/resources/xslt/metadataPlace.xsl"), ())}
     </div>
 )
 };
 
 declare function app:registryInstitutions($node as node(), $model as map(*)) {
-    let $institutionen := collection("/db/contents/baudi/institutions")//tei:institution
+    let $institutionen := collection("/db/apps/baudiInstitutions/data")//tei:institution
 
 return
 (
@@ -470,7 +470,7 @@ return
 declare function app:institution($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("institution-id", "Fehler")
-let $institution := collection("/db/contents/baudi/institutions")/tei:institution[@id=$id]
+let $institution := collection("/db/apps/baudiInstitutions/data")/tei:institution[@id=$id]
 let $name := $institution/tei:orgName[@type="used"]
 
 return
@@ -481,19 +481,19 @@ return
             <h1>{$name}</h1>
             <h5>{$id}</h5>
         </div>
-        {transform:transform($institution,doc("/db/apps/baudi/resources/xslt/metadataInstitution.xsl"), ())}
+        {transform:transform($institution,doc("/db/apps/baudiApp/resources/xslt/metadataInstitution.xsl"), ())}
     </div>
 )
 };
 
 declare function app:registrySources($node as node(), $model as map(*)) {
     
-    let $sourcesToDo := collection("/db/contents/baudi/sources/music")//mei:mei//mei:term[@type='todo']/ancestor::mei:mei
-    let $sources-manuscripts := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and not(contains(@class,'#coll'))]/ancestor::mei:mei
-    let $sources-manuscripts-Coll := collection("/db/contents/baudi/sources/music/collections")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and contains(@class,'#coll')]/ancestor::mei:mei
-    let $sources-prints := collection("/db/contents/baudi/sources/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#pr') and not(contains(@class,'#coll'))]/ancestor::mei:mei
-    let $sources-songs := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='song']/ancestor::mei:mei
-    let $sources-choirs := collection("/db/contents/baudi/sources/music")/mei:mei//mei:term[@type='genre' and .='choir']/ancestor::mei:mei
+    let $sourcesToDo := collection("/db/apps/baudiSources/data/music")//mei:mei//mei:term[@type='todo']/ancestor::mei:mei
+    let $sources-manuscripts := collection("/db/apps/baudiSources/data/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and not(contains(@class,'#coll'))]/ancestor::mei:mei
+    let $sources-manuscripts-Coll := collection("/db/apps/baudiSources/data/music/collections")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#ms') and contains(@class,'#coll')]/ancestor::mei:mei
+    let $sources-prints := collection("/db/apps/baudiSources/data/music")/mei:mei//mei:manifestationList/mei:manifestation[1][contains(@class,'#pr') and not(contains(@class,'#coll'))]/ancestor::mei:mei
+    let $sources-songs := collection("/db/apps/baudiSources/data/music")/mei:mei//mei:term[@type='genre' and .='song']/ancestor::mei:mei
+    let $sources-choirs := collection("/db/apps/baudiSources/data/music")/mei:mei//mei:term[@type='genre' and .='choir']/ancestor::mei:mei
     
 return
 (
@@ -638,7 +638,7 @@ return
 declare function app:sources-manuscript($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("source-id", "Fehler")
-let $manuscript := collection("/db/contents/baudi/sources/music")//mei:mei[@xml:id=$id]
+let $manuscript := collection("/db/apps/baudiSources/data/music")//mei:mei[@xml:id=$id]
 let $name := $manuscript//mei:manifestation/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.))
 let $manuscriptOrig := concat('../../../../../baudi-images/music/',$manuscript/@xml:id)
 let $manuscriptOrigBLB := "https://digital.blb-karlsruhe.de/blbihd/image/view/"
@@ -677,7 +677,7 @@ return
     <div class="tab-content">
         <div class="tab-pane fade show active" id="main">
         <p/>
-        {transform:transform($manuscript,doc("/db/apps/baudi/resources/xslt/metadataSourceManuscript.xsl"), ())}
+        {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscript.xsl"), ())}
         <p/>
         {if(exists($manuscript//mei:workDesc/mei:work/mei:incip/mei:score))
         then(<b>INCIPIT available (soon)</b>)
@@ -685,11 +685,11 @@ return
         </div>
         <div class="tab-pane fade" id="detail">
         <p/>
-        {transform:transform($manuscript,doc("/db/apps/baudi/resources/xslt/metadataSourceManuscriptDetailed.xsl"), ())}
+        {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscriptDetailed.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="lyrics">
         <p/>
-            {transform:transform($manuscript,doc("/db/apps/baudi/resources/xslt/contentLyrics.xsl"), ())}
+            {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/contentLyrics.xsl"), ())}
         </div>
     </div>
     </div>
@@ -701,7 +701,7 @@ return
 declare function app:sources-print($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("source-id", "Fehler")
-let $print := collection("/db/contents/baudi/sources/music")/mei:mei[@xml:id=$id]
+let $print := collection("/db/apps/baudiSources/data/music")/mei:mei[@xml:id=$id]
 let $name := $print//mei:title[@type="main"]/normalize-space(data(.))
 let $printOrig := "PFAD"
 
@@ -719,7 +719,7 @@ return
                 </div>  
     <div class="col">
     <strong>Quellenbeschreibung</strong>
-        {transform:transform($print,doc("/db/apps/baudi/resources/xslt/print.xsl"), ())}
+        {transform:transform($print,doc("/db/apps/baudiApp/resources/xslt/print.xsl"), ())}
     </div>
     </div>
     </div>
@@ -728,26 +728,26 @@ return
 
 declare function app:aboutProject($node as node(), $model as map(*)) {
 
-let $text := doc("/db/contents/baudi/texts/portal/aboutProject.xml")/tei:TEI
+let $text := doc("/db/apps/baudiTexts/data/portal/aboutProject.xml")/tei:TEI
 
 
 return
 (
     <div class="container">
-        {transform:transform($text,doc("/db/apps/baudi/resources/xslt/portal.xsl"), ())}
+        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/portal.xsl"), ())}
     </div>
 )
 };
 
 declare function app:aboutBaumann($node as node(), $model as map(*)) {
 
-let $text := doc("/db/contents/baudi/texts/portal/aboutBaumann.xml")/tei:TEI
+let $text := doc("/db/apps/baudiTexts/data/portal/aboutBaumann.xml")/tei:TEI
 
 return
 (
     <div class="container">
-    <p>TEST: {$baudiVersions:versions}</p>
-        {transform:transform($text,doc("/db/apps/baudi/resources/xslt/portal.xsl"), ())}
+    <!--<p>TEST: {$baudiVersions:versions}</p>-->
+        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/portal.xsl"), ())}
     </div>
 )
 };
@@ -764,7 +764,7 @@ return
             <h1>Status der Bestandsbearbeitung (HS: D-KA, D-KAsa)</h1>
         </div>
         <div class="container">
-        {transform:transform($object,doc("/db/apps/baudi/resources/xslt/rismxml2html.xsl"), ())}
+        {transform:transform($object,doc("/db/apps/baudiApp/resources/xslt/rismxml2html.xsl"), ())}
     </div>
     </div>
 )
@@ -772,12 +772,12 @@ return
 
 declare function app:indexPage($node as node(), $model as map(*)) {
 
-let $text := doc('/db/contents/baudi/texts/portal/index.xml')
+let $text := doc('/db/apps/baudiTexts/data/portal/index.xml')
 
 return
 (
     <div class="container">
-        {transform:transform($text,doc("/db/apps/baudi/resources/xslt/portal.xsl"), ())}
+        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/portal.xsl"), ())}
     </div>
 )
 };
@@ -794,7 +794,7 @@ return
             <h1>Zeitungarchiv</h1>
         </div>
     <div class="container">
-        {transform:transform($text,doc("/db/apps/baudi/resources/xslt/zeitungsarchiv.xsl"), ())}
+        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/zeitungsarchiv.xsl"), ())}
     </div>
     </div>
 )
@@ -802,9 +802,9 @@ return
 
 declare function app:guidelines($node as node(), $model as map(*)) {
 
-let $codingGuidelines := doc('/db/contents/baudi/texts/documentation/codingGuidelines.xml')
-let $editiorialGuidelines := doc('/db/contents/baudi/texts/documentation/editorialGuidelines.xml')
-let $sourceDescGuidelines := doc('/db/contents/baudi/texts/documentation/sourceDescGuidelines.xml')
+let $codingGuidelines := doc('/db/apps/baudiTexts/data/documentation/codingGuidelines.xml')
+let $editiorialGuidelines := doc('/db/apps/baudiTexts/data/documentation/editorialGuidelines.xml')
+let $sourceDescGuidelines := doc('/db/apps/baudiTexts/data/documentation/sourceDescGuidelines.xml')
 
 return
 (
@@ -817,13 +817,13 @@ return
     <!-- Tab panels -->
     <div class="tab-content">
         <div class="tab-pane fade show active" id="coding" >
-        {transform:transform($codingGuidelines,doc("/db/apps/baudi/resources/xslt/contentCodingGuidelines.xsl"), ())}
+        {transform:transform($codingGuidelines,doc("/db/apps/baudiApp/resources/xslt/contentCodingGuidelines.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="edition" >
-        {transform:transform($editiorialGuidelines,doc("/db/apps/baudi/resources/xslt/contentEditorialGuidelines.xsl"), ())}
+        {transform:transform($editiorialGuidelines,doc("/db/apps/baudiApp/resources/xslt/contentEditorialGuidelines.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="sourceDesc" >
-        {transform:transform($sourceDescGuidelines,doc("/db/apps/baudi/resources/xslt/contentSourceDescGuidelines.xsl"), ())}
+        {transform:transform($sourceDescGuidelines,doc("/db/apps/baudiApp/resources/xslt/contentSourceDescGuidelines.xsl"), ())}
         </div>
    </div>
     </div>
@@ -832,9 +832,9 @@ return
 
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
-    let $works := collection("/db/contents/baudi/works")/mei:mei
-    let $choirs := collection("/db/contents/baudi/works")/mei:mei//mei:term[@type="choir"]/ancestor::mei:mei
-    let $songs := collection("/db/contents/baudi/works")/mei:mei//mei:term[@type="song"]/ancestor::mei:mei
+    let $works := collection("/db/apps/baudiWorks/data")/mei:mei
+    let $choirs := collection("/db/apps/baudiWorks/data")/mei:mei//mei:term[@type="choir"]/ancestor::mei:mei
+    let $songs := collection("/db/apps/baudiWorks/data")/mei:mei//mei:term[@type="song"]/ancestor::mei:mei
     
     let $content := <div class="container">
     <br/>
@@ -904,7 +904,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
 declare function app:work($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("work-id", "Fehler")
-let $work := collection("/db/contents/baudi/works")/mei:mei[@xml:id=$id]
+let $work := collection("/db/apps/baudiWorks/data")/mei:mei[@xml:id=$id]
 let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
 
 return
@@ -918,7 +918,7 @@ return
         </div>
         <br/>
     <div class="col">
-        {transform:transform($work,doc("/db/apps/baudi/resources/xslt/metadataWork.xsl"), ())}
+        {transform:transform($work,doc("/db/apps/baudiApp/resources/xslt/metadataWork.xsl"), ())}
     </div>
     </div>
 )

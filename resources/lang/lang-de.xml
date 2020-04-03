@@ -1,0 +1,169 @@
+<catalogue xml:lang="de">
+    
+    <!-- Bread crumb -->
+    <msg key="breadCrumb.catalogue">Katalog</msg>
+    <msg key="breadCrumb.persons">Personen</msg>
+    <msg key="breadCrumb.events">Ereignisse</msg>
+    
+    <!-- Catalogue Entry Person Navigation -->
+    <msg key="catEntry.person.nav.overview">Überblick</msg>
+    <msg key="catEntry.person.nav.bio">Biographie</msg>
+    <msg key="catEntry.person.nav.references">Bezüge zu</msg>
+    <msg key="catEntry.person.nav.references.other">anderen</msg>
+    <msg key="catEntry.person.nav.private">Interna</msg>
+    <msg key="catEntry.person.nav.sources">Quellen</msg>
+    <msg key="catEntry.person.nav.correspondance">Korrespondenz</msg>
+    <msg key="catEntry.person.nav.images">Bilder</msg>
+    
+    <!-- Catalogue Entry Person Meta Infos -->
+    <msg key="metaSex">Geschlecht</msg>
+    <msg key="female">weiblich</msg>
+    <msg key="male">männlich</msg>
+    
+    <msg key="metaProfession">Tätigkeit</msg>
+    <msg key="metaBirth">Geburtsdaten</msg>
+    <msg key="metaDeath">Sterbedaten</msg>
+    <msg key="metaGND">GND</msg>
+    <msg key="metaIdentifier">MRI-Identifier</msg>
+    
+    <!-- Name types -->
+    <msg key="nameUsed">Ansatzname</msg>
+    <msg key="nameFull">Name</msg>
+    <msg key="nameNick">Spitzname</msg>
+    <msg key="nameBirth">Geburtsname</msg>
+    <msg key="namePseud">Pseudonym</msg>
+    <msg key="nameFurther">Weitere Namen</msg>
+    
+    <msg key="refsTo">Bezüge zu</msg>
+    <msg key="refsToOther">Bezüge zu anderen</msg>
+    <msg key="mriPersonalia.ref2Reger.correspondence">Korrespondenz</msg>
+    <msg key="mriPersonalia.ref2Reger.dedicatee">Widmungsträger/in</msg>
+    <msg key="mriPersonalia.ref2Reger.student">Schüler/in</msg>
+    <msg key="mriPersonalia.ref2Reger.lyricist">Textdichter/in</msg>
+    <msg key="mriPersonalia.ref2Reger.critic">Rezensent/in</msg>
+    <msg key="mriPersonalia.ref2Reger.publisher">Verleger/in</msg>
+    <msg key="mriPersonalia.ref2Reger.family">Familie</msg>
+    <msg key="mriPersonalia.ref2Reger.performer">Interpret/in</msg>
+    <msg key="mriPersonalia.ref2Reger.agent">Konzertagent/in</msg>
+    <msg key="mriPersonalia.ref2Reger.teacher">Lehrer/in</msg>
+    <msg key="mriPersonalia.ref2Reger.editor">Herausgeber/in</msg>
+    <msg key="mriPersonalia.ref2Reger.physician">Arzt/Ärztin</msg>
+    <msg key="mriPersonalia.ref2Reger.friend">Freund/in | Bekannte/r</msg>
+    <msg key="mriPersonalia.ref2Reger.other">[andere]</msg>
+    <msg key="dedicationsReger">Widmungen Regers</msg>
+    <msg key="entryLiterature">Literatur</msg>
+    
+    <!-- other -->
+    <msg key="unknown">unbekannt</msg>
+    <msg key="dateUnknown">Datum unbekannt</msg>
+    <msg key="in.rwa.encyclo">in der Enzyklopädie der Reger-Werkausgabe</msg>
+    <msg key="currently.nothing.more">Derzeit keine weiteren Informationen verfügbar.</msg>
+    <msg key="reger.reference">Informationen zum Reger-Bezug</msg>
+    <msg key="today.in.year.n">Heute im Jahr</msg>
+    
+    <!-- Professions -->
+    <msg key="mriPersonalia.profession.">Antiquar</msg>
+    <msg key="mriPersonalia.profession.">Architekt</msg>
+    <msg key="mriPersonalia.profession.">Archivar</msg>
+    <msg key="mriPersonalia.profession.">Arzt</msg>
+    <msg key="mriPersonalia.profession.">Assistentin</msg>
+    <msg key="mriPersonalia.profession.">Bankier</msg>
+    <msg key="mriPersonalia.profession.">Bankmitarbeiter</msg>
+    <msg key="mriPersonalia.profession.">Bestattungsinstitut</msg>
+    <msg key="mriPersonalia.profession.">Bibliothekar</msg>
+    <msg key="mriPersonalia.profession.">Bildhauer</msg>
+    <msg key="mriPersonalia.profession.">Bratschist</msg>
+    <msg key="mriPersonalia.profession.">Buchhändler</msg>
+    <msg key="mriPersonalia.profession.">Büro</msg>
+    <msg key="mriPersonalia.profession.">Cellist</msg>
+    <msg key="mriPersonalia.profession.">Cembalist</msg>
+    <msg key="mriPersonalia.profession.">Chorleiter</msg>
+    <msg key="mriPersonalia.profession.">Dichter</msg>
+    <msg key="mriPersonalia.profession.">Diplomat</msg>
+    <msg key="mriPersonalia.profession.">Dirigent</msg>
+    <msg key="mriPersonalia.profession.">Dramaturg</msg>
+    <msg key="mriPersonalia.profession.">Fabrikant</msg>
+    <msg key="mriPersonalia.profession.">Fagottist</msg>
+    <msg key="mriPersonalia.profession.">Filmproduzent</msg>
+    <msg key="mriPersonalia.profession.">Fleischwarenhersteller</msg>
+    <msg key="mriPersonalia.profession.">Flötist</msg>
+    <msg key="mriPersonalia.profession.">Fotograf</msg>
+    <msg key="mriPersonalia.profession.">Grafiker</msg>
+    <msg key="mriPersonalia.profession.">Grundbesitzer</msg>
+    <msg key="mriPersonalia.profession.">Harmoniumspieler</msg>
+    <msg key="mriPersonalia.profession.">Hauptmann</msg>
+    <msg key="mriPersonalia.profession.">Herausgeber</msg>
+    <msg key="mriPersonalia.profession.">Hochschullehrer</msg>
+    <msg key="mriPersonalia.profession.">Hornist</msg>
+    <msg key="mriPersonalia.profession.">Hotelier</msg>
+    <msg key="mriPersonalia.profession.">Ingenieur</msg>
+    <msg key="mriPersonalia.profession.">Installateur</msg>
+    <msg key="mriPersonalia.profession.">Intendant</msg>
+    <msg key="mriPersonalia.profession.">Journalist</msg>
+    <msg key="mriPersonalia.profession.">Jurist</msg>
+    <msg key="mriPersonalia.profession.">Juwelier</msg>
+    <msg key="mriPersonalia.profession.">Kantor</msg>
+    <msg key="mriPersonalia.profession.">Kaufmann</msg>
+    <msg key="mriPersonalia.profession.">Kirchenmusiker</msg>
+    <msg key="mriPersonalia.profession.">Klarinettist</msg>
+    <msg key="mriPersonalia.profession.">Klavierbauer</msg>
+    <msg key="mriPersonalia.profession.">Komponist</msg>
+    <msg key="mriPersonalia.profession.">Konzertagent</msg>
+    <msg key="mriPersonalia.profession.">Konzertveranstalter</msg>
+    <msg key="mriPersonalia.profession.">Korrepetitor</msg>
+    <msg key="mriPersonalia.profession.">Krankenschwester</msg>
+    <msg key="mriPersonalia.profession.">Kunstgärtner</msg>
+    <msg key="mriPersonalia.profession.">Kunsthistoriker</msg>
+    <msg key="mriPersonalia.profession.">Lehrer</msg>
+    <msg key="mriPersonalia.profession.">Lokalpolitiker</msg>
+    <msg key="mriPersonalia.profession.">Maler</msg>
+    <msg key="mriPersonalia.profession.">Mediziner</msg>
+    <msg key="mriPersonalia.profession.">Modell</msg>
+    <msg key="mriPersonalia.profession.">Modist</msg>
+    <msg key="mriPersonalia.profession.">Muse</msg>
+    <msg key="mriPersonalia.profession.">Musikalienhändler</msg>
+    <msg key="mriPersonalia.profession.">Musikinstrumentenbauer</msg>
+    <msg key="mriPersonalia.profession.">Musikjournalist</msg>
+    <msg key="mriPersonalia.profession.">Musiklehrer</msg>
+    <msg key="mriPersonalia.profession.">Musikpädagoge</msg>
+    <msg key="mriPersonalia.profession.">Musikschriftsteller</msg>
+    <msg key="mriPersonalia.profession.">Musikwissenschaftler</msg>
+    <msg key="mriPersonalia.profession.">Oberstabsarzt</msg>
+    <msg key="mriPersonalia.profession.">Oboist</msg>
+    <msg key="mriPersonalia.profession.">Offizier</msg>
+    <msg key="mriPersonalia.profession.">Organist</msg>
+    <msg key="mriPersonalia.profession.">Orgelbauer</msg>
+    <msg key="mriPersonalia.profession.">Pensionswirt</msg>
+    <msg key="mriPersonalia.profession.">Philosoph</msg>
+    <msg key="mriPersonalia.profession.">Pianist</msg>
+    <msg key="mriPersonalia.profession.">Politiker</msg>
+    <msg key="mriPersonalia.profession.">Privatier</msg>
+    <msg key="mriPersonalia.profession.">Redakteur</msg>
+    <msg key="mriPersonalia.profession.">Regisseur</msg>
+    <msg key="mriPersonalia.profession.">Rundfunkmitarbeiter</msg>
+    <msg key="mriPersonalia.profession.">Schauspieler</msg>
+    <msg key="mriPersonalia.profession.">Schlosser</msg>
+    <msg key="mriPersonalia.profession.">Schriftsteller</msg>
+    <msg key="mriPersonalia.profession.">Schuhmacher</msg>
+    <msg key="mriPersonalia.profession.">Sekretärin</msg>
+    <msg key="mriPersonalia.profession.">Sinologe</msg>
+    <msg key="mriPersonalia.profession.">Sozialpolitiker</msg>
+    <msg key="mriPersonalia.profession.">Spediteur</msg>
+    <msg key="mriPersonalia.profession.">Student</msg>
+    <msg key="mriPersonalia.profession.">Sänger</msg>
+    <msg key="mriPersonalia.profession.">Theologe</msg>
+    <msg key="mriPersonalia.profession.">Tänzerin</msg>
+    <msg key="mriPersonalia.profession.">Universitätsmusikdirektor</msg>
+    <msg key="mriPersonalia.profession.">Verlagsinhaber</msg>
+    <msg key="mriPersonalia.profession.">Verlagsmitarbeiter</msg>
+    <msg key="mriPersonalia.profession.">Verleger</msg>
+    <msg key="mriPersonalia.profession.">Verwaltungsmitarbeiter</msg>
+    <msg key="mriPersonalia.profession.">Violinist</msg>
+    <msg key="mriPersonalia.profession.">Volksliedsammler</msg>
+    <msg key="mriPersonalia.profession.">Wohnungsausstatter</msg>
+    <msg key="mriPersonalia.profession.">Zeitungsausschnitte</msg>
+    <msg key="mriPersonalia.profession.">für</msg>
+    <msg key="mriPersonalia.profession.">oder</msg>
+    
+    
+</catalogue>
