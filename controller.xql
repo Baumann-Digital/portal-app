@@ -1,11 +1,16 @@
 xquery version "3.0";
 
+import module namespace i18n="http://exist-db.org/xquery/i18n" at "modules/i18n.xql";
+
+import module namespace request="http://exist-db.org/xquery/request";
+import module namespace xdb = "http://exist-db.org/xquery/xmldb";
+
 declare variable $exist:path external;
 declare variable $exist:resource external;
 declare variable $exist:controller external;
 declare variable $exist:prefix external;
 declare variable $exist:root external;
-declare variable $exist:log-in := xmldb:login('/db','Baumann','Ludwig');
+(:declare variable $exist:log-in := xmldb:login('/db','baudi','baudi');:)
 
 if ($exist:path eq '') then
 	<dispatch
@@ -13,8 +18,22 @@ if ($exist:path eq '') then
 		<redirect
 			url="{request:get-uri()}/"/>
 	</dispatch>
-	
-	
+
+else if (contains($exist:resource, ".html"))
+then(
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+     <view>
+            <forward url="{$exist:controller}/modules/view.xql">
+                {xmldb:login('/db','baudi','baudi')}
+                <set-attribute name="$exist:prefix"
+value="{$exist:prefix}"/>
+                <set-attribute name="$exist:controller"
+value="{$exist:controller}"/>
+                <set-header name="Cache-Control" value="no-cache"/>
+            </forward>
+        </view>
+    </dispatch>)
+
 	(: if it's a letter :)
 else
 	if (matches($exist:path, "/letter/")) then
