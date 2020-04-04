@@ -10,6 +10,6 @@
     <target>baudiApp</target>
     <prepare>pre-install.xql</prepare>
     <finish/>
-    <permissions user="baudi" group="baudi" mode="rwxrwxr-x"/>
+    <permissions user="baudi" password="dummy" group="baudi" mode="rwxrwx---"/>
     
 <deployed>2018-12-16T22:41:40.099+01:00</deployed></meta>
