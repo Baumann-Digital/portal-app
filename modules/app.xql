@@ -923,3 +923,14 @@ return
     </div>
 )
 };
+
+declare function local:getPeriodicals($model) {
+    collection($periodicalsCollectionURI)/id($model('docID'))
+};
+
+declare %templates:wrap function app:getPeriodicalsSummary($node as node(), $model as map(*)) {
+    let $periodical := local:getPeriodicals($model)//tei:body/node()
+    let $xslt := doc('/db/apps/baudiApp/resources/xslt/contentLetter.xsl')
+    return
+        transform:transform($periodical, $xslt, ())
+};
