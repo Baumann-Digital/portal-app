@@ -10,7 +10,6 @@ declare variable $exist:resource external;
 declare variable $exist:controller external;
 declare variable $exist:prefix external;
 declare variable $exist:root external;
-(:declare variable $exist:log-in := xmldb:login('/db','baudi','baudi');:)
 
 if ($exist:path eq '') then
 	<dispatch
@@ -19,21 +18,11 @@ if ($exist:path eq '') then
 			url="{request:get-uri()}/"/>
 	</dispatch>
 
-else if (contains($exist:resource, ".html"))
-then(
+else if ($exist:path eq "/") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-     <view>
-            <forward url="{$exist:controller}/modules/view.xql">
-                {xmldb:login('/db','baudi','baudi')}
-                <set-attribute name="$exist:prefix"
-value="{$exist:prefix}"/>
-                <set-attribute name="$exist:controller"
-value="{$exist:controller}"/>
-                <set-header name="Cache-Control" value="no-cache"/>
-            </forward>
-        </view>
-    </dispatch>)
-
+        <redirect url="index.html"/>
+    </dispatch>
+    
 	(: if it's a letter :)
 else
 	if (matches($exist:path, "/letter/")) then

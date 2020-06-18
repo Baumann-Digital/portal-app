@@ -832,9 +832,9 @@ return
 
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
-    let $works := collection("/db/apps/baudiWorks/data")/mei:mei
-    let $choirs := collection("/db/apps/baudiWorks/data")/mei:mei//mei:term[@type="choir"]/ancestor::mei:mei
-    let $songs := collection("/db/apps/baudiWorks/data")/mei:mei//mei:term[@type="song"]/ancestor::mei:mei
+    let $works := collection("/db/apps/baudiWorks/data")//mei:work
+    let $choirs := collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre" and @subtype="choir"]/ancestor::mei:work
+    let $songs := collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre" and @subtype="song"]/ancestor::mei:work
     
     let $content := <div class="container">
     <br/>
@@ -851,7 +851,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
             <ul>
         {
         for $work in $works
-        let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
+        let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
         
         let $id := $work/@xml:id/normalize-space(data(.))
         order by $name ascending
@@ -904,8 +904,8 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
 declare function app:work($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("work-id", "Fehler")
-let $work := collection("/db/apps/baudiWorks/data")/mei:mei[@xml:id=$id]
-let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
+let $work := collection("/db/apps/baudiWorks/data")/mei:work[@xml:id=$id]
+let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
 
 return
 (
