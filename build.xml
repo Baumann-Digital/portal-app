@@ -7,10 +7,10 @@
     <property name="project.version" value="${package(version)}"/>
     <property name="project.app" value="${package(abbrev)}"/>
     <property name="build.dir" value="./build"/>
-    <property name="p.target.user" value="admin"/>
+    <property name="p.target.user" value="deploy"/>
     <property name="p.target.pass" value=""/>
     <property name="p.target1.exist.url" value="xmldb:exist://localhost:8080/exist/xmlrpc/db/"/>
-    <property name="p.target2.exist.url" value="xmldb:exist://baumann-digital.de:8081/exist/xmlrpc/db/"/>
+    <property name="p.target2.exist.url" value="xmldb:exist://baumann-digital.de:8088/exist/xmlrpc/db/"/>
     <property name="p.target.exist.tmp" value="installer"/>
     <property name="xar.name" value="${project.app}-${project.version}-${DATETIME}.xar"/>
     <property name="xar.destination" value=""/>
@@ -43,6 +43,16 @@
         </xdb:xquery>
         <echo message="${deploy.output}"/>
         <xdb:remove xmlns:xdb="http://exist-db.org/ant" uri="${p.target1.exist.url}${p.target.exist.tmp}" resource="${xar.name}" user="${p.target.user}" password="${p.target.pass}"/>
+        
+        <!-- postDeploy-Actions -->
+        <echo message="Prepairing postDeploy.xql"/>
+        <loadfile property="postDeployXQuery" srcFile="scripts/postDeployLocalhost.xql"/>
+        
+        <echo message="Executing postDeploy.xql"/>
+        <xdb:xquery  xmlns:xdb="http://exist-db.org/ant"
+            uri="${p.target1.exist.url}" query="${postDeployXQuery}"
+            user="${p.target.user}" password="${p.target.pass}"/>
+        <echo message="postDeploy.xql executed"/>
     </target>
     
     <!-- upload to Dev -->
@@ -63,6 +73,16 @@
         </xdb:xquery>
         <echo message="${deploy.output}"/>
         <xdb:remove xmlns:xdb="http://exist-db.org/ant" uri="${p.target2.exist.url}${p.target.exist.tmp}" resource="${xar.name}" user="${p.target.user}" password="${p.target.pass}"/>
+        
+        <!-- postDeploy-Actions -->
+        <echo message="Prepairing postDeploy.xql"/>
+        <loadfile property="postDeployXQuery" srcFile="scripts/postDeployDev.xql"/>
+        
+        <echo message="Executing postDeploy.xql"/>
+        <xdb:xquery  xmlns:xdb="http://exist-db.org/ant"
+            uri="${p.target2.exist.url}" query="${postDeployXQuery}"
+            user="${p.target.user}" password="${p.target.pass}"/>
+        <echo message="postDeploy.xql executed"/>
     </target>
     
     <target name="xar">
