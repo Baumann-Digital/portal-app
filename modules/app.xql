@@ -833,67 +833,70 @@ return
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
     let $works := collection("/db/apps/baudiWorks/data")//mei:work
-    let $choirs := collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre" and @subtype="choir"]/ancestor::mei:work
-    let $songs := collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre" and @subtype="song"]/ancestor::mei:work
-    
+    let $genres := distinct-values(collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre"]/@subtype)
+    let $dict := collection("/db/apps/baudiResources/data")
     let $content := <div class="container">
     <br/>
          <ul class="nav nav-pills" role="tablist">
             <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Alle Werke ({count($works)})</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#choirs">Chöre ({count($choirs)})</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#songs">Lieder ({count($songs)})</a></li>
-       
+            {for $genre in $genres
+                let $genreDict := $dict//tei:name[@type=$genre]/text()
+                let $workCount := count($works//mei:term[@type='genre' and @subtype = $genre])
+                let $nav-item := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{$genreDict} ({$workCount})</a></li>
+                return
+                    $nav-item
+             }
     </ul>
     <!-- Tab panels -->
     <div class="tab-content">
         <div class="tab-pane fade show active" id="main" >
         <br/>
-            <ul>
         {
         for $work in $works
-        let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
-        
+        let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
         let $id := $work/@xml:id/normalize-space(data(.))
-        order by $name ascending
+        let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
+        let $composer := $work//mei:composer
+        let $lyricist := $work//mei:lyricist
+        order by $title ascending
         return
-            <li>
-                {$name} (<a href="work/{$id}">{$id}</a>)<br/>
-            </li>
+            <div class="card" style="width: 75%;">
+                <div class="card-body">
+                  <h5 class="card-title">{$title}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
+                  <p class="card-text">{if($composer)then('Komponist: ',$composer,<br/>)else()}{if($lyricist)then('Textdichter: ',$lyricist)else()}</p>
+                  <a href="work/{$id}" class="card-link">{$id}</a>
+                </div>
+            </div>
         }
-            </ul>
         </div>
-        <div class="tab-pane fade" id="choirs" >
-        <br/>
-            <ul>
-        {
-        for $work in $choirs
-        let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
-        
-        let $id := $work/@xml:id/normalize-space(data(.))
-        order by $name ascending
-        return
-            <li>
-                {$name} (<a href="work/{$id}">{$id}</a>)<br/>
-            </li>
-        }
-            </ul>
-        </div>
-        <div class="tab-pane fade" id="songs" >
-        <br/>
-            <ul>
-        {
-        for $work in $songs
-        let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
-        
-        let $id := $work/@xml:id/normalize-space(data(.))
-        order by $name ascending
-        return
-            <li>
-                {$name} (<a href="work/{$id}">{$id}</a>)<br/>
-            </li>
-        }
-            </ul>
-        </div>
+        {for $genre in $genres
+           return
+            <div class="tab-pane fade" id="{$genre}">
+                <br/>
+                {
+                for $work in $works//mei:term[@type="genre" and @subtype=$genre]/ancestor::mei:work
+                    let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
+                    let $id := $work/@xml:id/normalize-space(data(.))
+                    let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
+                    let $composer := $work//mei:composer
+                    let $lyricist := $work//mei:lyricist
+                    order by $title ascending
+                    return
+                        <div class="card" style="width: 75%;">
+                            <div class="card-body">
+                              <h5 class="card-title">{$title}</h5>
+                              <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
+                              <p class="card-text">
+                                {if($composer)then('Komponist: ',$composer,<br/>)else()}
+                                {if($lyricist)then('Textdichter: ',$lyricist)else()}
+                              </p>
+                              <a href="work/{$id}" class="card-link">{$id}</a>
+                            </div>
+                        </div>
+                }
+            </div>
+             }
         </div>
    </div>
        
@@ -910,7 +913,6 @@ let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/norma
 return
 (
     <div class="container">
-        <a href="../registryWorks.html">&#8592; zum Werkeverzeichnis</a>
         <br/>
         <div class="page-header">
             <h1>{$name}</h1>
