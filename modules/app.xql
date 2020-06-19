@@ -867,7 +867,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
             <ul>
         {
         for $work in $choirs
-        let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
+        let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
         
         let $id := $work/@xml:id/normalize-space(data(.))
         order by $name ascending
@@ -883,7 +883,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
             <ul>
         {
         for $work in $songs
-        let $name := $work//mei:title[@type='uniform' and @xml:lang='de']/mei:titlePart[@type='main']/normalize-space(text()[1])
+        let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
         
         let $id := $work/@xml:id/normalize-space(data(.))
         order by $name ascending
