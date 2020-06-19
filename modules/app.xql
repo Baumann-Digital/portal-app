@@ -639,6 +639,7 @@ declare function app:sources-manuscript($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("source-id", "Fehler")
 let $manuscript := collection("/db/apps/baudiSources/data/music")//mei:mei[@xml:id=$id]
+let $fileURI := document-uri($manuscript/root())
 let $name := $manuscript//mei:manifestation/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.))
 let $manuscriptOrig := concat('../../../../../baudi-images/music/',$manuscript/@xml:id)
 let $manuscriptOrigBLB := "https://digital.blb-karlsruhe.de/blbihd/image/view/"
@@ -672,24 +673,34 @@ return
         <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Überblick</a></li>  
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">Im Detail</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">Liedtext</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>
     </ul>
     <!-- Tab panels -->
     <div class="tab-content">
         <div class="tab-pane fade show active" id="main">
-        <p/>
-        {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscript.xsl"), ())}
-        <p/>
-        {if(exists($manuscript//mei:workDesc/mei:work/mei:incip/mei:score))
-        then(<b>INCIPIT available (soon)</b>)
-        else(<b>No INCIPIT available</b>)}
+            <p/>
+                {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscript.xsl"), ())}
+            <p/>
+            <div class="card">
+                <div class="card-body">
+                    {if(exists($manuscript//mei:work/mei:incip/mei:score))
+                    then('Incipit soon',<span onload="myIncipit({concat('http://localhost:8080/exist/rest',$fileURI)})"> </span>,<div id="output-verovio"/>)
+                    else(<b>No incipit available</b>)}
+                </div>
+            </div>
         </div>
         <div class="tab-pane fade" id="detail">
-        <p/>
-        {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscriptDetailed.xsl"), ())}
+            <p/>
+            {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscriptDetailed.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="lyrics">
-        <p/>
-            {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/contentLyrics.xsl"), ())}
+            <p/>
+                {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/contentLyrics.xsl"), ())}
+        </div>
+        <div class="tab-pane fade" id="verovio">
+            <div class="panel-body">
+                <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
+            </div>
         </div>
     </div>
     </div>
@@ -854,15 +865,16 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         {
         for $work in $works
         let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
+        let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
         let $id := $work/@xml:id/normalize-space(data(.))
         let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
         let $composer := $work//mei:composer
         let $lyricist := $work//mei:lyricist
         order by $title ascending
         return
-            <div class="card" style="width: 75%;">
+            <div class="card bg-light mb-3" style="max-width: 75%;">
                 <div class="card-body">
-                  <h5 class="card-title">{$title}</h5>
+                  <h5 class="card-title">{if($numberOpus)then(concat($title,', Op. ',$numberOpus))else($title)}</h5>
                   <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
                   <p class="card-text">{if($composer)then('Komponist: ',$composer,<br/>)else()}{if($lyricist)then('Textdichter: ',$lyricist)else()}</p>
                   <a href="work/{$id}" class="card-link">{$id}</a>
@@ -877,15 +889,16 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                 {
                 for $work in $works//mei:term[@type="genre" and @subtype=$genre]/ancestor::mei:work
                     let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
+                    let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
                     let $id := $work/@xml:id/normalize-space(data(.))
                     let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
                     let $composer := $work//mei:composer
                     let $lyricist := $work//mei:lyricist
                     order by $title ascending
                     return
-                        <div class="card" style="width: 75%;">
+                        <div class="card bg-light mb-3" style="max-width: 75%;">
                             <div class="card-body">
-                              <h5 class="card-title">{$title}</h5>
+                              <h5 class="card-title">{if($numberOpus)then(concat($title,', Op. ',$numberOpus))else($title)}</h5>
                               <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
                               <p class="card-text">
                                 {if($composer)then('Komponist: ',$composer,<br/>)else()}
@@ -908,14 +921,15 @@ declare function app:work($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("work-id", "Fehler")
 let $work := collection("/db/apps/baudiWorks/data")/mei:work[@xml:id=$id]
-let $name := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
+let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
+let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
 
 return
 (
     <div class="container">
         <br/>
         <div class="page-header">
-            <h1>{$name}</h1>
+            <h1>{if($numberOpus)then(concat($title,', Op. ',$numberOpus))else($title)}</h1>
             <h5>ID: {$id}</h5>
         </div>
         <br/>
