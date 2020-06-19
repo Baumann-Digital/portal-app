@@ -29,6 +29,7 @@
         <!-- Custom styles for this template -->
         <link href="/exist/apps/baudiApp/resources/css/theme.css" rel="stylesheet"/>
         <!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"/> -->
+        
     </head>
     <body id="body">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -106,9 +107,6 @@
 <!--                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">start</button>-->
             </form>
         </nav>
-        <!--<div class="alert alert-info" role="alert">
-            BauDi Development-Server | eXistDB on http://dev.baumann-digital.de [8088]
-        </div>-->
         <div id="content" class="container"/>
         <footer class="footer">
             <div class="container">
@@ -124,7 +122,7 @@
         
 <!--        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"/>-->
         <script src="/exist/apps/baudiApp/resources/js/jquery-3.2.1.slim.min.js"/>
-        
+<!--        <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript" ></script>-->
 <!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"/>-->
         <script src="/exist/apps/baudiApp/resources/js/popper-1.12.9.min.js"/>
         
@@ -133,7 +131,40 @@
         
 <!--        <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"/>-->
         <script src="/exist/apps/baudiApp/resources/verovio/verovio-toolkit.js"/>
-        
         <script src="/exist/apps/baudiApp/resources/js/incipit.js"/>
+        <!--<script type="text/javascript">
+
+            ///////////////////////////
+            /* Create the vrvToolkit */
+            ///////////////////////////
+            var vrvToolkit = new verovio.toolkit();
+
+            ////////////////////////////////////
+            /* Load the file using a HTTP GET */
+            ////////////////////////////////////
+            $.ajax({
+                url: "http://localhost:8080/exist/apps/baudiSources/data/music/songs/baudi-01-6b488120.xml"
+                , dataType: "text"
+                , success: function(data) {
+                    var svg = vrvToolkit.renderData(data, {});
+                    $("#svg_output_incip").html(svg);
+                }
+            });
+        </script>-->
+        <script type="text/javascript">
+            import 'https://www.verovio.org/javascript/app/verovio-app.js';
+        
+            // Create the app - here with an empty option object
+            const app = new Verovio.App(document.getElementById("app"), {});
+        
+            // Load a file (MEI or MusicXML)
+            fetch("https://www.verovio.org/examples/hello-world/Haydn_StringQuartet_Op1_No1-p1.mei")
+                .then(function(response) {
+                    return response.text();
+                })
+                .then(function(text) {
+                    app.loadData(text);
+                });
+        </script>
     </body>
 </html>
