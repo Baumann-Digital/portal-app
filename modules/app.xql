@@ -140,8 +140,8 @@ return
                 <br/><br/>
                 <img src="{
                 if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('http://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('http://digilib.baumann-digital.de/documents/',$id,'-1','?dw=500'))}" class="img-thumbnail" width="400"/>
+                then(concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
+                else(concat('https://digilib.baumann-digital.de/documents/',$id,'-1','?dw=500'))}" class="img-thumbnail" width="400"/>
             </div>
         <div class="col">
                 <br/>
@@ -159,8 +159,8 @@ return
       <div class="modal-body">
         <img src="{
                 if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('http://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('http://digilib.baumann-digital.de/documents/',$id,'-1','?dw=1000'))}" class="img-thumbnail center"/>
+                then(concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
+                else(concat('https://digilib.baumann-digital.de/documents/',$id,'-1','?dw=1000'))}" class="img-thumbnail center"/>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Zurück</button>
@@ -173,8 +173,8 @@ return
     )
     else(
         for $page in $pages
-        let $letterOrigFacs := concat('http://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
-        let $letterOrigLink := concat('http://digilib.baumann-digital.de/documents/',$id,'-',$page,'?dw=500')
+        let $letterOrigFacs := concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
+        let $letterOrigLink := concat('https://digilib.baumann-digital.de/documents/',$id,'-',$page,'?dw=500')
      
         return
         
