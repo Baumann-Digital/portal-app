@@ -865,29 +865,29 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         {
         for $work in $works
         let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
-        let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[contains(@xml:id,'-titleMainSort')]/normalize-space(text()[1])
-                          
+        let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/normalize-space(text()[1])
+        let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
         let $id := $work/@xml:id/normalize-space(data(.))
         let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
         let $composer := $work//mei:composer
         let $lyricist := $work//mei:lyricist
         let $termWorkGroup := $work//mei:term[@type='workGroup']/@subtype/string()
-        let $termGenre := $work//mei:term[@type="genre"]/@subtype/string()
+        let $termGenre := $work//mei:term[@type='genre']/@subtype/string()
         
-        let $order := if($titleSort)then($titleSort)else($title)
+        let $order := lower-case(if($titleSort)then($titleSort)else($title))
         
         order by $order
         return
             <div class="card bg-light mb-3" style="max-width: 75%;">
                 <div class="card-body">
                   <h5 class="card-title">{$title}</h5>
-                  <!--<h5 class="card-title">{if($numberOpus)then(concat($title,', op. ',$numberOpus))else($title)}</h5>-->
+                  <h6>{$titleSub}</h6>
                   <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
                   <p class="card-text">{if($composer)then('Komponist: ',$composer,<br/>)else()}{if($lyricist)then('Textdichter: ',$lyricist)else()}</p>
                   <a href="work/{$id}" class="card-link">{$id}</a>
                   <hr/>
-                  <p>Tags: <button type="button" class="btn btn-outline-info">{$termWorkGroup}</button>&#160;<button type="button" class="btn btn-outline-secondary">{$termGenre}</button></p>
+                  <p>Tags: {$termWorkGroup}&#160;<button type="button" class="btn btn-outline-secondary">{$termGenre}</button></p>
                 </div>
             </div>
         }
