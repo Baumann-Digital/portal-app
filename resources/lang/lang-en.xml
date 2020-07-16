@@ -30,5 +30,17 @@
     <msg key="baudi.catalogues.editions.sub">Critical edition of Baumann's works</msg>
     <msg key="baudi.catalogues.periodicals">Magazine archive</msg>
     <msg key="baudi.catalogues.periodicals.sub">Daily press and club magazines</msg>
+    
+    <!-- Catalog of Works -->
+    <msg key="baudi.catalog.works">Catalog of Works</msg>
+    <msg key="baudi.catalog.works.all">All Works</msg>
+    <msg key="baudi.catalog.works.song">Songs</msg>
+    <msg key="baudi.catalog.works.choir">Choirs</msg>
+    <msg key="baudi.catalog.works.chamber">Chamber</msg>
+    <msg key="baudi.catalog.works.vocal">Vocal</msg>
+    <msg key="baudi.catalog.works.orchestra">Orchestral</msg>
+    <msg key="baudi.catalog.works.composer">Composer</msg>
+    <msg key="baudi.catalog.works.lyricist">Lyricist</msg>
+    <msg key="baudi.catalog.works.opus.no">No.</msg>
 
 </catalogue>

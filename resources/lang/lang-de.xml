@@ -17,21 +17,33 @@
 
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Willkommen!</msg>
-    <msg key="baudi.catalogues">Kataloge</msg>
-    <msg key="baudi.catalogues.sub"></msg>
-    <msg key="baudi.catalogues.works">Werke</msg>
-    <msg key="baudi.catalogues.works.sub">Verzeichnis der Kompositionen</msg>
-    <msg key="baudi.catalogues.sources">Quellen</msg>
-    <msg key="baudi.catalogues.sources.sub">Die musikalischen Quellen</msg>
-    <msg key="baudi.catalogues.docs">Dokumente</msg>
-    <msg key="baudi.catalogues.docs.sub">Briefe, Urkunden, Dokumente</msg>
-    <msg key="baudi.catalogues.gallery">Galerie</msg>
-    <msg key="baudi.catalogues.gallery.sub">Bilder rund um Ludwig Baumann</msg>
-    <msg key="baudi.catalogues.editions">Editionen</msg>
-    <msg key="baudi.catalogues.editions.sub">Wissenschaftlich-kritische Edition der Werke Baumanns</msg>
-    <msg key="baudi.catalogues.periodicals">Zeitschriftenarchiv</msg>
-    <msg key="baudi.catalogues.periodicals.sub">Tagespresse und Vereinszeitschriften</msg>
+    <msg key="baudi.landing.catalogues">Kataloge</msg>
+    <msg key="baudi.landing.catalogues.sub"></msg>
+    <msg key="baudi.landing.catalogues.works">Werke</msg>
+    <msg key="baudi.landing.catalogues.works.sub">Verzeichnis der Kompositionen</msg>
+    <msg key="baudi.landing.catalogues.sources">Quellen</msg>
+    <msg key="baudi.landing.catalogues.sources.sub">Die musikalischen Quellen</msg>
+    <msg key="baudi.landing.catalogues.docs">Dokumente</msg>
+    <msg key="baudi.landing.catalogues.docs.sub">Briefe, Urkunden, Dokumente</msg>
+    <msg key="baudi.landing.catalogues.gallery">Galerie</msg>
+    <msg key="baudi.landing.catalogues.gallery.sub">Bilder rund um Ludwig Baumann</msg>
+    <msg key="baudi.landing.catalogues.editions">Editionen</msg>
+    <msg key="baudi.landing.catalogues.editions.sub">Wissenschaftlich-kritische Edition der Werke Baumanns</msg>
+    <msg key="baudi.landing.catalogues.periodicals">Zeitschriftenarchiv</msg>
+    <msg key="baudi.landing.catalogues.periodicals.sub">Tagespresse und Vereinszeitschriften</msg>
 
+    <!-- Catalog of Works -->
+    <msg key="baudi.catalog.works">Werkverzeichnis</msg>
+    <msg key="baudi.catalog.works.all">Alle Werke</msg>
+    <msg key="baudi.catalog.works.song">Lieder</msg>
+    <msg key="baudi.catalog.works.choir">Chöre</msg>
+    <msg key="baudi.catalog.works.chamber">Kammermusik</msg>
+    <msg key="baudi.catalog.works.vocal">Vokalmusik</msg>
+    <msg key="baudi.catalog.works.orchestra">Orchestermusik</msg>
+    <msg key="baudi.catalog.works.composer">Komponist</msg>
+    <msg key="baudi.catalog.works.lyricist">Textdichter</msg>
+    <msg key="baudi.catalog.works.opus.no">Nr.</msg>
+    
     <!-- Bread crumb -->
     <msg key="breadCrumb.catalogue">Katalog</msg>
     <msg key="breadCrumb.persons">Personen</msg>
