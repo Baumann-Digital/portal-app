@@ -45,7 +45,7 @@
                 <xsl:if test="not(exists(//mei:term[@type = 'source' and @subtype = 'special' and contains(., 'Sammelquelle')]))">
                     <xsl:if test="not(//mei:composer/text() = '')">
                         <tr>
-                            <td>Komponist:</td>
+                            <td>Komponist</td>
                             <td><xsl:value-of select="//mei:composer"/></td>
                         </tr>
                     </xsl:if>
@@ -168,8 +168,8 @@
                     <tr>
                         <td valign="top">Beteiligte Instrumente:</td>
                         <td>
-                            <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes">
-                                <xsl:sort select="." order="ascending" data-type="text"/>
+                            <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes/@auth">
+<!--                                <xsl:sort select="." order="ascending" data-type="text"/>-->
                                 <li style="list-style: square inside">
                                         <xsl:value-of select="."/>
                                         <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>)</xsl:if>
