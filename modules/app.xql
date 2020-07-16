@@ -3,9 +3,11 @@ xquery version "3.0";
 module namespace app="http://baumann-digital.de/ns/templates";
 
 import module namespace templates="http://exist-db.org/xquery/templates" ;
-import module namespace config="http://baumann-digital.de/ns/config" at "config.xqm";
+import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
 (:import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";:)
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
+import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
+import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
@@ -844,83 +846,67 @@ return
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
     let $works := collection("/db/apps/baudiWorks/data")//mei:work
-    let $genres := distinct-values(collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre"]/@subtype)
+    let $genres := distinct-values(collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre"]/@subtype | collection("/db/apps/baudiWorks/data")//mei:work//mei:titlePart[@type='main' and not(@class)]/@type)
     let $dict := collection("/db/apps/baudiResources/data")
     let $content := <div class="container">
     <br/>
          <ul class="nav nav-pills" role="tablist">
-            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Alle Werke ({count($works)})</a></li>
-            {for $genre in $genres
-                let $genreDict := $dict//tei:name[@type=$genre]/text()
+            {for $genre at $pos in $genres
+                let $genreDict := if($dict//tei:name[@type=$genre]/text())then($dict//tei:name[@type=$genre]/text())else($genre)
                 let $workCount := count($works//mei:term[@type='genre' and @subtype = $genre])
-                let $nav-item := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{$genreDict} ({$workCount})</a></li>
+                let $nav-itemMain := <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Alle Werke ({count($works)})</a></li>
+                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{$genreDict} ({$workCount})</a></li>
                 return
-                    $nav-item
+                    if($pos=1)
+                    then($nav-itemMain)
+                    else($nav-itemGenre)
              }
     </ul>
     <!-- Tab panels -->
+    <div class="container" style=" height: 600px; overflow-y: scroll;">
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="main" >
-        <br/>
-        {
-        for $work in $works
-        let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
-        let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/normalize-space(text()[1])
-        let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
-        let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
-        let $id := $work/@xml:id/normalize-space(data(.))
-        let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
-        let $composer := $work//mei:composer
-        let $lyricist := $work//mei:lyricist
-        let $termWorkGroup := $work//mei:term[@type='workGroup']/@subtype/string()
-        let $termGenre := $work//mei:term[@type='genre']/@subtype/string()
+    {for $genre at $pos in $genres
+        let $cards := for $work in $works[if($pos=1)then(.)else(.//mei:term[@type='genre' and @subtype = $genre])]
+                         let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
+                         let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and @class='sort']/text()
+                         let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
+                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+                         let $id := $work/@xml:id/normalize-space(data(.))
+                         let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
+                         let $composer := $work//mei:composer
+                         let $lyricist := $work//mei:lyricist
+                         let $termWorkGroup := $work//mei:term[@type='workgroup']/@subtype/string()
+                         let $termGenre := $work//mei:term[@type='genre']/@subtype/string()
+                         
+                         let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
+                         
+                         order by $order
+                         return
+                             <div class="card bg-light mb-3">
+                                 <div class="card-body">
+                                   <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus))else($title)}</h5>
+                                   <h6>{$titleSub}</h6>
+                                   <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
+                                   <p class="card-text">{if($composer)then('Komponist: ',$composer,<br/>)else()}{if($lyricist)then('Textdichter: ',$lyricist)else()}</p>
+                                   <a href="work/{$id}" class="card-link">{$id}</a>
+                                   <hr/>
+                                   <p><label class="btn btn-outline-primary btn-sm disabled">{$termWorkGroup}</label>&#160;<label class="btn btn-outline-secondary btn-sm disabled">{$termGenre}</label></p>
+                                 </div>
+                             </div>
         
-        let $order := lower-case(if($titleSort)then($titleSort)else($title))
-        
-        order by $order
+        let $tab := if($genre = 'main')
+                    then(<div class="tab-pane fade show active" id="main">
+                            <br/>
+                            {$cards}
+                         </div>)
+                    else(<div class="tab-pane fade" id="{$genre}">
+                           <br/>
+                            {$cards}
+                            </div>)
         return
-            <div class="card bg-light mb-3" style="max-width: 75%;">
-                <div class="card-body">
-                  <h5 class="card-title">{$title}</h5>
-                  <h6>{$titleSub}</h6>
-                  <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
-                  <p class="card-text">{if($composer)then('Komponist: ',$composer,<br/>)else()}{if($lyricist)then('Textdichter: ',$lyricist)else()}</p>
-                  <a href="work/{$id}" class="card-link">{$id}</a>
-                  <hr/>
-                  <p>Tags: {$termWorkGroup}&#160;<button type="button" class="btn btn-outline-secondary">{$termGenre}</button></p>
-                </div>
-            </div>
-        }
+            $tab}
         </div>
-        {for $genre in $genres
-           return
-            <div class="tab-pane fade" id="{$genre}">
-                <br/>
-                {
-                for $work in $works//mei:term[@type="genre" and @subtype=$genre]/ancestor::mei:work
-                    let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
-                    let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
-                    let $id := $work/@xml:id/normalize-space(data(.))
-                    let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
-                    let $composer := $work//mei:composer
-                    let $lyricist := $work//mei:lyricist
-                    order by $title ascending
-                    return
-                        <div class="card bg-light mb-3" style="max-width: 75%;">
-                            <div class="card-body">
-                              <h5 class="card-title">{if($numberOpus)then(concat($title,', Op. ',$numberOpus))else($title)}</h5>
-                              <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
-                              <p class="card-text">
-                                {if($composer)then('Komponist: ',$composer,<br/>)else()}
-                                {if($lyricist)then('Textdichter: ',$lyricist)else()}
-                              </p>
-                              <a href="work/{$id}" class="card-link">{$id}</a>
-                            </div>
-                        </div>
-                }
-            </div>
-             }
-        </div>
+      </div>
    </div>
        
        return
@@ -931,7 +917,7 @@ declare function app:work($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("work-id", "Fehler")
 let $work := collection("/db/apps/baudiWorks/data")/mei:work[@xml:id=$id]
-let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main']/normalize-space(text()[1])
+let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
 let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
 
 return
