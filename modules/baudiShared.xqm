@@ -125,7 +125,7 @@ declare function baudiShared:translate($content) {
                         attribute key {$content}
                     }
     return
-        i18n:process($content, '', '/db/apps/mriCat/resources/lang', 'en')
+        i18n:process($content, '', '/db/apps/baudiApp/resources/lang', 'en')
 };
 
 

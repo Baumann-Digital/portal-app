@@ -854,8 +854,8 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
             {for $genre at $pos in $genres
                 let $genreDict := if($dict//tei:name[@type=$genre]/text())then($dict//tei:name[@type=$genre]/text())else($genre)
                 let $workCount := count($works//mei:term[@type='genre' and @subtype = $genre])
-                let $nav-itemMain := <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Alle Werke ({count($works)})</a></li>
-                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{$genreDict} ({$workCount})</a></li>
+                let $nav-itemMain := <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.works.all')} ({count($works)})</a></li>
+                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.catalog.works.',$genre))} ({$workCount})</a></li>
                 return
                     if($pos=1)
                     then($nav-itemMain)
@@ -871,26 +871,35 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and @class='sort']/text()
                          let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
                          let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+                         let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
+                         let $numberOpusCounter := if($numberOpusCount)
+                                                   then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
+                                                   else()
                          let $id := $work/@xml:id/normalize-space(data(.))
                          let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
                          let $composer := $work//mei:composer
                          let $lyricist := $work//mei:lyricist
-                         let $termWorkGroup := $work//mei:term[@type='workgroup']/@subtype/string()
-                         let $termGenre := $work//mei:term[@type='genre']/@subtype/string()
-                         
+                         let $termWorkGroup := for $tag in $work//mei:term[@type='workgroup']/@subtype/string()
+                                                let $label := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.works.',$tag))}</label>
+                                                return $label
+                         let $termGenre := for $tag in $work//mei:term[@type='genre']/@subtype/string()
+                                               let $label := <label class="btn btn-outline-secondary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.works.',$tag))}</label>
+                                               return $label
+                         let $tags := for $each in ($termGenre|$termWorkGroup)
+                                        return ($each,'&#160;')
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          
                          order by $order
                          return
                              <div class="card bg-light mb-3">
                                  <div class="card-body">
-                                   <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus))else($title)}</h5>
+                                   <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
                                    <h6>{$titleSub}</h6>
                                    <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
-                                   <p class="card-text">{if($composer)then('Komponist: ',$composer,<br/>)else()}{if($lyricist)then('Textdichter: ',$lyricist)else()}</p>
+                                   <p class="card-text">{if($composer)then(baudiShared:translate('baudi.catalog.works.composer'),': ',$composer,<br/>)else()}{if($lyricist)then(baudiShared:translate('baudi.catalog.works.lyricist'),': ',$lyricist)else()}</p>
                                    <a href="work/{$id}" class="card-link">{$id}</a>
                                    <hr/>
-                                   <p><label class="btn btn-outline-primary btn-sm disabled">{$termWorkGroup}</label>&#160;<label class="btn btn-outline-secondary btn-sm disabled">{$termGenre}</label></p>
+                                   <p>{$tags}</p>
                                  </div>
                              </div>
         
