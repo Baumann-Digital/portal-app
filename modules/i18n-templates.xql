@@ -5,9 +5,7 @@ module namespace intl="http://exist-db.org/xquery/i18n-templates";
  :)
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 import module namespace templates="http://exist-db.org/xquery/templates";
-(:import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";:)
-import module namespace config="http://baumann-digital.de/ns/config" at "config.xqm";
-
+import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
 
 (:~
  : Template function: calls i18n:process on the child nodes of $node.

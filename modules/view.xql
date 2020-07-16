@@ -11,9 +11,11 @@ import module namespace i18n="http://exist-db.org/xquery/i18n-templates" at "i18
  : The following modules provide functions which will be called by the 
  : templating.
  :)
-import module namespace config="http://baumann-digital.de/ns/config" at "config.xqm";
+import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
 import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
+
+import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
