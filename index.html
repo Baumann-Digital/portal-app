@@ -1,84 +1,22 @@
-<div xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n" data-template-lang="en" data-template-catalogues="/db/apps/baudiApp/resources/lang" class="templates:surround?with=templates/landingPage.html&amp;at=content">
-       <!-- <div class="container">
-            <h1 class="display-4">Baumann Digital</h1>
-            <p class="lead">Ludwig Baumann – Leben, Werk und Wirken</p>
-            <br/>
-        </div>
-    <div class="row">
-        <div class="col">
-            <div class="card text-center" style="width: 15rem;">
-                <div class="card-header">Werke</div>
-                <div class="card-body">
-                    <h5 class="card-title"><a class="btn btn-dark" href="/exist/apps/baudiApp/html/registryWorks.html"><img class="rounded" src="https://digilib.baumann-digital.de/baudi-01-aead1a4c/baudi-01-aead1a4c-00-0001.jpg?dh=200&amp;dw=200" alt="[Das zur Anzeige bestimmte Bild konnte leider nicht geladen werden.]"/></a></h5>
-<!-\-                    <p class="card-text">Die überlieferten Werke und ihre Quellen.</p>-\->
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-center" style="width: 15rem;">
-                <div class="card-header">Musikal. Quellen</div>
-                <div class="card-body">
-                    <h5 class="card-title"><a class="btn btn-dark" href="/exist/apps/baudiApp/html/registrySources.html"><img class="rounded" src="https://digilib.baumann-digital.de/baudi-01-aead1a4c/baudi-01-aead1a4c-00-0001.jpg?dh=200&amp;dw=200" alt="[Das zur Anzeige bestimmte Bild konnte leider nicht geladen werden.]"/></a></h5>
-                    <!-\-                    <p class="card-text">Die überlieferten Werke und ihre Quellen.</p>-\->
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-center" style="width: 15rem;">
-                <div class="card-header">Briefe und Dokumente<i18n:text key="catEntry.person.nav.bio"/></div>
-                <div class="card-body">
-                    <h5 class="card-title"><a class="btn btn-dark" href="/exist/apps/baudiApp/html/registryLetters.html"><img class="rounded" src="https://digilib.baumann-digital.de/documents/baudi-07-58a843a6-1.jpeg?dh=200&amp;dw=200" alt="[Das zur Anzeige bestimmte Bild konnte leider nicht geladen werden.]"/></a></h5>
-                    <!-\-                    <p class="card-text">Auf den Spuren des Chormeisters.</p>-\->
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col"><br/><span> </span><br/></div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="card text-center" style="width: 15rem;">
-                <div class="card-header">Bilder-Galerie <i18n:text key="catEntry.images.gallery"/></div>
-                <div class="card-body">
-                    <h5 class="card-title"><a class="btn btn-dark" href=""><img class="rounded" src="https://digilib.baumann-digital.de/images/Portrait-Signatur-ante-1926-SSZ-18-1926_06-09.jpg?dh=200&amp;dw=200" alt="[Das zur Anzeige bestimmte Bild konnte leider nicht geladen werden.]"/></a></h5>
-                    <!-\-<p class="card-text">Einblicke in die Lebenswelt.</p>-\->
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-center" style="width: 15rem;">
-                <div class="card-header">Edition</div>
-
-                <div class="card-body"> 
-                    <h5 class="card-title"><a class="btn btn-dark" href="/exist/apps/EdiromOnline/?edition=xmldb:exist:///db/contents/baudi/editionFiles/baudi_Vol-1.xml&amp;lang=de" target="_blank"><img class="rounded" src="https://digilib.baumann-digital.de/baudi-01-3dc71f3f/M_302_KLAV_0009.jpg?dh=200&amp;dw=200" alt="[Das zur Anzeige bestimmte Bild konnte leider nicht geladen werden.]"/></a></h5>
-
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-center" style="width: 15rem;">
-                <div class="card-header">Zeitschriftenarchiv</div>
-                <div class="card-body">
-                    <h5 class="card-title"><a class="btn btn-dark" href="/exist/apps/baudiApp/html/registryPeriodicals.html"><img class="card-img-top" src="https://digilib.baumann-digital.de/SSZ_18_1926-06-09_titel.png?dh=800&amp;dw=1000" alt="[Das zur Anzeige bestimmte Bild konnte leider nicht geladen werden.]"/></a></h5>
-<!-\-                    <p class="card-text">Einblicke in die Vereins- und Tagespresse.</p>-\->
-                </div>
-            </div>
-        </div>
-    </div>-->
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/landingPage.html" data-template-at="content">
+    <!-- class="templates:surround?with=templates/landingPage.html&amp;at=content" -->
+    <div data-template="i18n:translate" data-template-lang="en" data-template-catalogues="/db/apps/baudiApp/resources/lang">
+        
     <header class="masthead">
             <div class="container">
-                <div class="masthead-subheading">Welcome To</div>
+                <div class="masthead-subheading"><i18n:text key="baudi.landing.welcome"/></div>
                 <div class="masthead-heading text-uppercase">Baumann-Digital</div>
 <!--                <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>-->
             </div>
         </header>
+        
         <!-- Portfolio Grid-->
         <section class="page-section bg-light" id="portfolio">
             <div class="container">
                 <div class="text-center">
-                    <h2 class="section-heading text-uppercase">Kataloge</h2>
-                    <h3 class="section-subheading text-muted">Untertitel</h3>
+                    <h2 class="section-heading text-uppercase"><i18n:text key="baudi.catalogues"/></h2>
+                    <h3 class="section-subheading text-muted"><i18n:text key="baudi.catalogues.sub"/></h3>
                 </div>
                 <div class="row">
                     <div class="col-lg-4 col-sm-6 mb-4">
@@ -90,8 +28,8 @@
                                 <img class="img-fluid" src="/exist/apps/baudiApp/resources/js/assets/img/portfolio/01-thumbnail.jpg" alt="" />
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading">Werke</div>
-                                <div class="portfolio-caption-subheading text-muted">Werkkatalog</div>
+                                <div class="portfolio-caption-heading"><i18n:text key="baudi.catalogues.works"/></div>
+                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.catalogues.works.sub"/></div>
                             </div>
                         </div>
                     </div>
@@ -104,8 +42,8 @@
                                 <img class="img-fluid" src="/exist/apps/baudiApp/resources/js/assets/img/portfolio/02-thumbnail.jpg" alt="" />
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading">Quellen</div>
-                                <div class="portfolio-caption-subheading text-muted">Musikalische Quellen</div>
+                                <div class="portfolio-caption-heading"><i18n:text key="baudi.catalogues.sources"/></div>
+                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.catalogues.sources.sub"/></div>
                             </div>
                         </div>
                     </div>
@@ -118,8 +56,8 @@
                                 <img class="img-fluid" src="/exist/apps/baudiApp/resources/js/assets/img/portfolio/03-thumbnail.jpg" alt="" />
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading">Dokumente</div>
-                                <div class="portfolio-caption-subheading text-muted">Briefe, Urkunden, Dokumente</div>
+                                <div class="portfolio-caption-heading"><i18n:text key="baudi.catalogues.docs"/></div>
+                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.catalogues.docs.sub"/></div>
                             </div>
                         </div>
                     </div>
@@ -132,8 +70,8 @@
                                 <img class="img-fluid" src="/exist/apps/baudiApp/resources/js/assets/img/portfolio/04-thumbnail.jpg" alt="" />
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading">Galerie</div>
-                                <div class="portfolio-caption-subheading text-muted">Bilder rund um Ludwig Baumann</div>
+                                <div class="portfolio-caption-heading"><i18n:text key="baudi.catalogues.gallery"/></div>
+                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.catalogues.gallery.sub"/></div>
                             </div>
                         </div>
                     </div>
@@ -146,8 +84,8 @@
                                 <img class="img-fluid" src="/exist/apps/baudiApp/resources/js/assets/img/portfolio/05-thumbnail.jpg" alt="" />
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading">Editionen</div>
-                                <div class="portfolio-caption-subheading text-muted">Wissenschaftlich-kritische Edition der Werke Baumanns</div>
+                                <div class="portfolio-caption-heading"><i18n:text key="baudi.catalogues.editions"/></div>
+                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.catalogues.editions.sub"/></div>
                             </div>
                         </div>
                     </div>
@@ -160,8 +98,8 @@
                                 <img class="img-fluid" src="/exist/apps/baudiApp/resources/js/assets/img/portfolio/06-thumbnail.jpg" alt="" />
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading">Zeitungsarchiv</div>
-                                <div class="portfolio-caption-subheading text-muted">Tagespresse und Vereinszeitschriften</div>
+                                <div class="portfolio-caption-heading"><i18n:text key="baudi.catalogues.periodicals"/></div>
+                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.catalogues.periodicals.sub"/></div>
                             </div>
                         </div>
                     </div>
@@ -528,4 +466,5 @@
                 </div>
             </div>
         </div>
+    </div>
 </div>
