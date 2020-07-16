@@ -1,10 +1,42 @@
 <catalogue xml:lang="de">
-    
+
+    <!-- Main Nav -->
+    <msg key="baudi.mainNav.catalog">Kataloge</msg>
+    <msg key="baudi.mainNav.catalog.works">Werke</msg>
+    <msg key="baudi.mainNav.catalog.sources">Quellen</msg>
+    <msg key="baudi.mainNav.catalog.editions">Editionen</msg>
+    <msg key="baudi.mainNav.catalog.persons">Personen</msg>
+    <msg key="baudi.mainNav.catalog.letters">Briefe</msg>
+    <msg key="baudi.mainNav.catalog.documents">Dokumente</msg>
+    <msg key="baudi.mainNav.catalog.places">Orte</msg>
+    <msg key="baudi.mainNav.catalog.institutions">Institutionen</msg>
+    <msg key="baudi.mainNav.catalog.periodicals">Zeitschriften</msg>
+    <msg key="baudi.mainNav.project.about">Über das Projekt</msg>
+    <msg key="baudi.mainNav.project.about.baudi">BauDi</msg>
+    <msg key="baudi.mainNav.project.about.documentation">Dokumentation</msg>
+
+    <!-- Landing page -->
+    <msg key="baudi.landing.welcome">Willkommen!</msg>
+    <msg key="baudi.catalogues">Kataloge</msg>
+    <msg key="baudi.catalogues.sub"></msg>
+    <msg key="baudi.catalogues.works">Werke</msg>
+    <msg key="baudi.catalogues.works.sub">Verzeichnis der Kompositionen</msg>
+    <msg key="baudi.catalogues.sources">Quellen</msg>
+    <msg key="baudi.catalogues.sources.sub">Die musikalischen Quellen</msg>
+    <msg key="baudi.catalogues.docs">Dokumente</msg>
+    <msg key="baudi.catalogues.docs.sub">Briefe, Urkunden, Dokumente</msg>
+    <msg key="baudi.catalogues.gallery">Galerie</msg>
+    <msg key="baudi.catalogues.gallery.sub">Bilder rund um Ludwig Baumann</msg>
+    <msg key="baudi.catalogues.editions">Editionen</msg>
+    <msg key="baudi.catalogues.editions.sub">Wissenschaftlich-kritische Edition der Werke Baumanns</msg>
+    <msg key="baudi.catalogues.periodicals">Zeitschriftenarchiv</msg>
+    <msg key="baudi.catalogues.periodicals.sub">Tagespresse und Vereinszeitschriften</msg>
+
     <!-- Bread crumb -->
     <msg key="breadCrumb.catalogue">Katalog</msg>
     <msg key="breadCrumb.persons">Personen</msg>
     <msg key="breadCrumb.events">Ereignisse</msg>
-    
+
     <!-- Catalogue Entry Person Navigation -->
     <msg key="catEntry.person.nav.overview">Überblick</msg>
     <msg key="catEntry.person.nav.bio">Biographie</msg>
@@ -14,18 +46,18 @@
     <msg key="catEntry.person.nav.sources">Quellen</msg>
     <msg key="catEntry.person.nav.correspondance">Korrespondenz</msg>
     <msg key="catEntry.person.nav.images">Bilder</msg>
-    
+
     <!-- Catalogue Entry Person Meta Infos -->
     <msg key="metaSex">Geschlecht</msg>
     <msg key="female">weiblich</msg>
     <msg key="male">männlich</msg>
-    
+
     <msg key="metaProfession">Tätigkeit</msg>
     <msg key="metaBirth">Geburtsdaten</msg>
     <msg key="metaDeath">Sterbedaten</msg>
     <msg key="metaGND">GND</msg>
     <msg key="metaIdentifier">MRI-Identifier</msg>
-    
+
     <!-- Name types -->
     <msg key="nameUsed">Ansatzname</msg>
     <msg key="nameFull">Name</msg>
@@ -33,7 +65,7 @@
     <msg key="nameBirth">Geburtsname</msg>
     <msg key="namePseud">Pseudonym</msg>
     <msg key="nameFurther">Weitere Namen</msg>
-    
+
     <msg key="refsTo">Bezüge zu</msg>
     <msg key="refsToOther">Bezüge zu anderen</msg>
     <msg key="mriPersonalia.ref2Reger.correspondence">Korrespondenz</msg>
@@ -52,7 +84,7 @@
     <msg key="mriPersonalia.ref2Reger.other">[andere]</msg>
     <msg key="dedicationsReger">Widmungen Regers</msg>
     <msg key="entryLiterature">Literatur</msg>
-    
+
     <!-- other -->
     <msg key="unknown">unbekannt</msg>
     <msg key="dateUnknown">Datum unbekannt</msg>
@@ -60,7 +92,7 @@
     <msg key="currently.nothing.more">Derzeit keine weiteren Informationen verfügbar.</msg>
     <msg key="reger.reference">Informationen zum Reger-Bezug</msg>
     <msg key="today.in.year.n">Heute im Jahr</msg>
-    
+
     <!-- Professions -->
     <msg key="mriPersonalia.profession.">Antiquar</msg>
     <msg key="mriPersonalia.profession.">Architekt</msg>
@@ -164,6 +196,6 @@
     <msg key="mriPersonalia.profession.">Zeitungsausschnitte</msg>
     <msg key="mriPersonalia.profession.">für</msg>
     <msg key="mriPersonalia.profession.">oder</msg>
-    
-    
+
+
 </catalogue>
