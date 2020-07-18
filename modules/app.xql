@@ -321,7 +321,7 @@ return
         for $person in $personen
         let $surname := $person//tei:surname[1]
         let $forename := $person//tei:forename[1]
-        let $id := $person/@id
+        let $id := $person/@xml:id
         order by $surname, $forename
         return
         <li><a href="person/{$id}">{concat(normalize-space(data($surname)),', ',normalize-space(data($forename)))}</a> ({normalize-space($id)})</li>
@@ -754,13 +754,13 @@ return
 
 declare function app:aboutBaumann($node as node(), $model as map(*)) {
 
-let $text := doc("/db/apps/baudiTexts/data/portal/aboutBaumann.xml")/tei:TEI
+let $text := doc("/db/apps/baudiTexts/data/portal/aboutBaumann.xml")/tei:TEI//tei:text
 
 return
 (
     <div class="container">
     <!--<p>TEST: {$baudiVersions:versions}</p>-->
-        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/portal.xsl"), ())}
+        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
     </div>
 )
 };
