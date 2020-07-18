@@ -7,3 +7,5 @@ build/baudi-0.5*.xar
 *.xar
 *.bak
 .existdb.json
+resources/js/assets/img
+resources/js/assets/mail
