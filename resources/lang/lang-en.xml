@@ -100,7 +100,9 @@
     <msg key="baudi.catalog.sources.opus.no">No.</msg>
     <msg key="baudi.catalog.sources.print">Prints</msg>
     <msg key="baudi.catalog.sources.manuscript">Manuscripts</msg>
-    <msg key="baudi.catalog.sources.part">Part</msg>
+    <msg key="baudi.catalog.sources.copy">Copies</msg>
+    <msg key="baudi.catalog.sources.collection">Collections</msg>
+    <msg key="baudi.catalog.sources.part">Parts</msg>
     <msg key="baudi.catalog.sources.collections.ms">Collections (Ms.)</msg>
     <msg key="baudi.catalog.sources.collections.pr">Collections (Pr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>

@@ -104,6 +104,7 @@
     <msg key="baudi.catalog.sources.print">Drucke</msg>
     <msg key="baudi.catalog.sources.manuscript">Handschriften</msg>
     <msg key="baudi.catalog.sources.copy">Abschriften/Kopien</msg>
+    <msg key="baudi.catalog.sources.collection">Sammlungen</msg>
     <msg key="baudi.catalog.sources.part">Einzelstimmen</msg>
     <msg key="baudi.catalog.sources.collections.manuscript">Sammelquellen (Ms.)</msg>
     <msg key="baudi.catalog.sources.collections.print">Sammelquellen (Dr.)</msg>
