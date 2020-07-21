@@ -45,6 +45,8 @@
     <msg key="baudi.landing.about.thesis.ma.text">Lorem ipsum dolor</msg>
     <msg key="baudi.landing.about.thesis.phd">Start of a PhD project</msg>
     <msg key="baudi.landing.about.thesis.phd.text">Lorem ipsum dolor</msg>
+    <msg key="baudi.landing.about.portal.launch">Finally online!</msg>
+    <msg key="baudi.landing.about.portal.launch.text">After several years of fundamental work, the Baumann portal is now online. And this, although the promotion project for Baumann is still running! Due to this fact we have decided to share only general catalogue data for the time being. As soon as the dissertation is finished, all prepared data about Ludwig Baumann will go online here!</msg>
     <msg key="baudi.landing.about.concert">Concert: Cantata</msg>
     <msg key="baudi.landing.about.concert.text">Lorem ipsum dolor</msg>
     <msg key="baudi.landing.about.be.part">Be Part</msg>
@@ -83,7 +85,26 @@
     <msg key="baudi.catalog.works.composer">Composer</msg>
     <msg key="baudi.catalog.works.lyricist">Lyricist</msg>
     <msg key="baudi.catalog.works.opus.no">No.</msg>
-
+    
+    <!-- Catalog of Sources -->
+    <msg key="baudi.catalog.sources">Catalog of Sources</msg>
+    <msg key="baudi.catalog.sources.all">All Sources</msg>
+    <msg key="baudi.catalog.sources.song">Songs</msg>
+    <msg key="baudi.catalog.sources.choir">Choirs</msg>
+    <msg key="baudi.catalog.sources.cantata">Cantata</msg>
+    <msg key="baudi.catalog.sources.chamber">Chamber</msg>
+    <msg key="baudi.catalog.sources.vocal">Vocal</msg>
+    <msg key="baudi.catalog.sources.orchestra">Orchestral</msg>
+    <msg key="baudi.catalog.sources.composer">Composer</msg>
+    <msg key="baudi.catalog.sources.lyricist">Lyricist</msg>
+    <msg key="baudi.catalog.sources.opus.no">No.</msg>
+    <msg key="baudi.catalog.sources.print">Prints</msg>
+    <msg key="baudi.catalog.sources.manuscript">Manuscripts</msg>
+    <msg key="baudi.catalog.sources.part">Part</msg>
+    <msg key="baudi.catalog.sources.collections.ms">Collections (Ms.)</msg>
+    <msg key="baudi.catalog.sources.collections.pr">Collections (Pr.)</msg>
+    <msg key="baudi.catalog.sources.todo">ToDo</msg>
+    
     <msg key="january">January</msg>
     <msg key="february">February</msg>
     <msg key="march">March</msg>

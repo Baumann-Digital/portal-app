@@ -14,6 +14,7 @@
     <msg key="baudi.mainNav.project.about">Über das Projekt</msg>
     <msg key="baudi.mainNav.project.about.baudi">BauDi</msg>
     <msg key="baudi.mainNav.project.about.documentation">Dokumentation</msg>
+    
 
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Willkommen!</msg>
@@ -46,6 +47,8 @@
     <msg key="baudi.landing.about.thesis.ma.text">Lorem ipsum dolor</msg>
     <msg key="baudi.landing.about.thesis.phd">Beginn eines Promotionsprojektes</msg>
     <msg key="baudi.landing.about.thesis.phd.text">Lorem ipsum dolor</msg>
+    <msg key="baudi.landing.about.portal.launch">Endlich online!</msg>
+    <msg key="baudi.landing.about.portal.launch.text">Nach mehreren Jahren grundlegender Arbeiten ist das Baumann-Portal nun online. Und das, obwohl das Promotionsprojekt zu Baumann noch läuft! Aufgrund dieser Tatsache haben wir uns entschlossen zunächst nur allgemeine Katalogdaten zu teilen. Sobald die Disseration abgeschlossen ist, werden hier alle aufbereiteten Daten zu Ludwig Baumann online gehen!</msg>
     <msg key="baudi.landing.about.concert">Konzert: Kantate</msg>
     <msg key="baudi.landing.about.concert.text">Lorem ipsum dolor</msg>
     <msg key="baudi.landing.about.be.part">Werde</msg>
@@ -75,7 +78,7 @@
     <msg key="baudi.landing.contact.your.message.req">Bitte gib eine Nachricht ein.</msg>
     
     <!-- Catalog of Works -->
-    <msg key="baudi.catalog.works">Werkverzeichnis</msg>
+    <msg key="baudi.catalog.works">Werkkatalog</msg>
     <msg key="baudi.catalog.works.all">Alle Werke</msg>
     <msg key="baudi.catalog.works.song">Lieder</msg>
     <msg key="baudi.catalog.works.choir">Chöre</msg>
@@ -85,6 +88,26 @@
     <msg key="baudi.catalog.works.composer">Komponist</msg>
     <msg key="baudi.catalog.works.lyricist">Textdichter</msg>
     <msg key="baudi.catalog.works.opus.no">Nr.</msg>
+    
+    <!-- Catalog of Sources -->
+    <msg key="baudi.catalog.sources">Quellenkatalog</msg>
+    <msg key="baudi.catalog.sources.all">Alle Quellen</msg>
+    <msg key="baudi.catalog.sources.song">Lieder</msg>
+    <msg key="baudi.catalog.sources.choir">Chöre</msg>
+    <msg key="baudi.catalog.sources.cantata">Kantate</msg>
+    <msg key="baudi.catalog.sources.chamber">Kammermusik</msg>
+    <msg key="baudi.catalog.sources.vocal">Vokalmusik</msg>
+    <msg key="baudi.catalog.sources.orchestra">Orchestermusik</msg>
+    <msg key="baudi.catalog.sources.composer">Komponist</msg>
+    <msg key="baudi.catalog.sources.lyricist">Textdichter</msg>
+    <msg key="baudi.catalog.sources.opus.no">Nr.</msg>
+    <msg key="baudi.catalog.sources.print">Drucke</msg>
+    <msg key="baudi.catalog.sources.manuscript">Handschiften</msg>
+    <msg key="baudi.catalog.sources.copy">Abschrift/Kopie</msg>
+    <msg key="baudi.catalog.sources.part">Einzelstimme</msg>
+    <msg key="baudi.catalog.sources.collections.ms">Sammelquellen (Ms.)</msg>
+    <msg key="baudi.catalog.sources.collections.pr">Sammelquellen (Dr.)</msg>
+    <msg key="baudi.catalog.sources.todo">ToDo</msg>
     
     <!-- Bread crumb -->
     <msg key="breadCrumb.catalogue">Katalog</msg>
