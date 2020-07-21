@@ -1,9 +1,15 @@
-<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
-    <div class="row">
-        <div class="page-header">
-            <h1>Verzeichnis der musikalischen Quellen</h1>
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div data-template="i18n:translate" data-template-lang="en" data-template-catalogues="/db/apps/baudiApp/resources/lang">
+        <div class="container" style="max-width: 75%;">
+            <br/>
+            <div class="page-header">
+                <h1><i18n:text key="baudi.catalog.sources"/></h1>
+            </div>
+            <hr/>
+            <div>
+                <div data-template="app:registrySources"/>
+            </div>
         </div>
-		<!-- <a href="veroviobeispiel.html">Beispiel</a> -->
-        <div data-template="app:registrySources"/>
     </div>
 </div>
