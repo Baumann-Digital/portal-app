@@ -105,6 +105,20 @@
     <msg key="baudi.catalog.sources.collections.pr">Collections (Pr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
     
+    <!-- Tags -->
+    <msg key="baudi.catalog.tag.song">Song</msg>
+    <msg key="baudi.catalog.tag.choir">Choir</msg>
+    <msg key="baudi.catalog.tag.piano">Piano</msg>
+    <msg key="baudi.catalog.tag.cantata">Cantata</msg>
+    <msg key="baudi.catalog.tag.duo">Duo</msg>
+    <msg key="baudi.catalog.tag.trio">Trio</msg>
+    <msg key="baudi.catalog.tag.quartet">Quartet</msg>
+    <msg key="baudi.catalog.tag.vocal">Vocal</msg>
+    <msg key="baudi.catalog.tag.chamber">Chamber</msg>
+    <msg key="baudi.catalog.tag.orchestra">Orchestra</msg>
+    <msg key="baudi.catalog.tag.ensemble">Ensemble</msg>
+    
+    <!-- Months -->
     <msg key="january">January</msg>
     <msg key="february">February</msg>
     <msg key="march">March</msg>

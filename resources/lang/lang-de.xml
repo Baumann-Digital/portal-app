@@ -102,12 +102,26 @@
     <msg key="baudi.catalog.sources.lyricist">Textdichter</msg>
     <msg key="baudi.catalog.sources.opus.no">Nr.</msg>
     <msg key="baudi.catalog.sources.print">Drucke</msg>
-    <msg key="baudi.catalog.sources.manuscript">Handschiften</msg>
-    <msg key="baudi.catalog.sources.copy">Abschrift/Kopie</msg>
-    <msg key="baudi.catalog.sources.part">Einzelstimme</msg>
-    <msg key="baudi.catalog.sources.collections.ms">Sammelquellen (Ms.)</msg>
-    <msg key="baudi.catalog.sources.collections.pr">Sammelquellen (Dr.)</msg>
+    <msg key="baudi.catalog.sources.manuscript">Handschriften</msg>
+    <msg key="baudi.catalog.sources.copy">Abschriften/Kopien</msg>
+    <msg key="baudi.catalog.sources.part">Einzelstimmen</msg>
+    <msg key="baudi.catalog.sources.collections.manuscript">Sammelquellen (Ms.)</msg>
+    <msg key="baudi.catalog.sources.collections.print">Sammelquellen (Dr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
+    
+    <!-- Tags -->
+    <msg key="baudi.catalog.tag.song">Lied</msg>
+    <msg key="baudi.catalog.tag.choir">Chor</msg>
+    <msg key="baudi.catalog.tag.piano">Klavier</msg>
+    <msg key="baudi.catalog.tag.cantata">Kantate</msg>
+    <msg key="baudi.catalog.tag.duo">Duo</msg>
+    <msg key="baudi.catalog.tag.trio">Trio</msg>
+    <msg key="baudi.catalog.tag.quartet">Quartett</msg>
+    <msg key="baudi.catalog.tag.vocal">Vokal</msg>
+    <msg key="baudi.catalog.tag.chamber">Kammer</msg>
+    <msg key="baudi.catalog.tag.orchestra">Orchester</msg>
+    <msg key="baudi.catalog.tag.ensemble">Ensemble</msg>
+    
     
     <!-- Bread crumb -->
     <msg key="breadCrumb.catalogue">Katalog</msg>

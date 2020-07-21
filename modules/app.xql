@@ -493,15 +493,15 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     let $lang := baudiShared:get-lang()
     let $sources := collection("/db/apps/baudiSources/data/music")/mei:mei//mei:manifestationList/mei:manifestation (:[1]/ancestor::mei:mei:)
     (:let $genres := distinct-values(collection("/db/apps/baudiSources/data/music")//mei:term[@type="genre"] | collection("/db/apps/baudiSources/data/music")//mei:term[@type="source"] | collection("/db/apps/baudiSources/data/music")//mei:titlePart[@type='main' and not(@class)]/@type | collection("/db/apps/baudiSources/data/music")//mei:term[.='todo']):)
-    let $genres := distinct-values(collection("/db/apps/baudiSources/data/music")//mei:term[@type="source"])
+    let $genres := distinct-values(collection("/db/apps/baudiSources/data/music")//mei:term[@type="source"] | collection("/db/apps/baudiSources/data/music")//mei:titlePart[@type='main' and not(@class)]/@type)
     
     let $content :=<div class="container">
     <br/>
          <ul class="nav nav-pills" role="tablist">
             {for $genre at $pos in $genres
-                let $msCount := count($sources[.//mei:term[@type='source' and . = $genre]])
+                let $genreCount := count($sources[.//mei:term[@type='source'][. = $genre]])
                 let $nav-itemMain := <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.sources.all')} ({count($sources)})</a></li>
-                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.catalog.sources.',$genre))} ({$msCount})</a></li>
+                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.catalog.sources.',$genre))} ({$genreCount})</a></li>
                 return
                     if($pos=1)
                     then($nav-itemMain)
@@ -512,7 +512,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     <div class="container" style=" height: 600px; overflow-y: scroll;">
     <div class="tab-content">
     {for $genre at $pos in $genres
-        let $cards := for $source in (if($sources[.//mei:term[@type='source' and . = $genre]])then($sources[.//mei:term[@type='source' and . = $genre]])else($sources))
+        let $cards := for $source in $sources[if($genre='main')then(.)else(.//mei:term[@type='source' and . = $genre])]
                          let $title := $source//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                          let $titleSort := $title[1]
                          let $titleSub := $source//mei:titlePart[@type='subordinate']/normalize-space(text()[1])
@@ -525,11 +525,11 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                          let $perfMedium := string-join($source/ancestor::mei:mei//mei:work//mei:perfRes/normalize-space(text()[1]),' | ')
                          let $composer := $source//mei:composer
                          let $lyricist := $source//mei:lyricist
-                         let $termWorkGroup := for $tag in $source//mei:term[@type='workgroup']/@subtype/string()
-                                                let $label := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.works.',$tag))}</label>
+                         let $termWorkGroup := for $tag in $source//mei:term[@type='workGroup']/string()
+                                                let $label := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.tag.',$tag))}</label>
                                                 return $label
-                         let $termGenre := for $tag in $source//mei:term[@type='genre']/@subtype/string()
-                                               let $label := <label class="btn btn-outline-secondary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.works.',$tag))}</label>
+                         let $termGenre := for $tag in $source//mei:term[@type='genre']/string()
+                                               let $label := <label class="btn btn-outline-secondary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.tag.',$tag))}</label>
                                                return $label
                          let $tags := for $each in ($termGenre|$termWorkGroup)
                                         return ($each,'&#160;')
