@@ -513,9 +513,20 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     <div class="tab-content">
     {for $genre at $pos in $genres
         let $cards := for $source in $sources[if($genre='main')then(.)else(.//mei:term[@type='source' and . = $genre])]
+                         let $status := if($source//mei:availability)
+                                        then($source//mei:availability/text())
+                                        else('unchecked')
+                         let $statusSymbol := if($status='unchecked')
+                                              then(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                              else if($status='checked')
+                                              then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                              else if($status='published')
+                                              then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                              else($status)
                          let $title := $source//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                          let $titleSort := $title[1]
                          let $titleSub := $source//mei:titlePart[@type='subordinate']/normalize-space(text()[1])
+                         let $titleSub2 := $source//mei:titlePart[@type='ediromSourceWindow']/normalize-space(text()[1])
                          let $numberOpus := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='number' and @auth='opus']
                          let $numberOpusCount := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
@@ -531,15 +542,27 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                          let $termGenre := for $tag in $source//mei:term[@type='genre']/string()
                                                let $label := <label class="btn btn-outline-secondary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.tag.',$tag))}</label>
                                                return $label
-                         let $tags := for $each in ($termGenre|$termWorkGroup)
+                         let $termSource := for $tag in $source//mei:term[@type='source']/string()
+                                                let $label := <label class="btn btn-outline-danger btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.tag.',$tag))}</label>
+                                                return $label
+                         let $tags := for $each in ($termSource|$termGenre|$termWorkGroup)
+                                        order by $each
                                         return ($each,'&#160;')
                          
                          order by $titleSort
                          return
                              <div class="card bg-light mb-3">
                                  <div class="card-body">
-                                   <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
+                                   <div class="row justify-content-between">
+                                        <div class="col">
+                                        <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
+                                        </div>
+                                        <div class="col-2">
+                                        <p class="text-right">{$statusSymbol}</p>
+                                        </div>
+                                   </div>
                                    <h6>{$titleSub}</h6>
+                                   {if($titleSub2)then(<h6>{$titleSub2}</h6>)else()}
                                    <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
                                    <p class="card-text">{if($composer)then(baudiShared:translate('baudi.catalog.sources.composer'),': ',$composer,<br/>)else()}{if($lyricist)then(baudiShared:translate('baudi.catalog.sources.lyricist'),': ',$lyricist)else()}</p>
                                    <a href="work/{$id}" class="card-link">{$id}</a>
