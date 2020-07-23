@@ -120,9 +120,13 @@
     <msg key="baudi.catalog.tag.quartet">Quartett</msg>
     <msg key="baudi.catalog.tag.vocal">Vokal</msg>
     <msg key="baudi.catalog.tag.chamber">Kammer</msg>
-    <msg key="baudi.catalog.tag.orchestra">Orchester</msg>
+    <msg key="baudi.catalog.tag.orchestral">Orchester</msg>
     <msg key="baudi.catalog.tag.ensemble">Ensemble</msg>
-    
+    <msg key="baudi.catalog.tag.autograph">Autograph</msg>
+    <msg key="baudi.catalog.tag.manuscript">Handschrift</msg>
+    <msg key="baudi.catalog.tag.print">Druck</msg>
+    <msg key="baudi.catalog.tag.copy">Abschrift</msg>
+    <msg key="baudi.catalog.tag.collection">Sammlung</msg>
     
     <!-- Bread crumb -->
     <msg key="breadCrumb.catalogue">Katalog</msg>

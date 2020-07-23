@@ -117,8 +117,13 @@
     <msg key="baudi.catalog.tag.quartet">Quartet</msg>
     <msg key="baudi.catalog.tag.vocal">Vocal</msg>
     <msg key="baudi.catalog.tag.chamber">Chamber</msg>
-    <msg key="baudi.catalog.tag.orchestra">Orchestra</msg>
+    <msg key="baudi.catalog.tag.orchestral">Orchestra</msg>
     <msg key="baudi.catalog.tag.ensemble">Ensemble</msg>
+    <msg key="baudi.catalog.tag.autograph">Autograph</msg>
+    <msg key="baudi.catalog.tag.manuscript">Manuscript</msg>
+    <msg key="baudi.catalog.tag.print">Print</msg>
+    <msg key="baudi.catalog.tag.copy">Copy</msg>
+    <msg key="baudi.catalog.tag.collection">Collection</msg>
     
     <!-- Months -->
     <msg key="january">January</msg>
