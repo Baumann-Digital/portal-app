@@ -7,51 +7,51 @@
                     <th/>
                     <th/>
                 </tr>
-                <xsl:if test="not(//mei:titleStmt/mei:title[@type = 'uniform' and @xml:lang = 'de']/data(.) = '')">
+                <xsl:if test="not(//mei:title[@type = 'uniform' and @xml:lang = 'de']/data(.) = '')">
                     <tr>
                         <td>Einheitstitel der Quelle:</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:title[@type = 'uniform' and @xml:lang = 'de']"/>
+                            <xsl:value-of select="//mei:title[@type = 'uniform' and @xml:lang = 'de']"/>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(//mei:titleStmt/mei:title[@type = 'main']/data(.) = '')">
+                <xsl:if test="not(//mei:title[@type = 'main']/data(.) = '')">
                     <tr>
                         <td>Titel (diplomatisch):</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:title[@type = 'main']"/>
+                            <xsl:value-of select="//mei:title[@type = 'main']"/>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(//mei:titleStmt/mei:title[@type = 'subordinate']/data(.) = '')">
+                <xsl:if test="not(//mei:title[@type = 'subordinate']/data(.) = '')">
                     <tr>
                         <td>Untertitel (dipl.):</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:title[@type = 'subordinate']"/>
+                            <xsl:value-of select="//mei:title[@type = 'subordinate']"/>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(//mei:titleStmt/mei:title[@type = 'desc']/data(.) = '')">
+                <xsl:if test="not(//mei:title[@type = 'desc']/data(.) = '')">
                     <tr>
                         <td>Werkbeschreibung:</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:title[@type = 'desc' and  @xml:lang = 'de']"/>
+                            <xsl:value-of select="//mei:title[@type = 'desc' and  @xml:lang = 'de']"/>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(//mei:titleStmt/mei:composer = '')">
+                <xsl:if test="not(//mei:composer = '')">
                     <tr>
                         <td>Komponist:</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:composer"/>
+                            <xsl:value-of select="//mei:composer"/>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(//mei:titleStmt/mei:lyricist = '')">
+                <xsl:if test="not(//mei:lyricist = '')">
                     <tr>
                         <td>Textdichter:</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:lyricist"/>
+                            <xsl:value-of select="//mei:lyricist"/>
                         </td>
                     </tr>
                 </xsl:if>

@@ -13,6 +13,8 @@ declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace functx = "http://www.functx.com";
 
+declare variable $app:collectionWorks := collection('/db/apps/baudiWorks/data')//mei:work;
+
 declare function functx:is-node-in-sequence-deep-equal
   ( $node as node()? ,
     $seq as node()* )  as xs:boolean {
@@ -536,6 +538,10 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                          let $perfMedium := string-join($source/ancestor::mei:mei//mei:work//mei:perfRes/normalize-space(text()[1]),' | ')
                          let $composer := $source//mei:composer
                          let $lyricist := $source//mei:lyricist
+                         let $componentSources := for $componentSource in $source//mei:componentList/mei:manifestation
+                                                    let $componentId := $componentSource/mei:identifier/string()
+                                                    return
+                                                        $componentId
                          let $termWorkGroup := for $tag in $source//mei:term[@type='workGroup']/string()
                                                 let $label := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.tag.',$tag))}</label>
                                                 return $label
@@ -555,17 +561,31 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                  <div class="card-body">
                                    <div class="row justify-content-between">
                                         <div class="col">
-                                        <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
+                                        <h6 class="text-muted">Werk zugewiesen: {if($source//mei:relation/@corresp)then(<i>{baudiShared:getWorkTitle($app:collectionWorks[@xml:id=$source//mei:relation/@corresp])}</i>, '&#160;', $source//mei:relation[@rel='isEmbodimentOf']/@corresp/string()) else('noch nicht erfolgt!')}</h6>
+                                            <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
+                                            {if(exists($titleSub))then(<h6>{$titleSub}</h6>)else()}
+                                            {if(exists($titleSub2))then(<h6>{$titleSub2}</h6>)else()}
+                                            <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
                                         </div>
                                         <div class="col-2">
-                                        <p class="text-right">{$statusSymbol}</p>
+                                            <p class="text-right">{$statusSymbol}</p>
                                         </div>
                                    </div>
-                                   <h6>{$titleSub}</h6>
-                                   {if($titleSub2)then(<h6>{$titleSub2}</h6>)else()}
-                                   <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
-                                   <p class="card-text">{if($composer)then(baudiShared:translate('baudi.catalog.sources.composer'),': ',$composer,<br/>)else()}{if($lyricist)then(baudiShared:translate('baudi.catalog.sources.lyricist'),': ',$lyricist)else()}</p>
-                                   <a href="work/{$id}" class="card-link">{$id}</a>
+                                   <p class="card-text">
+                                    {if($composer)
+                                     then(baudiShared:translate('baudi.catalog.sources.composer'),': ',$composer,<br/>)
+                                     else()}
+                                    {if($lyricist)
+                                     then(baudiShared:translate('baudi.catalog.sources.lyricist'),': ',$lyricist)
+                                     else()}
+                                    {if(count($componentSources)>=1)
+                                     then(baudiShared:translate('baudi.catalog.sources.components'),': ',
+                                                                 <ul>{for $each in $componentSources
+                                                                        return <li>{$each}</li>}
+                                                                 </ul>)
+                                     else()}
+                                   </p>
+                                   <a href="{concat('sources/', $source//mei:term[@type='source'][1]/string(), '/',$id)}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
@@ -603,7 +623,6 @@ let $manuscriptDigitalisatBLB := "https://digital.blb-karlsruhe.de/blbihd/conten
 return
 (
     <div class="container">
-        <a href="../../registrySources.html">&#8592; zum Quellenverzeichnis</a>
         <div class="page-header">
             <h1>{$name}</h1>
             <h5>{$id}</h5>
@@ -668,24 +687,74 @@ declare function app:sources-print($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("source-id", "Fehler")
 let $print := collection("/db/apps/baudiSources/data/music")/mei:mei[@xml:id=$id]
-let $name := $print//mei:title[@type="main"]/normalize-space(data(.))
-let $printOrig := "PFAD"
+let $fileURI := document-uri($print/root())
+let $name := $print//mei:manifestation/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.))
+let $printOrig := concat('../../../../../baudi-images/music/',$print/@xml:id)
+let $printOrigBLB := "https://digital.blb-karlsruhe.de/blbihd/image/view/"
+let $printDigitalisatBLB := "https://digital.blb-karlsruhe.de/blbihd/content/pageview/"
 
 return
 (
     <div class="container">
-        <a href="../../registrySources.html">&#8592; zum Quellenverzeichnis</a>
         <div class="page-header">
             <h1>{$name}</h1>
+            <h5>{$id}</h5>
         </div>
         <div class="row">
-      <div class="col">
-                <strong>Link zum Digitalisat der Quelle </strong>
-                <img src="{concat($printOrig,'_001','.jpeg')}" width="400"/>
-                </div>  
+       {if(exists($print//mei:facsimile/mei:surface))
+       then(
+        <div class="col">
+                {
+                if(doc-available(concat($printOrig,'_001','.jpeg')))
+                then(<img src="{concat($printOrig,'_001','.jpeg')}" width="400"/>)
+                else if($print//mei:graphic[@targettype="blb-vlid"])
+                then(<a href="{concat($printDigitalisatBLB,$print//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)}" target="_blank"><img src="{concat($printOrigBLB,$print//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)}" width="400"/></a>)
+                else()
+                }
+        </div>
+        )
+        else()}
+
     <div class="col">
-    <strong>Quellenbeschreibung</strong>
-        {transform:transform($print,doc("/db/apps/baudiApp/resources/xslt/print.xsl"), ())}
+    <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Überblick</a></li>  
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">Im Detail</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">Liedtext</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>
+    </ul>
+    <!-- Tab panels -->
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="main">
+            <hr/>
+            <p>
+                Zugehöriges Werk: {baudiShared:getWorkTitle($app:collectionWorks[@xml:id=$print//mei:relation/@corresp])} (<a href="{concat('../../work/',$print//mei:relation/@corresp)}">{$print//mei:relation[@rel='isEmbodimentOf']/@corresp/string()}</a>)
+            </p>
+            <hr/>
+            <p/>
+                {transform:transform($print,doc("/db/apps/baudiApp/resources/xslt/metadataSourcePrint.xsl"), ())}
+            <p/>
+            <div class="card">
+                <div class="card-body">
+                    {if(exists($print//mei:work/mei:incip/mei:score))
+                    then('Incipit soon',<span onload="myIncipit({concat('http://localhost:8080/exist/rest',$fileURI)})"> </span>,<div id="output-verovio"/>)
+                    else(<b>No incipit available</b>)}
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="detail">
+            <p/>
+            {transform:transform($print,doc("/db/apps/baudiApp/resources/xslt/metadataSourcePrintDetailed.xsl"), ())}
+        </div>
+        <div class="tab-pane fade" id="lyrics">
+            <p/>
+                {transform:transform($print,doc("/db/apps/baudiApp/resources/xslt/contentLyrics.xsl"), ())}
+        </div>
+        <div class="tab-pane fade" id="verovio">
+            <div class="panel-body">
+                <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
+            </div>
+        </div>
+    </div>
     </div>
     </div>
     </div>
@@ -798,7 +867,7 @@ return
 
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
-    let $works := collection("/db/apps/baudiWorks/data")//mei:work
+    let $works := collection("/db/apps/baudiWorks/data")//mei:work[not(parent::mei:componentList)]
     let $genres := distinct-values(collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre"]/@subtype | collection("/db/apps/baudiWorks/data")//mei:work//mei:titlePart[@type='main' and not(@class)]/@type)
     let $dict := collection("/db/apps/baudiResources/data")
     let $content := <div class="container">
@@ -832,7 +901,11 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
                          let $composer := $work//mei:composer
                          let $lyricist := $work//mei:lyricist
-                         let $termWorkGroup := for $tag in $work//mei:term[@type='workgroup']/@subtype/string()
+                         let $componentWorks := for $componentWork in $work//mei:componentList/mei:work
+                                                    let $componentId := $componentWork/mei:identifier[@type="baudiWork"]/string()
+                                                    return
+                                                        $works[@xml:id=$componentId]
+                         let $termWorkGroup := for $tag in $work//mei:term[@type='workGroup']/@subtype/string()
                                                 let $label := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.works.',$tag))}</label>
                                                 return $label
                          let $termGenre := for $tag in $work//mei:term[@type='genre']/@subtype/string()
@@ -846,10 +919,20 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          return
                              <div class="card bg-light mb-3">
                                  <div class="card-body">
-                                   <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
+                                   <h5 class="card-title">{baudiShared:getWorkTitle($work)}</h5>
                                    <h6>{$titleSub}</h6>
                                    <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
-                                   <p class="card-text">{if($composer)then(baudiShared:translate('baudi.catalog.works.composer'),': ',$composer,<br/>)else()}{if($lyricist)then(baudiShared:translate('baudi.catalog.works.lyricist'),': ',$lyricist)else()}</p>
+                                   <p class="card-text">{if($composer)
+                                                         then(baudiShared:translate('baudi.catalog.works.composer'),': ',$composer/string(),<br/>)
+                                                         else()}
+                                                        {if($lyricist)
+                                                         then(baudiShared:translate('baudi.catalog.works.lyricist'),': ',$lyricist/string())
+                                                         else()}
+                                                        {if(count($componentWorks)>=1)
+                                                         then(baudiShared:translate('baudi.catalog.works.components'),': ',
+                                                                <ul>{for $each in $componentWorks
+                                                                return <li>{baudiShared:getWorkTitle($each)}</li>}</ul>)
+                                                         else()}</p>
                                    <a href="work/{$id}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
@@ -893,7 +976,39 @@ return
         <br/>
     <div class="col">
         {transform:transform($work,doc("/db/apps/baudiApp/resources/xslt/metadataWork.xsl"), ())}
+        <hr/>
+        <tr>
+           <td colspan="2">Zugehörige Quellen:</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <ul style="list-style-type: square;">
+                    {for $source in collection('/db/apps/baudiSources/data/music')//mei:mei
+                        let $sourceId := $source/@xml:id/string()
+                        let $sourceType := $source//mei:term[@type='source'][1]/string()
+                        let $sort := switch ($sourceType)
+                                        case 'manuscript' return '01'
+                                        case 'msCopy' return '02'
+                                        case 'print' return '03'
+                                        case 'prCopy' return '04'
+                                        case 'print' return '05'
+                                        case 'copy' return '05'
+                                        case 'edition' return '05'
+                                        default return '00'
+                        let $correspWork := $source//mei:relation[@corresp=$id]/@corresp
+                        let $correspWorkLabel := $source//mei:relation[@corresp=$id]/@label/string()
+                        let $sourceTitle := $source//mei:manifestation//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
+                        where $correspWork = $id
+                        order by $sort
+                        return
+                            <li>{$sourceTitle} [{string-join(($sourceType, $correspWorkLabel),', ')}] (<a href="{concat('../sources/', $sourceType, '/', $sourceId)}">{$sourceId}</a>)</li>
+                    }
+                </ul>
+            </td>
+        </tr>
+        <hr/>
     </div>
+    
     </div>
 )
 };
