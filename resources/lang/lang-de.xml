@@ -83,6 +83,7 @@
     <msg key="baudi.catalog.works.song">Lieder</msg>
     <msg key="baudi.catalog.works.choir">Chöre</msg>
     <msg key="baudi.catalog.works.chamber">Kammermusik</msg>
+    <msg key="baudi.catalog.works.ensemble">Ensemble</msg>
     <msg key="baudi.catalog.works.cantata">Kantaten</msg>
     <msg key="baudi.catalog.works.vocal">Vokalmusik</msg>
     <msg key="baudi.catalog.works.instrumental">Instrumentalmusik</msg>

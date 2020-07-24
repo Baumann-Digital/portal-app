@@ -81,6 +81,7 @@
     <msg key="baudi.catalog.works.choir">Choirs</msg>
     <msg key="baudi.catalog.works.cantata">Cantatas</msg>
     <msg key="baudi.catalog.works.chamber">Chamber</msg>
+    <msg key="baudi.catalog.works.ensemble">Ensemble</msg>
     <msg key="baudi.catalog.works.vocal">Vocal</msg>
     <msg key="baudi.catalog.works.instrumental">Instrumental</msg>
     <msg key="baudi.catalog.works.orchestra">Orchestral</msg>
