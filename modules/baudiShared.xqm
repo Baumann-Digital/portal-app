@@ -3,6 +3,7 @@ xquery version "3.1";
 module namespace baudiShared="http://baumann-digital.de/ns/baudiShared";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
+declare namespace mei="http://www.music-encoding.org/ns/mei";
 
 import module namespace app="http://exist-db.org/xquery/templates" at "app.xql";
 
@@ -48,11 +49,9 @@ declare function baudiShared:langSwitch($node as node(), $model as map(*)) {
     let $supportedLangVals := ('de', 'en')
     for $lang in $supportedLangVals
         return
-            <ul class="nav justify-content-end">
             <li class="nav-item">
                 <a id="{concat('lang-switch-', $lang)}" class="nav-link py-2 d-none d-md-inline-block {if (baudiShared:get-lang() = $lang) then ('disabled') else ()}" style="{if (baudiShared:get-lang() = $lang) then ('color: white!important;') else ()}" href="?lang={$lang}">{$lang}</a>
             </li>
-            </ul>
 };
 
 
@@ -404,18 +403,18 @@ declare function baudiShared:get-browser-lang() as xs:string? {
     ()
 };
 
-declare function baudiShared:get-lang() as xs:string? {
+(:declare function baudiShared:get-lang() as xs:string? {
   let $lang := if(string-length(request:get-parameter("lang", "")) gt 0) then
-      (: use http parameter lang as selected language :)
+      (\: use http parameter lang as selected language :\)
       request:get-parameter("lang", "")
   else
      if(string-length(request:get-cookie-value("forceLang")) gt 0) then
        request:get-cookie-value("forceLang")
      else
        baudiShared:get-browser-lang()
-  (: limit to de and en; en default :)
+  (\: limit to de and en; en default :\)
   return if($lang != "en" and $lang != "de") then "en" else $lang
-};
+};:)
 
 declare function baudiShared:get-top-supported-lang($ordered-langs as xs:string*, $translations as xs:string*) as xs:string? {
   if (fn:empty($ordered-langs)) then
@@ -453,4 +452,16 @@ declare function baudiShared:parse-header($header as xs:string) as xs:string {
 
 declare function baudiShared:getSelectedLanguage($node as node()*,$selectedLang as xs:string) {
     baudiShared:get-lang()
+};
+
+declare function baudiShared:getWorkTitle($work){
+    let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
+                         let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and @class='sort']/text()
+                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+                         let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
+                         let $numberOpusCounter := if($numberOpusCount)
+                                                   then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
+                                                   else()
+    return
+        if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)
 };
