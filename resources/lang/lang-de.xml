@@ -83,20 +83,24 @@
     <msg key="baudi.catalog.works.song">Lieder</msg>
     <msg key="baudi.catalog.works.choir">Chöre</msg>
     <msg key="baudi.catalog.works.chamber">Kammermusik</msg>
+    <msg key="baudi.catalog.works.cantata">Kantaten</msg>
     <msg key="baudi.catalog.works.vocal">Vokalmusik</msg>
+    <msg key="baudi.catalog.works.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.catalog.works.orchestra">Orchestermusik</msg>
     <msg key="baudi.catalog.works.composer">Komponist</msg>
     <msg key="baudi.catalog.works.lyricist">Textdichter</msg>
     <msg key="baudi.catalog.works.opus.no">Nr.</msg>
+    <msg key="baudi.catalog.works.components">Enthaltene Werke</msg>
     
     <!-- Catalog of Sources -->
     <msg key="baudi.catalog.sources">Quellenkatalog</msg>
     <msg key="baudi.catalog.sources.all">Alle Quellen</msg>
     <msg key="baudi.catalog.sources.song">Lieder</msg>
     <msg key="baudi.catalog.sources.choir">Chöre</msg>
-    <msg key="baudi.catalog.sources.cantata">Kantate</msg>
+    <msg key="baudi.catalog.sources.cantata">Kantaten</msg>
     <msg key="baudi.catalog.sources.chamber">Kammermusik</msg>
     <msg key="baudi.catalog.sources.vocal">Vokalmusik</msg>
+    <msg key="baudi.catalog.sources.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.catalog.sources.orchestra">Orchestermusik</msg>
     <msg key="baudi.catalog.sources.composer">Komponist</msg>
     <msg key="baudi.catalog.sources.lyricist">Textdichter</msg>
@@ -109,6 +113,7 @@
     <msg key="baudi.catalog.sources.collections.manuscript">Sammelquellen (Ms.)</msg>
     <msg key="baudi.catalog.sources.collections.print">Sammelquellen (Dr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
+    <msg key="baudi.catalog.sources.components">Enthaltene Quellen</msg>
     
     <!-- Tags -->
     <msg key="baudi.catalog.tag.song">Lied</msg>
