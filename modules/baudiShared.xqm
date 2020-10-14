@@ -5,7 +5,7 @@ module namespace baudiShared="http://baumann-digital.de/ns/baudiShared";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 
-import module namespace app="http://exist-db.org/xquery/templates" at "app.xql";
+import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql";
 
 import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
@@ -465,3 +465,20 @@ declare function baudiShared:getWorkTitle($work){
     return
         if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)
 };
+
+declare function baudiShared:stringJoinAll($node as node()) {
+    string-join($node/string(),' | ')
+};
+
+declare function baudiShared:getPersNameShort($person as node()) {
+
+    let $personID := $person/@xml:id
+    let $personUri := concat($app:dbRoot, '/person/', $personID)
+    let $forename := $person/tei:persName/tei:forename
+    let $surname :=  $person/tei:persName/tei:surname
+    
+    return
+        <a href="{$personUri}">{concat(string-join($forename, ' '), ' ',string-join($surname))}</a>
+};
+
+

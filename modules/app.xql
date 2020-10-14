@@ -8,12 +8,18 @@ import module namespace config="https://exist-db.org/xquery/config" at "config.x
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
+import module namespace baudiWork="http://baumann-digital.de/ns/baudiWork" at "baudiWork.xqm";
+import module namespace functx = "http://www.functx.com" at "functx.xqm";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
-declare namespace functx = "http://www.functx.com";
+
+declare variable $app:dbRoot as xs:string := '/exist/apps/baudiApp';
 
 declare variable $app:collectionWorks := collection('/db/apps/baudiWorks/data')//mei:work;
+declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiSources/data/music')//mei:mei;
+declare variable $app:collectionPersons := collection('/db/apps/baudiPersons/data')//tei:person;
+declare variable $app:collectionInstitutions := collection('/db/apps/baudiInstitutions/data')//tei:org;
 
 declare function functx:is-node-in-sequence-deep-equal
   ( $node as node()? ,
@@ -66,7 +72,7 @@ return
         let $datumSent := $letter//tei:correspAction[@type="sent"]/tei:date/@when
         order by $datumSent
         return
-        <li><a href="letter/{$id}">{$titel/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
+        <li><a href="{concat($app:dbRoot,'/letter/',$id)}">{$titel/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
         }
       
         </div>
@@ -249,7 +255,7 @@ return
         let $datumVerfasst := $dokument//tei:correspAction[@type="sent"]/tei:date/@when
         order by $titel
         return
-        <li><a href="document/{$id}">{$titel/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
+        <li><a href="{concat($app:dbRoot,'/document/',$id)}">{$titel/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
         }
       </ul>
     </div>
@@ -347,7 +353,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                </div>
                                <p class="card-text"/>
                                
-                               <a href="person/{$id}" class="card-link">{$id}</a>
+                               <a href="{concat($app:dbRoot,'/person/',$id)}" class="card-link">{$id}</a>
                                <hr/>
                                <p>Tags</p>
                              </div>
@@ -446,7 +452,7 @@ return
         let $id := $ort/@id
         order by $name
         return
-        <li><a href="locus/{$id}">{$name/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
+        <li><a href="{concat($app:dbRoot,'/locus/',$id)}">{$name/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
         }
       </ul>
     </div>
@@ -487,7 +493,7 @@ return
         let $id := $institution/@id
         order by $name
         return
-        <li><a href="institution/{$id}">{$name/normalize-space(data(.))}</a> ({$id/normalize-space(data(.))})</li>
+        <li><a href="{concat($app:dbRoot,'/institution/',$id)}">{$name/normalize-space(data(.))}</a> ({$id/normalize-space(data(.))})</li>
         }
       </ul>
     </div>
@@ -608,7 +614,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                                                  </ul>)
                                      else()}
                                    </p>
-                                   <a href="{concat('sources/', $source//mei:term[@type='source'][1]/string(), '/',$id)}" class="card-link">{$id}</a>
+                                   <a href="{concat($app:dbRoot,'/sources/', $source//mei:term[@type='source'][1]/string(), '/',$id)}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
@@ -907,9 +913,10 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                     else($nav-itemGenre)
              }
     </ul>
+    <br/>
     <!-- Tab panels -->
-    <div class="container" style=" height: 600px; overflow-y: scroll;">
-    <div class="tab-content">
+    <div class="container" >
+    <div class="tab-content" style=" height: 600px; overflow-y: scroll;">
     {for $genre at $pos in $genres
         let $cards := for $work in $works[if($pos=1)then(.)else(.//mei:term[@type='genre' and @subtype = $genre])]
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
@@ -956,7 +963,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                                 <ul>{for $each in $componentWorks
                                                                 return <li>{baudiShared:getWorkTitle($each)}</li>}</ul>)
                                                          else()}</p>
-                                   <a href="work/{$id}" class="card-link">{$id}</a>
+                                   <a href="{concat($app:dbRoot,'/work/',$id)}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
@@ -984,39 +991,206 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
 declare function app:work($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("work-id", "Fehler")
+let $lang := baudiShared:get-lang()
 let $work := collection("/db/apps/baudiWorks/data")/mei:work[@xml:id=$id]
-let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
+let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(.)
+let $subtitle := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/normalize-space(.)
 let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'perfmedium']
+let $titleMainAlt := $work//mei:titlePart[@type = 'mainAlt']
+let $titleSubAlt := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subAlt']
+let $composer := $work//mei:composer
+let $composerID := $composer/mei:persName/@auth
+let $composerEntry := if($composerID)
+                      then($app:collectionPersons[matches(@xml:id,$composerID)])
+                      else($composer)
+let $composerName := baudiShared:getPersNameShort($composerEntry)
+let $composerGender := if($composerEntry[@sex="female"]) then('composer.female') else('composer')
+(:let $workLyricist := baudiWork:getLyricist($work):)
+let $lyricist := $work//mei:lyricist
+let $lyricistID := $lyricist/mei:persName/@auth
+let $lyricistEntry := if($lyricistID)
+                      then($app:collectionPersons[matches(@xml:id,$lyricistID)])
+                      else($lyricist)
+let $lyricistName := if($lyricistID)
+                      then(baudiShared:getPersNameShort($lyricistEntry))
+                      else($lyricist)
+let $lyricistGender := if($lyricistEntry)
+                       then('lyricist.female')
+                       else('lyricist')
+
+let $usedLang := for $lang in $work//mei:langUsage/mei:language/@auth
+                    return
+                        baudiShared:translate(concat('baudi.lang.',$lang))
+let $key := for $each in $work//mei:key
+              let $keyPname := $each/@pname
+              let $keyMode := $each/@mode
+              let $keyAccid := $each/@accid
+              let $keyPnameFull := concat($keyPname,$keyAccid)
+              return
+                  if($keyMode = 'major')
+                  then(concat(
+                                functx:capitalize-first(baudiShared:translate(concat('baudi.catalog.works.pname.',$keyPnameFull))),
+                                baudiShared:translate('baudi.catalog.delimiter.key'),
+                                baudiShared:translate(concat('baudi.catalog.works.',$keyMode))
+                             )
+                        )
+                  else if($keyMode = 'minor')
+                  then(concat(
+                                baudiShared:translate(concat('baudi.catalog.works.pname.',$keyPnameFull)),
+                                baudiShared:translate('baudi.catalog.delimiter.key'),
+                                baudiShared:translate(concat('baudi.catalog.works.',$keyMode))
+                             )
+                      )
+                  else()
+let $meter := for $each in $work//mei:meter
+                let $meterCount := $each/@count
+                let $meterUnit := $each/@unit
+                let $meterSym := $each/@sym
+                let $meterSymbol := if($meterSym = 'common')
+                                   then(<img src="/exist/apps/baudiApp/resources/img/timeSignature_common.png" width="20px"/>)
+                                   else if($meterSym = 'cut')
+                                   then(<img src="/exist/apps/baudiApp/resources/img/timeSignature_cut.png" width="20px"/>)
+                                   else()
+                return
+                    if($meterSymbol)
+                    then($meterSymbol)
+                    else(concat($meterCount, '/', $meterUnit))
+let $tempo := $work//mei:tempo/text()
+
+let $workgroup := $work//mei:term[@type='workGroup']/text()
+let $genre := $work//mei:term[@type='genre']/text()
+
+let $perfResLists := $work//mei:perfResList
+let $perfResList := for $list in $perfResLists
+                        let $perfResListName := $list/@auth
+                        let $perfRess := $list//mei:perfRes/@auth
+                        return
+                            (
+                                <b>{baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResListName))}</b>,
+                                <ul style="list-style-type: square;">
+                                    {for $perfRes in $perfRess
+                                        return
+                                            <li>{baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfRes))}</li>}
+                                </ul>
+                            )
 
 return
 (
     <div class="container">
         <br/>
         <div class="page-header">
-            <h1>{if($numberOpus)then(concat($title,', Op. ',$numberOpus))else($title)}</h1>
+            <h1>{if($numberOpus)then(concat($title,' op. ',$numberOpus))else($title)}</h1>
+            {if($subtitle)then(<h4 class="text-muted">{$subtitle}</h4>)else()}
             <h5>ID: {$id}</h5>
         </div>
         <br/>
     <div class="col">
-        {transform:transform($work,doc("/db/apps/baudiApp/resources/xslt/metadataWork.xsl"), ())}
-        <hr/>
+        <table class="workView">
+            <tr>
+                <th/>
+                <th/>
+            </tr>
+            {if($perfMedium)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.perfmedium')}</td>
+                    <td>{normalize-space($perfMedium)}</td>
+                  </tr>)
+             else()}
+             {if($titleMainAlt)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.titleAlt')}</td>
+                    <td>{normalize-space($titleMainAlt)}</td>
+                  </tr>)
+             else()}
+             {if($titleSubAlt)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.subtitleAlt')}</td>
+                    <td>{normalize-space($titleSubAlt)}</td>
+                  </tr>)
+             else()}
+             {if(not($composerName = ''))
+             then(<tr>
+                    <td>{baudiShared:translate(concat('baudi.catalog.works.',$composerGender))}</td>
+                    <td>{$composerName}</td>
+                  </tr>)
+             else()}
+             {if(not($lyricistName = ''))
+             then(<tr>
+                    <td>{baudiShared:translate(concat('baudi.catalog.works.',$lyricistGender))}</td>
+                    <td>{$lyricistName}</td>
+                  </tr>)
+             else()}
+             {if(not($usedLang/data(.) = ''))
+             then(<tr>
+                    <td>{if(count($usedLang) = 1)
+                         then(baudiShared:translate('baudi.catalog.works.langUsed'))
+                         else if(count($usedLang) > 1)
+                         then(baudiShared:translate('baudi.catalog.works.langsUsed'))
+                         else()}</td>
+                    <td>{string-join($usedLang,', ')}</td>
+                  </tr>)
+             else()}
+             
+             {if(count($key) > 0)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.key')}</td>
+                    <td>{normalize-space(string-join($key, ' | '))}</td>
+                  </tr>)
+             else()}
+             {if(count($meter) > 0)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.meter')}</td>
+                    <td>{$meter}</td>
+                  </tr>)
+             else()}
+             {if($tempo)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.tempo')}</td>
+                    <td><i>{normalize-space($tempo)}</i></td>
+                  </tr>)
+             else()}
+             {if($workgroup)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.category')}</td>
+                    <td>{baudiShared:translate(concat('baudi.catalog.works.',$workgroup))}</td>
+                  </tr>)
+             else()}
+             {if($genre)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.genre')}</td>
+                    <td>{baudiShared:translate(concat('baudi.catalog.works.',$genre))}</td>
+                  </tr>)
+             else()}
+             {if($perfResList)
+             then(<tr>
+                    <td style="vertical-align: top;">{baudiShared:translate('baudi.catalog.works.perfRes')}</td>
+                    <td>{$perfResList}</td>
+                  </tr>)
+             else()}
+             </table>
+                 
+        
+        Incipit folgt…
+        
+        <table class="workView">
         <tr>
            <td colspan="2">Zugehörige Quellen:</td>
         </tr>
         <tr>
             <td colspan="2">
                 <ul style="list-style-type: square;">
-                    {for $source in collection('/db/apps/baudiSources/data/music')//mei:mei
+                    {for $source in $app:collectionSourcesMusic
                         let $sourceId := $source/@xml:id/string()
                         let $sourceType := $source//mei:term[@type='source'][1]/string()
+                        let $sourceTypeTranslated := baudiShared:translate(concat('baudi.catalog.sources.',$sourceType))
                         let $sort := switch ($sourceType)
                                         case 'manuscript' return '01'
                                         case 'msCopy' return '02'
                                         case 'print' return '03'
                                         case 'prCopy' return '04'
-                                        case 'print' return '05'
                                         case 'copy' return '05'
-                                        case 'edition' return '05'
+                                        case 'edition' return '06'
                                         default return '00'
                         let $correspWork := $source//mei:relation[@corresp=$id]/@corresp
                         let $correspWorkLabel := $source//mei:relation[@corresp=$id]/@label/string()
@@ -1024,12 +1198,13 @@ return
                         where $correspWork = $id
                         order by $sort
                         return
-                            <li>{$sourceTitle} [{string-join(($sourceType, $correspWorkLabel),', ')}] (<a href="{concat('../sources/', $sourceType, '/', $sourceId)}">{$sourceId}</a>)</li>
+                            <li>{$sourceTitle} [{$sourceTypeTranslated}] (<a href="{concat('../sources/', $sourceType, '/', $sourceId)}">{$sourceId}</a>)</li>
                     }
                 </ul>
             </td>
         </tr>
-        <hr/>
+        </table>
+        
     </div>
     
     </div>
