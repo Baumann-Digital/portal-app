@@ -107,6 +107,7 @@
     <msg key="baudi.catalog.sources.lyricist">Textdichter</msg>
     <msg key="baudi.catalog.sources.opus.no">Nr.</msg>
     <msg key="baudi.catalog.sources.print">Drucke</msg>
+    <msg key="baudi.catalog.sources.reprint">Nachdrucke</msg>
     <msg key="baudi.catalog.sources.manuscript">Handschriften</msg>
     <msg key="baudi.catalog.sources.copy">Abschriften/Kopien</msg>
     <msg key="baudi.catalog.sources.collection">Sammlungen</msg>
@@ -115,6 +116,9 @@
     <msg key="baudi.catalog.sources.collections.print">Sammelquellen (Dr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
     <msg key="baudi.catalog.sources.components">Enthaltene Quellen</msg>
+    
+    <!-- Persons -->
+    <msg key="baudi.catalog.persons">Personen-Katalog</msg>
     
     <!-- Tags -->
     <msg key="baudi.catalog.tag.song">Lied</msg>
@@ -131,6 +135,7 @@
     <msg key="baudi.catalog.tag.autograph">Autograph</msg>
     <msg key="baudi.catalog.tag.manuscript">Handschrift</msg>
     <msg key="baudi.catalog.tag.print">Druck</msg>
+    <msg key="baudi.catalog.tag.reprint">Nachdruck</msg>
     <msg key="baudi.catalog.tag.copy">Abschrift</msg>
     <msg key="baudi.catalog.tag.collection">Sammlung</msg>
     

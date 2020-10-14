@@ -104,6 +104,7 @@
     <msg key="baudi.catalog.sources.lyricist">Lyricist</msg>
     <msg key="baudi.catalog.sources.opus.no">No.</msg>
     <msg key="baudi.catalog.sources.print">Prints</msg>
+    <msg key="baudi.catalog.sources.reprint">Reprints</msg>
     <msg key="baudi.catalog.sources.manuscript">Manuscripts</msg>
     <msg key="baudi.catalog.sources.copy">Copies</msg>
     <msg key="baudi.catalog.sources.collection">Collections</msg>
@@ -112,6 +113,9 @@
     <msg key="baudi.catalog.sources.collections.pr">Collections (Pr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
     <msg key="baudi.catalog.sources.components">Component Sources</msg>
+    
+    <!-- Persons -->
+    <msg key="baudi.catalog.persons">Catalog of Persons</msg>
     
     <!-- Tags -->
     <msg key="baudi.catalog.tag.song">Song</msg>
@@ -128,6 +132,7 @@
     <msg key="baudi.catalog.tag.autograph">Autograph</msg>
     <msg key="baudi.catalog.tag.manuscript">Manuscript</msg>
     <msg key="baudi.catalog.tag.print">Print</msg>
+    <msg key="baudi.catalog.tag.reprint">Reprint</msg>
     <msg key="baudi.catalog.tag.copy">Copy</msg>
     <msg key="baudi.catalog.tag.collection">Collection</msg>
     
