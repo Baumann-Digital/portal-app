@@ -303,106 +303,129 @@ return
 };
 
 declare function app:registryPersons($node as node(), $model as map(*)) {
-
-    let $personen := collection("/db/apps/baudiPersons/data")//tei:person
-    let $namedPersonsDist := functx:distinct-deep(collection("/db/apps/baudiSources/data")//tei:text//tei:persName[normalize-space(.)])
-    let $namedPersons := collection("/db/apps/baudiSources/data")//tei:text//tei:persName[normalize-space(.)]
     
-return
-(
-<div class="container">
-    <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">Personendateien</a></li>  
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">Alle Erwähnungen</a></li>
-    </ul>
+    let $lang := baudiShared:get-lang()
+    let $persons := collection("/db/apps/baudiPersons/data")//tei:person
+      
+    let $content := <div class="container">
+    <br/>
+
+    <div class="container" style=" height: 600px; overflow-y: scroll;">
     <div class="tab-content">
-    <div class="tab-pane fade show active" id="tab1">
-        <p>Das Personenverzeichnis enthält weiterfündende Informationen zu {count($personen)} Personen.</p>
-      <ul>
-        {
-        for $person in $personen
-        let $surname := $person//tei:surname[1]
-        let $forename := $person//tei:forename[1]
-        let $id := $person/@xml:id
-        order by $surname, $forename
+    {let $cards := for $person in $persons
+                    let $surname := $person//tei:surname[1]
+                    let $forename := string-join($person//tei:forename,' ')
+                    let $name := if($surname and $forename)
+                                 then(concat($surname,', ',$forename))
+                                 else if($surname and not($forename))
+                                 then($surname)
+                                 else if (not($surname) and $forename)
+                                 then($forename)
+                                 else($person/tei:persName)
+                    let $id := $person/@xml:id/string()
+                    
+                    let $status := $person/@status/string()
+                    let $statusSymbol := if($status='checked')
+                                         then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                         else if($status='published')
+                                         then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                         else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                          
+                    order by $name
+                     
+                    return
+                         <div class="card bg-light mb-3">
+                             <div class="card-body">
+                               <div class="row justify-content-between">
+                                    <div class="col">
+                                        <h5 class="card-title">{$name}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                    </div>
+                                    <div class="col-2">
+                                        <p class="text-right">{$statusSymbol}</p>
+                                    </div>
+                               </div>
+                               <p class="card-text"/>
+                               
+                               <a href="person/{$id}" class="card-link">{$id}</a>
+                               <hr/>
+                               <p>Tags</p>
+                             </div>
+                         </div>
+   
         return
-        <li><a href="person/{$id}">{concat(normalize-space(data($surname)),', ',normalize-space(data($forename)))}</a> ({normalize-space($id)})</li>
-        }
-      </ul>
-    </div>
-    <div class="tab-pane fade" id="tab2" >
-        <p>Alle Vorkommen von Personen in alphabetischer Reihenfolge</p>
-         <ul>
-        {
-        for $persName in $namedPersons
-        let $persNameDist := $persName/normalize-space(data(.))
-        let $Quelle := $persName/ancestor::tei:TEI/@xml:id/data(.)
-        order by lower-case($persNameDist)
-        return
-        <li>{$persNameDist} (in: <b>{concat($Quelle,'.xml')}</b>)</li>
-        }
-      </ul>
+            $cards}
         </div>
-        </div>
-    </div>
-)
+      </div>
+   </div>
+       
+       return
+        $content
+
 };
 
 declare function app:person($node as node(), $model as map(*)) {
  
 let $id := request:get-parameter("person-id", "Fehler")
-let $person := collection("/db/apps/baudiPersons/data")//tei:person[@id=$id]
-let $name := $person//tei:title/normalize-space(data(.))
-(:let $namedPersons := collection("/db/apps/baudiSources/data")//tei:text//tei:persName[@key=$id]:)
-(:let $namedPersonsDist := functx:distinct-deep(collection("/db/apps/baudiSources/data")//tei:text//tei:persName[@key=$id]):)
+let $person := collection("/db/apps/baudiPersons/data")//tei:person[@xml:id=$id]
+let $surname := $person//tei:surname[1]
+let $forename := string-join($person//tei:forename,' ')
+let $name := if($surname and $forename)
+             then(concat($forename,' ',$surname))
+             else if($surname and not($forename))
+             then($surname)
+             else if (not($surname) and $forename)
+             then($forename)
+             else($person/tei:persName)
 
 return
 (
-<div class="row">
+<div class="container">
+    <br/>
     <div class="page-header">
-        <a href="../registryPersons.html">&#8592; zum Personenverzeichnis</a>
-        <h1>{$name}</h1>
+        <h3>{$name}</h3>
         <h5>{$id}</h5>
     </div>
-    <div class="container">
-            <ul class="nav nav-pills" role="tablist">
-                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">Zur Person</a></li>  
-                <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">Erwähnungen</a></li>-->
-            </ul>
-          <div class="tab-content">
-            <div class="tab-pane fade show active" id="tab1">
-                {transform:transform($person,doc("/db/apps/baudiApp/resources/xslt/metadataPerson.xsl"), ())}
-                <!--
-                <h4>Bezeichnungen</h4>
-                <ul>
-                {
-                for $persName in $namedPersonsDist
-                let $persNameDist := $persName/normalize-space(data(.))
-                let $Quelle := $persName/ancestor::tei:TEI/@xml:id/data(.)
-                order by lower-case($persNameDist)
-                return
-                (
-                <li>{$persNameDist}</li>
-                )
-                }
-                </ul>
-                -->
-            </div>
-            <!--
-            <div class="tab-pane fade" id="tab2" >
-                <ul>
-                {
-                    for $persName in $namedPersons
-                    let $persNameDist := $persName/normalize-space(data(.))
-                    let $Quelle := $persName/ancestor::tei:TEI/@xml:id/data(.)
-                    order by lower-case($persNameDist)
-                    return
-                    <li>{$persNameDist} (in: <b>{concat($Quelle,'.xml')}</b>)</li>
-                    }
-                </ul>
-            </div>
-            -->
-          </div>
+    <hr/>
+
+    <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">Zur Person</a></li>  
+        <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">Erwähnungen</a></li>-->
+    </ul>
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="tab1">
+    <br/>
+        {transform:transform($person,doc("/db/apps/baudiApp/resources/xslt/metadataPerson.xsl"), ())}
+        <!--
+        <h4>Bezeichnungen</h4>
+        <ul>
+        {
+        for $persName in $namedPersonsDist
+        let $persNameDist := $persName/normalize-space(data(.))
+        let $Quelle := $persName/ancestor::tei:TEI/@xml:id/data(.)
+        order by lower-case($persNameDist)
+        return
+        (
+        <li>{$persNameDist}</li>
+        )
+        }
+        </ul>
+        -->
+    </div>
+    <!--
+    <div class="tab-pane fade" id="tab2" >
+        <ul>
+        {
+            for $persName in $namedPersons
+            let $persNameDist := $persName/normalize-space(data(.))
+            let $Quelle := $persName/ancestor::tei:TEI/@xml:id/data(.)
+            order by lower-case($persNameDist)
+            return
+            <li>{$persNameDist} (in: <b>{concat($Quelle,'.xml')}</b>)</li>
+            }
+        </ul>
+    </div>
+    -->
     </div>
 </div>
 )
