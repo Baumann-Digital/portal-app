@@ -89,9 +89,56 @@
     <msg key="baudi.catalog.works.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.catalog.works.orchestra">Orchestermusik</msg>
     <msg key="baudi.catalog.works.composer">Komponist</msg>
+    <msg key="baudi.catalog.works.composer.female">Komponistin</msg>
     <msg key="baudi.catalog.works.lyricist">Textdichter</msg>
+    <msg key="baudi.catalog.works.lyricist.female">Textdichterin</msg>
     <msg key="baudi.catalog.works.opus.no">Nr.</msg>
     <msg key="baudi.catalog.works.components">Enthaltene Werke</msg>
+    <msg key="baudi.catalog.works.perfmedium">Besetzungsangabe</msg>
+    <msg key="baudi.catalog.works.titleAlt">Alternativer Titel</msg>
+    <msg key="baudi.catalog.works.subtitleAlt">Alternativer Untertitel</msg>
+    <msg key="baudi.catalog.works.langUsed">Verwendete Sprache</msg>
+    <msg key="baudi.catalog.works.langsUsed">Verwendete Sprachen</msg>
+    <msg key="baudi.catalog.works.category">Werkgruppe</msg>
+    <msg key="baudi.catalog.works.genre">Genre</msg>
+    <msg key="baudi.catalog.works.key">Tonart</msg>
+    <msg key="baudi.catalog.works.pname.c">c</msg>
+    <msg key="baudi.catalog.works.pname.cf">ces</msg>
+    <msg key="baudi.catalog.works.pname.cs">cis</msg>
+    <msg key="baudi.catalog.works.pname.d">d</msg>
+    <msg key="baudi.catalog.works.pname.df">des</msg>
+    <msg key="baudi.catalog.works.pname.ds">dis</msg>
+    <msg key="baudi.catalog.works.pname.e">e</msg>
+    <msg key="baudi.catalog.works.pname.ef">es</msg>
+    <msg key="baudi.catalog.works.pname.es">eis</msg>
+    <msg key="baudi.catalog.works.pname.f">f</msg>
+    <msg key="baudi.catalog.works.pname.ff">fes</msg>
+    <msg key="baudi.catalog.works.pname.fs">fis</msg>
+    <msg key="baudi.catalog.works.pname.g">g</msg>
+    <msg key="baudi.catalog.works.pname.gf">ges</msg>
+    <msg key="baudi.catalog.works.pname.gs">gis</msg>
+    <msg key="baudi.catalog.works.pname.a">a</msg>
+    <msg key="baudi.catalog.works.pname.af">as</msg>
+    <msg key="baudi.catalog.works.pname.as">ais</msg>
+    <msg key="baudi.catalog.works.pname.b">h</msg>
+    <msg key="baudi.catalog.works.pname.bf">b</msg>
+    <msg key="baudi.catalog.works.pname.bs">his</msg>
+    
+    
+    <msg key="baudi.catalog.works.major">Dur</msg>
+    <msg key="baudi.catalog.works.minor">Moll</msg>
+    <msg key="baudi.catalog.works.meter">Taktart</msg>
+    <msg key="baudi.catalog.works.tempo">Tempoangabe</msg>
+    <msg key="baudi.catalog.works.perfRes">Beteiligte Instrumente</msg>
+    <msg key="baudi.catalog.works.perfRes.choirMen">Männerchor</msg>
+    <msg key="baudi.catalog.works.perfRes.tenor">Tenor</msg>
+    <msg key="baudi.catalog.works.perfRes.tenor.i">Tenor I</msg>
+    <msg key="baudi.catalog.works.perfRes.tenor.ii">Tenor II</msg>
+    <msg key="baudi.catalog.works.perfRes.bass">Bass</msg>
+    <msg key="baudi.catalog.works.perfRes.bass.i">Bass I</msg>
+    <msg key="baudi.catalog.works.perfRes.bass.ii">Bass II</msg>
+    
+    
     
     <!-- Catalog of Sources -->
     <msg key="baudi.catalog.sources">Quellenkatalog</msg>
@@ -106,14 +153,22 @@
     <msg key="baudi.catalog.sources.composer">Komponist</msg>
     <msg key="baudi.catalog.sources.lyricist">Textdichter</msg>
     <msg key="baudi.catalog.sources.opus.no">Nr.</msg>
-    <msg key="baudi.catalog.sources.print">Drucke</msg>
-    <msg key="baudi.catalog.sources.reprint">Nachdrucke</msg>
-    <msg key="baudi.catalog.sources.manuscript">Handschriften</msg>
-    <msg key="baudi.catalog.sources.copy">Abschriften/Kopien</msg>
-    <msg key="baudi.catalog.sources.collection">Sammlungen</msg>
-    <msg key="baudi.catalog.sources.part">Einzelstimmen</msg>
-    <msg key="baudi.catalog.sources.collections.manuscript">Sammelquellen (Ms.)</msg>
-    <msg key="baudi.catalog.sources.collections.print">Sammelquellen (Dr.)</msg>
+    <msg key="baudi.catalog.sources.print">Druck</msg>
+    <msg key="baudi.catalog.sources.prints">Drucke</msg>
+    <msg key="baudi.catalog.sources.reprint">Nachdruck</msg>
+    <msg key="baudi.catalog.sources.reprints">Nachdrucke</msg>
+    <msg key="baudi.catalog.sources.manuscript">Handschrift</msg>
+    <msg key="baudi.catalog.sources.manuscripts">Handschriften</msg>
+    <msg key="baudi.catalog.sources.copy">Abschrift/Kopie</msg>
+    <msg key="baudi.catalog.sources.copies">Abschriften/Kopien</msg>
+    <msg key="baudi.catalog.sources.collection">Sammlung</msg>
+    <msg key="baudi.catalog.sources.collections">Sammlungen</msg>
+    <msg key="baudi.catalog.sources.part">Einzelstimme</msg>
+    <msg key="baudi.catalog.sources.parts">Einzelstimmen</msg>
+    <msg key="baudi.catalog.sources.collections.manuscript">Sammelquelle (Ms.)</msg>
+    <msg key="baudi.catalog.sources.collections.manuscripts">Sammelquellen (Ms.)</msg>
+    <msg key="baudi.catalog.sources.collections.print">Sammelquelle (Dr.)</msg>
+    <msg key="baudi.catalog.sources.collections.prints">Sammelquellen (Dr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
     <msg key="baudi.catalog.sources.components">Enthaltene Quellen</msg>
     
@@ -157,5 +212,27 @@
     <msg key="november">November</msg>
     <msg key="december">Dezember</msg>
 
-
+    <!-- lang -->
+    <msg key="baudi.lang.de">deutsch</msg>
+    <msg key="baudi.lang.en">englisch</msg>
+    <msg key="baudi.lang.gb">britisch</msg>
+    <msg key="baudi.lang.usa">US-englisch</msg>
+    <msg key="baudi.lang.fr">französisch</msg>
+    <msg key="baudi.lang.it">italienisch</msg>
+    <msg key="baudi.lang.ch">schweizerisch</msg>
+    <msg key="baudi.lang.a">österreichisch</msg>
+    <msg key="baudi.lang.cz">tschechisch</msg>
+    
+    <!-- country -->
+    <msg key="baudi.country.de">Deutschland</msg>
+    <msg key="baudi.country.en">England</msg>
+    <msg key="baudi.country.gb">Großbritannien</msg>
+    <msg key="baudi.country.usa">Vereinigte Staaten</msg>
+    <msg key="baudi.country.fr">Frankreich</msg>
+    <msg key="baudi.country.it">Italien</msg>
+    <msg key="baudi.country.ch">Schweiz</msg>
+    <msg key="baudi.country.a">Österreich</msg>
+    <msg key="baudi.country.cz">Tschechien</msg>
+    
+    <msg key="baudi.catalog.delimiter.key">-</msg>
 </catalogue>

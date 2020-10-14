@@ -75,8 +75,8 @@
     <msg key="baudi.landing.contact.your.message.req">Please enter a message.</msg>
     
     <!-- Catalog of Works -->
-    <msg key="baudi.catalog.works">Catalog of Works</msg>
-    <msg key="baudi.catalog.works.all">All Works</msg>
+    <msg key="baudi.catalog.works">Catalog of works</msg>
+    <msg key="baudi.catalog.works.all">All works</msg>
     <msg key="baudi.catalog.works.song">Songs</msg>
     <msg key="baudi.catalog.works.choir">Choirs</msg>
     <msg key="baudi.catalog.works.cantata">Cantatas</msg>
@@ -86,13 +86,48 @@
     <msg key="baudi.catalog.works.instrumental">Instrumental</msg>
     <msg key="baudi.catalog.works.orchestra">Orchestral</msg>
     <msg key="baudi.catalog.works.composer">Composer</msg>
+    <msg key="baudi.catalog.works.composer.female">Composer</msg>
     <msg key="baudi.catalog.works.lyricist">Lyricist</msg>
+    <msg key="baudi.catalog.works.lyricist.female">Lyricist</msg>
     <msg key="baudi.catalog.works.opus.no">No.</msg>
-    <msg key="baudi.catalog.works.components">Component Works</msg>
+    <msg key="baudi.catalog.works.components">Component works</msg>
+    <msg key="baudi.catalog.works.perfmedium">Performance medium</msg>
+    <msg key="baudi.catalog.works.titleAlt">Alternative title</msg>
+    <msg key="baudi.catalog.works.subtitleAlt">Alternative subtitle</msg>
+    <msg key="baudi.catalog.works.langUsed">Used language(s)</msg>
+    <msg key="baudi.catalog.works.category">Workgroup</msg>
+    <msg key="baudi.catalog.works.genre">Genre</msg>
+    <msg key="baudi.catalog.works.key">Key</msg>
+    <msg key="baudi.catalog.works.pname.c">c</msg>
+    <msg key="baudi.catalog.works.pname.cf">c flat</msg>
+    <msg key="baudi.catalog.works.pname.cs">c sharp</msg>
+    <msg key="baudi.catalog.works.pname.d">d</msg>
+    <msg key="baudi.catalog.works.pname.df">d flat</msg>
+    <msg key="baudi.catalog.works.pname.ds">d sharp</msg>
+    <msg key="baudi.catalog.works.pname.e">e</msg>
+    <msg key="baudi.catalog.works.pname.ef">e flat</msg>
+    <msg key="baudi.catalog.works.pname.es">e sharp</msg>
+    <msg key="baudi.catalog.works.pname.f">f</msg>
+    <msg key="baudi.catalog.works.pname.ff">f flat</msg>
+    <msg key="baudi.catalog.works.pname.fs">f sharp</msg>
+    <msg key="baudi.catalog.works.pname.g">g</msg>
+    <msg key="baudi.catalog.works.pname.gf">g flat</msg>
+    <msg key="baudi.catalog.works.pname.gs">g sharp</msg>
+    <msg key="baudi.catalog.works.pname.a">a</msg>
+    <msg key="baudi.catalog.works.pname.af">a flat</msg>
+    <msg key="baudi.catalog.works.pname.as">a sharp</msg>
+    <msg key="baudi.catalog.works.pname.b">b</msg>
+    <msg key="baudi.catalog.works.pname.bf">b flat</msg>
+    <msg key="baudi.catalog.works.pname.bs">b sharp</msg>
+    <msg key="baudi.catalog.works.major">major</msg>
+    <msg key="baudi.catalog.works.minor">minor</msg>
+    <msg key="baudi.catalog.works.meter">Meter</msg>
+    <msg key="baudi.catalog.works.tempo">Tempo</msg>
+    <msg key="baudi.catalog.works.perfRes">Performance resources</msg>
     
     <!-- Catalog of Sources -->
-    <msg key="baudi.catalog.sources">Catalog of Sources</msg>
-    <msg key="baudi.catalog.sources.all">All Sources</msg>
+    <msg key="baudi.catalog.sources">Catalog of sources</msg>
+    <msg key="baudi.catalog.sources.all">All sources</msg>
     <msg key="baudi.catalog.sources.song">Songs</msg>
     <msg key="baudi.catalog.sources.choir">Choirs</msg>
     <msg key="baudi.catalog.sources.cantata">Cantata</msg>
@@ -103,16 +138,24 @@
     <msg key="baudi.catalog.sources.composer">Composer</msg>
     <msg key="baudi.catalog.sources.lyricist">Lyricist</msg>
     <msg key="baudi.catalog.sources.opus.no">No.</msg>
-    <msg key="baudi.catalog.sources.print">Prints</msg>
-    <msg key="baudi.catalog.sources.reprint">Reprints</msg>
-    <msg key="baudi.catalog.sources.manuscript">Manuscripts</msg>
-    <msg key="baudi.catalog.sources.copy">Copies</msg>
-    <msg key="baudi.catalog.sources.collection">Collections</msg>
-    <msg key="baudi.catalog.sources.part">Parts</msg>
-    <msg key="baudi.catalog.sources.collections.ms">Collections (Ms.)</msg>
-    <msg key="baudi.catalog.sources.collections.pr">Collections (Pr.)</msg>
+    <msg key="baudi.catalog.sources.print">Print</msg>
+    <msg key="baudi.catalog.sources.prints">Prints</msg>
+    <msg key="baudi.catalog.sources.reprint">Reprint</msg>
+    <msg key="baudi.catalog.sources.reprints">Reprints</msg>
+    <msg key="baudi.catalog.sources.manuscript">Manuscript</msg>
+    <msg key="baudi.catalog.sources.manuscripts">Manuscripts</msg>
+    <msg key="baudi.catalog.sources.copy">Copy</msg>
+    <msg key="baudi.catalog.sources.copies">Copies</msg>
+    <msg key="baudi.catalog.sources.collection">Collection</msg>
+    <msg key="baudi.catalog.sources.collections">Collections</msg>
+    <msg key="baudi.catalog.sources.part">Part</msg>
+    <msg key="baudi.catalog.sources.parts">Parts</msg>
+    <msg key="baudi.catalog.sources.collection.ms">Collection (ms.)</msg>
+    <msg key="baudi.catalog.sources.collections.ms">Collections (ms.)</msg>
+    <msg key="baudi.catalog.sources.collection.pr">Collection (pr.)</msg>
+    <msg key="baudi.catalog.sources.collections.pr">Collections (pr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
-    <msg key="baudi.catalog.sources.components">Component Sources</msg>
+    <msg key="baudi.catalog.sources.components">Component sources</msg>
     
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Catalog of Persons</msg>
@@ -149,4 +192,28 @@
     <msg key="october">October</msg>
     <msg key="november">November</msg>
     <msg key="december">December</msg>
+
+    <!-- lang -->
+    <msg key="baudi.lang.de">german</msg>
+    <msg key="baudi.lang.en">english</msg>
+    <msg key="baudi.lang.gb">british</msg>
+    <msg key="baudi.lang.usa">US-english</msg>
+    <msg key="baudi.lang.fr">french</msg>
+    <msg key="baudi.lang.it">italian</msg>
+    <msg key="baudi.lang.ch">swiss</msg>
+    <msg key="baudi.lang.a">austrian</msg>
+    <msg key="baudi.lang.cz">czech</msg>
+    
+    <!-- country -->
+    <msg key="baudi.country.de">Germany</msg>
+    <msg key="baudi.country.en">England</msg>
+    <msg key="baudi.country.gb">Great Britain</msg>
+    <msg key="baudi.country.usa">United Staates</msg>
+    <msg key="baudi.country.fr">France</msg>
+    <msg key="baudi.country.it">Italy</msg>
+    <msg key="baudi.country.ch">Switzerland</msg>
+    <msg key="baudi.country.a">Austria</msg>
+    <msg key="baudi.country.cz">Czech Republik</msg>
+    
+    <msg key="baudi.catalog.delimiter.key"> </msg>
 </catalogue>
