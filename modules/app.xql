@@ -897,14 +897,14 @@ return
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
     let $works := collection("/db/apps/baudiWorks/data")//mei:work[not(parent::mei:componentList)]
-    let $genres := distinct-values(collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre"]/@subtype | collection("/db/apps/baudiWorks/data")//mei:work//mei:titlePart[@type='main' and not(@class)]/@type)
+    let $genres := distinct-values(collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre"]/text() | collection("/db/apps/baudiWorks/data")//mei:work//mei:titlePart[@type='main' and not(@class)]/@type)
     let $dict := collection("/db/apps/baudiResources/data")
     let $content := <div class="container">
     <br/>
          <ul class="nav nav-pills" role="tablist">
             {for $genre at $pos in $genres
                 let $genreDict := if($dict//tei:name[@type=$genre]/text())then($dict//tei:name[@type=$genre]/text())else($genre)
-                let $workCount := count($works//mei:term[@type='genre' and @subtype = $genre])
+                let $workCount := count($works//mei:term[@type='genre' and . = $genre])
                 let $nav-itemMain := <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.works.all')} ({count($works)})</a></li>
                 let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.catalog.works.',$genre))} ({$workCount})</a></li>
                 return
@@ -918,7 +918,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
     <div class="container" >
     <div class="tab-content" style=" height: 600px; overflow-y: scroll;">
     {for $genre at $pos in $genres
-        let $cards := for $work in $works[if($pos=1)then(.)else(.//mei:term[@type='genre' and @subtype = $genre])]
+        let $cards := for $work in $works[if($pos=1)then(.)else(.//mei:term[@type='genre' and . = $genre])]
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and @class='sort']/text()
                          let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
@@ -935,10 +935,10 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                     let $componentId := $componentWork/mei:identifier[@type="baudiWork"]/string()
                                                     return
                                                         $works[@xml:id=$componentId]
-                         let $termWorkGroup := for $tag in $work//mei:term[@type='workGroup']/@subtype/string()
+                         let $termWorkGroup := for $tag in $work//mei:term[@type='workGroup']/text()
                                                 let $label := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.works.',$tag))}</label>
                                                 return $label
-                         let $termGenre := for $tag in $work//mei:term[@type='genre']/@subtype/string()
+                         let $termGenre := for $tag in $work//mei:term[@type='genre']/text()
                                                let $label := <label class="btn btn-outline-secondary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.works.',$tag))}</label>
                                                return $label
                          let $tags := for $each in ($termGenre|$termWorkGroup)
@@ -992,7 +992,7 @@ declare function app:work($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("work-id", "Fehler")
 let $lang := baudiShared:get-lang()
-let $work := collection("/db/apps/baudiWorks/data")/mei:work[@xml:id=$id]
+let $work := collection("/db/apps/baudiWorks/data")//mei:work[@xml:id=$id]
 let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(.)
 let $subtitle := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/normalize-space(.)
 let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
