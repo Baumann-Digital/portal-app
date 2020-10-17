@@ -160,6 +160,9 @@
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Catalog of Persons</msg>
     
+    <!-- Institutions -->
+    <msg key="baudi.catalog.institutions">Catalog of Institutions</msg>
+    
     <!-- Tags -->
     <msg key="baudi.catalog.tag.song">Song</msg>
     <msg key="baudi.catalog.tag.choir">Choir</msg>

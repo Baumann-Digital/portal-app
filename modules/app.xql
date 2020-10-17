@@ -321,13 +321,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
     {let $cards := for $person in $persons
                     let $surname := $person//tei:surname[1]
                     let $forename := string-join($person//tei:forename,' ')
-                    let $name := if($surname and $forename)
-                                 then(concat($surname,', ',$forename))
-                                 else if($surname and not($forename))
-                                 then($surname)
-                                 else if (not($surname) and $forename)
-                                 then($forename)
-                                 else($person/tei:persName)
+                    let $name := baudiShared:getPersNameShort($person)
                     let $id := $person/@xml:id/string()
                     
                     let $status := $person/@status/string()
@@ -480,41 +474,94 @@ return
 };
 
 declare function app:registryInstitutions($node as node(), $model as map(*)) {
-    let $institutionen := collection("/db/apps/baudiInstitutions/data")//tei:institution
+    let $lang := baudiShared:get-lang()
+    let $orgs := collection("/db/apps/baudiInstitutions/data")//tei:org
+      
+    let $content := <div class="container">
+    <br/>
 
-return
-(
-    <div class ="container">
-        <p>Im Institutionenverzeichnis sind {count($institutionen)} Institutionen verzeichnet.</p>
-      <ul>
-        {
-        for $institution in $institutionen
-        let $name := $institution/tei:orgName[@type="used"]
-        let $id := $institution/@id
-        order by $name
+    <div class="container" style=" height: 600px; overflow-y: scroll;">
+    <div class="tab-content">
+    {let $cards := for $org in $orgs
+                    let $name := baudiShared:getOrgNameFull($org)
+                    let $id := $org/@xml:id/string()
+                    
+                    let $status := $org/@status/string()
+                    let $statusSymbol := if($status='checked')
+                                         then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                         else if($status='published')
+                                         then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                         else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                          
+                    order by $name
+                     
+                    return
+                         <div class="card bg-light mb-3">
+                             <div class="card-body">
+                               <div class="row justify-content-between">
+                                    <div class="col">
+                                        <h5 class="card-title">{$name}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                    </div>
+                                    <div class="col-2">
+                                        <p class="text-right">{$statusSymbol}</p>
+                                    </div>
+                               </div>
+                               <p class="card-text"/>
+                               
+                               <a href="{concat($app:dbRoot,'/institution/',$id)}" class="card-link">{$id}</a>
+                               <hr/>
+                               <p>Tags</p>
+                             </div>
+                         </div>
+   
         return
-        <li><a href="{concat($app:dbRoot,'/institution/',$id)}">{$name/normalize-space(data(.))}</a> ({$id/normalize-space(data(.))})</li>
-        }
-      </ul>
-    </div>
-)
+            $cards}
+        </div>
+      </div>
+   </div>
+       
+       return
+        $content
+
 };
 
 declare function app:institution($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("institution-id", "Fehler")
-let $institution := collection("/db/apps/baudiInstitutions/data")/tei:institution[@id=$id]
-let $name := $institution/tei:orgName[@type="used"]
-
+let $org := collection("/db/apps/baudiInstitutions/data")//tei:org[@xml:id=$id]
+let $name := baudiShared:getOrgNameFull($org)
+let $place := $org/tei:location/string()
+let $affiliates := for $person in $org//tei:listPerson/tei:person
+                    let $persID := $person/tei:persName/@key
+                    let $name := $person/tei:persName
+                    return
+                        <li><a href="{concat($app:dbRoot,'/person/',$persID)}">{$name}</a></li>
 return
 (
     <div class="container">
-    <a href="../registryInstitutions.html">&#8592; zum Institutionenverzeichnis</a>
+        <br/>
         <div class="page-header">
             <h1>{$name}</h1>
             <h5>{$id}</h5>
         </div>
-        {transform:transform($institution,doc("/db/apps/baudiApp/resources/xslt/metadataInstitution.xsl"), ())}
+        <br/>
+        <div class="col">
+            <table class="workView">
+                <tr>
+                    <th/>
+                    <th/>
+                </tr>
+                <tr>
+                    <td>Ort</td>
+                    <td>{$place}</td>
+                </tr>
+                <tr>
+                    <td>Personen</td>
+                    <td>{$affiliates}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 )
 };
@@ -1004,7 +1051,7 @@ let $composerID := $composer/mei:persName/@auth
 let $composerEntry := if($composerID)
                       then($app:collectionPersons[matches(@xml:id,$composerID)])
                       else($composer)
-let $composerName := baudiShared:getPersNameShort($composerEntry)
+let $composerName := baudiShared:getPersNameShortLinked($composerEntry)
 let $composerGender := if($composerEntry[@sex="female"]) then('composer.female') else('composer')
 (:let $workLyricist := baudiWork:getLyricist($work):)
 let $lyricist := $work//mei:lyricist
@@ -1013,7 +1060,7 @@ let $lyricistEntry := if($lyricistID)
                       then($app:collectionPersons[matches(@xml:id,$lyricistID)])
                       else($lyricist)
 let $lyricistName := if($lyricistID)
-                      then(baudiShared:getPersNameShort($lyricistEntry))
+                      then(baudiShared:getPersNameShortLinked($lyricistEntry))
                       else($lyricist)
 let $lyricistGender := if($lyricistEntry)
                        then('lyricist.female')

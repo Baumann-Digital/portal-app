@@ -470,15 +470,71 @@ declare function baudiShared:stringJoinAll($node as node()) {
     string-join($node/string(),' | ')
 };
 
+declare function baudiShared:getPersNameFull($person as node()) {
+
+    let $forename := $person/tei:persName/tei:forename[@type='used'][1]
+    let $surname :=  $person/tei:persName/tei:surname[@type='used'][1]
+    let $name := if($surname and $forename)
+                                 then(concat($surname,', ',$forename))
+                                 else if($surname and not($forename))
+                                 then($surname)
+                                 else if (not($surname) and $forename)
+                                 then($forename)
+                                 else($person/tei:persName)
+    
+    return
+        $name
+};
 declare function baudiShared:getPersNameShort($person as node()) {
+
+    let $forename := $person/tei:persName/tei:forename
+    let $surname :=  $person/tei:persName/tei:surname
+    let $name := if($surname and $forename)
+                 then(concat(string-join($surname, ' '),', ',string-join($forename,' ')))
+                 else if($surname and not($forename))
+                 then(string-join($surname,' '))
+                 else if (not($surname) and $forename)
+                 then(string-join($forename, ' '))
+                 else($person/tei:persName)
+    
+    return
+        $name
+};
+
+declare function baudiShared:getPersNameFullLinked($person as node()) {
 
     let $personID := $person/@xml:id
     let $personUri := concat($app:dbRoot, '/person/', $personID)
-    let $forename := $person/tei:persName/tei:forename
-    let $surname :=  $person/tei:persName/tei:surname
+    let $name := baudiShared:getPersNameFull($person)
     
     return
-        <a href="{$personUri}">{concat(string-join($forename, ' '), ' ',string-join($surname))}</a>
+        <a href="{$personUri}">{$name}</a>
 };
 
+declare function baudiShared:getPersNameShortLinked($person as node()) {
 
+    let $personID := $person/@xml:id
+    let $personUri := concat($app:dbRoot, '/person/', $personID)
+    let $name := baudiShared:getPersNameShort($person)
+    
+    return
+        <a href="{$personUri}">{$name}</a>
+};
+
+declare function baudiShared:getOrgNameFull($org as node()) {
+
+    let $name := string-join($org/tei:orgName[1]/text(), ' ')
+    
+    return
+        $name
+};
+
+declare function baudiShared:getOrgNameFullLinked($org as node()) {
+
+    let $orgID := $org/@xml:id
+    let $orgUri := concat($app:dbRoot, '/institution/', $orgID)
+    let $name := baudiShared:getOrgNameFull($org)
+    
+    return
+        <a href="{$orgUri}">{$name}</a>
+};

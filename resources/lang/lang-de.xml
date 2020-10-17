@@ -175,6 +175,9 @@
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Personen-Katalog</msg>
     
+    <!-- Institutions -->
+    <msg key="baudi.catalog.institutions">Institutionen-Katalog</msg>
+    
     <!-- Tags -->
     <msg key="baudi.catalog.tag.song">Lied</msg>
     <msg key="baudi.catalog.tag.choir">Chor</msg>
