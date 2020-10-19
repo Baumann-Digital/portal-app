@@ -13,7 +13,7 @@ table.workView{
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
-table.workView tr:first-of-type td:first-of-type{
+table.workView tr td:first-of-type{
     width:30%;
     vertical-align:top;
 }
@@ -23,7 +23,7 @@ table.personView{
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
-table.personView tr:first-of-type td:first-of-type{
+table.personView tr td:first-of-type{
     width:30%;
     vertical-align:top;
 }
@@ -33,7 +33,7 @@ table.letterView{
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
-table.letterView tr:first-of-type td:first-of-type{
+table.letterView tr td:first-of-type{
     width:20%;
     vertical-align:top;
 }
@@ -43,7 +43,7 @@ table.institutionView{
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
-table.institutionView tr:first-of-type td:first-of-type{
+table.institutionView tr td:first-of-type{
     width:30%;
     vertical-align:top;
 }
@@ -53,7 +53,7 @@ table.letterContentView{
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
-table.letterContentView tr:first-of-type td:first-of-type{
+table.letterContentView tr td:first-of-type{
     width:20%;
     vertical-align:top;
 }
@@ -63,7 +63,7 @@ table.letterContentRegeste{
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
-table.letterContentRegeste tr:first-of-type td:first-of-type{
+table.letterContentRegeste tr td:first-of-type{
     width:10%;
     vertical-align:top;
 }
@@ -99,7 +99,7 @@ table.sourceView{
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
-table.sourceView tr:first-of-type td:first-of-type{
+table.sourceView tr td:first-of-type{
     width:30%;
     vertical-align:top;
 }

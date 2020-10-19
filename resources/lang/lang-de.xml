@@ -14,7 +14,6 @@
     <msg key="baudi.mainNav.project.about">Über das Projekt</msg>
     <msg key="baudi.mainNav.project.about.baudi">BauDi</msg>
     <msg key="baudi.mainNav.project.about.documentation">Dokumentation</msg>
-    
 
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Willkommen!</msg>
@@ -62,7 +61,6 @@
     <msg key="baudi.landing.team.project.manager">Projektleiter</msg>
     <msg key="baudi.landing.team.technical.stuff">Technischer Support</msg>
     <msg key="baudi.landing.team.associate">Wissenschaftlicher Berater</msg>
-    
     
     <!-- Contact form -->
     <msg key="baudi.landing.contact.us">Schreib uns!</msg>
@@ -125,7 +123,6 @@
     <msg key="baudi.catalog.works.pname.bf">b</msg>
     <msg key="baudi.catalog.works.pname.bs">his</msg>
     
-    
     <msg key="baudi.catalog.works.major">Dur</msg>
     <msg key="baudi.catalog.works.minor">Moll</msg>
     <msg key="baudi.catalog.works.meter">Taktart</msg>
@@ -151,9 +148,6 @@
     <msg key="baudi.catalog.works.perfRes.viola">Viola</msg>
     <msg key="baudi.catalog.works.perfRes.cello">Violoncello</msg>
     <msg key="baudi.catalog.works.perfRes.doubleBass">Kontrabass</msg>
-    
-    
-    
     
     <!-- Catalog of Sources -->
     <msg key="baudi.catalog.sources">Quellenkatalog</msg>
@@ -198,6 +192,44 @@
     <msg key="baudi.catalog.sources.components">Enthaltene Quellen</msg>
     <msg key="baudi.catalog.sources.facsimile">Faksimile</msg>
     <msg key="baudi.catalog.sources.facsimile.source">Bildquelle</msg>
+    <msg key="baudi.catalog.sources.tab.main">Überblick</msg>
+    <msg key="baudi.catalog.sources.tab.detail">Beschreibung</msg>
+    <msg key="baudi.catalog.sources.tab.lyrics">Text</msg>
+    <msg key="baudi.catalog.sources.msDesc.repository">Standort</msg>
+    <msg key="baudi.catalog.sources.msDesc.shelfmark">Signatur</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions">Abmessungen</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions.height">Höhe</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions.height.short">H</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions.width">Breite</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions.width.short">B</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.orientation">Ausrichtung</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.orientation.portrait">Hochformat</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.orientation.landscape">Querformat</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.folii">Folii</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pages">Seiten</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pagination">Paginierung</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pagination.none">Keine Seitenzählung</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pagination.arabic">Arabisch</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pagination.roman">Römisch</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands">Handschriftliche Einträge</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.composer">Vermerke des Komponisten</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.biblNote">Bibliothekarische Vermerke</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.publNote">Verlegerische Vermerke</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium">Medium</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.pencil">Bleistift</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil">Buntstift</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil.red">Buntstift (rot)</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil.green">Buntstift (grün)</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil.blue">Buntstift (blau)</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil.pink">Buntstift (rosa)</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.ink.blue">Blaue Tinte</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.ink.black">Schwarze Tinte</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.ink.red">Rote Tinte</msg>
+    <msg key="baudi.catalog.sources.msDesc.paperNotes">Papiervermerke</msg>
+    <msg key="baudi.catalog.sources.msDesc.stamps">Stempel</msg>
+    <msg key="baudi.catalog.sources.msDesc.notes">Weitere Vermerke</msg>
+    <msg key="baudi.catalog.sources.msDesc.scoreFormat">Partitureinrichtung</msg>
+    <msg key="baudi.catalog.sources.msDesc.condition">Zustand</msg>
     
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Personen-Katalog</msg>
@@ -225,6 +257,8 @@
     <msg key="baudi.catalog.tag.reprint">Nachdruck</msg>
     <msg key="baudi.catalog.tag.copy">Abschrift</msg>
     <msg key="baudi.catalog.tag.collection">Sammlung</msg>
+    
+    <msg key="baudi.catalog.praeposition.with"> mit </msg>
     
     <!-- Bread crumb -->
     <msg key="breadCrumb.catalogue">Katalog</msg>
@@ -267,4 +301,9 @@
     <msg key="baudi.country.cz">Tschechien</msg>
     
     <msg key="baudi.catalog.delimiter.key">-</msg>
+    
+    <msg key="baudi.catalog.mei.annot.place.topmar">oben</msg>
+    <msg key="baudi.catalog.mei.annot.place.botmar">unten</msg>
+    <msg key="baudi.catalog.mei.annot.place.leftmar">links</msg>
+    <msg key="baudi.catalog.mei.annot.place.rightmar">rechts</msg>
 </catalogue>

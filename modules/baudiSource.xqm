@@ -72,3 +72,216 @@ declare function baudiSource:getManifestationPerfRes($sourceID as xs:string) {
     return
         $perfResList
 };
+
+declare function baudiSource:getManifestationIdentifiers($sourceID as xs:string) {
+let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
+
+let $msRepository := baudiShared:getCorpNameFullLinked($source//mei:physLoc/mei:repository/mei:corpName)
+let $msRepositorySiglum := $source//mei:physLoc/mei:repository/mei:corpName/@label/string()
+let $msRepositoryShelfmark := $source//mei:physLoc/mei:repository/mei:identifier[@type="shelfmark"]
+let $msRismNo := $source//mei:manifestation/mei:identifier[@type="rism"]
+
+let $table := <table class="sourceView">
+                  <tr>
+                      <th/>
+                      <th/>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.repository')}</td>
+                     <td>{$msRepository} ({$msRepositorySiglum})</td>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.shelfmark')}</td>
+                     <td>{$msRepositoryShelfmark}</td>
+                  </tr>
+                  <tr>
+                     <td>RISM-{baudiShared:translate('baudi.catalog.sources.opus.no')}</td>
+                     <td>{$msRismNo}</td>
+                  </tr>
+               </table>
+return
+    $table
+};
+
+declare function baudiSource:getManifestationPaperSpecs($sourceID  as xs:string) {
+
+let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
+
+let $msPaperDimensionsHeight := $source//mei:dimensions[@label="height"]/text()
+let $msPaperDimensionsHeightUnit := $source//mei:dimensions[@label="height"]/@unit/string()
+let $msPaperDimensionsWidth := $source//mei:dimensions[@label="width"]/text()
+let $msPaperDimensionsWidthUnit := $source//mei:dimensions[@label="width"]/@unit/string()
+let $msPaperDimensions := concat('ca. ', $msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, ' x ', $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit, ' (',baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions.height.short'), 'x', baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions.width.short'),')')
+let $msPaperOrientation := baudiShared:translate(concat('baudi.catalog.sources.msDesc.paper.orientation.', $source//mei:extent[@label="orientation"]/text()))
+let $msPaperFolii := $source//mei:extent[@label="folium"]/text()
+let $msPaperPages := $source//mei:extent[@label="pages"]/text()
+let $msPaperPagination := baudiShared:translate(concat('baudi.catalog.sources.msDesc.paper.pagination.', $source//mei:extent[@label="pagination"]/text()))
+
+let $table := <table class="sourceView">
+                  <tr>
+                      <th/>
+                      <th/>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions')}</td>
+                     <td>{$msPaperDimensions}</td>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.orientation')}</td>
+                     <td>{$msPaperOrientation}</td>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.folii')}</td>
+                     <td>{$msPaperFolii}</td>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.pages')}</td>
+                     <td>{$msPaperPages}</td>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.pagination')}</td>
+                     <td>{$msPaperPagination}</td>
+                  </tr>
+              </table>
+return
+    $table
+};
+
+declare function  baudiSource:getManifestationHands($sourceID as xs:string) {
+let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
+
+let $hands := $source//mei:handList/mei:hand
+let $listOfHands := for $hand in $hands
+                    
+                    let $type := baudiShared:translate(concat('baudi.catalog.sources.msDesc.hands.',$hand/@type))
+                    let $medium := baudiShared:translate(concat('baudi.catalog.sources.msDesc.hands.medium.',$hand/@medium))
+                    let $praeposition := baudiShared:translate('baudi.catalog.praeposition.with')
+                    return
+                        <li>{$type, $praeposition, $medium}</li>
+let $table := <table class="sourceView">
+                  <tr>
+                      <th/>
+                      <th/>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.hands')}</td>
+                     <td>
+                        <ol>
+                            {$listOfHands}
+                        </ol>
+                     </td>
+                  </tr>
+              </table>
+return
+    $table
+};
+
+declare function  baudiSource:getManifestationPaperNotes($sourceID as xs:string) {
+let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
+
+let $paperNote := $source//mei:annot[@type="paperNote"]
+let $paperNotePlace:= tokenize($paperNote/@place, ' ')
+let $paperNotePlaceTranslated := for $token in $paperNotePlace
+                                  let $i18n := baudiShared:translate(concat('baudi.catalog.mei.annot.place.', $token))
+                                  return
+                                    $i18n
+let $table := <table class="sourceView">
+                  <tr>
+                      <th/>
+                      <th/>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paperNotes')}</td>
+                     <td>{concat($paperNote, ' (', string-join($paperNotePlaceTranslated, ' '), ')')}</td>
+                  </tr>
+              </table>
+return
+    $table
+};
+
+declare function  baudiSource:getManifestationStamps($sourceID as xs:string) {
+let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
+
+let $stampNotes := $source//mei:annot[@type="stamp"]
+let $listOfStamps := for $stamp in $stampNotes
+                        let $stampPlace:= tokenize($stamp/@place, ' ')
+                        let $stampPlaceTranslated := for $token in $stampPlace
+                                                        let $i18n := baudiShared:translate(concat('baudi.catalog.mei.annot.place.', $token))
+                                                        return
+                                                           $i18n
+                        let $stampPositions := for $stampPos in tokenize($stamp/@data, ' ')
+                                                  let $stampData := substring-after($stampPos, '#')
+                                                  let $stampPage := $source//mei:surface[matches(@xml:id, $stampData)]/@label/string()
+                                                  return
+                                                     $stampPage
+                        return
+                            <li>{concat($stamp, ' (', string-join($stampPositions, ', '), ' ', string-join($stampPlaceTranslated, ' '), ')')}</li>
+let $table := <table class="sourceView">
+                  <tr>
+                      <th/>
+                      <th/>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.stamps')}</td>
+                     <td><ul style="list-style-type: square;">{$listOfStamps}</ul></td>
+                  </tr>
+              </table>
+return
+    $table
+};
+
+declare function  baudiSource:getManifestationNotes($sourceID as xs:string) {
+let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
+let $notes := $source//mei:annot[not(@type)]
+let $listOfNotes := for $note in $notes
+                        let $notePlace:= tokenize($note/@place, ' ')
+                        let $notePlaceTranslated := for $token in $notePlace
+                                                          let $i18n := baudiShared:translate(concat('baudi.catalog.mei.annot.place.', $token))
+                                                          return
+                                                            $i18n
+                        let $noteData := substring-after($note/@data, '#')
+                        let $noteResp := substring-after($note/@resp, '#')
+                        let $notePage := $source//mei:surface[matches(@xml:id, $noteData)]/@label/string()
+                        let $resp := functx:index-of-node($source//mei:hand, $source//mei:hand[@xml:id = $noteResp])
+                        return
+                            <li>{concat('[Hand ', $resp, ', ', $notePage, ' ', string-join($notePlaceTranslated, ' '), '] ')} <i>{$note/text()}</i></li>
+let $table := <table class="sourceView">
+                  <tr>
+                      <th/>
+                      <th/>
+                  </tr>
+                  <tr>
+                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.notes')}</td>
+                     <td>
+                        <ul style="list-style-type: square;">
+                            {$listOfNotes}
+                        </ul>
+                     </td>
+                  </tr>
+              </table>
+return
+    $table
+};
+
+declare function  baudiSource:getLyrics($sourceID as xs:string) {
+let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
+let $lyrics := $source//mei:div[@type="songtext"]
+let $title := $lyrics//mei:l[@label='title']/text()
+let $lgs := $lyrics/mei:lg[not(@label='title')]
+let $lyricsText := for $lg in $lgs
+                    let $ls := $lg/mei:l
+                    return
+                        (<ul style="list-style-type: none; margin: 0; padding: 0;">
+                            {for $l in $ls
+                                return
+                                    <li>{$l}</li>}
+                        </ul>, <br/>)
+return
+    (
+        <br/>,
+        <b>{$title}</b>,
+        <br/>,
+        <br/>,
+        $lyricsText
+    )
+};

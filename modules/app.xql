@@ -693,6 +693,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
 declare function app:sources-manuscript($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("source-id", "Fehler")
+let $lang := baudiShared:get-lang()
 let $manuscript := collection("/db/apps/baudiSources/data/music")//mei:mei[@xml:id=$id]
 let $fileURI := document-uri($manuscript/root())
 let $name := $manuscript//mei:manifestation//mei:title/mei:titlePart[@type="main"]/normalize-space(data(.))
@@ -711,6 +712,20 @@ let $manuscriptPerfRes := baudiSource:getManifestationPerfRes($id)
 
 let $facsimileTarget := concat($app:BLBfacPath,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
 let $facsimileImageTarget := concat($app:BLBfacPathImage,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
+
+let $msIdentifiers := baudiSource:getManifestationIdentifiers($id)
+
+let $msCondition := $manuscript//mei:condition/mei:p/text()
+
+let $msPaperSpecs := baudiSource:getManifestationPaperSpecs($id)
+
+let $msHands := baudiSource:getManifestationHands($id)
+let $msPaperNotes := baudiSource:getManifestationPaperNotes($id)
+let $msStamps := baudiSource:getManifestationStamps($id)
+let $msNotes := baudiSource:getManifestationNotes($id)
+
+let $msScoreFormat := $manuscript//mei:scoreFormat/text()
+
 return
 (
     <div class="container">
@@ -737,16 +752,17 @@ return
         else()}
     <div class="col">
       <ul class="nav nav-pills" role="tablist">
-          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Überblick</a></li>  
-          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">Im Detail</a></li>
-          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">Liedtext</a></li>
-          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>
+          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.sources.tab.main')}</a></li>  
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">{baudiShared:translate('baudi.catalog.sources.tab.detail')}</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">{baudiShared:translate('baudi.catalog.sources.tab.lyrics')}</a></li>
+          <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>-->
       </ul>
       <!-- Tab panels -->
       <div class="tab-content">
           <div class="tab-pane fade show active" id="main">
+          <div class="container">
           <br/>
-              <table class="workView">
+              <table class="sourceView">
             <tr>
                 <th/>
                 <th/>
@@ -773,6 +789,8 @@ return
                     <td>{$manuscriptTitleSub}</td>
                   </tr>)
              else()}
+             </table>
+             <table class="sourceView">
              {if($manuscriptComposer)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.composer')}</td>
@@ -797,6 +815,8 @@ return
                     <td>{$manuscriptEditor}</td>
                   </tr>)
              else()}
+             </table>
+             <table class="sourceView">
              {if($manuscriptPerfRes)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.perfRes')}</td>
@@ -812,20 +832,75 @@ return
                       else(<b>No incipit available</b>)}
                   </div>
               </div>
+              </div>
           </div>
           <div class="tab-pane fade" id="detail">
-              <p/>
-              {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscriptDetailed.xsl"), ())}
+              <div class="container">
+              <br/>
+                {$msIdentifiers}
+                {if ($msPaperSpecs)
+                 then ($msPaperSpecs)
+                 else ()}
+                 {if ($msHands)
+                 then ($msHands)
+                 else ()}
+                 {if ($msPaperNotes)
+                 then ($msPaperNotes)
+                 else ()}
+                 {if ($msStamps)
+                 then ($msStamps)
+                 else ()}
+                 {if ($msNotes)
+                 then ($msNotes)
+                 else ()}
+                 {if ($msScoreFormat)
+                 then (<table class="sourceView">
+                           <tr>
+                             <th/>
+                             <th/>
+                           </tr>
+                           <tr>
+                             <td>{baudiShared:translate('baudi.catalog.sources.msDesc.scoreFormat')}</td>
+                             <td>
+                               {$msScoreFormat}
+                             </td>
+                           </tr>
+                       </table>)
+                 else ()}
+                 {if ($msCondition)
+                 then (<table class="sourceView">
+                           <tr>
+                             <th/>
+                             <th/>
+                           </tr>
+                           <tr>
+                             <td>{baudiShared:translate('baudi.catalog.sources.msDesc.condition')}</td>
+                             <td>
+                               {$msCondition}
+                             </td>
+                           </tr>
+                       </table>)
+                 else ()}
+              </div>
           </div>
           <div class="tab-pane fade" id="lyrics">
-              <p/>
-                  {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/contentLyrics.xsl"), ())}
+             <div class="container">
+                <table class="sourceView">
+                     <tr>
+                       <th/>
+                       <th/>
+                     </tr>
+                     <tr>
+                         {baudiSource:getLyrics($id)}
+                     </tr>
+                 </table>
+             </div>
           </div>
-          <div class="tab-pane fade" id="verovio">
+          <!--<div class="tab-pane fade" id="verovio">
               <div class="panel-body">
                   <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
               </div>
-          </div>
+          </div>-->
       </div>
     </div>
     </div>

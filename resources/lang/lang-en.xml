@@ -159,6 +159,7 @@
     <msg key="baudi.catalog.sources.editor">Editor</msg>
     <msg key="baudi.catalog.sources.lyricist">Lyricist</msg>
     <msg key="baudi.catalog.sources.perfRes">Performance Ressources</msg>
+    
     <msg key="baudi.catalog.sources.all">All sources</msg>
     <msg key="baudi.catalog.sources.song">Songs</msg>
     <msg key="baudi.catalog.sources.choir">Choirs</msg>
@@ -188,6 +189,44 @@
     <msg key="baudi.catalog.sources.components">Component sources</msg>
     <msg key="baudi.catalog.sources.facsimile">Facsimile</msg>
     <msg key="baudi.catalog.sources.facsimile.source">Image source</msg>
+    <msg key="baudi.catalog.sources.tab.main">Overview</msg>
+    <msg key="baudi.catalog.sources.tab.detail">Description</msg>
+    <msg key="baudi.catalog.sources.tab.lyrics">Lyrics</msg>
+    <msg key="baudi.catalog.sources.msDesc.repository">Location</msg>
+    <msg key="baudi.catalog.sources.msDesc.shelfmark">Shelfmark</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions">Dimensions</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions.height">Height</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions.height.short">H</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions.width">Width</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.dimensions.width.short">W</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.orientation">Orientation</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.orientation.portrait">Portrait</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.orientation.landscape">Landscape</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.folii">Folia</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pages">Pages</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pagination">Pagination</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pagination.none">No Pagination</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pagination.arabic">Arabic</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pagination.roman">Roman</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands">Handwritten annotations</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.composer">Composer annotations</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.biblNote">Librarian annotations</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.publNote">Publisher annotations</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium">Medium</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.pencil">Pencil</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil">Coloured pencil</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil.red">Coloured pencil (red)</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil.green">Coloured pencil (green)</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil.blue">Coloured pencil (blue)</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.colouredPencil.pink">Coloured pencil (pink)</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.ink.blue">Blue ink</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.ink.black">Black ink</msg>
+    <msg key="baudi.catalog.sources.msDesc.hands.medium.ink.red">Red ink</msg>
+    <msg key="baudi.catalog.sources.msDesc.paperNotes">Paper notes</msg>
+    <msg key="baudi.catalog.sources.msDesc.stamps">Stamps</msg>
+    <msg key="baudi.catalog.sources.msDesc.notes">Other notes</msg>
+    <msg key="baudi.catalog.sources.msDesc.scoreFormat">Score format</msg>
+    <msg key="baudi.catalog.sources.msDesc.condition">Condition</msg>
     
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Catalog of Persons</msg>
@@ -215,6 +254,13 @@
     <msg key="baudi.catalog.tag.reprint">Reprint</msg>
     <msg key="baudi.catalog.tag.copy">Copy</msg>
     <msg key="baudi.catalog.tag.collection">Collection</msg>
+    
+    <msg key="baudi.catalog.praeposition.with"> with </msg>
+    
+    <!-- Bread crumb -->
+    <msg key="breadCrumb.catalogue">Catalog</msg>
+    <msg key="breadCrumb.persons">Persons</msg>
+    <msg key="breadCrumb.events">Events</msg>
     
     <!-- Months -->
     <msg key="january">January</msg>
@@ -253,4 +299,9 @@
     <msg key="baudi.country.cz">Czech Republik</msg>
     
     <msg key="baudi.catalog.delimiter.key"> </msg>
+    
+    <msg key="baudi.catalog.mei.annot.place.topmar">top</msg>
+    <msg key="baudi.catalog.mei.annot.place.botmar">bottom</msg>
+    <msg key="baudi.catalog.mei.annot.place.leftmar">left</msg>
+    <msg key="baudi.catalog.mei.annot.place.rightmar">right</msg>
 </catalogue>

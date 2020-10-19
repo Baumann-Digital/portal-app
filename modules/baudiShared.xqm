@@ -558,3 +558,13 @@ declare function baudiShared:getOrgNameFullLinked($org as node()) {
     return
         <a href="{$orgUri}">{$name}</a>
 };
+
+declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
+
+    let $corpID := $corpName/@auth
+    let $corpUri := concat($app:dbRoot, '/institution/', $corpID)
+    let $name := $app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()
+    
+    return
+        <a href="{$corpUri}">{$name}</a>
+};
