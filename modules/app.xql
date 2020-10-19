@@ -9,12 +9,16 @@ import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
 import module namespace baudiWork="http://baumann-digital.de/ns/baudiWork" at "baudiWork.xqm";
+import module namespace baudiSource="http://baumann-digital.de/ns/baudiSource" at "baudiSource.xqm";
 import module namespace functx = "http://www.functx.com" at "functx.xqm";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 
 declare variable $app:dbRoot as xs:string := '/exist/apps/baudiApp';
+declare variable $app:digilibPath as xs:string := 'https://digilib.baumann-digital.de';
+declare variable $app:BLBfacPath as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/content/pageview/';
+declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/image/view/';
 
 declare variable $app:collectionWorks := collection('/db/apps/baudiWorks/data')//mei:work;
 declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiSources/data/music')//mei:mei;
@@ -570,7 +574,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     
     let $lang := baudiShared:get-lang()
     let $sources := collection("/db/apps/baudiSources/data/music")/mei:mei//mei:manifestationList/mei:manifestation (:[1]/ancestor::mei:mei:)
-    (:let $genres := distinct-values(collection("/db/apps/baudiSources/data/music")//mei:term[@type="genre"] | collection("/db/apps/baudiSources/data/music")//mei:term[@type="source"] | collection("/db/apps/baudiSources/data/music")//mei:titlePart[@type='main' and not(@class)]/@type | collection("/db/apps/baudiSources/data/music")//mei:term[.='todo']):)
+    
     let $genres := distinct-values(collection("/db/apps/baudiSources/data/music")//mei:term[@type="source"] | collection("/db/apps/baudiSources/data/music")//mei:titlePart[@type='main' and not(@class)]/@type)
     
     let $content :=<div class="container">
@@ -691,18 +695,28 @@ declare function app:sources-manuscript($node as node(), $model as map(*)) {
 let $id := request:get-parameter("source-id", "Fehler")
 let $manuscript := collection("/db/apps/baudiSources/data/music")//mei:mei[@xml:id=$id]
 let $fileURI := document-uri($manuscript/root())
-let $name := $manuscript//mei:manifestation/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.))
-let $manuscriptOrig := concat('../../../../../baudi-images/music/',$manuscript/@xml:id)
-let $manuscriptOrigBLB := "https://digital.blb-karlsruhe.de/blbihd/image/view/"
-let $manuscriptDigitalisatBLB := "https://digital.blb-karlsruhe.de/blbihd/content/pageview/"
+let $name := $manuscript//mei:manifestation//mei:title/mei:titlePart[@type="main"]/normalize-space(data(.))
+let $manuscriptOrig := concat($app:digilibPath,$manuscript/@xml:id)
+let $manuscriptTitleUniform := baudiSource:getManifestationTitle($id,'uniform')
+let $manuscriptTitleMain := baudiSource:getManifestationTitle($id,'main')
+let $manuscriptTitleSub := baudiSource:getManifestationTitle($id,'sub')
+let $manuscriptTitlePerf := baudiSource:getManifestationTitle($id,'perf')
 
+let $manuscriptComposer := baudiSource:getManifestationPersona($id,'composer')
+let $manuscriptArranger := baudiSource:getManifestationPersona($id,'arranger')
+let $manuscriptEditor := baudiSource:getManifestationPersona($id,'editor')
+let $manuscriptLyricist := baudiSource:getManifestationPersona($id,'lyricist')
+
+let $manuscriptPerfRes := baudiSource:getManifestationPerfRes($id)
+
+let $facsimileTarget := concat($app:BLBfacPath,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
+let $facsimileImageTarget := concat($app:BLBfacPathImage,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
 return
 (
     <div class="container">
-        <div class="page-header">
-            <h1>{$name}</h1>
-            <h5>{$id}</h5>
-        </div>
+        <br/>
+        <div class="page-header"/>
+        <br/>
         <div class="row">
        {if(exists($manuscript//mei:facsimile/mei:surface))
        then(
@@ -711,48 +725,108 @@ return
                 if(doc-available(concat($manuscriptOrig,'_001','.jpeg')))
                 then(<img src="{concat($manuscriptOrig,'_001','.jpeg')}" width="400"/>)
                 else if($manuscript//mei:graphic[@targettype="blb-vlid"])
-                then(<a href="{concat($manuscriptDigitalisatBLB,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)}" target="_blank"><img src="{concat($manuscriptOrigBLB,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)}" width="400"/></a>)
+                then(<a href="{$facsimileTarget}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat (Weiterleitung zu digital.blb-karlsruhe.de)"><img src="{$facsimileImageTarget}" width="400"/></a>)
                 else()
                 }
+                
+                <div>
+                <br/>
+                {baudiShared:translate('baudi.catalog.sources.facsimile.source')}: Badische Landesbibliothek Karlsruhe</div>
         </div>
         )
         else()}
-
     <div class="col">
-    <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Überblick</a></li>  
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">Im Detail</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">Liedtext</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>
-    </ul>
-    <!-- Tab panels -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="main">
-            <p/>
-                {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscript.xsl"), ())}
-            <p/>
-            <div class="card">
-                <div class="card-body">
-                    {if(exists($manuscript//mei:work/mei:incip/mei:score))
-                    then('Incipit soon',<span onload="myIncipit({concat('http://localhost:8080/exist/rest',$fileURI)})"> </span>,<div id="output-verovio"/>)
-                    else(<b>No incipit available</b>)}
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="detail">
-            <p/>
-            {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscriptDetailed.xsl"), ())}
-        </div>
-        <div class="tab-pane fade" id="lyrics">
-            <p/>
-                {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/contentLyrics.xsl"), ())}
-        </div>
-        <div class="tab-pane fade" id="verovio">
-            <div class="panel-body">
-                <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
-            </div>
-        </div>
-    </div>
+      <ul class="nav nav-pills" role="tablist">
+          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Überblick</a></li>  
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">Im Detail</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">Liedtext</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>
+      </ul>
+      <!-- Tab panels -->
+      <div class="tab-content">
+          <div class="tab-pane fade show active" id="main">
+          <br/>
+              <table class="workView">
+            <tr>
+                <th/>
+                <th/>
+            </tr>
+            <tr>
+               <td>ID:</td>
+               <td>{$id}</td>
+            </tr>
+             {if($manuscriptTitleUniform)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.titleUniform')}</td>
+                    <td>{$manuscriptTitleUniform}</td>
+                  </tr>)
+             else()}
+             {if($manuscriptTitleMain)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.title')}</td>
+                    <td>{$manuscriptTitleMain}</td>
+                  </tr>)
+             else()}
+             {if($manuscriptTitleSub)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.titleSub')}</td>
+                    <td>{$manuscriptTitleSub}</td>
+                  </tr>)
+             else()}
+             {if($manuscriptComposer)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.composer')}</td>
+                    <td>{$manuscriptComposer}</td>
+                  </tr>)
+             else()}
+             {if($manuscriptArranger)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.arranger')}</td>
+                    <td>{$manuscriptArranger}</td>
+                  </tr>)
+             else()}
+             {if($manuscriptLyricist)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.lyricist')}</td>
+                    <td>{$manuscriptLyricist}</td>
+                  </tr>)
+             else()}
+             {if($manuscriptEditor)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.editor')}</td>
+                    <td>{$manuscriptEditor}</td>
+                  </tr>)
+             else()}
+             {if($manuscriptPerfRes)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.perfRes')}</td>
+                    <td>{$manuscriptPerfRes}</td>
+                  </tr>)
+             else()}
+             </table>
+              
+              <div class="card">
+                  <div class="card-body">
+                      {if(exists($manuscript//mei:work/mei:incip/mei:score))
+                      then('Incipit soon',<span onload="myIncipit({concat('http://localhost:8080/exist/rest',$fileURI)})"> </span>,<div id="output-verovio"/>)
+                      else(<b>No incipit available</b>)}
+                  </div>
+              </div>
+          </div>
+          <div class="tab-pane fade" id="detail">
+              <p/>
+              {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/metadataSourceManuscriptDetailed.xsl"), ())}
+          </div>
+          <div class="tab-pane fade" id="lyrics">
+              <p/>
+                  {transform:transform($manuscript,doc("/db/apps/baudiApp/resources/xslt/contentLyrics.xsl"), ())}
+          </div>
+          <div class="tab-pane fade" id="verovio">
+              <div class="panel-body">
+                  <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
+              </div>
+          </div>
+      </div>
     </div>
     </div>
     </div>
@@ -982,6 +1056,9 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                     let $componentId := $componentWork/mei:identifier[@type="baudiWork"]/string()
                                                     return
                                                         $works[@xml:id=$componentId]
+                         let $relatedItems := for $rel in $work//mei:relationList/mei:relation
+                                                return
+                                                    $app:collectionSourcesMusic[@xml:id=$rel/@target]//mei:work
                          let $termWorkGroup := for $tag in $work//mei:term[@type='workGroup']/text()
                                                 let $label := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.catalog.works.',$tag))}</label>
                                                 return $label
@@ -1003,12 +1080,22 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                          then(baudiShared:translate('baudi.catalog.works.composer'),': ',$composer/string(),<br/>)
                                                          else()}
                                                         {if($lyricist)
-                                                         then(baudiShared:translate('baudi.catalog.works.lyricist'),': ',$lyricist/string())
+                                                         then(baudiShared:translate('baudi.catalog.works.lyricist'),': ',$lyricist/string(),<br/>)
                                                          else()}
                                                         {if(count($componentWorks)>=1)
                                                          then(baudiShared:translate('baudi.catalog.works.components'),': ',
                                                                 <ul>{for $each in $componentWorks
-                                                                return <li>{baudiShared:getWorkTitle($each)}</li>}</ul>)
+                                                                return <li>{baudiShared:getWorkTitle($each)}</li>}</ul>,<br/>)
+                                                         else()}
+                                                         {if(count($relatedItems)>=1)
+                                                         then(baudiShared:translate('baudi.catalog.works.relSources'),': ',
+                                                                <ul>{for $each in $relatedItems
+                                                                        let $relId := substring-before($each/@xml:id/string(),'-work')
+                                                                        let $sourceType := switch ($each/ancestor::mei:meiHead//mei:manifestation[1]/@class)
+                                                                        case '#ms' return 'manuscript'
+                                                                        case '#pr' return 'print'
+                                                                        default return ''
+                                                                return <li>{baudiShared:getWorkTitle($each)} (<a href="{$app:dbRoot}/sources/{$sourceType}/{$relId}">{$relId}</a>)</li>}</ul>,<br/>)
                                                          else()}</p>
                                    <a href="{concat($app:dbRoot,'/work/',$id)}" class="card-link">{$id}</a>
                                    <hr/>
@@ -1053,7 +1140,6 @@ let $composerEntry := if($composerID)
                       else($composer)
 let $composerName := baudiShared:getPersNameShortLinked($composerEntry)
 let $composerGender := if($composerEntry[@sex="female"]) then('composer.female') else('composer')
-(:let $workLyricist := baudiWork:getLyricist($work):)
 let $lyricist := $work//mei:lyricist
 let $lyricistID := $lyricist/mei:persName/@auth
 let $lyricistEntry := if($lyricistID)

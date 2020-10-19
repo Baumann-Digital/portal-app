@@ -94,6 +94,7 @@
     <msg key="baudi.catalog.works.lyricist.female">Textdichterin</msg>
     <msg key="baudi.catalog.works.opus.no">Nr.</msg>
     <msg key="baudi.catalog.works.components">Enthaltene Werke</msg>
+    <msg key="baudi.catalog.works.relSources">Verwandte Quellen</msg>
     <msg key="baudi.catalog.works.perfmedium">Besetzungsangabe</msg>
     <msg key="baudi.catalog.works.titleAlt">Alternativer Titel</msg>
     <msg key="baudi.catalog.works.subtitleAlt">Alternativer Untertitel</msg>
@@ -130,18 +131,44 @@
     <msg key="baudi.catalog.works.meter">Taktart</msg>
     <msg key="baudi.catalog.works.tempo">Tempoangabe</msg>
     <msg key="baudi.catalog.works.perfRes">Beteiligte Instrumente</msg>
+    <msg key="baudi.catalog.works.perfRes.voice">Singstimme</msg>
     <msg key="baudi.catalog.works.perfRes.choirMen">Männerchor</msg>
+    <msg key="baudi.catalog.works.perfRes.choirWomen">Frauenchor</msg>
+    <msg key="baudi.catalog.works.perfRes.choirMixed">Gemischter Chor</msg>
+    <msg key="baudi.catalog.works.perfRes.choirChildren">Kinderchor</msg>
     <msg key="baudi.catalog.works.perfRes.tenor">Tenor</msg>
     <msg key="baudi.catalog.works.perfRes.tenor.i">Tenor I</msg>
     <msg key="baudi.catalog.works.perfRes.tenor.ii">Tenor II</msg>
     <msg key="baudi.catalog.works.perfRes.bass">Bass</msg>
     <msg key="baudi.catalog.works.perfRes.bass.i">Bass I</msg>
     <msg key="baudi.catalog.works.perfRes.bass.ii">Bass II</msg>
+    <msg key="baudi.catalog.works.perfRes.piano">Klavier</msg>
+    <msg key="baudi.catalog.works.perfRes.organ">Orgel</msg>
+    <msg key="baudi.catalog.works.perfRes.violin">Violine</msg>
+    <msg key="baudi.catalog.works.perfRes.violinSolo">Solo-Violine</msg>
+    <msg key="baudi.catalog.works.perfRes.violin.i">Violine I</msg>
+    <msg key="baudi.catalog.works.perfRes.violin.ii">Violine II</msg>
+    <msg key="baudi.catalog.works.perfRes.viola">Viola</msg>
+    <msg key="baudi.catalog.works.perfRes.cello">Violoncello</msg>
+    <msg key="baudi.catalog.works.perfRes.doubleBass">Kontrabass</msg>
+    
     
     
     
     <!-- Catalog of Sources -->
     <msg key="baudi.catalog.sources">Quellenkatalog</msg>
+    <msg key="baudi.catalog.sources.title">Titel</msg>
+    <msg key="baudi.catalog.sources.titleUniform">Einheitssachtitel</msg>
+    <msg key="baudi.catalog.sources.titleMain">Haupttitel</msg>
+    <msg key="baudi.catalog.sources.titleSub">Untertitel</msg>
+    <msg key="baudi.catalog.sources.titleDipl">Titel (diplomatisch)</msg>
+    <msg key="baudi.catalog.sources.perfMedium">Besetzungshinweis</msg>
+    <msg key="baudi.catalog.sources.composer">Komponist</msg>
+    <msg key="baudi.catalog.sources.arranger">Bearbeiter</msg>
+    <msg key="baudi.catalog.sources.editor">Herausgeber</msg>
+    <msg key="baudi.catalog.sources.lyricist">Textdichter</msg>
+    <msg key="baudi.catalog.sources.perfRes">Beteiligte Instrumente</msg>
+    
     <msg key="baudi.catalog.sources.all">Alle Quellen</msg>
     <msg key="baudi.catalog.sources.song">Lieder</msg>
     <msg key="baudi.catalog.sources.choir">Chöre</msg>
@@ -150,8 +177,6 @@
     <msg key="baudi.catalog.sources.vocal">Vokalmusik</msg>
     <msg key="baudi.catalog.sources.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.catalog.sources.orchestra">Orchestermusik</msg>
-    <msg key="baudi.catalog.sources.composer">Komponist</msg>
-    <msg key="baudi.catalog.sources.lyricist">Textdichter</msg>
     <msg key="baudi.catalog.sources.opus.no">Nr.</msg>
     <msg key="baudi.catalog.sources.print">Druck</msg>
     <msg key="baudi.catalog.sources.prints">Drucke</msg>
@@ -171,9 +196,12 @@
     <msg key="baudi.catalog.sources.collections.prints">Sammelquellen (Dr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
     <msg key="baudi.catalog.sources.components">Enthaltene Quellen</msg>
+    <msg key="baudi.catalog.sources.facsimile">Faksimile</msg>
+    <msg key="baudi.catalog.sources.facsimile.source">Bildquelle</msg>
     
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Personen-Katalog</msg>
+    <msg key="baudi.catalog.persons.unknown">Kein Eintrag gefunden</msg>
     
     <!-- Institutions -->
     <msg key="baudi.catalog.institutions">Institutionen-Katalog</msg>
@@ -189,6 +217,7 @@
     <msg key="baudi.catalog.tag.vocal">Vokal</msg>
     <msg key="baudi.catalog.tag.chamber">Kammer</msg>
     <msg key="baudi.catalog.tag.orchestral">Orchester</msg>
+    <msg key="baudi.catalog.tag.part">Einzelstimme</msg>
     <msg key="baudi.catalog.tag.ensemble">Ensemble</msg>
     <msg key="baudi.catalog.tag.autograph">Autograph</msg>
     <msg key="baudi.catalog.tag.manuscript">Handschrift</msg>

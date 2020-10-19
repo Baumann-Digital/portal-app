@@ -12,7 +12,7 @@ import module namespace config="https://exist-db.org/xquery/config" at "config.x
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace transform="http://exist-db.org/xquery/transform";
 
-import module namespace functx="http://www.functx.com";
+import module namespace functx="http://www.functx.com" at "functx.xqm";
 import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
 
@@ -519,6 +519,26 @@ declare function baudiShared:getPersNameShortLinked($person as node()) {
     
     return
         <a href="{$personUri}">{$name}</a>
+};
+
+declare function baudiShared:getPersonaLinked($id as xs:string) {
+    
+    let $personRecord := $app:collectionPersons[@xml:id = $id]
+    let $personLink := concat($app:dbRoot, '/person/', $id)
+    let $forename := $personRecord/tei:persName/tei:forename
+    let $surname :=  $personRecord/tei:persName/tei:surname
+    let $name := if($surname and $forename)
+                 then(string-join(($forename, $surname),' '))
+                 else if($surname and not($forename))
+                 then(string-join($surname,' '))
+                 else if (not($surname) and $forename)
+                 then(string-join($forename, ' '))
+                 else()
+    
+    return
+        if($name)
+        then(<a href="{$personLink}">{$name}</a>)
+        else (baudiShared:translate('baudi.catalog.persons.unknown'))
 };
 
 declare function baudiShared:getOrgNameFull($org as node()) {

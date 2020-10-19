@@ -91,6 +91,7 @@
     <msg key="baudi.catalog.works.lyricist.female">Lyricist</msg>
     <msg key="baudi.catalog.works.opus.no">No.</msg>
     <msg key="baudi.catalog.works.components">Component works</msg>
+    <msg key="baudi.catalog.works.relSources">Related Sources</msg>
     <msg key="baudi.catalog.works.perfmedium">Performance medium</msg>
     <msg key="baudi.catalog.works.titleAlt">Alternative title</msg>
     <msg key="baudi.catalog.works.subtitleAlt">Alternative subtitle</msg>
@@ -124,9 +125,40 @@
     <msg key="baudi.catalog.works.meter">Meter</msg>
     <msg key="baudi.catalog.works.tempo">Tempo</msg>
     <msg key="baudi.catalog.works.perfRes">Performance resources</msg>
+    <msg key="baudi.catalog.works.perfRes.voice">Singing voice</msg>
+    <msg key="baudi.catalog.works.perfRes.choirMen">Men's choir</msg>
+    <msg key="baudi.catalog.works.perfRes.choirWomen">Women's choir</msg>
+    <msg key="baudi.catalog.works.perfRes.choirMixed">Mixed choir</msg>
+    <msg key="baudi.catalog.works.perfRes.choirChildren">Children's coir</msg>
+    <msg key="baudi.catalog.works.perfRes.tenor">Tenor</msg>
+    <msg key="baudi.catalog.works.perfRes.tenor.i">Tenor I</msg>
+    <msg key="baudi.catalog.works.perfRes.tenor.ii">Tenor II</msg>
+    <msg key="baudi.catalog.works.perfRes.bass">Bass</msg>
+    <msg key="baudi.catalog.works.perfRes.bass.i">Bass I</msg>
+    <msg key="baudi.catalog.works.perfRes.bass.ii">Bass II</msg>
+    <msg key="baudi.catalog.works.perfRes.piano">Piano</msg>
+    <msg key="baudi.catalog.works.perfRes.organ">Organ</msg>
+    <msg key="baudi.catalog.works.perfRes.violin">Violin</msg>
+    <msg key="baudi.catalog.works.perfRes.violinSolo">Solo violin</msg>
+    <msg key="baudi.catalog.works.perfRes.violin.i">Violin I</msg>
+    <msg key="baudi.catalog.works.perfRes.violin.ii">Violin II</msg>
+    <msg key="baudi.catalog.works.perfRes.viola">Viola</msg>
+    <msg key="baudi.catalog.works.perfRes.cello">Cello</msg>
+    <msg key="baudi.catalog.works.perfRes.doubleBass">Double bass</msg>
     
     <!-- Catalog of Sources -->
     <msg key="baudi.catalog.sources">Catalog of sources</msg>
+    <msg key="baudi.catalog.sources.title">Title</msg>
+    <msg key="baudi.catalog.sources.titleUniform">Einheitssachtitel</msg>
+    <msg key="baudi.catalog.sources.titleMain">Main title</msg>
+    <msg key="baudi.catalog.sources.titleSub">Subtitle</msg>
+    <msg key="baudi.catalog.sources.titleDipl">Title (diplomatic)</msg>
+    <msg key="baudi.catalog.sources.perfMedium">Performance specification</msg>
+    <msg key="baudi.catalog.sources.composer">Composer</msg>
+    <msg key="baudi.catalog.sources.arranger">Arranger</msg>
+    <msg key="baudi.catalog.sources.editor">Editor</msg>
+    <msg key="baudi.catalog.sources.lyricist">Lyricist</msg>
+    <msg key="baudi.catalog.sources.perfRes">Performance Ressources</msg>
     <msg key="baudi.catalog.sources.all">All sources</msg>
     <msg key="baudi.catalog.sources.song">Songs</msg>
     <msg key="baudi.catalog.sources.choir">Choirs</msg>
@@ -135,8 +167,6 @@
     <msg key="baudi.catalog.sources.vocal">Vocal</msg>
     <msg key="baudi.catalog.sources.orchestra">Orchestral</msg>
     <msg key="baudi.catalog.sources.instrumental">Instrumental</msg>
-    <msg key="baudi.catalog.sources.composer">Composer</msg>
-    <msg key="baudi.catalog.sources.lyricist">Lyricist</msg>
     <msg key="baudi.catalog.sources.opus.no">No.</msg>
     <msg key="baudi.catalog.sources.print">Print</msg>
     <msg key="baudi.catalog.sources.prints">Prints</msg>
@@ -156,9 +186,12 @@
     <msg key="baudi.catalog.sources.collections.pr">Collections (pr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
     <msg key="baudi.catalog.sources.components">Component sources</msg>
+    <msg key="baudi.catalog.sources.facsimile">Facsimile</msg>
+    <msg key="baudi.catalog.sources.facsimile.source">Image source</msg>
     
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Catalog of Persons</msg>
+    <msg key="baudi.catalog.persons.unknown">No entry found</msg>
     
     <!-- Institutions -->
     <msg key="baudi.catalog.institutions">Catalog of Institutions</msg>
@@ -174,6 +207,7 @@
     <msg key="baudi.catalog.tag.vocal">Vocal</msg>
     <msg key="baudi.catalog.tag.chamber">Chamber</msg>
     <msg key="baudi.catalog.tag.orchestral">Orchestra</msg>
+    <msg key="baudi.catalog.tag.part">Part</msg>
     <msg key="baudi.catalog.tag.ensemble">Ensemble</msg>
     <msg key="baudi.catalog.tag.autograph">Autograph</msg>
     <msg key="baudi.catalog.tag.manuscript">Manuscript</msg>
