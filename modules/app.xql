@@ -40,73 +40,60 @@ declare function functx:distinct-deep
  };
  
 declare function app:registryLetters($node as node(), $model as map(*)) {
-   
-    let $letters := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI
-    let $datum := $letters//tei:correspAction[@type="sent"]//tei:date/@when/xs:date(.)
-    let $datum-first := min($datum)
-    let $datum-last := max($datum)
 
-(:
-    TODO:
-    - filtern nach absender, empfänger, datum  
-:)
+let $lang := baudiShared:get-lang()
+let $letters := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI
+let $datum := $letters//tei:correspAction[@type="sent"]//tei:date/@when/xs:date(.)
+let $datum-first := min($datum)
+let $datum-last := max($datum)
+
+let $content :=    <div class="container">
+                        <br/>
+                
+                        <div class="container" style=" height: 600px; overflow-y: scroll;">
+                            <div class="tab-content">
+                                {let $cards := for $letter in $letters
+                                                let $titel := $letter//tei:fileDesc/tei:titleStmt/tei:title/data()
+                                                let $id := $letter/@xml:id/string()
+                                                let $datumSent := $letter//tei:correspAction[@type="sent"]/tei:date/@when
+                                                let $status := $letter/@status/string()
+                                                let $statusSymbol := if($status='checked')
+                                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                                                     else if($status='published')
+                                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                                                     else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                                                      
+                                                order by $datumSent
+                                                 
+                                                return
+                                                     <div class="card bg-light mb-3">
+                                                         <div class="card-body">
+                                                           <div class="row justify-content-between">
+                                                                <div class="col">
+                                                                    <h6 class="card-subtitle mb-2 text-muted">{format-date($datumSent, '[D]. [MI]. [Y]', $lang, (), ())}</h6>
+                                                                    <h5 class="card-title">{$titel}</h5>
+                                                                    <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <p class="text-right">{$statusSymbol}</p>
+                                                                </div>
+                                                           </div>
+                                                           <p class="card-text"/>
+                                                           <a href="{concat($app:dbRoot,'/letter/',$id)}" class="card-link">{$id}</a>
+                                                           <hr/>
+                                                           <p>Tags</p>
+                                                         </div>
+                                                     </div>
+                               
+                                    return
+                                        $cards}
+                             </div>
+                          </div>
+                   </div>
+       
 return
-(
-    <div class="container">
-      <p>Das Briefeverzeichnis enthält zur Zeit { count($letters) } transkribierte Briefe.</p>
-      <p>Die erfassten Briefe wurden in den Jahren {
-        substring($datum-first,1,4)
-        } bis {
-        substring($datum-last,1,4)
-        } geschrieben.</p>
-        
-        <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#briefe">Briefe</a></li>  
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#adressaten">Adressaten</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#absender">Absender</a></li>
-    </ul>
-    <!-- Tab panels -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="briefe" >
-        <br/>
-        {
-        for $letter in $letters
-        let $titel := $letter//tei:fileDesc/tei:titleStmt/tei:title
-        let $id := $letter/@xml:id
-        let $datumSent := $letter//tei:correspAction[@type="sent"]/tei:date/@when
-        order by $datumSent
-        return
-        <li><a href="{concat($app:dbRoot,'/letter/',$id)}">{$titel/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
-        }
-      
-        </div>
-        <div class="tab-pane fade" id="adressaten" >
-        
-        <p><ul>{
-      let $valuesRec := distinct-values($letters//tei:correspAction[@type="received"]/tei:persName[@key])
-      for $valueRec in $valuesRec
-      order by $valueRec
-      return
-      <li>{$valueRec}</li>
-        }</ul>
-        </p>
-        </div>
-        <div class="tab-pane fade" id="absender" >
-        
-      <p><ul>{
-      let $valuesSent := distinct-values($letters//tei:correspAction[@type="sent"]/tei:persName/normalize-space(data(.)))
-      for $valueSent in $valuesSent
-      order by $valueSent
-      return
-      <li>{$valueSent}</li>
-        }</ul>
-        </p>
-        </div>
-   </div>
-        
-      
-    </div>
-)
+   $content
+
 };
 
 declare function app:letter($node as node(), $model as map(*)) {
@@ -236,34 +223,52 @@ return
 };
 
 declare function app:registryDocuments($node as node(), $model as map(*)) {
-   
-    let $dokumente := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@type='certificate' or @type='Bericht']
-    let $datum := $dokumente//tei:correspAction[@type="sent"]//tei:date/@when/xs:date(.)
-    let $datum-first := min($datum)
-    let $datum-last := max($datum)
-(:    order by $title :)
 
+let $lang := baudiShared:get-lang()
+let $documents := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@type='certificate' or @type='Bericht']
+
+let $content :=    <div class="container">
+                        <br/>
+                
+                        <div class="container" style=" height: 600px; overflow-y: scroll;">
+                            <div class="tab-content">
+                                {let $cards := for $document in $documents
+                                                let $titel := $document//tei:fileDesc/tei:titleStmt/tei:title
+                                                let $id := $document/@xml:id/string()
+                                                let $status := $document/@status/string()
+                                                let $statusSymbol := if($status='checked')
+                                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                                                     else if($status='published')
+                                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                                                     else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                                                      
+                                                order by $titel
+                                                return
+                                                     <div class="card bg-light mb-3">
+                                                         <div class="card-body">
+                                                           <div class="row justify-content-between">
+                                                                <div class="col">
+                                                                    <h5 class="card-title">{$titel/normalize-space(data(.))}</h5>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <p class="text-right">{$statusSymbol}</p>
+                                                                </div>
+                                                           </div>
+                                                           <p class="card-text"/>
+                                                           <a href="{concat($app:dbRoot,'/document/',$id)}" class="card-link">{$id}</a>
+                                                           <hr/>
+                                                           <p>Tags</p>
+                                                         </div>
+                                                     </div>
+                               
+                                    return
+                                        $cards}
+                             </div>
+                          </div>
+                   </div>
+       
 return
-    <div class="container">
-      <p>Das Dokumentenverzeichnis enthält zur Zeit { count($dokumente) } Inhalte.</p>
-      <p>Die erfassten Schriften wurden in den Jahren {
-        substring($datum-first,1,4)
-        } bis {
-        substring($datum-last,1,4)
-        } verfasst.</p>
-      <ul>
-        {
-        for $dokument in $dokumente
-        let $titel := $dokument//tei:fileDesc/tei:titleStmt/tei:title
-        let $id := $dokument/@xml:id
-        let $datumVerfasst := $dokument//tei:correspAction[@type="sent"]/tei:date/@when
-        order by $titel
-        return
-        <li><a href="{concat($app:dbRoot,'/document/',$id)}">{$titel/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
-        }
-      </ul>
-    </div>
-
+   $content
 };
 
 declare function app:document($node as node(), $model as map(*)) {
@@ -437,24 +442,55 @@ return
 
 declare function app:registryPlaces($node as node(), $model as map(*)) {
 
+    let $lang := baudiShared:get-lang()
     let $orte := collection("/db/apps/baudiLoci/data")//tei:place
 
-return
-(
+let $content := 
     <div class="container">
-        <p>Im Orteverzeichnis sind {count($orte)} Orte.</p>
-      <ul>
-        {
-        for $ort in $orte
-        let $name := $ort/tei:placeName
-        let $id := $ort/@id
-        order by $name
-        return
-        <li><a href="{concat($app:dbRoot,'/locus/',$id)}">{$name/normalize-space(data(.))}</a> <span> </span> ({$id/normalize-space(data(.))})</li>
-        }
-      </ul>
-    </div>
-)
+        <br/>
+
+        <div class="container" style=" height: 600px; overflow-y: scroll;">
+            <div class="tab-content">
+                {let $cards := for $ort in $orte
+                                let $name := $ort/tei:placeName[1]
+                                let $id := $ort/@xml:id/string()
+                                let $status := $ort/@status/string()
+                                let $statusSymbol := if($status='checked')
+                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                                     else if($status='published')
+                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                                     else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                                      
+                                order by $name
+                                 
+                                return
+                                     <div class="card bg-light mb-3">
+                                         <div class="card-body">
+                                           <div class="row justify-content-between">
+                                                <div class="col">
+                                                    <h5 class="card-title">{$name}</h5>
+                                                    <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                                </div>
+                                                <div class="col-2">
+                                                    <p class="text-right">{$statusSymbol}</p>
+                                                </div>
+                                           </div>
+                                           <p class="card-text"/>
+                                           
+                                           <a href="{concat($app:dbRoot,'/locus/',$id)}" class="card-link">{concat($name, ' (', $id, ')')}</a>
+                                           <hr/>
+                                           <p>Tags</p>
+                                         </div>
+                                     </div>
+               
+                    return
+                        $cards}
+             </div>
+          </div>
+   </div>
+       
+return
+   $content
 };
 
 declare function app:place($node as node(), $model as map(*)) {
@@ -595,8 +631,8 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     <div class="tab-content">
     {for $genre at $pos in $genres
         let $cards := for $source in $sources[if($genre='main')then(.)else(.//mei:term[@type='source' and . = $genre])]
-                         let $status := if($source//mei:availability)
-                                        then($source//mei:availability/text())
+                         let $status := if($source/ancestor::mei:mei//mei:availability/text())
+                                        then($source/ancestor::mei:mei//mei:availability/text())
                                         else('unchecked')
                          let $statusSymbol := if($status='unchecked')
                                               then(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
@@ -1143,15 +1179,27 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $tags := for $each in ($termGenre|$termWorkGroup)
                                         return ($each,'&#160;')
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
-                         
+                         let $status := $work/@status/string()
+                           let $statusSymbol := if($status='checked')
+                                                 then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                                 else if($status='published')
+                                                 then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                                 else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
                          order by $order
                          return
                              <div class="card bg-light mb-3">
                                  <div class="card-body">
-                                   <h5 class="card-title">{baudiShared:getWorkTitle($work)}</h5>
-                                   <h6>{$titleSub}</h6>
-                                   <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
-                                   <p class="card-text">{if($composer)
+                                    <div class="row justify-content-between">
+                                        <div class="col">
+                                            <h5 class="card-title">{baudiShared:getWorkTitle($work)}</h5>
+                                            <h6>{$titleSub}</h6>
+                                            <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
+                                        </div>
+                                        <div class="col-2">
+                                            <p class="text-right">{$statusSymbol}</p>
+                                        </div>
+                                    </div>
+                                    <p class="card-text">{if($composer)
                                                          then(baudiShared:translate('baudi.catalog.works.composer'),': ',$composer/string(),<br/>)
                                                          else()}
                                                         {if($lyricist)

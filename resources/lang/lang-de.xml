@@ -238,6 +238,12 @@
     <!-- Institutions -->
     <msg key="baudi.catalog.institutions">Institutionen-Katalog</msg>
     
+    <!-- Letters -->
+    <msg key="baudi.catalog.letters">Brief-Katalog</msg>
+    
+    <!-- Documents -->
+    <msg key="baudi.catalog.documents">Dokumenten-Katalog</msg>
+    
     <!-- Tags -->
     <msg key="baudi.catalog.tag.song">Lied</msg>
     <msg key="baudi.catalog.tag.choir">Chor</msg>
