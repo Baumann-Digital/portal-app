@@ -73,6 +73,71 @@ declare function baudiSource:getManifestationPerfRes($sourceID as xs:string) {
         $perfResList
 };
 
+declare function baudiSource:getAmbPitch($ambNote as node()) {
+  let $ambPname := $ambNote/@pname/string()
+  let $ambAccid := $ambNote/@accid/string()
+  let $ambOct := $ambNote/@oct/number()
+  let $ambNoteFull := concat($ambPname,$ambAccid)
+  return
+      if($ambOct < 3)
+      then(
+            (<i>{functx:capitalize-first(baudiShared:translate(concat('baudi.catalog.works.pname.',$ambNoteFull))),
+            if($ambOct - 2 = 0)
+            then()
+            else(<sup>{($ambOct - 2) * -1}</sup>)}</i>)
+            )
+      else if($ambOct >= 3)
+      then(
+            (<i>{baudiShared:translate(concat('baudi.catalog.works.pname.',$ambNoteFull)),
+            if($ambOct - 3 = 0)
+            then()
+            else(<sup>{$ambOct - 3}</sup>)}</i>)
+            )
+      else()
+};
+
+declare function baudiSource:getAmbitus($ambitus as node()) {
+    let $lowest := if($ambitus/mei:ambNote[@type='lowest']) then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='lowest'])) else()
+    let $lowestAlt := if($ambitus/mei:ambNote[@type='lowestAlt']) then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='lowestAlt'])) else()
+    let $highest := if($ambitus/mei:ambNote[@type='highest'])then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='highest']))else()
+    let $highestAlt := if($ambitus/mei:ambNote[@type='highestAlt'])then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='highestAlt']))else()
+    return
+            (
+            if($lowestAlt)
+            then(concat($lowest, ' (', $lowestAlt,')'))
+            else($lowest),
+            '–',
+            if($highestAlt)
+            then($highest, ' (', $highestAlt,')')
+            else($highest)
+            )
+};
+
+declare function baudiSource:getManifestationPerfResWithAmbitus($sourceID as xs:string) {
+    let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
+    let $sourceWork := $source//mei:work
+    let $perfResLists := $sourceWork//mei:perfResList
+    let $perfResList := for $list in $perfResLists
+                        let $perfResListName := $list/@auth
+                        let $perfRess := $list//mei:perfRes
+                        return
+                            (
+                                <b>{baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResListName))}</b>,
+                                <ul style="list-style-type: square;">
+                                    {for $perfRes in $perfRess
+                                        let $perfResVal := $perfRes/@auth
+                                        let $ambitus := if($perfRes/mei:ambitus) then(baudiSource:getAmbitus($perfRes/mei:ambitus)) else()
+                                            return
+                                                <li>{if($ambitus)
+                                                     then (baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResVal)), ' | ', $ambitus)
+                                                     else(baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResVal)))}
+                                                </li>}
+                                </ul>
+                            )
+    return
+        $perfResList
+};
+
 declare function baudiSource:getManifestationIdentifiers($sourceID as xs:string) {
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 

@@ -45,15 +45,6 @@ declare function baudiShared:get-lang() as xs:string? {
   return if($lang != "en" and $lang != "de") then "en" else $lang
 };
 
-declare function baudiShared:langSwitch($node as node(), $model as map(*)) {
-    let $supportedLangVals := ('de', 'en')
-    for $lang in $supportedLangVals
-        return
-            <li class="nav-item">
-                <a id="{concat('lang-switch-', $lang)}" class="nav-link py-2 d-none d-md-inline-block {if (baudiShared:get-lang() = $lang) then ('disabled') else ()}" style="{if (baudiShared:get-lang() = $lang) then ('color: white!important;') else ()}" href="?lang={$lang}">{$lang}</a>
-            </li>
-};
-
 
 (:~ 
 : i18n text from a TEI file

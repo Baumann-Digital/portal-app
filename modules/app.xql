@@ -25,20 +25,15 @@ declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiSource
 declare variable $app:collectionPersons := collection('/db/apps/baudiPersons/data')//tei:person;
 declare variable $app:collectionInstitutions := collection('/db/apps/baudiInstitutions/data')//tei:org;
 
-declare function functx:is-node-in-sequence-deep-equal
-  ( $node as node()? ,
-    $seq as node()* )  as xs:boolean {
+declare function app:langSwitch($node as node(), $model as map(*)) {
+    let $supportedLangVals := ('de', 'en')
+    for $lang in $supportedLangVals
+        return
+            <li class="nav-item">
+                <a id="{concat('lang-switch-', $lang)}" class="nav-link" style="{if (baudiShared:get-lang() = $lang) then ('color: white!important;') else ()}" href="?lang={$lang}" onclick="{response:set-cookie('forceLang', $lang)}">{upper-case($lang)}</a>
+            </li>
+};
 
-   some $nodeInSeq in $seq satisfies deep-equal($nodeInSeq,$node)
- };
- 
-declare function functx:distinct-deep
-  ( $nodes as node()* )  as node()* {
-
-    for $seq in (1 to count($nodes))
-    return $nodes[$seq][not(functx:is-node-in-sequence-deep-equal(.,$nodes[position() < $seq]))]
- };
- 
 declare function app:registryLetters($node as node(), $model as map(*)) {
 
 let $lang := baudiShared:get-lang()
@@ -744,7 +739,7 @@ let $manuscriptArranger := baudiSource:getManifestationPersona($id,'arranger')
 let $manuscriptEditor := baudiSource:getManifestationPersona($id,'editor')
 let $manuscriptLyricist := baudiSource:getManifestationPersona($id,'lyricist')
 
-let $manuscriptPerfRes := baudiSource:getManifestationPerfRes($id)
+let $manuscriptPerfRes := baudiSource:getManifestationPerfResWithAmbitus($id)
 
 let $facsimileTarget := concat($app:BLBfacPath,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
 let $facsimileImageTarget := concat($app:BLBfacPathImage,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
@@ -762,6 +757,45 @@ let $msNotes := baudiSource:getManifestationNotes($id)
 
 let $msScoreFormat := $manuscript//mei:scoreFormat/text()
 
+let $usedLang := for $lang in $manuscript//mei:langUsage/mei:language/@auth
+                    return
+                        baudiShared:translate(concat('baudi.lang.',$lang))
+let $key := for $each in $manuscript//mei:key
+              let $keyPname := $each/@pname
+              let $keyMode := $each/@mode
+              let $keyAccid := $each/@accid
+              let $keyPnameFull := concat($keyPname,$keyAccid)
+              return
+                  if($keyMode = 'major')
+                  then(concat(
+                                functx:capitalize-first(baudiShared:translate(concat('baudi.catalog.works.pname.',$keyPnameFull))),
+                                baudiShared:translate('baudi.catalog.delimiter.key'),
+                                baudiShared:translate(concat('baudi.catalog.works.',$keyMode))
+                             )
+                        )
+                  else if($keyMode = 'minor')
+                  then(concat(
+                                baudiShared:translate(concat('baudi.catalog.works.pname.',$keyPnameFull)),
+                                baudiShared:translate('baudi.catalog.delimiter.key'),
+                                baudiShared:translate(concat('baudi.catalog.works.',$keyMode))
+                             )
+                      )
+                  else()
+let $meter := for $each in $manuscript//mei:meter
+                let $meterCount := $each/@count
+                let $meterUnit := $each/@unit
+                let $meterSym := $each/@sym
+                let $meterSymbol := if($meterSym = 'common')
+                                   then(<img src="/exist/apps/baudiApp/resources/img/timeSignature_common.png" width="20px"/>)
+                                   else if($meterSym = 'cut')
+                                   then(<img src="/exist/apps/baudiApp/resources/img/timeSignature_cut.png" width="20px"/>)
+                                   else()
+                return
+                    if($meterSymbol)
+                    then($meterSymbol)
+                    else(concat($meterCount, '/', $meterUnit))
+let $tempo := $manuscript//mei:work/mei:tempo/text()
+
 return
 (
     <div class="container">
@@ -776,7 +810,7 @@ return
                 if(doc-available(concat($manuscriptOrig,'_001','.jpeg')))
                 then(<img src="{concat($manuscriptOrig,'_001','.jpeg')}" width="400"/>)
                 else if($manuscript//mei:graphic[@targettype="blb-vlid"])
-                then(<a href="{$facsimileTarget}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat (Weiterleitung zu digital.blb-karlsruhe.de)"><img src="{$facsimileImageTarget}" width="400"/></a>)
+                then(<a href="{$facsimileTarget}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat unter digital.blb-karlsruhe.de"><img class="img-thumbnail" src="{$facsimileImageTarget}" width="400"/></a>)
                 else()
                 }
                 
@@ -853,6 +887,35 @@ return
              else()}
              </table>
              <table class="sourceView">
+             {if(not($usedLang/data(.) = ''))
+             then(<tr>
+                    <td>{if(count($usedLang) = 1)
+                         then(baudiShared:translate('baudi.catalog.works.langUsed'))
+                         else if(count($usedLang) > 1)
+                         then(baudiShared:translate('baudi.catalog.works.langsUsed'))
+                         else()}</td>
+                    <td>{string-join($usedLang,', ')}</td>
+                  </tr>)
+             else()}
+             
+             {if(count($key) > 0)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.key')}</td>
+                    <td>{normalize-space(string-join($key, ' | '))}</td>
+                  </tr>)
+             else()}
+             {if(count($meter) > 0)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.meter')}</td>
+                    <td>{$meter}</td>
+                  </tr>)
+             else()}
+             {if($tempo)
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.catalog.works.tempo')}</td>
+                    <td><i>{normalize-space($tempo)}</i></td>
+                  </tr>)
+             else()}
              {if($manuscriptPerfRes)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.perfRes')}</td>
