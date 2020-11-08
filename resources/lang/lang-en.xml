@@ -241,6 +241,9 @@
     <!-- Documents -->
     <msg key="baudi.catalog.documents">Catalog of Documents</msg>
     
+    <!-- Periodicals -->
+    <msg key="baudi.catalog.periodicals">Periodicals</msg>
+    
     <!-- Tags -->
     <msg key="baudi.catalog.tag.song">Song</msg>
     <msg key="baudi.catalog.tag.choir">Choir</msg>
@@ -310,4 +313,6 @@
     <msg key="baudi.catalog.mei.annot.place.botmar">bottom</msg>
     <msg key="baudi.catalog.mei.annot.place.leftmar">left</msg>
     <msg key="baudi.catalog.mei.annot.place.rightmar">right</msg>
+    
+    <msg key="baudi.conjunction.for">for</msg>
 </catalogue>

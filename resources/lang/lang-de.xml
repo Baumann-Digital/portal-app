@@ -189,7 +189,7 @@
     <msg key="baudi.catalog.sources.collections.print">Sammelquelle (Dr.)</msg>
     <msg key="baudi.catalog.sources.collections.prints">Sammelquellen (Dr.)</msg>
     <msg key="baudi.catalog.sources.todo">ToDo</msg>
-    <msg key="baudi.catalog.sources.components">Enthaltene Quellen</msg>
+    <msg key="baudi.catalog.sources.components">Enthält weitere Quellen</msg>
     <msg key="baudi.catalog.sources.facsimile">Faksimile</msg>
     <msg key="baudi.catalog.sources.facsimile.source">Bildquelle</msg>
     <msg key="baudi.catalog.sources.tab.main">Überblick</msg>
@@ -243,6 +243,9 @@
     
     <!-- Documents -->
     <msg key="baudi.catalog.documents">Dokumenten-Katalog</msg>
+    
+    <!-- Periodicals -->
+    <msg key="baudi.catalog.periodicals">Zeitschriften</msg>
     
     <!-- Tags -->
     <msg key="baudi.catalog.tag.song">Lied</msg>
@@ -312,4 +315,8 @@
     <msg key="baudi.catalog.mei.annot.place.botmar">unten</msg>
     <msg key="baudi.catalog.mei.annot.place.leftmar">links</msg>
     <msg key="baudi.catalog.mei.annot.place.rightmar">rechts</msg>
+    
+    <msg key="baudi.conjunction.for">für</msg>
+    
+    
 </catalogue>
