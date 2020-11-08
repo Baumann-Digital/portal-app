@@ -192,7 +192,7 @@ else
 					</dispatch>
 					
 						
-						(: if it's a manuskript :)
+						(: if it's a manuscript :)
 					else
 						if (matches($exist:path, "/sources/manuscript/")) then
 							<dispatch
@@ -221,7 +221,7 @@ else
 							</dispatch>
 							
 							
-							(: if it's a print :)
+						(: if it's a print :)
 						else
 							if (matches($exist:path, "/sources/print/")) then
 								<dispatch
@@ -248,7 +248,34 @@ else
 											url="{$exist:controller}/modules/view.xql"/>
 									</error-handler>
 								</dispatch>
-							
+						
+						(: if it's a periodical :)
+						else
+							if (matches($exist:path, "/periodical/")) then
+								<dispatch
+									xmlns="http://exist.sourceforge.net/NS/exist">
+									<forward
+										url="{$exist:controller}/html/viewPeriodical.html">
+										<add-parameter
+											name="periodical-id"
+											value="{$exist:resource}"/>
+									</forward>
+									<view>
+										<forward
+											url="{$exist:controller}/modules/view.xql">
+											<add-parameter
+												name="periodical-id"
+												value="{$exist:resource}"/>
+										</forward>
+									</view>
+									<error-handler>
+										<forward
+											url="{$exist:controller}/templates/error-page.html"
+											method="get"/>
+										<forward
+											url="{$exist:controller}/modules/view.xql"/>
+									</error-handler>
+								</dispatch>
 							
 							else
 								if ($exist:path eq "/") then

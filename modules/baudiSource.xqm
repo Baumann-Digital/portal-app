@@ -53,6 +53,7 @@ declare function baudiSource:getManifestationPersona($sourceID as xs:string, $pa
         $sourceManifestationPersona
 };
 
+
 declare function baudiSource:getManifestationPerfRes($sourceID as xs:string) {
     let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
     let $sourceWork := $source//mei:work
@@ -61,14 +62,12 @@ declare function baudiSource:getManifestationPerfRes($sourceID as xs:string) {
                         let $perfResListName := $list/@auth
                         let $perfRess := $list//mei:perfRes/@auth
                         return
-                            (
-                                <b>{baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResListName))}</b>,
-                                <ul style="list-style-type: square;">
-                                    {for $perfRes in $perfRess
+                            if($perfResListName)
+                            then(baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResListName)))
+                            else(string-join(for $perfRes in $perfRess
                                         return
-                                            <li>{baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfRes))}</li>}
-                                </ul>
-                            )
+                                            baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfRes)),' | ')
+                                )
     return
         $perfResList
 };

@@ -503,7 +503,7 @@ declare function baudiShared:getPersNameFullLinked($person as node()) {
 };
 
 declare function baudiShared:getPersNameShortLinked($person as node()) {
-
+    
     let $personID := $person/@xml:id
     let $personUri := concat($app:dbRoot, '/person/', $personID)
     let $name := baudiShared:getPersNameShort($person)

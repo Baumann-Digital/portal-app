@@ -21,7 +21,7 @@ import module namespace jsonp="http://www.jsonp.org";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
 
-declare function baudiWork:getLyricist($work as node()) {
+(:declare function baudiWork:getLyricist($work as node()) {
   let $collectionPersons := collection('/db/apps/baudiPersons/data')//tei:person
   let $lyricists := $work//mei:lyricist/mei:persName
   return
@@ -40,4 +40,40 @@ declare function baudiWork:getLyricist($work as node()) {
              
         return
           <h3>[lyricistID:'{$lyricistID/string()}', lyricistName:'{$lyricistName}', lyricistGender:'{$lyricistGender}']</h3>
+};:)
+
+declare function baudiWork:getPerfRes($workID as xs:string) {
+    let $workDoc := $app:collectionWorks[@xml:id=$workID]
+    let $work := $workDoc//mei:work
+    let $perfResLists := $workDoc//mei:perfMedium/mei:perfResList
+    let $perfResList := for $list in $perfResLists
+                        let $perfResListName := $list/@auth
+                        let $perfRess := $list//mei:perfRes/@auth
+                        return
+                            if($perfResListName)
+                            then(baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResListName)))
+                            else(string-join(for $perfRes in $perfRess
+                                        return
+                                            baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfRes)),' | ')
+                                )
+    return
+        $perfResList
+};
+
+declare function baudiWork:getPerfResDetail($workID as xs:string) {
+    let $workDoc := $app:collectionWorks[@xml:id=$workID]
+    let $work := $workDoc//mei:work
+    let $perfResList := $workDoc//mei:perfMedium//mei:perfResList
+    let $perfResList := for $list in $perfResList
+                        let $perfResListName := $list/@auth
+                        let $perfRess := $list//mei:perfRes/@auth
+                        return
+                            if($perfResListName)
+                            then(baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResListName)))
+                            else(string-join(for $perfRes in $perfRess
+                                        return
+                                            baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfRes)),' | ')
+                                )
+    return
+        $perfResList
 };

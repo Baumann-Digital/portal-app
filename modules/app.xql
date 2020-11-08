@@ -24,6 +24,7 @@ declare variable $app:collectionWorks := collection('/db/apps/baudiWorks/data')/
 declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiSources/data/music')//mei:mei;
 declare variable $app:collectionPersons := collection('/db/apps/baudiPersons/data')//tei:person;
 declare variable $app:collectionInstitutions := collection('/db/apps/baudiInstitutions/data')//tei:org;
+declare variable $app:collectionPeriodicals := collection('/db/apps/baudiPeriodicals/data')//tei:TEI;
 
 declare function app:langSwitch($node as node(), $model as map(*)) {
     let $supportedLangVals := ('de', 'en')
@@ -630,11 +631,11 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                         then($source/ancestor::mei:mei//mei:availability/text())
                                         else('unchecked')
                          let $statusSymbol := if($status='unchecked')
-                                              then(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
                                               else if($status='checked')
-                                              then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
                                               else($status)
                          let $title := $source//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                          let $titleSort := $title[1]
@@ -646,7 +647,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                                    then(concat(' ',baudiShared:translate('baudi.catalog.sources.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $id := $source/ancestor::mei:mei/@xml:id/normalize-space(data(.))
-                         let $perfMedium := string-join($source/ancestor::mei:mei//mei:work//mei:perfRes/normalize-space(text()[1]),' | ')
+                         let $perfMedium := baudiSource:getManifestationPerfRes($id)
                          let $composer := $source//mei:composer
                          let $lyricist := $source//mei:lyricist
                          let $componentSources := for $componentSource in $source//mei:componentList/mei:manifestation
@@ -674,9 +675,9 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                         <div class="col">
                                         <h6 class="text-muted">Werk zugewiesen: {if($source//mei:relation[not(@type='edirom')]/@corresp)then(<i>{baudiShared:getWorkTitle($app:collectionWorks[@xml:id=$source//mei:relation/@corresp])}</i>, '&#160;', $source//mei:relation[@rel='isEmbodimentOf' and not(@type='edirom')]/@corresp/string()) else('noch nicht erfolgt!')}</h6>
                                             <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
-                                            {if(exists($titleSub))then(<h6>{$titleSub}</h6>)else()}
-                                            {if(exists($titleSub2))then(<h6>{$titleSub2}</h6>)else()}
-                                            <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
+                                            {if($titleSub != '')then(<h6 class="card-subtitle mb-2">{$titleSub}</h6>)else()}
+                                            {if($titleSub2 != '')then(<h6 class="card-subtitle mb-2">{$titleSub2}</h6>)else()}
+                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', $perfMedium}</h6>
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
@@ -690,10 +691,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                      then(baudiShared:translate('baudi.catalog.sources.lyricist'),': ',$lyricist)
                                      else()}
                                     {if(count($componentSources)>=1)
-                                     then(baudiShared:translate('baudi.catalog.sources.components'),': ',
-                                                                 <ul>{for $each in $componentSources
-                                                                        return <li>{$each}</li>}
-                                                                 </ul>)
+                                     then(<i>{baudiShared:translate('baudi.catalog.sources.components'), concat(' (', count($componentSources), ')')}</i>)
                                      else()}
                                    </p>
                                    <a href="{concat($app:dbRoot,'/sources/', $source//mei:term[@type='source'][1]/string(), '/',$id)}" class="card-link">{$id}</a>
@@ -1087,13 +1085,20 @@ return
 
 declare function app:aboutProject($node as node(), $model as map(*)) {
 
-let $text := doc("/db/apps/baudiTexts/data/portal/aboutProject.xml")/tei:TEI
+let $text := doc("/db/apps/baudiTexts/data/portal/aboutProject.xml")/tei:TEI//tei:body
 
 
 return
 (
     <div class="container">
-        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/portal.xsl"), ())}
+        <br/>
+        <div class="page-header">
+            <h1>Was ist <i>BauDi</i>?</h1>
+        </div>
+        <hr/>
+        <div class="container">
+            {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+        </div>
     </div>
 )
 };
@@ -1103,28 +1108,33 @@ declare function app:aboutBaumann($node as node(), $model as map(*)) {
 let $text := doc("/db/apps/baudiTexts/data/portal/aboutBaumann.xml")/tei:TEI//tei:text
 
 return
-(
     <div class="container">
-    <!--<p>TEST: {$baudiVersions:versions}</p>-->
-        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+        <br/>
+        <div class="page-header">
+            <h1>Ludwig Baumann <span class="text-muted" style="font-size: x-large;">(1866–1944)</span></h1>
+        </div>
+        <hr/>
+        <div class="container">
+            {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+        </div>
     </div>
-)
 };
 
-declare function app:statusBearb($node as node(), $model as map(*)) {
+declare function app:impressum($node as node(), $model as map(*)) {
 
-let $object := doc("/db/contents/baudi/register/bearbStatusBLB-HS.xml")
+let $text := doc("/db/apps/baudiTexts/data/portal/impressum.xml")//tei:body
 
 return
 (
-<div class="container">
-<div class="page-header">
-<a href="../index.html">&#8592; zurück zur Startseite</a>
-            <h1>Status der Bestandsbearbeitung (HS: D-KA, D-KAsa)</h1>
+    <div class="container">
+        <br/>
+        <div class="page-header">
+            <h1>Impressum</h1>
         </div>
+        <hr/>
         <div class="container">
-        {transform:transform($object,doc("/db/apps/baudiApp/resources/xslt/rismxml2html.xsl"), ())}
-    </div>
+            {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+        </div>
     </div>
 )
 };
@@ -1136,27 +1146,105 @@ let $text := doc('/db/apps/baudiTexts/data/portal/index.xml')
 return
 (
     <div class="container">
-        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/portal.xsl"), ())}
+        <br/>
+        <div class="page-header">
+            <h1>Startseite</h1>
+        </div>
+        <hr/>
+        <div class="container">
+            {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+        </div>
     </div>
 )
 };
 
-declare function app:zeitungsarchiv($node as node(), $model as map(*)) {
+declare function app:registryPeriodicals($node as node(), $model as map(*)) {
 
-let $text := doc('/db/contents/baudi/register/zeitungsarchiv.xml')
+let $collection := $app:collectionPeriodicals
 
+let $cards := for $item in $collection
+                let $id := $item/@xml:id/string()
+                let $title := $item//tei:sourceDesc//tei:title[@type="main"]/text()
+                let $titleSub := for $each in $item//tei:series/tei:title/text()
+                                    return
+                                        ($each,<br/>)
+                let $titleIssue := $item//tei:fileDesc/tei:titleStmt/tei:title/text()
+                let $publisher := $item//tei:sourceDesc//tei:publisher/text()
+                let $pubPlace := $item//tei:sourceDesc//tei:pubPlace/text()
+                let $pubDate := $item//tei:sourceDesc//tei:date/text()
+                let $volume := $item//tei:sourceDesc//tei:biblScope[@unit="volume"]/text()
+                let $issue := $item//tei:sourceDesc//tei:biblScope[@unit="issue"]/text()
+                let $status := $item//tei:publicationStmt/tei:p
+                let $statusSymbol := if($status='checked')
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                              else if($status='published')
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                              else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+
+                return
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <h5 class="card-title">{$title}</h5>
+                                    {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
+                                </div>
+                                <div class="col-2">
+                                    <p class="text-right">{$statusSymbol}</p>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                {concat($publisher, ' ', $pubPlace, ' (', $pubDate, ')')}
+                                <br/>
+                                {concat('Jg. ', $volume, ' H. ', $issue)}
+                            </p>
+                            <hr/>
+                            <a href="{concat($app:dbRoot,'/periodical/',$id)}" class="card-link">{$id}</a>
+                        </div>
+                    </div>
+        
 return
 (
 <div class="container">
-        <a href="../index.html">← zurück zur Startseite</a>
+        <br/>
         <div class="page-header">
-            <h1>Zeitungarchiv</h1>
+            <h1><i18n:text key="baudi.catalog.periodocals"/></h1>
         </div>
-    <div class="container">
-        {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/zeitungsarchiv.xsl"), ())}
-    </div>
+        <hr/>
+        <div class="container">
+            {$cards}
+        </div>
     </div>
 )
+};
+
+declare function app:periodical($node as node(), $model as map(*)) {
+ 
+let $id := request:get-parameter("periodical-id", "Fehler")
+let $issue := collection("/db/apps/baudiPeriodicals/data")//tei:TEI[@xml:id=$id]
+let $titleIssue := $issue//tei:fileDesc/tei:titleStmt/tei:title/text()
+let $text := $issue//tei:body
+
+return
+  <div class="container">
+      <br/>
+      <div class="page-header">
+          <h3>{$titleIssue}</h3>
+          <h5>{$id}</h5>
+      </div>
+      <hr/>
+  
+      <ul class="nav nav-pills" role="tablist">
+          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">Inhalt</a></li>  
+          <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">Erwähnungen</a></li>-->
+      </ul>
+      <div class="tab-content">
+          <div class="tab-pane fade show active" id="tab1">
+              <br/>
+              {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+          </div>
+      </div>
+  </div>
 };
 
 declare function app:guidelines($node as node(), $model as map(*)) {
@@ -1222,8 +1310,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $numberOpusCounter := if($numberOpusCount)
                                                    then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
                                                    else()
-                         let $id := $work/@xml:id/normalize-space(data(.))
-                         let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type='perfmedium']/normalize-space(text()[1])
+                         let $id := $work/@xml:id/string()
                          let $composer := $work//mei:composer
                          let $lyricist := $work//mei:lyricist
                          let $componentWorks := for $componentWork in $work//mei:componentList/mei:work
@@ -1243,11 +1330,11 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                         return ($each,'&#160;')
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
-                           let $statusSymbol := if($status='checked')
-                                                 then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
-                                                 else if($status='published')
-                                                 then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
-                                                 else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                         let $statusSymbol := if($status='checked')
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                              else if($status='published')
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                              else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
                          order by $order
                          return
                              <div class="card bg-light mb-3">
@@ -1255,8 +1342,8 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                     <div class="row justify-content-between">
                                         <div class="col">
                                             <h5 class="card-title">{baudiShared:getWorkTitle($work)}</h5>
-                                            <h6>{$titleSub}</h6>
-                                            <h6 class="card-subtitle mb-2 text-muted">{$perfMedium}</h6>
+                                            {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
+                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiWork:getPerfRes($id)}</h6>
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
@@ -1375,7 +1462,7 @@ let $meter := for $each in $work//mei:meter
                     if($meterSymbol)
                     then($meterSymbol)
                     else(concat($meterCount, '/', $meterUnit))
-let $tempo := $work//mei:tempo/text()
+let $tempo := $work//mei:work/mei:tempo/text()
 
 let $workgroup := $work//mei:term[@type='workGroup']/text()
 let $genre := $work//mei:term[@type='genre']/text()
@@ -1484,7 +1571,7 @@ return
              {if($perfResList)
              then(<tr>
                     <td style="vertical-align: top;">{baudiShared:translate('baudi.catalog.works.perfRes')}</td>
-                    <td>{$perfResList}</td>
+                    <td>{baudiWork:getPerfResDetail($id)}</td>
                   </tr>)
              else()}
              </table>

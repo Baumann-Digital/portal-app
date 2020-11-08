@@ -103,3 +103,7 @@ table.sourceView tr td:first-of-type{
     width:30%;
     vertical-align:top;
 }
+
+.card-subtitle-baudi {
+    margin-top: -0.255rem ! important;
+}
