@@ -54,10 +54,10 @@ let $content :=    <div class="container">
                                                 let $datumSent := $letter//tei:correspAction[@type="sent"]/tei:date/@when
                                                 let $status := $letter/@status/string()
                                                 let $statusSymbol := if($status='checked')
-                                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
-                                                                     else if($status='published')
-                                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
-                                                                     else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                                                     else if($status='public')
+                                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                                                     else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                                                                       
                                                 order by $datumSent
                                                  
@@ -233,10 +233,10 @@ let $content :=    <div class="container">
                                                 let $id := $document/@xml:id/string()
                                                 let $status := $document/@status/string()
                                                 let $statusSymbol := if($status='checked')
-                                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                                                      else if($status='published')
-                                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
-                                                                     else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                                                     else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                                                                       
                                                 order by $titel
                                                 return
@@ -331,10 +331,10 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                     
                     let $status := $person/@status/string()
                     let $statusSymbol := if($status='checked')
-                                         then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                         then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                          else if($status='published')
-                                         then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
-                                         else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                         then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                         else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                                           
                     order by $name
                      
@@ -452,10 +452,10 @@ let $content :=
                                 let $id := $ort/@xml:id/string()
                                 let $status := $ort/@status/string()
                                 let $statusSymbol := if($status='checked')
-                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                                      else if($status='published')
-                                                     then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
-                                                     else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                                     else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                                                       
                                 order by $name
                                  
@@ -524,10 +524,10 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                     
                     let $status := $org/@status/string()
                     let $statusSymbol := if($status='checked')
-                                         then(<img src="/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                         then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                          else if($status='published')
-                                         then(<img src="/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
-                                         else(<img src="/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                         then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                         else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                                           
                     order by $name
                      
@@ -631,11 +631,11 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                         then($source/ancestor::mei:mei//mei:availability/text())
                                         else('unchecked')
                          let $statusSymbol := if($status='unchecked')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                                               else if($status='checked')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
                                               else($status)
                          let $title := $source//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                          let $titleSort := $title[1]
@@ -1176,10 +1176,10 @@ let $cards := for $item in $collection
                 let $issue := $item//tei:sourceDesc//tei:biblScope[@unit="issue"]/text()
                 let $status := $item//tei:publicationStmt/tei:p
                 let $statusSymbol := if($status='checked')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
-                                              else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                              else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
 
                 return
                     <div class="card bg-light mb-3">
@@ -1331,13 +1331,13 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
                          let $statusSymbol := if($status='checked')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotYellow.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotGreen.png" alt="{$status}" width="10px"/>)
-                                              else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/dotRed.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                              else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                          order by $order
                          return
-                             <div class="card bg-light mb-3">
+                             <div class="card bg-light mb-3" status="{$status}">
                                  <div class="card-body">
                                     <div class="row justify-content-between">
                                         <div class="col">
