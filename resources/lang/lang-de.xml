@@ -14,6 +14,7 @@
     <msg key="baudi.mainNav.project.about">Über das Projekt</msg>
     <msg key="baudi.mainNav.project.about.baudi">BauDi</msg>
     <msg key="baudi.mainNav.project.about.documentation">Dokumentation</msg>
+    <msg key="baudi.mainNav.imprint">Impressum</msg>
 
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Willkommen!</msg>
