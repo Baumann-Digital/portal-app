@@ -921,14 +921,6 @@ return
                   </tr>)
              else()}
              </table>
-              
-              <div class="card">
-                  <div class="card-body">
-                      {if(exists($manuscript//mei:work/mei:incip/mei:score))
-                      then('Incipit soon',<span onload="myIncipit({concat('http://localhost:8080/exist/rest',$fileURI)})"> </span>,<div id="output-verovio"/>)
-                      else(<b>No incipit available</b>)}
-                  </div>
-              </div>
               </div>
           </div>
           <div class="tab-pane fade" id="detail">
@@ -1303,7 +1295,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
     {for $genre at $pos in $genres
         let $cards := for $work in $works[if($pos=1)then(.)else(.//mei:term[@type='genre' and . = $genre])]
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
-                         let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and @class='sort']/text()
+                         let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/text()
                          let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
                          let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
@@ -1311,8 +1303,18 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                    then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $id := $work/@xml:id/string()
-                         let $composer := $work//mei:composer
-                         let $lyricist := $work//mei:lyricist
+                         let $composer := if($work//mei:composer//@auth)
+                                          then(baudiShared:getName($work//mei:composer/mei:persName/@auth/string(), 'short'))
+                                          else($work//mei:composer/string())
+                         let $arranger := if($work//mei:arranger//@auth)
+                                          then(baudiShared:getName($work//mei:arranger/mei:persName/@auth/string(), 'short'))
+                                          else($work//mei:arranger/string())
+                         let $lyricist := if($work//mei:lyricist//@auth)
+                                          then(baudiShared:getName($work//mei:lyricist/mei:persName/@auth/string(), 'short'))
+                                          else($work//mei:lyricist/string())
+                         let $editor := if($work//mei:editor//@auth)
+                                        then(baudiShared:getName($work//mei:editor/mei:persName/@auth/string(), 'short'))
+                                        else($work//mei:editor/string())
                          let $componentWorks := for $componentWork in $work//mei:componentList/mei:work
                                                     let $componentId := $componentWork/mei:identifier[@type="baudiWork"]/string()
                                                     return
@@ -1343,17 +1345,23 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                         <div class="col">
                                             <h5 class="card-title">{baudiShared:getWorkTitle($work)}</h5>
                                             {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
-                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiWork:getPerfRes($id)}</h6>
+                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', if($id)then(baudiWork:getPerfRes($id))else(concat('IDnotFound!',document-uri($work/root())))}</h6>
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
                                         </div>
                                     </div>
                                     <p class="card-text">{if($composer)
-                                                         then(baudiShared:translate('baudi.catalog.works.composer'),': ',$composer/string(),<br/>)
+                                                         then(baudiShared:translate('baudi.catalog.works.composer'),': ',$composer,<br/>)
+                                                         else()}
+                                                         {if($arranger)
+                                                         then(baudiShared:translate('baudi.catalog.works.arranger'),': ',$arranger,<br/>)
                                                          else()}
                                                         {if($lyricist)
-                                                         then(baudiShared:translate('baudi.catalog.works.lyricist'),': ',$lyricist/string(),<br/>)
+                                                         then(baudiShared:translate('baudi.catalog.works.lyricist'),': ',$lyricist,<br/>)
+                                                         else()}
+                                                         {if($editor)
+                                                         then(baudiShared:translate('baudi.catalog.works.editor'),': ',$editor,<br/>)
                                                          else()}
                                                         {if(count($componentWorks)>=1)
                                                          then(baudiShared:translate('baudi.catalog.works.components'),': ',
@@ -1400,6 +1408,7 @@ declare function app:work($node as node(), $model as map(*)) {
 let $id := request:get-parameter("work-id", "Fehler")
 let $lang := baudiShared:get-lang()
 let $work := collection("/db/apps/baudiWorks/data")//mei:work[@xml:id=$id]
+let $fileURI := document-uri($work/root())
 let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(.)
 let $subtitle := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/normalize-space(.)
 let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
@@ -1480,6 +1489,8 @@ let $perfResList := for $list in $perfResLists
                                             <li>{baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfRes))}</li>}
                                 </ul>
                             )
+
+let $incipURI := concat('http://localhost:8080/exist/rest',$fileURI) (: '?_query=//incip' :)
 
 return
 (
@@ -1575,9 +1586,13 @@ return
                   </tr>)
              else()}
              </table>
-                 
         
-        Incipit folgt…
+        {if(exists($work//mei:incip/mei:score))
+                      then(<div class="panel-body" onload="myIncipit({$incipURI})">
+                               <!--  $manuscript//mei:work/mei:incip myIncipit('https://www.verovio.org/editor/brahms.mei') -->
+                               <div id="verovioIncipit"/> <!-- style="border: 1px solid lightgray; max-width: 50%; max-height: 300px;" -->
+                           </div>)
+                      else()}
         
         <table class="workView">
         <tr>

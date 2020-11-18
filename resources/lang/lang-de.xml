@@ -88,8 +88,12 @@
     <msg key="baudi.catalog.works.orchestra">Orchestermusik</msg>
     <msg key="baudi.catalog.works.composer">Komponist</msg>
     <msg key="baudi.catalog.works.composer.female">Komponistin</msg>
+    <msg key="baudi.catalog.works.arranger">Bearbeiter</msg>
+    <msg key="baudi.catalog.works.arranger.female">Bearbeiterin</msg>
     <msg key="baudi.catalog.works.lyricist">Textdichter</msg>
     <msg key="baudi.catalog.works.lyricist.female">Textdichterin</msg>
+    <msg key="baudi.catalog.works.editor">Herausgeber</msg>
+    <msg key="baudi.catalog.works.editor.female">Herausgeberin</msg>
     <msg key="baudi.catalog.works.opus.no">Nr.</msg>
     <msg key="baudi.catalog.works.components">Enthaltene Werke</msg>
     <msg key="baudi.catalog.works.relSources">Verwandte Quellen</msg>
@@ -129,6 +133,8 @@
     <msg key="baudi.catalog.works.tempo">Tempoangabe</msg>
     <msg key="baudi.catalog.works.perfRes">Beteiligte Instrumente</msg>
     <msg key="baudi.catalog.works.perfRes.voice">Singstimme</msg>
+    <msg key="baudi.catalog.works.perfRes.choir">Chor</msg>
+    <msg key="baudi.catalog.works.perfRes.choir4voices">Chor (4-stimmig)</msg>
     <msg key="baudi.catalog.works.perfRes.choirMen">Männerchor</msg>
     <msg key="baudi.catalog.works.perfRes.choirWomen">Frauenchor</msg>
     <msg key="baudi.catalog.works.perfRes.choirMixed">Gemischter Chor</msg>
