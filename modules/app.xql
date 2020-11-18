@@ -1275,7 +1275,6 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
     let $genres := distinct-values(collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre"]/text() | collection("/db/apps/baudiWorks/data")//mei:work//mei:titlePart[@type='main' and not(@class)]/@type)
     let $dict := collection("/db/apps/baudiResources/data")
     let $content := <div class="container">
-    <br/>
          <ul class="nav nav-pills" role="tablist">
             {for $genre at $pos in $genres
                 let $genreDict := if($dict//tei:name[@type=$genre]/text())then($dict//tei:name[@type=$genre]/text())else($genre)
@@ -1339,7 +1338,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                               else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                          order by $order
                          return
-                             <div class="card bg-light mb-3" status="{$status}">
+                             <div class="card bg-light mb-3" name="{$status}">
                                  <div class="card-body">
                                     <div class="row justify-content-between">
                                         <div class="col">
