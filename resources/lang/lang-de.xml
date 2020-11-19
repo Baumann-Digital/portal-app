@@ -87,6 +87,8 @@
     <msg key="baudi.catalog.works.vocal">Vokalmusik</msg>
     <msg key="baudi.catalog.works.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.catalog.works.orchestra">Orchestermusik</msg>
+    <msg key="baudi.catalog.works.violin">Violine Solo</msg>
+    <msg key="baudi.catalog.works.piano">Klavier Solo</msg>
     <msg key="baudi.catalog.works.composer">Komponist</msg>
     <msg key="baudi.catalog.works.composer.female">Komponistin</msg>
     <msg key="baudi.catalog.works.arranger">Bearbeiter</msg>

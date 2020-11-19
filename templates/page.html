@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8"/>
-        <!--        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <title data-template="config:app-title">Baumann-Digital</title>
@@ -11,13 +11,11 @@
         <!-- TODO: paths are hardcoded, not good... -->
 
         <!-- Bootstrap core CSS -->
-        <link rel="stylesheet" href="/exist/apps/baudiApp/resources/css/bootstrap.min.css"/>
+<!--        <link rel="stylesheet" href="/exist/apps/baudiApp/resources/css/bootstrap.min.css"/>-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"/>
 
         <!-- Bootstrap theme -->
-        <link href="/exist/apps/baudiApp/resources/css/bootstrap-theme.min.css" rel="stylesheet"/>
-
-        <!-- Bootstrap social (https://lipis.github.io/bootstrap-social/) -->
-        <!--        <link href="/exist/apps/baudiApp/resources/css/bootstrap-social.css" rel="stylesheet"/>-->
+<!--        <link href="/exist/apps/baudiApp/resources/css/bootstrap-theme.min.css" rel="stylesheet"/>-->
 
         <!-- font awesome -->
         <link rel="stylesheet" href="/exist/apps/baudiApp/resources/css/font-awesome.min.css"/>
@@ -37,61 +35,22 @@
         <main role="main" class="container mt-1" id="content">
             <!--<div />-->
         </main>
-<!--        <div id="content" class="container"/>-->
-        <footer data-template="templates:include" data-template-path="templates/baudiMainFooter.html"></footer>
+        <footer data-template="templates:include" data-template-path="templates/baudiMainFooter.html"/>
 
         <!-- Bootstrap core JavaScript
 				 ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-<!--        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"/>-->
-<!--        <script src="/exist/apps/baudiApp/resources/js/jquery-1.12.4.min.js"/>-->
-<!--        <script src="/exist/apps/baudiApp/resources/js/jquery-3.2.1.slim.min.js"/>-->
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"/>
-        <script src="/exist/apps/baudiApp/resources/js/popper-1.12.9.min.js"/>
-        <script src="/exist/apps/baudiApp/resources/js/bootstrap.min.js"/>
-        
-        <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"/>
-<!--        <script src="https://www.verovio.org/javascript/latest/verovio-toolkit-light.js" type="text/javascript"/>-->
+<!--        <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"/>-->
+<!--        <script src="/exist/apps/baudiApp/resources/js/popper-1.12.9.min.js"/>-->
+<!--        <script src="/exist/apps/baudiApp/resources/js/bootstrap.min.js"/>-->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
         <script src="/exist/apps/baudiApp/resources/js/incipit.js"/>
         <script src="/exist/apps/baudiApp/resources/js/baudiEvents.js"/>
-        <!--<script type="text/javascript">
 
-            ///////////////////////////
-            /* Create the vrvToolkit */
-            ///////////////////////////
-            var vrvToolkit = new verovio.toolkit();
-           
-           
-            ////////////////////////////////////
-            /* Load the file using a HTTP GET */
-            ////////////////////////////////////
-            /*$.get( myIncipit(), function( data ) {
-                var svg = vrvToolkit.renderData(data, {});
-                $("#verovioApp").html(svg);
-                }, 'text');*/
-            $.ajax({
-                url: myIncipit()
-                , dataType: "text"
-                , success: function(data) {
-                    var svg = vrvToolkit.renderData(data, {});
-                    $("#verovioApp").html(svg);
-                }
-            });
-        </script>-->
-        
-        <!--<script type="application/xquery" src="/exist/apps/baudiApp/resources/js/mxqueryjs/mxqueryjs.nocache.js"/>
-        <script type="application/xquery">
-            import module namespace m = "http://www.xqib.org/module" at "/exist/apps/baudiApp/resources/js/mxqueryjs/mxqueryjs.nocache.js";
-      
-            declare function m:incipUri() {
-              let $workId := request:get-parameter("work-id", "Fehler")
-              let $work := collection("/db/apps/baudiWorks/data")//mei:work[@xml:id=$workId]
-              let $fileUri := document-uri($work/root())
-              let $incipUriRest := concat('http://localhost:8080/exist/rest',$fileUri) (: '?_query=//incip' :)
-              return
-                $incipUriRest
-            };
-        </script>-->
+        <!--        <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"/>-->
+        <script src="https://www.verovio.org/javascript/latest/verovio-toolkit-light.js" type="text/javascript"/>
         <script type="text/javascript">
 
             ///////////////////////////

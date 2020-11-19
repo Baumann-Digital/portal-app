@@ -9,8 +9,8 @@ function ampel_rot() {
 }
 
 function ampel_gelb() {
-    if(document.getElementById("ampel_gelb").checked) {
-            for (let e of document.getElementsByName("checked")) { e.style.display="block"; }
+   if(document.getElementById("ampel_gelb").checked) {
+        for (let e of document.getElementsByName("checked")) { e.style.display="block"; }
         }
     else {
         for (let e of document.getElementsByName("checked")) { e.style.display="none"; }

@@ -1,94 +1,70 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <meta charset="utf-8"/>
-        <!--        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>-->
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <title data-template="config:app-title">Baumann-Digital</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="shortcut icon" href="/exist/apps/baudiApp/icon.png"/>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="/exist/apps/baudiApp/icon.png" />
         <!-- TODO: paths are hardcoded, not good... -->
-
         <!-- Bootstrap core CSS -->
-        <link rel="stylesheet" href="/exist/apps/baudiApp/resources/css/bootstrap.min.css"/>
-        
+        <link rel="stylesheet" href="/exist/apps/baudiApp/resources/css/bootstrap.min.css" />
         <!-- Core theme CSS for landing page (includes Bootstrap)-->
         <link href="/exist/apps/baudiApp/resources/css/landingPageStyles.css" rel="stylesheet" />
-        
-        <!-- Bootstrap theme -->
-<!--        <link href="/exist/apps/baudiApp/resources/css/bootstrap-theme.min.css" rel="stylesheet"/>-->
-
-        <!-- Bootstrap social (https://lipis.github.io/bootstrap-social/) -->
-        <!--        <link href="/exist/apps/baudiApp/resources/css/bootstrap-social.css" rel="stylesheet"/>-->
-
+        <!-- Cookie alert -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Wruczek/Bootstrap-Cookie-Alert@gh-pages/cookiealert.css"/>
         <!-- font awesome -->
-        <link rel="stylesheet" href="/exist/apps/baudiApp/resources/css/font-awesome.min.css"/>
-        
-
+        <link rel="stylesheet" href="/exist/apps/baudiApp/resources/css/font-awesome.min.css" />
         <!-- sticky-footer -->
-        <link href="/exist/apps/baudiApp/resources/css/sticky-footer-navbar.css" rel="stylesheet"/>
-
+        <link href="/exist/apps/baudiApp/resources/css/sticky-footer-navbar.css" rel="stylesheet" />
         <!-- Custom styles for this template -->
-        <link href="/exist/apps/baudiApp/resources/css/theme.css" rel="stylesheet"/>
-        <!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"/> -->
-        
+        <link href="/exist/apps/baudiApp/resources/css/theme.css" rel="stylesheet" />
     </head>
     <body id="body" class="d-flex flex-column">
-        
-        <nav data-template="templates:include" data-template-path="templates/baudiMainNav.html"/>
-        <div style="height: 37px;"/>
-        <main role="main" class="container mt-1" id="content">
-            <!--<div />-->
-        </main>
+        <nav data-template="templates:include" data-template-path="templates/baudiMainNav.html"></nav>
+<!--        <div style="height: 37px;"/>-->
+        <main role="main" class="container mt-1" id="content"></main>
+        <div class="modal fade" id="landingModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Concerning the content</h4>
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                    </div>
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        This side contains almost parts of the project, because the content is part of an ongoing PhD-Project.
+                    </div>
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">start</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="alert text-center cookiealert" role="alert">
+            <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website. <a href="https://cookiesandyou.com/" target="_blank">Learn more</a>
+            
+            <button type="button" class="btn btn-primary btn-sm acceptcookies">
+                I agree
+            </button>
+        </div>
         <footer data-template="templates:include" data-template-path="templates/baudiMainFooter.html"></footer>
         <!-- Bootstrap core JavaScript
 				 ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="/exist/apps/baudiApp/resources/js/jquery-1.12.4.min.js"/>
-        <script src="/exist/apps/baudiApp/resources/js/jquery-3.2.1.slim.min.js"/>
-        <script src="/exist/apps/baudiApp/resources/js/popper-1.12.9.min.js"/>
-        <script src="/exist/apps/baudiApp/resources/js/bootstrap.min.js"/>
-        <script src="/exist/apps/baudiApp/resources/js/popper-1.12.9.min.js"/>
-        <script src="/exist/apps/baudiApp/resources/js/bootstrap.min.js"/>
-        
-<!--        <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"/>-->
-<!--        <script src="/exist/apps/baudiApp/resources/verovio/verovio-toolkit.js"/>-->
-        <script src="/exist/apps/baudiApp/resources/js/incipit.js"/>
-        <!--<script type="text/javascript">
-
-            ///////////////////////////
-            /* Create the vrvToolkit */
-            ///////////////////////////
-            var vrvToolkit = new verovio.toolkit();
-
-            ////////////////////////////////////
-            /* Load the file using a HTTP GET */
-            ////////////////////////////////////
-            $.ajax({
-                url: "http://localhost:8080/exist/apps/baudiSources/data/music/songs/baudi-01-6b488120.xml"
-                , dataType: "text"
-                , success: function(data) {
-                    var svg = vrvToolkit.renderData(data, {});
-                    $("#svg_output_incip").html(svg);
-                }
-            });
-        </script>-->
-        <!--<script type="text/javascript">
-            import 'https://www.verovio.org/javascript/app/verovio-app.js';
-        
-            // Create the app - here with an empty option object
-            const app = new Verovio.App(document.getElementById("app"), {});
-        
-            // Load a file (MEI or MusicXML)
-            fetch("https://www.verovio.org/examples/hello-world/Haydn_StringQuartet_Op1_No1-p1.mei")
-                .then(function(response) {
-                    return response.text();
-                })
-                .then(function(text) {
-                    app.loadData(text);
-                });
-        </script>-->
+        <!-- Cookie Alert -->
+        <!--<script>
+    for (var i = 1; i <= 150; i++)
+        document.querySelector("#fillme").innerHTML += "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ";
+</script>-->
+        <script src="https://cdn.jsdelivr.net/gh/Wruczek/Bootstrap-Cookie-Alert@gh-pages/cookiealert.js"></script>
         <!-- Bootstrap core JS-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
@@ -101,5 +77,9 @@
         <script src="/exist/apps/baudiApp/resources/js/landingPageScripts.js"></script>
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+        
+        <script type="text/javascript">
+            $('#landingModal').modal('show')
+        </script>
     </body>
 </html>

@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
-    <div data-template="i18n:translate" data-template-lang="en" data-template-catalogues="/db/apps/baudiApp/resources/lang">
-    <div class="container" style="max-width: 90%;">
-       <br/>
-       <div class="page-header">
-           <h1><i18n:text key="baudi.catalog.works"/></h1>
-      </div>
-       <hr/>
-        <div class="row">
-            Filter: <input type="checkbox" id="ampel_rot" name="created" oninput="ampel_rot()" value="created"/>
-            <label for="ampel_rot"> erstellt </label>
-            <input type="checkbox" id="ampel_gelb" name="checked" oninput="ampel_gelb()" value="checked"/>
-            <label for="ampel_gelb"> überprüft </label>
-            <input type="checkbox" id="ampel_gruen" name="public" oninput="ampel_gruen()" value="public"/>
-            <label for="ampel_gruen"> öffentlich </label>
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n"
+    data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div data-template="i18n:translate" data-template-lang="en"
+        data-template-catalogues="/db/apps/baudiApp/resources/lang">
+        <div class="container" style="max-width: 90%;">
+            <br/>
+            <div class="page-header">
+                <h1><i18n:text key="baudi.catalog.works"/></h1>
+            </div>
+            <hr/>
+            <div>
+                <div data-template="app:registryWorks"/>
+            </div>
         </div>
-        <hr/>
-        <div>
-        <div data-template="app:registryWorks"/>
-      </div>
-   </div>
     </div>
+    <script type="text/javascript"> window.onload = onPageLoad(); function onPageLoad() {
+        document.getElementById("ampel_rot").checked = true; document.getElementById("ampel_gelb").checked = true;
+        document.getElementById("ampel_gruen").checked = true; } </script>
 </div>

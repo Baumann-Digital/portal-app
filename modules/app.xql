@@ -54,10 +54,10 @@ let $content :=    <div class="container">
                                                 let $datumSent := $letter//tei:correspAction[@type="sent"]/tei:date/@when
                                                 let $status := $letter/@status/string()
                                                 let $statusSymbol := if($status='checked')
-                                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
                                                                      else if($status='public')
-                                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                                                     else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                                                     else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
                                                                       
                                                 order by $datumSent
                                                  
@@ -233,10 +233,10 @@ let $content :=    <div class="container">
                                                 let $id := $document/@xml:id/string()
                                                 let $status := $document/@status/string()
                                                 let $statusSymbol := if($status='checked')
-                                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
                                                                      else if($status='published')
-                                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                                                     else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                                                     else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
                                                                       
                                                 order by $titel
                                                 return
@@ -316,53 +316,47 @@ return
 declare function app:registryPersons($node as node(), $model as map(*)) {
     
     let $lang := baudiShared:get-lang()
-    let $persons := collection("/db/apps/baudiPersons/data")//tei:person
       
     let $content := <div class="container">
-    <br/>
-
-    <div class="container" style=" height: 600px; overflow-y: scroll;">
-    <div class="tab-content">
-    {let $cards := for $person in $persons
-                    let $surname := $person//tei:surname[1]
-                    let $forename := string-join($person//tei:forename,' ')
-                    let $name := baudiShared:getPersNameShort($person)
-                    let $id := $person/@xml:id/string()
-                    
-                    let $status := $person/@status/string()
-                    let $statusSymbol := if($status='checked')
-                                         then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
-                                         else if($status='published')
-                                         then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                         else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
-                                          
-                    order by $name
-                     
-                    return
-                         <div class="card bg-light mb-3">
-                             <div class="card-body">
-                               <div class="row justify-content-between">
-                                    <div class="col">
-                                        <h5 class="card-title">{$name}</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted"></h6>
-                                    </div>
-                                    <div class="col-2">
-                                        <p class="text-right">{$statusSymbol}</p>
-                                    </div>
-                               </div>
-                               <p class="card-text"/>
-                               
-                               <a href="{concat($app:dbRoot,'/person/',$id)}" class="card-link">{$id}</a>
-                               <hr/>
-                               <p>Tags</p>
-                             </div>
-                         </div>
-   
-        return
-            $cards}
-        </div>
-      </div>
-   </div>
+                        <br/>
+                        <div class="container" style=" height: 600px; overflow-y: scroll;">
+                            {let $cards := for $person in $app:collectionPersons
+                                            let $name := baudiShared:getPersNameShort($person)
+                                            let $id := $person/@xml:id/string()
+                                            
+                                            let $status := $person/@status/string()
+                                            let $statusSymbol := if($status='checked')
+                                                                 then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                                                 else if($status='published')
+                                                                 then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                                                 else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                                                  
+                                            order by $name
+                                             
+                                            return
+                                                 <div class="card bg-light mb-3">
+                                                     <div class="card-body">
+                                                       <div class="row justify-content-between">
+                                                            <div class="col">
+                                                                <h5 class="card-title">{$name}</h5>
+                                                                <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <p class="text-right">{$statusSymbol}</p>
+                                                            </div>
+                                                       </div>
+                                                       <p class="card-text"/>
+                                                       
+                                                       <a href="{concat($app:dbRoot,'/person/',$id)}" class="card-link">{$id}</a>
+                                                       <hr/>
+                                                       <p>Tags</p>
+                                                     </div>
+                                                 </div>
+                                return
+                                    $cards
+                            }
+                        </div>
+                   </div>
        
        return
         $content
@@ -452,10 +446,10 @@ let $content :=
                                 let $id := $ort/@xml:id/string()
                                 let $status := $ort/@status/string()
                                 let $statusSymbol := if($status='checked')
-                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
                                                      else if($status='published')
-                                                     then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                                     else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                                     else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
                                                       
                                 order by $name
                                  
@@ -524,10 +518,10 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                     
                     let $status := $org/@status/string()
                     let $statusSymbol := if($status='checked')
-                                         then(<img src="/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                         then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
                                          else if($status='published')
-                                         then(<img src="/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                         else(<img src="/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                         then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                         else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
                                           
                     order by $name
                      
@@ -631,11 +625,11 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                         then($source/ancestor::mei:mei//mei:availability/text())
                                         else('unchecked')
                          let $statusSymbol := if($status='unchecked')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
                                               else if($status='checked')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
                                               else($status)
                          let $title := $source//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                          let $titleSort := $title[1]
@@ -784,9 +778,9 @@ let $meter := for $each in $manuscript//mei:meter
                 let $meterUnit := $each/@unit
                 let $meterSym := $each/@sym
                 let $meterSymbol := if($meterSym = 'common')
-                                   then(<img src="/exist/apps/baudiApp/resources/img/timeSignature_common.png" width="20px"/>)
+                                   then(<img src="{concat($app:dbRoot,'/resources/img/timeSignature_common.png')}" width="20px"/>)
                                    else if($meterSym = 'cut')
-                                   then(<img src="/exist/apps/baudiApp/resources/img/timeSignature_cut.png" width="20px"/>)
+                                   then(<img src="{concat($app:dbRoot,'/resources/img/timeSignature_cut.png')}" width="20px"/>)
                                    else()
                 return
                     if($meterSymbol)
@@ -1168,10 +1162,10 @@ let $cards := for $item in $collection
                 let $issue := $item//tei:sourceDesc//tei:biblScope[@unit="issue"]/text()
                 let $status := $item//tei:publicationStmt/tei:p
                 let $statusSymbol := if($status='checked')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                              else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                              else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
 
                 return
                     <div class="card bg-light mb-3">
@@ -1287,6 +1281,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                     else($nav-itemGenre)
              }
     </ul>
+    <hr/>
     <br/>
     <!-- Tab panels -->
     <div class="container" >
@@ -1332,10 +1327,10 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
                          let $statusSymbol := if($status='checked')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                              else(<img src="http://localhost:8080/exist/apps/baudiApp/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                              else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
                          order by $order
                          return
                              <div class="card bg-light mb-3" name="{$status}">
@@ -1386,12 +1381,41 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         let $tab := if($genre = 'main')
                     then(<div class="tab-pane fade show active" id="main">
                             <br/>
+                            <div class="alert alert-dark" role="alert">
+                                <div class="row">
+                                    <div class="custom-control custom-switch">
+                                        <input class="custom-control-input" type="checkbox" id="ampel_rot" oninput="ampel_rot()"/>
+                                        <label class="custom-control-label" for="ampel_rot">erfasst </label>
+                                    </div>
+                                    <div class="custom-control custom-switch">
+                                        <input class="custom-control-input" type="checkbox" id="ampel_gelb" oninput="ampel_gelb()"/>
+                                        <label class="custom-control-label" for="ampel_gelb">überprüft </label>
+                                    </div>
+                                    <div class="custom-control custom-switch">
+                                        <input class="custom-control-input" type="checkbox" id="ampel_gruen" oninput="ampel_gruen()"/>
+                                        <label class="custom-control-label" for="ampel_gruen">öffentlich </label>
+                                    </div>
+                                </div>
+                            </div>
                             {$cards}
                          </div>)
                     else(<div class="tab-pane fade" id="{$genre}">
                            <br/>
+                            Filter:
+                                    <div class="custom-control custom-switch">
+                                        <input class="custom-control-input" type="checkbox" id="ampel_rot" oninput="ampel_rot()"/>
+                                        <label class="custom-control-label" for="ampel_rot">erfasst</label>
+                                    </div>
+                                    <div class="custom-control custom-switch">
+                                        <input class="custom-control-input" type="checkbox" id="ampel_gelb" oninput="ampel_gelb()"/>
+                                        <label class="custom-control-label" for="ampel_gelb">überprüft</label>
+                                    </div>
+                                    <div class="custom-control custom-switch">
+                                        <input class="custom-control-input" type="checkbox" id="ampel_gruen" oninput="ampel_gruen()"/>
+                                        <label class="custom-control-label" for="ampel_gruen">öffentlich</label>
+                                    </div>
                             {$cards}
-                            </div>)
+                         </div>)
         return
             $tab}
         </div>
@@ -1462,9 +1486,9 @@ let $meter := for $each in $work//mei:meter
                 let $meterUnit := $each/@unit
                 let $meterSym := $each/@sym
                 let $meterSymbol := if($meterSym = 'common')
-                                   then(<img src="/exist/apps/baudiApp/resources/img/timeSignature_common.png" width="20px"/>)
+                                   then(<img src="{concat($app:dbRoot,'/resources/img/timeSignature_common.png')}" width="20px"/>)
                                    else if($meterSym = 'cut')
-                                   then(<img src="/exist/apps/baudiApp/resources/img/timeSignature_cut.png" width="20px"/>)
+                                   then(<img src="{concat($app:dbRoot,'/resources/img/timeSignature_cut.png')}" width="20px"/>)
                                    else()
                 return
                     if($meterSymbol)
