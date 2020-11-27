@@ -19,7 +19,7 @@
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Willkommen!</msg>
     <msg key="baudi.landing.catalogues">Kataloge</msg>
-    <msg key="baudi.landing.catalogues.sub"></msg>
+    <msg key="baudi.landing.catalogues.sub">Recherchieren Sie hier zu Leben, Werk und Wirken von Ludwig Baumann.</msg>
     <msg key="baudi.landing.catalogues.works">Werke</msg>
     <msg key="baudi.landing.catalogues.works.sub">Verzeichnis der Kompositionen.</msg>
     <msg key="baudi.landing.catalogues.sources">Quellen</msg>
@@ -160,7 +160,7 @@
     
     <!-- Catalog of Sources -->
     <msg key="baudi.catalog.sources">Quellenkatalog</msg>
-    <msg key="baudi.catalog.sources.title">Titel</msg>
+    <msg key="baudi.catalog.sources.title">Titel der Quelle</msg>
     <msg key="baudi.catalog.sources.titleUniform">Einheitssachtitel</msg>
     <msg key="baudi.catalog.sources.titleMain">Haupttitel</msg>
     <msg key="baudi.catalog.sources.titleSub">Untertitel</msg>
@@ -181,6 +181,7 @@
     <msg key="baudi.catalog.sources.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.catalog.sources.orchestra">Orchestermusik</msg>
     <msg key="baudi.catalog.sources.opus.no">Nr.</msg>
+    <msg key="baudi.catalog.sources.sourceType">Quellenart</msg>
     <msg key="baudi.catalog.sources.print">Druck</msg>
     <msg key="baudi.catalog.sources.prints">Drucke</msg>
     <msg key="baudi.catalog.sources.reprint">Nachdruck</msg>
@@ -211,11 +212,13 @@
     <msg key="baudi.catalog.sources.msDesc.paper.dimensions.height.short">H</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.dimensions.width">Breite</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.dimensions.width.short">B</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.format">Format</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.format.unknown">Format unbekannt</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.orientation">Ausrichtung</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.orientation.portrait">Hochformat</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.orientation.landscape">Querformat</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.folii">Folii</msg>
-    <msg key="baudi.catalog.sources.msDesc.paper.pages">Seiten</msg>
+    <msg key="baudi.catalog.sources.msDesc.paper.pages">Seiten (Noten)</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.pagination">Paginierung</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.pagination.none">Keine Seitenzählung</msg>
     <msg key="baudi.catalog.sources.msDesc.paper.pagination.arabic">Arabisch</msg>
@@ -235,10 +238,21 @@
     <msg key="baudi.catalog.sources.msDesc.hands.medium.ink.black">Schwarze Tinte</msg>
     <msg key="baudi.catalog.sources.msDesc.hands.medium.ink.red">Rote Tinte</msg>
     <msg key="baudi.catalog.sources.msDesc.paperNotes">Papiervermerke</msg>
+    <msg key="baudi.catalog.sources.msDesc.plateNum">Plattennummer</msg>
     <msg key="baudi.catalog.sources.msDesc.stamps">Stempel</msg>
     <msg key="baudi.catalog.sources.msDesc.notes">Weitere Vermerke</msg>
     <msg key="baudi.catalog.sources.msDesc.scoreFormat">Partitureinrichtung</msg>
     <msg key="baudi.catalog.sources.msDesc.condition">Zustand</msg>
+    <msg key="baudi.catalog.sources.editionStmt.title">Titel der Veröffentlichung</msg>
+    <msg key="baudi.catalog.sources.editionStmt.titlePage">Titelseite</msg>
+    <msg key="baudi.catalog.sources.editionStmt.publisher">Erschienen bei</msg>
+    <msg key="baudi.catalog.sources.editionStmt.pubPlace">Erschienen in</msg>
+    <msg key="baudi.catalog.sources.editionStmt.pubDate">Erschienen am</msg>
+    <msg key="baudi.catalog.sources.editionStmt.dedication">Widmung</msg>
+    
+    <!-- Editions -->
+    <msg key="baudi.catalog.editions">Editions-Katalog</msg>
+    <msg key="baudi.catalog.editions.all">Alle Editionen</msg>
     
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Personen-Katalog</msg>
@@ -247,8 +261,8 @@
     <!-- Institutions -->
     <msg key="baudi.catalog.institutions">Institutionen-Katalog</msg>
     
-    <!-- Letters -->
-    <msg key="baudi.catalog.letters">Brief-Katalog</msg>
+    <!-- Places -->
+    <msg key="baudi.catalog.places">Orte-Katalog</msg>
     
     <!-- Documents -->
     <msg key="baudi.catalog.documents">Dokumenten-Katalog</msg>
@@ -326,6 +340,7 @@
     <msg key="baudi.catalog.mei.annot.place.rightmar">rechts</msg>
     
     <msg key="baudi.conjunction.for">für</msg>
+    <msg key="baudi.unknown">N.N.</msg>
     
     
 </catalogue>

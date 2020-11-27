@@ -19,6 +19,7 @@
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Welcome!</msg>
     <msg key="baudi.landing.catalogues">Catalogues</msg>
+    <msg key="baudi.landing.catalogues.sub">Here you can research the life, work and activities of Ludwig Baumann.</msg>
     <msg key="baudi.landing.catalogues.works">Works</msg>
     <msg key="baudi.landing.catalogues.works.sub">List of compositions.</msg>
     <msg key="baudi.landing.catalogues.sources">Sources</msg>
@@ -228,6 +229,10 @@
     <msg key="baudi.catalog.sources.msDesc.notes">Other notes</msg>
     <msg key="baudi.catalog.sources.msDesc.scoreFormat">Score format</msg>
     <msg key="baudi.catalog.sources.msDesc.condition">Condition</msg>
+    
+    <!-- Editions -->
+    <msg key="baudi.catalog.editions">Catalog of editions</msg>
+    <msg key="baudi.catalog.editions.all">All editions</msg>
     
     <!-- Persons -->
     <msg key="baudi.catalog.persons">Catalog of Persons</msg>
