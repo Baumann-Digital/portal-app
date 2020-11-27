@@ -64,9 +64,9 @@
             <file file=""/>
         </copy>
         <copyfile src="repo/rwxrwxr-x/repo.xml" dest="./repo.xml" forceoverwrite="yes"/>
-        <!--<exec executable="python">
+        <exec executable="python">
             <arg value="${executable-full-path}"/>
-        </exec>-->
+        </exec>
         <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
         <git command="reset">
             <args>
