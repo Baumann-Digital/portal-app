@@ -1,14 +1,16 @@
-<div xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/landingPage.html" data-template-at="content">
-    <div data-template="i18n:translate" data-template-lang="en" data-template-catalogues="/db/apps/baudiApp/resources/lang">
-        
-    <header class="masthead">
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n"
+    data-template="templates:surround" data-template-with="templates/landingPage.html" data-template-at="content">
+    <div data-template="i18n:translate" data-template-lang="en"
+        data-template-catalogues="/db/apps/baudiApp/resources/lang">
+        <header class="masthead">
             <div class="container">
-                <div class="masthead-subheading"><i18n:text key="baudi.landing.welcome"/></div>
+                <div class="masthead-subheading">
+                    <i18n:text key="baudi.landing.welcome"/>
+                </div>
                 <div class="masthead-heading text-uppercase">Baumann-Digital</div>
-<!--                <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>-->
+                <!--                <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>-->
             </div>
         </header>
-        
         <!-- Portfolio Grid-->
         <section class="page-section bg-light" id="portfolio">
             <div class="container">
@@ -19,129 +21,240 @@
                 <div class="row">
                     <div class="col-lg-4 col-sm-6 mb-4">
                         <div class="portfolio-item">
-<!--                            <a href="/exist/apps/baudiApp/html/registryWorks.html" class="portfolio-link">-->
-                                <!--<div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
-                                </div>-->
-                            <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/01-works-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
-                            <!--</a>-->
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.works"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.works.sub"/></div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="col-lg-4 col-sm-6 mb-4">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" href="/exist/apps/baudiApp/html/registrySources.html">
-                                <div class="portfolio-hover">
+                                                        <a href="/exist/apps/baudiApp/registryWorks.html" class="portfolio-link">
+                            <div class="portfolio-hover">
                                     <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
                                 </div>
-                                <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/02-sources-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
+                            <img class="img-fluid"
+                                src="https://digilib.baumann-digital.de/landingPage/catalogs/01-works-thumbnail.jpg?dh=300&amp;dw=400"
+                                alt=""/>
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.sources"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.sources.sub"/></div>
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.works"/>
+                                    <div class="counter-box pt-4 pt-md-0">
+                                        <div class="counter-num">
+                                            <div data-template="app:countWorks"/>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6 mb-4">
                         <div class="portfolio-item">
-                            <a class="portfolio-link" data-toggle="modal" href="/exist/apps/baudiApp/html/registryDocuments.html">
+                            <a class="portfolio-link" href="/exist/apps/baudiApp/registrySources.html">
                                 <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
+                                    <div class="portfolio-hover-content">
+                                        <i class="fas fa-plus fa-3x"/>
+                                    </div>
                                 </div>
-                                <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/03-documents-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
+                                <img class="img-fluid"
+                                    src="https://digilib.baumann-digital.de/landingPage/catalogs/02-sources-thumbnail.jpg?dh=300&amp;dw=400"
+                                    alt="Baumann: Eifel-Wind op. 35"/>
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.docs"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.docs.sub"/></div>
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.sources"/>
+                                    <div class="counter-box counter-box pt-4 pt-md-0">
+                                        <div class="counter-num">
+                                            <div data-template="app:countSources"/>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
+                                    
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-4">
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" href="/exist/apps/baudiApp/registryDocuments.html">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content">
+                                        <i class="fas fa-plus fa-3x"/>
+                                    </div>
+                                </div>
+                                <img class="img-fluid"
+                                    src="https://digilib.baumann-digital.de/landingPage/catalogs/03-documents-thumbnail.jpg?dh=300&amp;dw=400"
+                                    alt=""/>
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.docs"/>
+                                    <div class="counter-box pt-4 pt-md-0">
+                                        <div class="counter-num">
+                                            <div data-template="app:countDocuments"/>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
+                                    
+                                
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6 mb-4 mb-lg-0">
                         <div class="portfolio-item">
-                            <a class="portfolio-link" href="">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
-                                </div>
-                                <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/04-gallery-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
-                            </a>
+<!--                            <a class="portfolio-link" href="">-->
+                                <!--<div class="portfolio-hover">
+                                    <div class="portfolio-hover-content">
+                                        <i class="fas fa-plus fa-3x"/>
+                                    </div>
+                                </div>-->
+                                <img class="img-fluid"
+                                    src="https://digilib.baumann-digital.de/landingPage/catalogs/04-gallery-thumbnail.jpg?dh=300&amp;dw=400"
+                                    alt=""/>
+                            <!--</a>-->
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.gallery"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.gallery.sub"/></div>
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.gallery"/>
+                                    
+                                        <div class="counter-box pt-4 pt-md-0">
+                                            <div class="counter-num">
+                                                <div data-template="app:countGalleryItems"/>
+                                            </div>
+                                        </div>
+                                    
+                                </div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6 mb-4 mb-sm-0">
                         <div class="portfolio-item">
-                            <a class="portfolio-link" href="/exist/apps/baudiApp/html/registryEditions.html">
+                            <a class="portfolio-link" href="/exist/apps/baudiApp/registryEditions.html">
                                 <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
+                                    <div class="portfolio-hover-content">
+                                        <i class="fas fa-plus fa-3x"/>
+                                    </div>
                                 </div>
-                                <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/05-editions-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
+                                <img class="img-fluid"
+                                    src="https://digilib.baumann-digital.de/landingPage/catalogs/05-editions-thumbnail.jpg?dh=300&amp;dw=400"
+                                    alt=""/>
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.editions"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.editions.sub"/></div>
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.editions"/>
+                                    <div class="counter-box pt-4 pt-md-0">
+                                        <div class="counter-num">
+                                            <div data-template="app:countEditions"/>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
+                                    
+                                
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6">
                         <div class="portfolio-item">
-                            <a class="portfolio-link" href="/exist/apps/baudiApp/html/registryPeriodicals.html">
+                            <a class="portfolio-link" href="/exist/apps/baudiApp/registryPeriodicals.html">
                                 <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
+                                    <div class="portfolio-hover-content">
+                                        <i class="fas fa-plus fa-3x"/>
+                                    </div>
                                 </div>
-                                <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/06-periodicals-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
+                                <img class="img-fluid"
+                                    src="https://digilib.baumann-digital.de/landingPage/catalogs/06-periodicals-thumbnail.jpg?dh=300&amp;dw=400"
+                                    alt=""/>
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.periodicals"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.periodicals.sub"/></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" href="/exist/apps/baudiApp/html/registryPersons.html">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.periodicals"/>
+                                    <div class="counter-box pt-4 pt-md-0">
+                                        <div class="counter-num">
+                                            <div data-template="app:countPeriodicals"/>
+                                        </div>
+                                    </div>
                                 </div>
-                                <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/07-persons-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
-                            </a>
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.persons"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.persons.sub"/></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" href="/exist/apps/baudiApp/html/registryInstitutions.html">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
-                                </div>
-                                <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/08-institutions-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
-                            </a>
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.institutions"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.institutions.sub"/></div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
+                                    
+                                
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6">
                         <div class="portfolio-item">
-                            <a class="portfolio-link" href="/exist/apps/baudiApp/html/registryLoci.html">
+                            <a class="portfolio-link" href="/exist/apps/baudiApp/registryPersons.html">
                                 <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"/></div>
+                                    <div class="portfolio-hover-content">
+                                        <i class="fas fa-plus fa-3x"/>
+                                    </div>
                                 </div>
-                                <img class="img-fluid" src="https://digilib.baumann-digital.de/landingPage/catalogs/09-loci-thumbnail.jpg?dh=300&amp;dw=400" alt=""/>
+                                <img class="img-fluid"
+                                    src="https://digilib.baumann-digital.de/landingPage/catalogs/07-persons-thumbnail.jpg?dh=300&amp;dw=400"
+                                    alt=""/>
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading"><i18n:text key="baudi.landing.catalogues.loci"/></div>
-                                <div class="portfolio-caption-subheading text-muted"><i18n:text key="baudi.landing.catalogues.loci.sub"/></div>
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.persons"/>
+                                    <div class="counter-box pt-4 pt-md-0">
+                                        <div class="counter-num">
+                                            <div data-template="app:countPersons"/>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
+                                    
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" href="/exist/apps/baudiApp/registryInstitutions.html">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content">
+                                        <i class="fas fa-plus fa-3x"/>
+                                    </div>
+                                </div>
+                                <img class="img-fluid"
+                                    src="https://digilib.baumann-digital.de/landingPage/catalogs/08-institutions-thumbnail.jpg?dh=300&amp;dw=400"
+                                    alt=""/>
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.institutions"/>
+                                        <div class="counter-box pt-4 pt-md-0">
+                                            <div class="counter-num">
+                                                <div data-template="app:countInstitutions"/>
+                                            </div>
+                                        </div>
+                                </div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
+                                    
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" href="/exist/apps/baudiApp/registryLoci.html">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content">
+                                        <i class="fas fa-plus fa-3x"/>
+                                    </div>
+                                </div>
+                                <img class="img-fluid"
+                                    src="https://digilib.baumann-digital.de/landingPage/catalogs/09-loci-thumbnail.jpg?dh=300&amp;dw=400"
+                                    alt=""/>
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">
+                                    <i18n:text key="baudi.landing.catalogues.loci"/>
+                                    <div class="counter-box pt-4 pt-md-0">
+                                        <div class="counter-num">
+                                            <div data-template="app:countLoci"/>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="portfolio-caption-subheading text-muted"/>-->
+                                    
+                                
                             </div>
                         </div>
                     </div>
@@ -157,53 +270,79 @@
                 </div>
                 <ul class="timeline">
                     <li>
-                        <div class="timeline-image"><img class="rounded-circle img-fluid" src="https://digilib.baumann-digital.de/landingPage/about/1.jpg?dh=200" alt=""/></div>
+                        <div class="timeline-image">
+                            <img class="rounded-circle img-fluid"
+                                src="https://digilib.baumann-digital.de/landingPage/about/1.jpg?dh=200" alt=""/>
+                        </div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
                                 <h4>2016</h4>
                                 <h4 class="subheading"><i18n:text key="baudi.landing.about.start"/></h4>
                             </div>
-                            <div class="timeline-body"><p class="text-muted"><i18n:text key="baudi.landing.about.start.text"/></p></div>
+                            <div class="timeline-body">
+                                <p class="text-muted"><i18n:text key="baudi.landing.about.start.text"/></p>
+                            </div>
                         </div>
                     </li>
                     <li class="timeline-inverted">
-                        <div class="timeline-image text-middle"><img class="rounded-circle img-fluid" src="https://digilib.baumann-digital.de/landingPage/about/2.png?dh=150&amp;dw=150" alt=""/></div>
+                        <div class="timeline-image text-middle">
+                            <img class="rounded-circle img-fluid"
+                                src="https://digilib.baumann-digital.de/landingPage/about/2.png?dh=150&amp;dw=150"
+                                alt=""/>
+                        </div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
                                 <h4>2016–2017</h4>
                                 <h4 class="subheading"><i18n:text key="baudi.landing.about.thesis.ma"/></h4>
                             </div>
-                            <div class="timeline-body"><p class="text-muted"><i18n:text key="baudi.landing.about.thesis.ma.text"/></p></div>
+                            <div class="timeline-body">
+                                <p class="text-muted"><i18n:text key="baudi.landing.about.thesis.ma.text"/></p>
+                            </div>
                         </div>
                     </li>
                     <li>
-                        <div class="timeline-image"><img class="rounded-circle img-fluid" src="https://digilib.baumann-digital.de/landingPage/about/3.jpg?dh=150" alt=""/></div>
+                        <div class="timeline-image">
+                            <img class="rounded-circle img-fluid"
+                                src="https://digilib.baumann-digital.de/landingPage/about/3.jpg?dh=150" alt=""/>
+                        </div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
                                 <h4><i18n:text key="december"/> 2017</h4>
                                 <h4 class="subheading"><i18n:text key="baudi.landing.about.thesis.phd"/></h4>
                             </div>
-                            <div class="timeline-body"><p class="text-muted"><i18n:text key="baudi.landing.about.thesis.phd.text"/></p></div>
+                            <div class="timeline-body">
+                                <p class="text-muted"><i18n:text key="baudi.landing.about.thesis.phd.text"/></p>
+                            </div>
                         </div>
                     </li>
                     <li class="timeline-inverted">
-                        <div class="timeline-image"><img class="rounded-circle img-fluid" src="https://digilib.baumann-digital.de/landingPage/about/4.jpg?dh=200" alt=""/></div>
+                        <div class="timeline-image">
+                            <img class="rounded-circle img-fluid"
+                                src="https://digilib.baumann-digital.de/landingPage/about/4.jpg?dh=200" alt=""/>
+                        </div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
                                 <h4><i18n:text key="march"/> 2019</h4>
                                 <h4 class="subheading"><i18n:text key="baudi.landing.about.concert"/></h4>
                             </div>
-                            <div class="timeline-body"><p class="text-muted"><i18n:text key="baudi.landing.about.concert.text"/></p></div>
+                            <div class="timeline-body">
+                                <p class="text-muted"><i18n:text key="baudi.landing.about.concert.text"/></p>
+                            </div>
                         </div>
                     </li>
                     <li>
-                        <div class="timeline-image"><img class="rounded-circle img-fluid" src="https://digilib.baumann-digital.de/landingPage/about/5-2.jpg?dh=200" alt=""/></div>
+                        <div class="timeline-image">
+                            <img class="rounded-circle img-fluid"
+                                src="https://digilib.baumann-digital.de/landingPage/about/5-2.jpg?dh=200" alt=""/>
+                        </div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
                                 <h4><i18n:text key="october"/> 2020</h4>
                                 <h4 class="subheading"><i18n:text key="baudi.landing.about.portal.launch"/></h4>
                             </div>
-                            <div class="timeline-body"><p class="text-muted"><i18n:text key="baudi.landing.about.portal.launch.text"/></p></div>
+                            <div class="timeline-body">
+                                <p class="text-muted"><i18n:text key="baudi.landing.about.portal.launch.text"/></p>
+                            </div>
                         </div>
                     </li>
                     <li class="timeline-inverted">
@@ -220,7 +359,6 @@
                 </ul>
             </div>
         </section>
-        
         <!-- Team-->
         <section class="page-section bg-light" id="team">
             <div class="container">
@@ -231,57 +369,83 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="team-member">
-                            <img class="mx-auto rounded-circle" src="https://digilib.baumann-digital.de/landingPage/team/1.jpg?dh=500" alt=""/>
+                            <img class="mx-auto rounded-circle"
+                                src="https://digilib.baumann-digital.de/landingPage/team/1.jpg?dh=500" alt=""/>
                             <h4>Daniel Fütterer, M.A.</h4>
                             <p class="text-muted"><i18n:text key="baudi.landing.team.associate"/></p>
-                            <a class="btn btn-dark btn-social mx-2" href="https://twitter.com/dfuetterer"><i class="fab fa-twitter"/></a>
-                            <a class="btn btn-dark btn-social mx-2" href="https://www.facebook.com/dfuetterer89"><i class="fab fa-facebook-f"/></a>
-                            <a class="btn btn-dark btn-social mx-2" href="https://www.linkedin.com/in/daniel-f%C3%BCtterer-0b7223173/"><i class="fab fa-linkedin-in"/></a>
-                            <a class="btn btn-dark btn-social mx-2" href="https://github.com/df89"><i class="fab fa-github"/></a>
+                            <a class="btn btn-dark btn-social mx-2" href="https://twitter.com/dfuetterer"><i
+                                    class="fab fa-twitter"/></a>
+                            <a class="btn btn-dark btn-social mx-2" href="https://www.facebook.com/dfuetterer89"><i
+                                    class="fab fa-facebook-f"/></a>
+                            <a class="btn btn-dark btn-social mx-2"
+                                href="https://www.linkedin.com/in/daniel-f%C3%BCtterer-0b7223173/"><i
+                                    class="fab fa-linkedin-in"/></a>
+                            <a class="btn btn-dark btn-social mx-2" href="https://github.com/df89"><i
+                                    class="fab fa-github"/></a>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="team-member">
-                            <img class="mx-auto rounded-circle" src="https://digilib.baumann-digital.de/landingPage/team/2-Dennis.jpg?dh=500" alt=""/>
+                            <a href="https://hfm-karlsruhe.academia.edu/DennisRied" target="_blank"><img class="mx-auto rounded-circle"
+                                src="https://digilib.baumann-digital.de/landingPage/team/2-Dennis.jpg?dh=500" alt=""/></a>
                             <h4>Dennis Ried, M.A.</h4>
-                            <p class="text-muted"><i18n:text key="baudi.landing.team.project.manager"/></p>
-                            <a class="btn btn-dark btn-social mx-2" href="https://twitter.com/riedde"><i class="fab fa-twitter"/></a>
-                            <a class="btn btn-dark btn-social mx-2" href="https://www.facebook.com/dennis.ried.1989"><i class="fab fa-facebook-f"/></a>
-                            <a class="btn btn-dark btn-social mx-2" href="https://www.linkedin.com/in/dennis-ried-a75814148/"><i class="fab fa-linkedin-in"/></a>
-                            <a class="btn btn-dark btn-social mx-2" href="https://hfm-karlsruhe.academia.edu/DennisRied"><i class="fab fa-academia"/></a>
-                            <a class="btn btn-dark btn-social mx-2" href="https://github.com/riedde"><i class="fab fa-github"/></a>
+                            <p class="text-muted">
+                                <i18n:text key="baudi.landing.team.project.manager"/>
+                            </p>
+                            <a class="btn btn-dark btn-social mx-2" href="https://twitter.com/riedde"><i
+                                    class="fab fa-twitter"/></a>
+                            <a class="btn btn-dark btn-social mx-2" href="https://www.facebook.com/dennis.ried.1989"><i
+                                    class="fab fa-facebook-f"/></a>
+                            <a class="btn btn-dark btn-social mx-2"
+                                href="https://www.linkedin.com/in/dennis-ried-a75814148/"><i class="fab fa-linkedin-in"
+                                /></a>
+                            <a class="btn btn-dark btn-social mx-2" href="https://github.com/riedde"><i
+                                    class="fab fa-github"/></a>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="team-member">
-                            <img class="mx-auto rounded-circle" src="https://digilib.baumann-digital.de/landingPage/team/3.jpg?dh=500" alt=""/>
+                            <img class="mx-auto rounded-circle"
+                                src="https://digilib.baumann-digital.de/landingPage/team/3.jpg?dh=500" alt=""/>
                             <h4>Tobias Bachmann, M.A.</h4>
                             <p class="text-muted"><i18n:text key="baudi.landing.team.technical.stuff"/></p>
-<!--                            <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>-->
-                            <a class="btn btn-dark btn-social mx-2" href="https://www.facebook.com/tobijjah.feuerbart"><i class="fab fa-facebook-f"/></a>
-                            <a class="btn btn-dark btn-social mx-2" href="https://github.com/feuerbart"><i class="fab fa-github"/></a>
+                            <!--                            <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>-->
+                            <a class="btn btn-dark btn-social mx-2" href="https://www.facebook.com/tobijjah.feuerbart"
+                                    ><i class="fab fa-facebook-f"/></a>
+                            <a class="btn btn-dark btn-social mx-2" href="https://github.com/feuerbart"><i
+                                    class="fab fa-github"/></a>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-8 mx-auto text-center"><p class="large text-muted"><i18n:text key="baudi.landing.team.about"/></p></div>
+                    <div class="col-lg-8 mx-auto text-center">
+                        <p class="large text-muted"><i18n:text key="baudi.landing.team.about"/></p>
+                    </div>
                 </div>
             </div>
         </section>
         <!-- Clients-->
         <div class="py-5">
             <div class="container">
-                <div class="row justify-content-center"><h3>Unterstützt durch</h3></div>
+                <div class="row justify-content-center">
+                    <h3>Unterstützt durch</h3>
+                </div>
                 <div class="row text-center">
                     <div class="col-md col-sm my"/>
                     <div class="col-md-3 col-sm-6 my-3">
-                        <a href="https://www.blb-karlsruhe.de/" target="_blank"><img class="rounded" src="https://digilib.baumann-digital.de/landingPage/logos/logo_blb.jpg?dw=100" alt="Badische Landesbibliothek Karlsruhe"/></a>
+                        <a href="https://www.blb-karlsruhe.de/" target="_blank"><img class="rounded"
+                                src="https://digilib.baumann-digital.de/landingPage/logos/logo_blb.jpg?dw=100"
+                                alt="Badische Landesbibliothek Karlsruhe"/></a>
                     </div>
                     <div class="col-md-3 col-sm-6 my-3">
-                        <img class="rounded" src="https://digilib.baumann-digital.de/landingPage/logos/logo_lbz.png?dw=200" alt="Baumann Digital"/>
+                        <img class="rounded"
+                            src="https://digilib.baumann-digital.de/landingPage/logos/logo_lbz.png?dw=200"
+                            alt="Baumann Digital"/>
                     </div>
                     <div class="col-md-3 col-sm-6 my-3">
-                        <a href="https://www.hfm-karlsruhe.de/" target="_blank"><img class="rounded" src="https://digilib.baumann-digital.de/landingPage/logos/logo_hfm_ka.png?dw=80" alt="HfM Karlsruhe"/></a>
+                        <a href="https://www.hfm-karlsruhe.de/" target="_blank"><img class="rounded"
+                                src="https://digilib.baumann-digital.de/landingPage/logos/logo_hfm_ka.png?dw=80"
+                                alt="HfM Karlsruhe"/></a>
                     </div>
                     <div class="col-md col-sm my"/>
                 </div>
@@ -298,28 +462,37 @@
                     <div class="row align-items-stretch mb-5">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <input class="form-control" id="name" type="text" placeholder="i18n(baudi.landing.contact.your.name)" required="required" data-validation-required-message="i18n(baudi.landing.contact.your.name.req)"/>
+                                <input class="form-control" id="name" type="text"
+                                    placeholder="i18n(baudi.landing.contact.your.name)" required="required"
+                                    data-validation-required-message="i18n(baudi.landing.contact.your.name.req)"/>
                                 <p class="help-block text-danger"/>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="email" type="email" placeholder="i18n(baudi.landing.contact.your.mail)" required="required" data-validation-required-message="i18n(baudi.landing.contact.your.mail.req)"/>
+                                <input class="form-control" id="email" type="email"
+                                    placeholder="i18n(baudi.landing.contact.your.mail)" required="required"
+                                    data-validation-required-message="i18n(baudi.landing.contact.your.mail.req)"/>
                                 <p class="help-block text-danger"/>
                             </div>
                             <div class="form-group mb-md-0">
-                                <input class="form-control" id="subject" type="tel" placeholder="i18n(baudi.landing.contact.your.subject)" required="required" data-validation-required-message="i18n(baudi.landing.contact.your.subject.req)"/>
+                                <input class="form-control" id="subject" type="tel"
+                                    placeholder="i18n(baudi.landing.contact.your.subject)" required="required"
+                                    data-validation-required-message="i18n(baudi.landing.contact.your.subject.req)"/>
                                 <p class="help-block text-danger"/>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group form-group-textarea mb-md-0">
-                                <textarea class="form-control" id="message" placeholder="i18n(baudi.landing.contact.your.message)" required="required" data-validation-required-message="i18n(baudi.landing.contact.your.message.req)"/>
+                                <textarea class="form-control" id="message"
+                                    placeholder="i18n(baudi.landing.contact.your.message)" required="required"
+                                    data-validation-required-message="i18n(baudi.landing.contact.your.message.req)"/>
                                 <p class="help-block text-danger"/>
                             </div>
                         </div>
                     </div>
                     <div class="text-center">
                         <div id="success"/>
-                        <button class="btn btn-primary btn-xl text-uppercase" id="sendMessageButton" type="submit"><i18n:text key="baudi.landing.contact.send.message"/></button>
+                        <button class="btn btn-primary btn-xl text-uppercase" id="sendMessageButton" type="submit"
+                                ><i18n:text key="baudi.landing.contact.send.message"/></button>
                     </div>
                 </form>
             </div>
@@ -327,5 +500,5 @@
         <!--<div>
             <a target="_blank" href="https://icons8.de/icons/set/graduation-cap">Doktorhut icon</a> Symbol durch <a target="_blank" href="https://icons8.de">Symbole8</a>
         </div>-->
-        </div>
+    </div>
 </div>
