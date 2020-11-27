@@ -1,21 +1,27 @@
 xquery version "3.0";
 
-module namespace app="http://baumann-digital.de/ns/templates";
+module namespace app = "http://baumann-digital.de/ns/templates";
 
-import module namespace templates="http://exist-db.org/xquery/templates" ;
-import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
+import module namespace templates = "http://exist-db.org/xquery/templates" ;
+import module namespace config = "https://exist-db.org/xquery/config" at "config.xqm";
 (:import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";:)
-import module namespace xmldb="http://exist-db.org/xquery/xmldb";
-import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
-import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
-import module namespace baudiWork="http://baumann-digital.de/ns/baudiWork" at "baudiWork.xqm";
-import module namespace baudiSource="http://baumann-digital.de/ns/baudiSource" at "baudiSource.xqm";
+import module namespace xmldb = "http://exist-db.org/xquery/xmldb";
+import module namespace i18n = "http://exist-db.org/xquery/i18n" at "i18n.xql";
+import module namespace baudiShared = "http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
+import module namespace baudiWork = "http://baumann-digital.de/ns/baudiWork" at "baudiWork.xqm";
+import module namespace baudiSource = "http://baumann-digital.de/ns/baudiSource" at "baudiSource.xqm";
 import module namespace functx = "http://www.functx.com" at "functx.xqm";
 
-declare namespace tei="http://www.tei-c.org/ns/1.0";
-declare namespace mei="http://www.music-encoding.org/ns/mei";
+declare namespace tei = "http://www.tei-c.org/ns/1.0";
+declare namespace mei = "http://www.music-encoding.org/ns/mei";
+declare namespace edirom = "http://www.edirom.de/ns/1.3";
+declare namespace pkg = "http://expath.org/ns/pkg";
 
-declare variable $app:dbRoot as xs:string := '/exist/apps/baudiApp';
+declare variable $app:dbRootUrl as xs:string := request:get-url();
+declare variable $app:dbRootLocalhost as xs:string := 'http://localhost:8080/exist/apps/baudiApp';
+declare variable $app:dbRootDev as xs:string := 'http://localhost:8088/exist/apps/baudiApp';
+declare variable $app:dbRootPortal as xs:string := 'http://localhost:8082/exist/apps/baudiApp';
+declare variable $app:dbRoot as xs:string := if(contains($app:dbRootUrl,$app:dbRootLocalhost))then('/exist/apps/baudiApp')else('');
 declare variable $app:digilibPath as xs:string := 'https://digilib.baumann-digital.de';
 declare variable $app:BLBfacPath as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/content/pageview/';
 declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/image/view/';
@@ -25,6 +31,10 @@ declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiSource
 declare variable $app:collectionPersons := collection('/db/apps/baudiPersons/data')//tei:person;
 declare variable $app:collectionInstitutions := collection('/db/apps/baudiInstitutions/data')//tei:org;
 declare variable $app:collectionPeriodicals := collection('/db/apps/baudiPeriodicals/data')//tei:TEI;
+declare variable $app:collectionLoci := collection('/db/apps/baudiLoci/data')//tei:place;
+declare variable $app:collectionGalleryItems := 0 (:collection('/db/apps/baudiGalleryItems/data')//tei:TEI:);
+declare variable $app:collectionDocuments := collection('/db/apps/baudiSources/data/documents')//tei:TEI;
+declare variable $app:collectionEditions := collection('/db/apps/baudiEdiromEditions/data')//edirom:edition;
 
 declare function app:langSwitch($node as node(), $model as map(*)) {
     let $supportedLangVals := ('de', 'en')
@@ -35,193 +45,10 @@ declare function app:langSwitch($node as node(), $model as map(*)) {
             </li>
 };
 
-declare function app:registryLetters($node as node(), $model as map(*)) {
-
-let $lang := baudiShared:get-lang()
-let $letters := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI
-let $datum := $letters//tei:correspAction[@type="sent"]//tei:date/@when/xs:date(.)
-let $datum-first := min($datum)
-let $datum-last := max($datum)
-
-let $content :=    <div class="container">
-                        <br/>
-                
-                        <div class="container" style=" height: 600px; overflow-y: scroll;">
-                            <div class="tab-content">
-                                {let $cards := for $letter in $letters
-                                                let $titel := $letter//tei:fileDesc/tei:titleStmt/tei:title/data()
-                                                let $id := $letter/@xml:id/string()
-                                                let $datumSent := $letter//tei:correspAction[@type="sent"]/tei:date/@when
-                                                let $status := $letter/@status/string()
-                                                let $statusSymbol := if($status='checked')
-                                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
-                                                                     else if($status='public')
-                                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                                                     else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
-                                                                      
-                                                order by $datumSent
-                                                 
-                                                return
-                                                     <div class="card bg-light mb-3">
-                                                         <div class="card-body">
-                                                           <div class="row justify-content-between">
-                                                                <div class="col">
-                                                                    <h6 class="card-subtitle mb-2 text-muted">{format-date($datumSent, '[D]. [MI]. [Y]', $lang, (), ())}</h6>
-                                                                    <h5 class="card-title">{$titel}</h5>
-                                                                    <h6 class="card-subtitle mb-2 text-muted"></h6>
-                                                                </div>
-                                                                <div class="col-2">
-                                                                    <p class="text-right">{$statusSymbol}</p>
-                                                                </div>
-                                                           </div>
-                                                           <p class="card-text"/>
-                                                           <a href="{concat($app:dbRoot,'/letter/',$id)}" class="card-link">{$id}</a>
-                                                           <hr/>
-                                                           <p>Tags</p>
-                                                         </div>
-                                                     </div>
-                               
-                                    return
-                                        $cards}
-                             </div>
-                          </div>
-                   </div>
-       
-return
-   $content
-
-};
-
-declare function app:letter($node as node(), $model as map(*)) {
-
-let $id := request:get-parameter("letter-id", "Fehler")
-let $letter := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI[@xml:id=$id]
-let $pages := $letter/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
-
-return
-(
-<div class="container">
-    <div class="page-header">
-        <a href="../registryLetters.html">&#8592; zum Briefeverzeichnis</a>
-            <h1>{$letter//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.))}</h1>
-            <h5><a href="{document-uri($letter)}" download="{concat($id,'.xml')}">{$id}</a></h5>
-    </div>
- <ul class="nav nav-pills" role="tablist">
-    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#datenblatt" role="tab" aria-controls="home" aria-selected="true">Datenblatt</a></li>
-    { 
-        for $tab in $pages
-        let $tabCounted := $tab
-        let $tabID := concat('#seite-',$tabCounted)
-        
-        return
-    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{$tabID}" role="tab" aria-controls="{$tabCounted}" aria-selected="false">[Seite {$tabCounted}]</a></li>
-    }
-  </ul>
-    <!-- Tab panels -->
-    <div class="tab-content">
-    <div class="tab-pane fade show active" id="datenblatt" role="tabpanel">
-        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudiApp/resources/xslt/metadataLetter.xsl"), ())}
-    </div>
-    
-    {if (count($pages)=1)
-    then(
-    <div class="tab-pane fade" id="seite-1" role="tabpanel">
-    <div class="row">
-        <div class="col">
-            <br/>
-                <div class="col">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bigPicture">
-  Vollansicht
-</button>
-</div>
-                <br/><br/>
-                <img src="{
-                if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('https://digilib.baumann-digital.de/documents/',$id,'-1','?dw=500'))}" class="img-thumbnail" width="400"/>
-            </div>
-        <div class="col">
-                <br/>
-                <strong>Transkription</strong>
-                <br/><br/>
-                {transform:transform($letter//tei:div[@type='page' and @n='1'],doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
-        </div>
-        <!-- Modal -->
-    <div class="modal fade bd-example-modal-lg" id="bigPicture" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-  <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Seite 1 von 1</h5>
-      </div>
-      <div class="modal-body">
-        <img src="{
-                if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('https://digilib.baumann-digital.de/documents/',$id,'-1','?dw=1000'))}" class="img-thumbnail center"/>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Zurück</button>
-      </div>
-    </div>
-  </div>
-</div>
-        </div>
-    </div>
-    )
-    else(
-        for $page in $pages
-        let $letterOrigFacs := concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
-        let $letterOrigLink := concat('https://digilib.baumann-digital.de/documents/',$id,'-',$page,'?dw=500')
-     
-        return
-        
-    <div class="tab-pane fade" id="{concat('seite-',$page)}" role="tabpanel">
-    <div class="row">
-        <div class="col">
-                <br/>
-                <div class="col">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="{concat('#bigPicture',$page)}">
-  Vollansicht
-</button>
-</div>
-                <br/><br/>
-                <img src="{if (exists($letter//tei:div[@type='page' and @n=$page and @facs])) then($letterOrigFacs) else($letterOrigLink)}" class="img-thumbnail" width="400"/>
-       </div>
-        <div class="col">
-                <br/>
-                <strong>Transkription</strong>
-                <br/><br/>
-                {transform:transform($letter//tei:div[@type='page' and @n=$page],doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
-       </div>
-<!-- Modal -->
-    <div class="modal fade bd-example-modal-lg" id="{concat('bigPicture',$page)}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-  <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">{concat('Seite ',$page,' von ',count($pages))}</h5>
-      </div>
-      <div class="modal-body">
-        <img src="{if (exists($letter//tei:div[@type='page' and @n=$page and @facs])) then($letterOrigFacs) else($letterOrigLink)}" class="img-thumbnail"/>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Zurück</button>
-      </div>
-    </div>
-  </div>
-</div>
-    </div>
-    </div>
-        )
-        }
-  </div>
-  </div>
-)
-};
-
 declare function app:registryDocuments($node as node(), $model as map(*)) {
 
 let $lang := baudiShared:get-lang()
-let $documents := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@type='certificate' or @type='Bericht']
+let $documents := $app:collectionDocuments
 
 let $content :=    <div class="container">
                         <br/>
@@ -229,8 +56,11 @@ let $content :=    <div class="container">
                         <div class="container" style=" height: 600px; overflow-y: scroll;">
                             <div class="tab-content">
                                 {let $cards := for $document in $documents
-                                                let $titel := $document//tei:fileDesc/tei:titleStmt/tei:title
+                                                
                                                 let $id := $document/@xml:id/string()
+                                                let $docType := if($document//tei:correspDesc) then('letter') else('document')
+                                                let $titel := $document//tei:fileDesc/tei:titleStmt/tei:title/data()
+                                                let $datumSent := $document//tei:correspAction[@type="sent"]/tei:date/@when
                                                 let $status := $document/@status/string()
                                                 let $statusSymbol := if($status='checked')
                                                                      then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
@@ -244,14 +74,18 @@ let $content :=    <div class="container">
                                                          <div class="card-body">
                                                            <div class="row justify-content-between">
                                                                 <div class="col">
-                                                                    <h5 class="card-title">{$titel/normalize-space(data(.))}</h5>
+                                                                    {if($datumSent)
+                                                                    then(<h6 class="card-subtitle mb-2 text-muted">{format-date($datumSent, '[D]. [M]. [Y]', $lang, (), ())}</h6>)
+                                                                    else()}
+                                                                    <h5 class="card-title">{$titel}</h5>
+                                                                    <!--<h6 class="card-subtitle mb-2 text-muted"></h6>-->
                                                                 </div>
                                                                 <div class="col-2">
                                                                     <p class="text-right">{$statusSymbol}</p>
                                                                 </div>
                                                            </div>
                                                            <p class="card-text"/>
-                                                           <a href="{concat($app:dbRoot,'/document/',$id)}" class="card-link">{$id}</a>
+                                                           <a href="{concat($app:dbRoot, '/', $docType, '/', $id)}" class="card-link">{$id}</a>
                                                            <hr/>
                                                            <p>Tags</p>
                                                          </div>
@@ -268,7 +102,7 @@ return
 };
 
 declare function app:document($node as node(), $model as map(*)) {
-let $id := request:get-parameter("document-id", "Fehler")
+let $id := request:get-parameter("document-id", "error")
 let $dokument := collection("/db/apps/baudiSources/data/documents")/tei:TEI[@xml:id=$id]
 let $pages := $dokument/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
@@ -312,6 +146,132 @@ return
 </div>
 )
 };
+
+declare function app:letter($node as node(), $model as map(*)) {
+
+let $id := request:get-parameter("letter-id", "error")
+let $letter := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI[@xml:id=$id]
+let $pages := $letter/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
+
+return
+(
+<div class="container">
+    <div class="page-header">
+            <h1>{$letter//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.))}</h1>
+            <h5>ID: {$id}</h5>
+    </div>
+ <ul class="nav nav-pills" role="tablist">
+    { 
+        for $tab at $pos in $pages
+        let $tabCounted := $tab
+        let $tabID := concat('#seite-',$tabCounted)
+        
+        return
+    <li class="nav-item"><a class="nav-link {if($pos=1)then('active')else()}" data-toggle="tab" href="{$tabID}" role="tab" aria-controls="{$tabCounted}" aria-selected="false">[Seite {$tabCounted}]</a></li>
+    }
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#datenblatt" role="tab" aria-controls="home" aria-selected="true">Datenblatt</a></li>
+  </ul>
+    <!-- Tab panels -->
+    <div class="tab-content">
+    <div class="tab-pane fade" id="datenblatt" role="tabpanel">
+        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudiApp/resources/xslt/metadataLetter.xsl"), ())}
+    </div>
+    
+    {if (count($pages)=1)
+    then(
+    <div class="tab-pane fade show active" id="seite-1" role="tabpanel">
+    <div class="row">
+        <div class="col">
+            <br/>
+                <div class="col">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bigPicture">
+  Vollansicht
+</button>
+</div>
+                <br/><br/>
+                <img src="{
+                if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
+                then(concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
+                else(concat('https://digilib.baumann-digital.de/documents/',$id,'-1','?dw=500'))}" class="img-thumbnail" width="400"/>
+            </div>
+        <div class="col">
+                <br/>
+                <strong>Transkription</strong>
+                <br/><br/>
+                {transform:transform($letter//tei:div[@type='page' and @n='1'],doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
+        </div>
+        <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="bigPicture" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+  <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Seite 1 von 1</h5>
+      </div>
+      <div class="modal-body">
+        <img src="{
+                if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
+                then(concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
+                else(concat('https://digilib.baumann-digital.de/documents/',$id,'-1','?dw=1000'))}" class="img-thumbnail center"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Zurück</button>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+    </div>
+    )
+    else(
+        for $page at $pos in $pages
+        let $letterOrigFacs := concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
+        let $letterOrigLink := concat('https://digilib.baumann-digital.de/documents/',$id,'-',$page,'?dw=500')
+     
+        return
+        
+    <div class="tab-pane fade {if($pos=1)then('show active')else()}" id="{concat('seite-',$page)}" role="tabpanel">
+    <div class="row">
+        <div class="col">
+                <br/>
+                <div class="col">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="{concat('#bigPicture',$page)}">
+  Vollansicht
+</button>
+</div>
+                <br/><br/>
+                <img src="{if (exists($letter//tei:div[@type='page' and @n=$page and @facs])) then($letterOrigFacs) else($letterOrigLink)}" class="img-thumbnail" width="400"/>
+       </div>
+        <div class="col">
+                <br/>
+                <strong>Transkription</strong>
+                <br/><br/>
+                {transform:transform($letter//tei:div[@type='page' and @n=$page],doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
+       </div>
+<!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="{concat('bigPicture',$page)}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+  <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">{concat('Seite ',$page,' von ',count($pages))}</h5>
+      </div>
+      <div class="modal-body">
+        <img src="{if (exists($letter//tei:div[@type='page' and @n=$page and @facs])) then($letterOrigFacs) else($letterOrigLink)}" class="img-thumbnail"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Zurück</button>
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+    </div>
+        )
+        }
+  </div>
+  </div>
+)
+};
+
 
 declare function app:registryPersons($node as node(), $model as map(*)) {
     
@@ -365,7 +325,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
 
 declare function app:person($node as node(), $model as map(*)) {
  
-let $id := request:get-parameter("person-id", "Fehler")
+let $id := request:get-parameter("person-id", "error")
 let $person := collection("/db/apps/baudiPersons/data")//tei:person[@xml:id=$id]
 let $surname := $person//tei:surname[1]
 let $forename := string-join($person//tei:forename,' ')
@@ -485,7 +445,7 @@ return
 
 declare function app:place($node as node(), $model as map(*)) {
 
-let $id := request:get-parameter("locus-id", "Fehler")
+let $id := request:get-parameter("locus-id", "error")
 let $ort := collection("/db/apps/baudiLoci/data")/tei:place[@id=$id]
 let $name := $ort//tei:title/normalize-space(data(.))
 
@@ -558,9 +518,9 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
 
 declare function app:institution($node as node(), $model as map(*)) {
 
-let $id := request:get-parameter("institution-id", "Fehler")
-let $org := collection("/db/apps/baudiInstitutions/data")//tei:org[@xml:id=$id]
-let $name := baudiShared:getOrgNameFull($org)
+let $id := request:get-parameter("institution-id", "error")
+let $org := $app:collectionInstitutions[@xml:id=$id]
+let $name := if($org) then(baudiShared:getOrgNameFull($org)) else('N.N.')
 let $place := $org/tei:location/string()
 let $affiliates := for $person in $org//tei:listPerson/tei:person
                     let $persID := $person/tei:persName/@key
@@ -606,14 +566,13 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     let $content :=<div class="container">
     <br/>
          <ul class="nav nav-pills" role="tablist">
-            {for $genre at $pos in $genres
+         <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.sources.all')} ({count($sources)})</a></li>
+            {for $genre in $genres
                 let $genreCount := count($sources[.//mei:term[@type='source'][. = $genre]])
-                let $nav-itemMain := <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.sources.all')} ({count($sources)})</a></li>
                 let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.catalog.sources.',$genre))} ({$genreCount})</a></li>
+                order by baudiShared:translate(concat('baudi.catalog.sources.',$genre))
                 return
-                    if($pos=1)
-                    then($nav-itemMain)
-                    else($nav-itemGenre)
+                    $nav-itemGenre
              }
     </ul>
     <!-- Tab panels -->
@@ -621,16 +580,8 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     <div class="tab-content">
     {for $genre at $pos in $genres
         let $cards := for $source in $sources[if($genre='main')then(.)else(.//mei:term[@type='source' and . = $genre])]
-                         let $status := if($source/ancestor::mei:mei//mei:availability/text())
-                                        then($source/ancestor::mei:mei//mei:availability/text())
-                                        else('unchecked')
-                         let $statusSymbol := if($status='unchecked')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
-                                              else if($status='checked')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
-                                              else if($status='published')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                              else($status)
+                         
+                         let $isSourceCollection := if($source//mei:term[@type='source' and .='collection']) then(true()) else(false())
                          let $title := $source//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                          let $titleSort := $title[1]
                          let $titleSub := $source//mei:titlePart[@type='subordinate']/normalize-space(text()[1])
@@ -660,10 +611,40 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                          let $tags := for $each in ($termSource|$termGenre|$termWorkGroup)
                                         order by $each
                                         return ($each,'&#160;')
-                         
-                         order by $titleSort
+                         let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
+                         let $status := $source/ancestor::mei:mei/@status/string()
+                         let $statusSymbol := if($status='checked')
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                              else if($status='published')
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                              else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                         order by $order
                          return
-                             <div class="card bg-light mb-3">
+                             if ($isSourceCollection)
+                             then(
+                             <div class="card bg-light mb-3" name="{$status}">
+                                 <div class="card-body">
+                                   <div class="row justify-content-between">
+                                        <div class="col">
+                                            <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
+                                            {if($titleSub != '')then(<h6 class="card-subtitle mb-2">{$titleSub}</h6>)else()}
+                                            {if($titleSub2 != '')then(<h6 class="card-subtitle mb-2">{$titleSub2}</h6>)else()}
+                                        </div>
+                                        <div class="col-2">
+                                            <p class="text-right">{$statusSymbol}</p>
+                                        </div>
+                                   </div>
+                                    {if(count($componentSources)>=1)
+                                     then(<p class="card-text"><i>{baudiShared:translate('baudi.catalog.sources.components'), concat(' (', count($componentSources), ')')}</i></p>)
+                                     else()}
+                                   <a href="{concat($app:dbRoot,'/source/', $id)}" class="card-link">{$id}</a>
+                                   <hr/>
+                                   <p>{$tags}</p>
+                                 </div>
+                             </div>
+                             )
+                             else(
+                             <div class="card bg-light mb-3" name="{$status}">
                                  <div class="card-body">
                                    <div class="row justify-content-between">
                                         <div class="col">
@@ -688,11 +669,11 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                      then(<i>{baudiShared:translate('baudi.catalog.sources.components'), concat(' (', count($componentSources), ')')}</i>)
                                      else()}
                                    </p>
-                                   <a href="{concat($app:dbRoot,'/sources/', $source//mei:term[@type='source'][1]/string(), '/',$id)}" class="card-link">{$id}</a>
+                                   <a href="{concat($app:dbRoot,'/source/', $id)}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
-                             </div>
+                             </div>)
        
         let $tab := if($genre = 'main')
                     then(<div class="tab-pane fade show active" id="main">
@@ -713,46 +694,63 @@ declare function app:registrySources($node as node(), $model as map(*)) {
         $content
        };
 
-declare function app:sources-manuscript($node as node(), $model as map(*)) {
+declare function app:source($node as node(), $model as map(*)) {
 
-let $id := request:get-parameter("source-id", "Fehler")
+let $id := request:get-parameter("source-id", "error")
 let $lang := baudiShared:get-lang()
-let $manuscript := collection("/db/apps/baudiSources/data/music")//mei:mei[@xml:id=$id]
-let $fileURI := document-uri($manuscript/root())
-let $name := $manuscript//mei:manifestation//mei:title/mei:titlePart[@type="main"]/normalize-space(data(.))
-let $manuscriptOrig := concat($app:digilibPath,$manuscript/@xml:id)
-let $manuscriptTitleUniform := baudiSource:getManifestationTitle($id,'uniform')
-let $manuscriptTitleMain := baudiSource:getManifestationTitle($id,'main')
-let $manuscriptTitleSub := baudiSource:getManifestationTitle($id,'sub')
-let $manuscriptTitlePerf := baudiSource:getManifestationTitle($id,'perf')
+let $source := collection("/db/apps/baudiSources/data/music")//mei:mei[@xml:id=$id]
+let $fileURI := document-uri($source/root())
+let $sourceType := $source//mei:term[@type='source'][1]/string()
+let $sourceWorkGroup := $source//mei:term[@type='workGroup'][1]/string()
+let $sourceOrig := concat($app:digilibPath,$source/@xml:id)
+let $sourceTitleUniform := baudiSource:getManifestationTitle($id,'uniform')
+let $sourceTitleMain := baudiSource:getManifestationTitle($id,'main')
+let $sourceTitleSub := baudiSource:getManifestationTitle($id,'sub')
+let $sourceTitlePerf := baudiSource:getManifestationTitle($id,'perf')
 
-let $manuscriptComposer := baudiSource:getManifestationPersona($id,'composer')
-let $manuscriptArranger := baudiSource:getManifestationPersona($id,'arranger')
-let $manuscriptEditor := baudiSource:getManifestationPersona($id,'editor')
-let $manuscriptLyricist := baudiSource:getManifestationPersona($id,'lyricist')
+let $sourceComposer := baudiSource:getManifestationPersona($id,'composer')
+let $sourceArranger := baudiSource:getManifestationPersona($id,'arranger')
+let $sourceEditor := baudiSource:getManifestationPersona($id,'editor')
+let $sourceLyricist := baudiSource:getManifestationPersona($id,'lyricist')
 
-let $manuscriptPerfRes := baudiSource:getManifestationPerfResWithAmbitus($id)
+let $sourceEditionStmt := baudiSource:getSourceEditionStmt($id, $lang)
 
-let $facsimileTarget := concat($app:BLBfacPath,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
-let $facsimileImageTarget := concat($app:BLBfacPathImage,$manuscript//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
+let $sourceTitlePage := if($source//mei:titlePage/mei:p/text())
+                        then(baudiSource:renderTitlePage($source))
+                        else()
+
+let $sourcePerfRes := baudiSource:getManifestationPerfResWithAmbitus($id)
+
+let $facsimileTarget := concat($app:BLBfacPath,$source//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
+let $facsimileImageTarget := concat($app:BLBfacPathImage,$source//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)
 
 let $msIdentifiers := baudiSource:getManifestationIdentifiers($id)
 
-let $msCondition := $manuscript//mei:condition/mei:p/text()
+let $msCondition := $source//mei:condition/mei:p/text()
 
 let $msPaperSpecs := baudiSource:getManifestationPaperSpecs($id)
 
 let $msHands := baudiSource:getManifestationHands($id)
 let $msPaperNotes := baudiSource:getManifestationPaperNotes($id)
-let $msStamps := baudiSource:getManifestationStamps($id)
-let $msNotes := baudiSource:getManifestationNotes($id)
+let $msStamps := if($source//mei:annot[@type="stamp"])
+                 then(baudiSource:getManifestationStamps($source//mei:annot[@type="stamp"]))
+                 else()
+let $msNotes := if($source//mei:annot[not(@type)]/text())
+                then(baudiSource:getManifestationNotes($id))
+                else()
 
-let $msScoreFormat := $manuscript//mei:scoreFormat/text()
+let $msScoreFormat := $source//mei:scoreFormat/text()
+let $sourcePlateNum := if($source//mei:plateNum/text())
+                       then(<tr>
+                                <td>{baudiShared:translate('baudi.catalog.sources.msDesc.plateNum')}</td>
+                                <td>{$source//mei:plateNum/text()}</td>
+                            </tr>)
+                        else()
 
-let $usedLang := for $lang in $manuscript//mei:langUsage/mei:language/@auth
+let $usedLang := for $lang in $source//mei:langUsage/mei:language/@auth
                     return
                         baudiShared:translate(concat('baudi.lang.',$lang))
-let $key := for $each in $manuscript//mei:key
+let $key := for $each in $source//mei:key
               let $keyPname := $each/@pname
               let $keyMode := $each/@mode
               let $keyAccid := $each/@accid
@@ -773,7 +771,7 @@ let $key := for $each in $manuscript//mei:key
                              )
                       )
                   else()
-let $meter := for $each in $manuscript//mei:meter
+let $meter := for $each in $source//mei:meter
                 let $meterCount := $each/@count
                 let $meterUnit := $each/@unit
                 let $meterSym := $each/@sym
@@ -786,22 +784,27 @@ let $meter := for $each in $manuscript//mei:meter
                     if($meterSymbol)
                     then($meterSymbol)
                     else(concat($meterCount, '/', $meterUnit))
-let $tempo := $manuscript//mei:work/mei:tempo/text()
+let $tempo := $source//mei:work/mei:tempo/text()
+
+let $sourceHasLyrics := if($source//mei:div[@type="songtext"])then(true())else(false())
 
 return
 (
     <div class="container">
         <br/>
-        <div class="page-header"/>
+        <div class="page-header">
+            <h1>{$sourceTitleUniform}</h1>
+            <h5>ID: {$id}</h5>
+        </div>
         <br/>
         <div class="row">
-       {if(exists($manuscript//mei:facsimile/mei:surface))
+       {if(exists($source//mei:facsimile/mei:surface))
        then(
         <div class="col">
                 {
-                if(doc-available(concat($manuscriptOrig,'_001','.jpeg')))
-                then(<img src="{concat($manuscriptOrig,'_001','.jpeg')}" width="400"/>)
-                else if($manuscript//mei:graphic[@targettype="blb-vlid"])
+                if(doc-available(concat($sourceOrig,'_001','.jpeg')))
+                then(<img src="{concat($sourceOrig,'_001','.jpeg')}" width="400"/>)
+                else if($source//mei:graphic[@targettype="blb-vlid"])
                 then(<a href="{$facsimileTarget}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat unter digital.blb-karlsruhe.de"><img class="img-thumbnail" src="{$facsimileImageTarget}" width="400"/></a>)
                 else()
                 }
@@ -814,14 +817,14 @@ return
         else()}
     <div class="col">
       <ul class="nav nav-pills" role="tablist">
-          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.sources.tab.main')}</a></li>  
-          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">{baudiShared:translate('baudi.catalog.sources.tab.detail')}</a></li>
-          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">{baudiShared:translate('baudi.catalog.sources.tab.lyrics')}</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.sources.tab.main')}</a></li>  
+          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#detail">{baudiShared:translate('baudi.catalog.sources.tab.detail')}</a></li>
+          {if($sourceHasLyrics)then(<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">{baudiShared:translate('baudi.catalog.sources.tab.lyrics')}</a></li>)else()}
           <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>-->
       </ul>
       <!-- Tab panels -->
       <div class="tab-content">
-          <div class="tab-pane fade show active" id="main">
+          <div class="tab-pane fade" id="main">
           <div class="container">
           <br/>
               <table class="sourceView">
@@ -830,51 +833,51 @@ return
                 <th/>
             </tr>
             <tr>
-               <td>ID:</td>
-               <td>{$id}</td>
+               <td>{baudiShared:translate('baudi.catalog.sources.sourceType')}</td>
+               <td>{baudiShared:translate(concat('baudi.catalog.sources.',$sourceType))}</td>
             </tr>
-             {if($manuscriptTitleUniform)
+            {if($sourceTitleUniform)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.titleUniform')}</td>
-                    <td>{$manuscriptTitleUniform}</td>
+                    <td>{$sourceTitleUniform}</td>
                   </tr>)
              else()}
-             {if($manuscriptTitleMain)
+             {if($sourceTitleMain)
              then(<tr>
-                    <td>{baudiShared:translate('baudi.catalog.sources.title')}</td>
-                    <td>{$manuscriptTitleMain}</td>
+                    <td>{baudiShared:translate('baudi.catalog.sources.titleMain')}</td>
+                    <td>{$sourceTitleMain}</td>
                   </tr>)
              else()}
-             {if($manuscriptTitleSub)
+             {if($sourceTitleSub)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.titleSub')}</td>
-                    <td>{$manuscriptTitleSub}</td>
+                    <td>{$sourceTitleSub}</td>
                   </tr>)
              else()}
              </table>
              <table class="sourceView">
-             {if($manuscriptComposer)
+             {if($sourceComposer)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.composer')}</td>
-                    <td>{$manuscriptComposer}</td>
+                    <td>{$sourceComposer}</td>
                   </tr>)
              else()}
-             {if($manuscriptArranger)
+             {if($sourceArranger)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.arranger')}</td>
-                    <td>{$manuscriptArranger}</td>
+                    <td>{$sourceArranger}</td>
                   </tr>)
              else()}
-             {if($manuscriptLyricist)
+             {if($sourceLyricist or $sourceWorkGroup = 'vocal')
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.lyricist')}</td>
-                    <td>{$manuscriptLyricist}</td>
+                    <td>{if($sourceLyricist) then($sourceLyricist)else(baudiShared:translate('baudi.unknown'))}</td>
                   </tr>)
              else()}
-             {if($manuscriptEditor)
+             {if($sourceEditor)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.editor')}</td>
-                    <td>{$manuscriptEditor}</td>
+                    <td>{$sourceEditor}</td>
                   </tr>)
              else()}
              </table>
@@ -908,27 +911,38 @@ return
                     <td><i>{normalize-space($tempo)}</i></td>
                   </tr>)
              else()}
-             {if($manuscriptPerfRes)
+             {if($sourcePerfRes)
              then(<tr>
                     <td>{baudiShared:translate('baudi.catalog.sources.perfRes')}</td>
-                    <td>{$manuscriptPerfRes}</td>
+                    <td>{$sourcePerfRes}</td>
                   </tr>)
              else()}
              </table>
               </div>
           </div>
-          <div class="tab-pane fade" id="detail">
+          <div class="tab-pane fade show active" id="detail">
               <div class="container">
               <br/>
                 {$msIdentifiers}
+                {if($sourceEditionStmt)
+                 then($sourceEditionStmt)
+                 else()}
                 {if ($msPaperSpecs)
                  then ($msPaperSpecs)
                  else ()}
                  {if ($msHands)
                  then ($msHands)
                  else ()}
-                 {if ($msPaperNotes)
-                 then ($msPaperNotes)
+                 {if ($msPaperNotes or $sourcePlateNum)
+                 then (
+                 <table class="sourceView">
+                  <tr>
+                      <th/>
+                      <th/>
+                  </tr>
+                  {$msPaperNotes}
+                  {$sourcePlateNum}
+                  </table>)
                  else ()}
                  {if ($msStamps)
                  then ($msStamps)
@@ -964,8 +978,13 @@ return
                            </tr>
                        </table>)
                  else ()}
+                 {if($sourceTitlePage)
+                  then(<br/>, $sourceTitlePage, <br/>)
+                  else()}
               </div>
           </div>
+          {if($sourceHasLyrics)
+          then(
           <div class="tab-pane fade" id="lyrics">
              <div class="container">
                 <table class="sourceView">
@@ -978,7 +997,8 @@ return
                      </tr>
                  </table>
              </div>
-          </div>
+          </div>)
+          else()}
           <!--<div class="tab-pane fade" id="verovio">
               <div class="panel-body">
                   <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
@@ -991,83 +1011,6 @@ return
 )
 };
 
-declare function app:sources-print($node as node(), $model as map(*)) {
-
-let $id := request:get-parameter("source-id", "Fehler")
-let $print := collection("/db/apps/baudiSources/data/music")/mei:mei[@xml:id=$id]
-let $fileURI := document-uri($print/root())
-let $name := $print//mei:manifestation/mei:titleStmt/mei:title[@type="main"]/normalize-space(data(.))
-let $printOrig := concat('../../../../../baudi-images/music/',$print/@xml:id)
-let $printOrigBLB := "https://digital.blb-karlsruhe.de/blbihd/image/view/"
-let $printDigitalisatBLB := "https://digital.blb-karlsruhe.de/blbihd/content/pageview/"
-
-return
-(
-    <div class="container">
-        <div class="page-header">
-            <h1>{$name}</h1>
-            <h5>{$id}</h5>
-        </div>
-        <div class="row">
-       {if(exists($print//mei:facsimile/mei:surface))
-       then(
-        <div class="col">
-                {
-                if(doc-available(concat($printOrig,'_001','.jpeg')))
-                then(<img src="{concat($printOrig,'_001','.jpeg')}" width="400"/>)
-                else if($print//mei:graphic[@targettype="blb-vlid"])
-                then(<a href="{concat($printDigitalisatBLB,$print//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)}" target="_blank"><img src="{concat($printOrigBLB,$print//mei:facsimile/mei:surface[@n="1"]/mei:graphic/@target)}" width="400"/></a>)
-                else()
-                }
-        </div>
-        )
-        else()}
-
-    <div class="col">
-    <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">Überblick</a></li>  
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">Im Detail</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">Liedtext</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>
-    </ul>
-    <!-- Tab panels -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="main">
-            <hr/>
-            <p>
-                Zugehöriges Werk: {baudiShared:getWorkTitle($app:collectionWorks[@xml:id=$print//mei:relation/@corresp])} (<a href="{concat('../../work/',$print//mei:relation/@corresp)}">{$print//mei:relation[@rel='isEmbodimentOf']/@corresp/string()}</a>)
-            </p>
-            <hr/>
-            <p/>
-                {transform:transform($print,doc("/db/apps/baudiApp/resources/xslt/metadataSourcePrint.xsl"), ())}
-            <p/>
-            <div class="card">
-                <div class="card-body">
-                    {if(exists($print//mei:work/mei:incip/mei:score))
-                    then('Incipit soon',<span onload="myIncipit({concat('http://localhost:8080/exist/rest',$fileURI)})"> </span>,<div id="output-verovio"/>)
-                    else(<b>No incipit available</b>)}
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="detail">
-            <p/>
-            {transform:transform($print,doc("/db/apps/baudiApp/resources/xslt/metadataSourcePrintDetailed.xsl"), ())}
-        </div>
-        <div class="tab-pane fade" id="lyrics">
-            <p/>
-                {transform:transform($print,doc("/db/apps/baudiApp/resources/xslt/contentLyrics.xsl"), ())}
-        </div>
-        <div class="tab-pane fade" id="verovio">
-            <div class="panel-body">
-                <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-    </div>
-)
-};
 
 declare function app:aboutProject($node as node(), $model as map(*)) {
 
@@ -1206,7 +1149,7 @@ return
 
 declare function app:periodical($node as node(), $model as map(*)) {
  
-let $id := request:get-parameter("periodical-id", "Fehler")
+let $id := request:get-parameter("periodical-id", "error")
 let $issue := collection("/db/apps/baudiPeriodicals/data")//tei:TEI[@xml:id=$id]
 let $titleIssue := $issue//tei:fileDesc/tei:titleStmt/tei:title/text()
 let $text := $issue//tei:body
@@ -1270,15 +1213,14 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
     let $dict := collection("/db/apps/baudiResources/data")
     let $content := <div class="container">
          <ul class="nav nav-pills" role="tablist">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.works.all')} ({count($works)})</a></li>
             {for $genre at $pos in $genres
                 let $genreDict := if($dict//tei:name[@type=$genre]/text())then($dict//tei:name[@type=$genre]/text())else($genre)
                 let $workCount := count($works//mei:term[@type='genre' and . = $genre])
-                let $nav-itemMain := <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.works.all')} ({count($works)})</a></li>
                 let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.catalog.works.',$genre))} ({$workCount})</a></li>
+                order by baudiShared:translate(concat('baudi.catalog.works.',$genre))
                 return
-                    if($pos=1)
-                    then($nav-itemMain)
-                    else($nav-itemGenre)
+                    $nav-itemGenre
              }
     </ul>
     <hr/>
@@ -1381,39 +1323,10 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         let $tab := if($genre = 'main')
                     then(<div class="tab-pane fade show active" id="main">
                             <br/>
-                            <div class="alert alert-dark" role="alert">
-                                <div class="row">
-                                    <div class="custom-control custom-switch">
-                                        <input class="custom-control-input" type="checkbox" id="ampel_rot" oninput="ampel_rot()"/>
-                                        <label class="custom-control-label" for="ampel_rot">erfasst </label>
-                                    </div>
-                                    <div class="custom-control custom-switch">
-                                        <input class="custom-control-input" type="checkbox" id="ampel_gelb" oninput="ampel_gelb()"/>
-                                        <label class="custom-control-label" for="ampel_gelb">überprüft </label>
-                                    </div>
-                                    <div class="custom-control custom-switch">
-                                        <input class="custom-control-input" type="checkbox" id="ampel_gruen" oninput="ampel_gruen()"/>
-                                        <label class="custom-control-label" for="ampel_gruen">öffentlich </label>
-                                    </div>
-                                </div>
-                            </div>
                             {$cards}
                          </div>)
                     else(<div class="tab-pane fade" id="{$genre}">
                            <br/>
-                            Filter:
-                                    <div class="custom-control custom-switch">
-                                        <input class="custom-control-input" type="checkbox" id="ampel_rot" oninput="ampel_rot()"/>
-                                        <label class="custom-control-label" for="ampel_rot">erfasst</label>
-                                    </div>
-                                    <div class="custom-control custom-switch">
-                                        <input class="custom-control-input" type="checkbox" id="ampel_gelb" oninput="ampel_gelb()"/>
-                                        <label class="custom-control-label" for="ampel_gelb">überprüft</label>
-                                    </div>
-                                    <div class="custom-control custom-switch">
-                                        <input class="custom-control-input" type="checkbox" id="ampel_gruen" oninput="ampel_gruen()"/>
-                                        <label class="custom-control-label" for="ampel_gruen">öffentlich</label>
-                                    </div>
                             {$cards}
                          </div>)
         return
@@ -1428,7 +1341,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
        
 declare function app:work($node as node(), $model as map(*)) {
 
-let $id := request:get-parameter("work-id", "Fehler")
+let $id := request:get-parameter("work-id", "error")
 let $lang := baudiShared:get-lang()
 let $work := collection("/db/apps/baudiWorks/data")//mei:work[@xml:id=$id]
 let $fileURI := document-uri($work/root())
@@ -1655,6 +1568,97 @@ return
 )
 };
 
+declare function app:registryEditions($node as node(), $model as map(*)) {
+let $editions := $app:collectionEditions//edirom:work
+    let $content := <div class="container">
+         <ul class="nav nav-pills" role="tablist">
+                {let $editionsCount := count($editions)
+                 return
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.editions.all')} ({$editionsCount})</a></li>
+             }
+    </ul>
+    <hr/>
+    <br/>
+    <!-- Tab panels -->
+    <div class="container" >
+    <div class="tab-content" style=" height: 600px; overflow-y: scroll;">
+    {
+        let $cards := for $work in $editions
+                         let $work := $app:collectionWorks[@xml:id=$work/@xml:id]
+                         let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
+                         let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/text()
+                         let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
+                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+                         let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
+                         let $numberOpusCounter := if($numberOpusCount)
+                                                   then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
+                                                   else()
+                         let $id := $work/@xml:id/string()
+                         let $composer := if($work//mei:composer//@auth)
+                                          then(baudiShared:getName($work//mei:composer/mei:persName/@auth/string(), 'short'))
+                                          else($work//mei:composer/string())
+                         let $arranger := if($work//mei:arranger//@auth)
+                                          then(baudiShared:getName($work//mei:arranger/mei:persName/@auth/string(), 'short'))
+                                          else($work//mei:arranger/string())
+                         let $lyricist := if($work//mei:lyricist//@auth)
+                                          then(baudiShared:getName($work//mei:lyricist/mei:persName/@auth/string(), 'short'))
+                                          else($work//mei:lyricist/string())
+                         let $editor := if($work//mei:editor//@auth)
+                                        then(baudiShared:getName($work//mei:editor/mei:persName/@auth/string(), 'short'))
+                                        else($work//mei:editor/string())
+                         let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
+                         let $status := $work/@status/string()
+                         let $statusSymbol := if($status='checked')
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                              else if($status='published')
+                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                              else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                         order by $order
+                         return
+                             <div class="card bg-light mb-3" name="{$status}">
+                                 <div class="card-body">
+                                    <div class="row justify-content-between">
+                                        <div class="col">
+                                            <h5 class="card-title">{baudiShared:getWorkTitle($work)}</h5>
+                                            {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
+                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', if($id)then(baudiWork:getPerfRes($id))else(concat('IDnotFound!',document-uri($work/root())))}</h6>
+                                        </div>
+                                        <div class="col-2">
+                                            <p class="text-right">{$statusSymbol}</p>
+                                        </div>
+                                    </div>
+                                    <p class="card-text">{if($composer)
+                                                         then(baudiShared:translate('baudi.catalog.works.composer'),': ',$composer,<br/>)
+                                                         else()}
+                                                         {if($arranger)
+                                                         then(baudiShared:translate('baudi.catalog.works.arranger'),': ',$arranger,<br/>)
+                                                         else()}
+                                                        {if($lyricist)
+                                                         then(baudiShared:translate('baudi.catalog.works.lyricist'),': ',$lyricist,<br/>)
+                                                         else()}
+                                                         {if($editor)
+                                                         then(baudiShared:translate('baudi.catalog.works.editor'),': ',$editor,<br/>)
+                                                         else()}
+                                   <hr/>
+                                   <a href="/exist/apps/EdiromOnline/?edition=xmldb:exist:///db/apps/baudiEdiromEditions/data/baudi_Vol-1.xml&amp;lang=de" target="_blank" class="card-link">Edirom</a></p>
+                                   
+                                 </div>
+                             </div>
+        
+        let $tab := <div class="tab-pane fade show active" id="main">
+                            <br/>
+                            {$cards}
+                         </div>
+        return
+            $tab}
+        </div>
+      </div>
+   </div>
+       
+       return
+        $content
+};
+
 declare function local:getPeriodicals($model) {
     collection($periodicalsCollectionURI)/id($model('docID'))
 };
@@ -1664,4 +1668,107 @@ declare %templates:wrap function app:getPeriodicalsSummary($node as node(), $mod
     let $xslt := doc('/db/apps/baudiApp/resources/xslt/contentLetter.xsl')
     return
         transform:transform($periodical, $xslt, ())
+};
+
+
+declare function app:errorReport($node as node(), $model as map(*)){
+
+let $mailto := 'mailto:errors@baumann-digital.de'
+let $subject := 'Error%20Report'
+let $occurance := replace(request:get-url(),'https://localhost:8082/exist/apps/baudiApp/','https://baumann-digital.de/')
+let $body := concat('Hey Guys,%0D%0A%0D%0Aplease%20check%20this%20url:%0D%0A%0D%0A',$occurance,'%0D%0A%0D%0Athanks!')
+let $href := concat($mailto,'?subject=',$subject,'&amp;body=',$body)
+return
+    <button class="btn list-item-jra"><a href="{$href}">report</a></button>
+};
+
+declare function app:countSources($node as node(), $model as map(*)){
+let $count := count($app:collectionSourcesMusic)
+return
+    (<p class="counter">{$count}</p>)
+};
+declare function app:countWorks($node as node(), $model as map(*)){
+let $count := count($app:collectionWorks)
+return
+    (<span class="counter">{$count}</span>)
+};
+declare function app:countPersons($node as node(), $model as map(*)){
+let $count := count($app:collectionPersons)
+return
+    (<p class="counter">{$count}</p>)
+};
+declare function app:countInstitutions($node as node(), $model as map(*)){
+let $count := count($app:collectionInstitutions)
+return
+    (<p class="counter">{$count}</p>)
+};
+declare function app:countPeriodicals($node as node(), $model as map(*)){
+let $count := count($app:collectionPeriodicals)
+return
+    (<p class="counter">{$count}</p>)
+};
+declare function app:countDocuments($node as node(), $model as map(*)){
+let $count := count($app:collectionDocuments)
+return
+    (<p class="counter">{$count}</p>)
+};
+declare function app:countGalleryItems($node as node(), $model as map(*)){
+let $count := count($app:collectionGalleryItems)
+return
+    (<p class="counter">{$count}</p>)
+};
+declare function app:countLoci($node as node(), $model as map(*)){
+let $count := count($app:collectionLoci)
+return
+    (<p class="counter">{$count}</p>)
+};
+
+declare function app:countEditions($node as node(), $model as map(*)){
+let $count := count($app:collectionEditions//edirom:work)
+return
+    (<p class="counter">{$count}</p>)
+};
+
+declare function app:alert($node as node(), $model as map(*)){
+    if (contains($app:dbRootUrl,$app:dbRootLocalhost))
+    then (
+            <div class="alert alert-info" role="alert" style="padding-top: 67px;">
+               Baudi-Portal Entwicklung –  Sie befinden sich auf http://localhost:8080
+            </div>
+         )
+         
+    else if (contains($app:dbRootUrl,$app:dbRootDev))
+    then (
+            <div class="alert alert-warning" role="alert" style="padding-top: 67px;">
+               Baudi-Portal intern: Diese Umgebung kann sich in Inhalt und Erscheinung vom offiziellen Baudi-Portal unterscheiden! Sie befinden sich auf https://dev.baumann-digital.de
+            </div>
+         )
+    
+    else ()
+};
+
+declare function app:portalVersion($node as node(), $model as map(*)){
+ let $package := doc('/db/apps/baudiApp/expath-pkg.xml')
+ let $version := $package//pkg:package/@version/string()
+    return
+        <p class="subtitle-b">{concat('(Version ',$version,')')}</p>
+};
+
+declare function app:registryFilterBar($node as node(), $model as map(*)){
+   <div class="alert alert-dark" role="alert">
+       <div class="row">
+           <div class="custom-control custom-switch" >
+               <input class="custom-control-input" type="checkbox" id="ampel_rot" oninput="ampel_rot()"/>
+               <label class="custom-control-label" style="padding-right:20px;" for="ampel_rot">erfasst</label>
+           </div>
+           <div class="custom-control custom-switch">
+               <input class="custom-control-input" type="checkbox" id="ampel_gelb" oninput="ampel_gelb()"/>
+               <label class="custom-control-label" style="padding-right:20px;" for="ampel_gelb">überprüft</label>
+           </div>
+           <div class="custom-control custom-switch">
+               <input class="custom-control-input" type="checkbox" id="ampel_gruen" oninput="ampel_gruen()"/>
+               <label class="custom-control-label" style="padding-right:20px;" for="ampel_gruen">öffentlich</label>
+           </div>
+       </div>
+   </div>
 };
