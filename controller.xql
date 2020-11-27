@@ -23,6 +23,26 @@ else if ($exist:path eq "/") then
         <redirect url="index.html"/>
     </dispatch>
     
+	(: if it's a registry :)
+else
+	if (matches($exist:path, "registry") or matches($exist:path, "about") or matches($exist:path, "view") or matches($exist:path, "imprint")) then
+		<dispatch
+			xmlns="http://exist.sourceforge.net/NS/exist">
+			<forward
+				url="{$exist:controller}/html/{$exist:resource}"/>
+			<view>
+				<forward
+					url="{$exist:controller}/modules/view.xql"/>
+			</view>
+			<error-handler>
+				<forward
+					url="{$exist:controller}/templates/error-page.html"
+					method="get"/>
+				<forward
+					url="{$exist:controller}/modules/view.xql"/>
+			</error-handler>
+		</dispatch>
+	
 	(: if it's a letter :)
 else
 	if (matches($exist:path, "/letter/")) then
@@ -192,17 +212,18 @@ else
 					</dispatch>
 					
 						
-						(: if it's a manuscript :)
-					else
-						if (matches($exist:path, "/sources/manuscript/")) then
+						(: if it's a musical source :)
+						else
+						if (matches($exist:path, "/source/")) then (
 							<dispatch
 								xmlns="http://exist.sourceforge.net/NS/exist">
 								<forward
-									url="{$exist:controller}/html/sources/viewManuscript.html">
+									url="{$exist:controller}/html/viewSource.html">
 									<add-parameter
 										name="source-id"
 										value="{$exist:resource}"/>
 								</forward>
+								
 								<view>
 									<forward
 										url="{$exist:controller}/modules/view.xql">
@@ -220,34 +241,7 @@ else
 								</error-handler>
 							</dispatch>
 							
-							
-						(: if it's a print :)
-						else
-							if (matches($exist:path, "/sources/print/")) then
-								<dispatch
-									xmlns="http://exist.sourceforge.net/NS/exist">
-									<forward
-										url="{$exist:controller}/html/sources/viewPrint.html">
-										<add-parameter
-											name="source-id"
-											value="{$exist:resource}"/>
-									</forward>
-									<view>
-										<forward
-											url="{$exist:controller}/modules/view.xql">
-											<add-parameter
-												name="source-id"
-												value="{$exist:resource}"/>
-										</forward>
-									</view>
-									<error-handler>
-										<forward
-											url="{$exist:controller}/templates/error-page.html"
-											method="get"/>
-										<forward
-											url="{$exist:controller}/modules/view.xql"/>
-									</error-handler>
-								</dispatch>
+							)
 						
 						(: if it's a periodical :)
 						else
