@@ -108,3 +108,33 @@ table.sourceView tr td:first-of-type{
     margin-top: -0.255rem ! important;
 }
 
+.line-mf {
+    width: 90%;
+    height: 2.5px;
+    background-color: black;
+    margin: 0 auto;
+}
+
+/*======================================
+//--//-->   COUNTER
+======================================*/
+
+.counter-box {
+  display:inline-block;
+  color: black;
+  font-style:normal;
+  text-align: center;
+}
+
+.counter-num .counter {
+  font-size: 1.25rem;
+  margin-bottom: 0;
+}
+
+.counter:before{
+    content:'(';
+}
+
+.counter:after{
+    content:')';
+}
