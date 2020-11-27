@@ -553,9 +553,10 @@ declare function baudiShared:getOrgNameFullLinked($org as node()) {
 
 declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
 
-    let $corpID := $corpName/@auth
+    let $corpID := $corpName/@auth/string()
     let $corpUri := concat($app:dbRoot, '/institution/', $corpID)
-    let $name := $app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()
+    let $nameFound := $app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()
+    let $name := if($nameFound) then($nameFound) else($corpName)
     
     return
         <a href="{$corpUri}">{$name}</a>
@@ -621,4 +622,8 @@ declare function baudiShared:getName($key as xs:string, $param as xs:string){
                  else('[NoInstitutionFound]')
     return
        $name
+};
+
+declare function baudiShared:linkAll($node as node()){
+    transform:transform($node,doc('/db/apps/baudiApp/resources/xslt/linking.xsl'),())
 };

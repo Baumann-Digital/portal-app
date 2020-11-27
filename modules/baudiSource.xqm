@@ -44,9 +44,11 @@ return
 
 declare function baudiSource:getManifestationPersona($sourceID as xs:string, $param as xs:string) {
     let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
-    let $sourceManifestation := $source//mei:manifestationList/mei:manifestation
+    let $sourceManifestation := $source//mei:manifestation
     let $sourceManifestationPersona := if ($sourceManifestation//node()[name() = $param]/mei:persName/@auth)
                                        then (baudiShared:getPersonaLinked($sourceManifestation//node()[name() = $param]/mei:persName/@auth))
+                                       else if ($sourceManifestation//node()[name() = $param]/mei:persName)
+                                       then ($sourceManifestation//node()[name() = $param]/mei:persName/text()[1])
                                        else ()
     
     return
@@ -140,10 +142,12 @@ declare function baudiSource:getManifestationPerfResWithAmbitus($sourceID as xs:
 declare function baudiSource:getManifestationIdentifiers($sourceID as xs:string) {
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 
-let $msRepository := baudiShared:getCorpNameFullLinked($source//mei:physLoc/mei:repository/mei:corpName)
+let $msRepository := if($source//mei:physLoc/mei:repository/mei:corpName[@auth])
+                     then(baudiShared:getCorpNameFullLinked($source//mei:physLoc/mei:repository/mei:corpName))
+                     else($source//mei:physLoc/mei:repository/string())
 let $msRepositorySiglum := $source//mei:physLoc/mei:repository/mei:corpName/@label/string()
 let $msRepositoryShelfmark := $source//mei:physLoc/mei:repository/mei:identifier[@type="shelfmark"]
-let $msRismNo := $source//mei:manifestation/mei:identifier[@type="rism"]
+let $msRismNo := $source//mei:manifestation/mei:identifier[@type="rism"]/text()
 
 let $table := <table class="sourceView">
                   <tr>
@@ -152,16 +156,22 @@ let $table := <table class="sourceView">
                   </tr>
                   <tr>
                      <td>{baudiShared:translate('baudi.catalog.sources.msDesc.repository')}</td>
-                     <td>{$msRepository} ({$msRepositorySiglum})</td>
+                     <td>{$msRepository} {if($msRepositorySiglum)then(concat(' (', $msRepositorySiglum, ')'))else(baudiShared:translate('baudi.unknown'))}</td>
                   </tr>
+                  {if($msRepositoryShelfmark)
+                  then(
                   <tr>
                      <td>{baudiShared:translate('baudi.catalog.sources.msDesc.shelfmark')}</td>
                      <td>{$msRepositoryShelfmark}</td>
-                  </tr>
+                  </tr>)
+                  else()}
+                  {if($msRismNo)
+                  then(
                   <tr>
                      <td>RISM-{baudiShared:translate('baudi.catalog.sources.opus.no')}</td>
                      <td>{$msRismNo}</td>
-                  </tr>
+                  </tr>)
+                  else()}
                </table>
 return
     $table
@@ -170,13 +180,17 @@ return
 declare function baudiSource:getManifestationPaperSpecs($sourceID  as xs:string) {
 
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
+let $sourceType := string-join($source//mei:term[@type='source']/string(),'_')
 
 let $msPaperDimensionsHeight := $source//mei:dimensions[@label="height"]/text()
 let $msPaperDimensionsHeightUnit := $source//mei:dimensions[@label="height"]/@unit/string()
 let $msPaperDimensionsWidth := $source//mei:dimensions[@label="width"]/text()
 let $msPaperDimensionsWidthUnit := $source//mei:dimensions[@label="width"]/@unit/string()
 let $msPaperDimensions := concat('ca. ', $msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, ' x ', $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit, ' (',baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions.height.short'), 'x', baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions.width.short'),')')
-let $msPaperOrientation := baudiShared:translate(concat('baudi.catalog.sources.msDesc.paper.orientation.', $source//mei:extent[@label="orientation"]/text()))
+
+let $msPaperOrientation := $source//mei:extent[@label="orientation"]/text()
+let $prPaperFormat := baudiSource:getPrintPaperFormat($msPaperOrientation,$msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit)
+
 let $msPaperFolii := $source//mei:extent[@label="folium"]/text()
 let $msPaperPages := $source//mei:extent[@label="pages"]/text()
 let $msPaperPagination := baudiShared:translate(concat('baudi.catalog.sources.msDesc.paper.pagination.', $source//mei:extent[@label="pagination"]/text()))
@@ -187,13 +201,20 @@ let $table := <table class="sourceView">
                       <th/>
                   </tr>
                   <tr>
-                     <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions')}</td>
-                     <td>{$msPaperDimensions}</td>
-                  </tr>
-                  <tr>
                      <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.orientation')}</td>
-                     <td>{$msPaperOrientation}</td>
+                     <td>{baudiShared:translate(concat('baudi.catalog.sources.msDesc.paper.orientation.', $msPaperOrientation))}</td>
                   </tr>
+                  {if(contains($sourceType,'manuscript'))
+                  then(<tr>
+                         <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions')}</td>
+                         <td>{$msPaperDimensions}</td>
+                       </tr>)
+                  else if(contains($sourceType,'print'))
+                  then(<tr>
+                         <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.format')}</td>
+                         <td>{$prPaperFormat}</td>
+                       </tr>)
+                  else('–')}
                   <tr>
                      <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paper.folii')}</td>
                      <td>{$msPaperFolii}</td>
@@ -249,24 +270,18 @@ let $paperNotePlaceTranslated := for $token in $paperNotePlace
                                   let $i18n := baudiShared:translate(concat('baudi.catalog.mei.annot.place.', $token))
                                   return
                                     $i18n
-let $table := <table class="sourceView">
-                  <tr>
-                      <th/>
-                      <th/>
-                  </tr>
+let $tableRow := 
                   <tr>
                      <td>{baudiShared:translate('baudi.catalog.sources.msDesc.paperNotes')}</td>
                      <td>{concat($paperNote, ' (', string-join($paperNotePlaceTranslated, ' '), ')')}</td>
                   </tr>
-              </table>
 return
-    $table
+    if($paperNote) then($tableRow) else()
 };
 
-declare function  baudiSource:getManifestationStamps($sourceID as xs:string) {
-let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 
-let $stampNotes := $source//mei:annot[@type="stamp"]
+declare function  baudiSource:getManifestationStamps($stampNotes) {
+
 let $listOfStamps := for $stamp in $stampNotes
                         let $stampPlace:= tokenize($stamp/@place, ' ')
                         let $stampPlaceTranslated := for $token in $stampPlace
@@ -275,7 +290,7 @@ let $listOfStamps := for $stamp in $stampNotes
                                                            $i18n
                         let $stampPositions := for $stampPos in tokenize($stamp/@data, ' ')
                                                   let $stampData := substring-after($stampPos, '#')
-                                                  let $stampPage := $source//mei:surface[matches(@xml:id, $stampData)]/@label/string()
+                                                  let $stampPage := $stamp/ancestor::mei:mei//mei:surface[matches(@xml:id, $stampData)]/@label/string()
                                                   return
                                                      $stampPage
                         return
@@ -348,4 +363,136 @@ return
         <br/>,
         $lyricsText
     )
+};
+
+
+declare function baudiSource:getPrintPaperFormat($orientation as xs:string, $paperDimensionsHeight as xs:string, $paperDimensionsHeightUnit as xs:string, $paperDimensionsWidth as xs:string, $paperDimensionsWidthUnit as xs:string) as xs:string {
+
+let $height := if($paperDimensionsHeightUnit = 'mm')
+               then (number($paperDimensionsHeight))
+               else if ($paperDimensionsHeightUnit = 'cm')
+               then (number($paperDimensionsHeight) * 10)
+               else if ($paperDimensionsHeightUnit = 'm')
+               then (number($paperDimensionsHeight) * 1000)
+               else('[unit unknown]')
+
+let $width := if($paperDimensionsWidthUnit = 'mm')
+               then (number($paperDimensionsWidth))
+               else if ($paperDimensionsHeightUnit = 'cm')
+               then (number($paperDimensionsWidth) * 10)
+               else if ($paperDimensionsHeightUnit = 'm')
+               then (number($paperDimensionsWidth) * 1000)
+               else('[unit unknown]')
+
+return
+    if($orientation = 'portrait')
+    then(if($height < 100)
+            then('16° (Sedez)')
+            else if(100 < $height and $height < 149)
+            then('12° (Duodez)')
+            else if(150 < $height and $height < 184)
+            then('Kl.–8° (Klein-Oktav)')
+            else if(185 < $height and $height < 224)
+            then('8° (Oktav)')
+            else if(225 < $height and $height < 249)
+            then('Gr.–8° (Groß-Oktav)')
+            else if(250 < $height and $height < 349)
+            then('4° (Quart)')
+            else if(350 < $height and $height < 399)
+            then('Gr.-4° (Groß-Quart)')
+            else if(400 < $height and $height < 449)
+            then('2° (Folio)')
+            else if(450 < $height and $height)
+            then('Gr.-2° (Groß-Folio)')
+            else(baudiShared:translate('baudi.catalog.sources.msDesc.paper.format.unknown')))
+    else if ($orientation = 'landscape')
+    then(if($width < 100)
+            then('16° (Quer-Sedez)')
+            else if(100 < $width and $width < 149)
+            then('12° (Quer-Duodez)')
+            else if(150 < $width and $width < 184)
+            then('Kl.–8° (Quer-Klein-Oktav)')
+            else if(185 < $width and $width < 224)
+            then('8° (Quer-Oktav)')
+            else if(225 < $width and $width < 249)
+            then('Gr.–8° (Quer-Groß-Oktav)')
+            else if(250 < $width and $width < 349)
+            then('4° (Quer-Quart)')
+            else if(350 < $width and $width < 399)
+            then('Gr.-4° (Quer-Groß-Quart)')
+            else if(400 < $width and $width < 449)
+            then('2° (Quer-Folio)')
+            else if(450 < $width and $width)
+            then('Gr.-2° (Quer-Groß-Folio)')
+            else(baudiShared:translate('baudi.catalog.sources.msDesc.paper.format.unknown')))
+    else(baudiShared:translate('baudi.catalog.sources.msDesc.paper.format.unknown'))
+};
+
+declare function baudiSource:getSourceEditionStmt($id, $lang) {
+    let $source := $app:collectionSourcesMusic[@xml:id=$id]
+    let $edition := $source//mei:editionStmt//mei:edition
+    let $editionTitle := $edition/mei:title/text()
+    let $editionPublisher := if($edition//mei:publisher/mei:corpName/@auth)
+                             then(baudiShared:getCorpNameFullLinked($edition//mei:publisher/mei:corpName))
+                             else($edition//mei:publisher/mei:corpName)
+    let $editionPubPlace := $edition//mei:pubPlace
+    let $editionDate := if($edition//mei:date/@*)then(baudiShared:formatDate($edition//mei:date,'full',$lang))else()
+    let $editionDedicatee := if($edition//mei:dedicatee/data())
+                             then(baudiShared:linkAll($edition//mei:dedicatee))
+                             else()
+    
+    return
+        if(1=1)
+        then(
+            <table class="sourceView">
+                <tr>
+                    <th/>
+                    <th/>
+                </tr>
+                {if($editionTitle)
+                then(
+                <tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.editionStmt.title')}</td>
+                    <td>{$editionTitle}</td>
+                </tr>)
+                else()}
+                {if($editionPublisher)
+                then(
+                <tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.editionStmt.publisher')}</td>
+                    <td>{$editionPublisher}</td>
+                </tr>)
+                else()}
+                {if($editionDate)
+                then(
+                <tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.editionStmt.pubDate')}</td>
+                    <td>{$editionDate}</td>
+                </tr>)
+                else()}
+                {if($editionPubPlace)
+                then(
+                <tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.editionStmt.pubPlace')}</td>
+                    <td>{$editionPubPlace}</td>
+                </tr>)
+                else()}
+                {if($editionDedicatee)
+                then(
+                <tr>
+                    <td>{baudiShared:translate('baudi.catalog.sources.editionStmt.dedication')}</td>
+                    <td>{$editionDedicatee}</td>
+                </tr>)
+                else()}
+            </table>
+        )
+        else()
+};
+
+declare function baudiSource:renderTitlePage($source) {
+let $titlePage := $source//mei:titlePage
+
+return
+    transform:transform($titlePage,doc('/db/apps/baudiApp/resources/xslt/formattingTitlePage.xsl'),())
+
 };
