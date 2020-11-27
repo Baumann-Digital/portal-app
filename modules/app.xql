@@ -1208,8 +1208,8 @@ return
 
 declare function app:registryWorks($node as node(), $model as map(*)) {
     
-    let $works := collection("/db/apps/baudiWorks/data")//mei:work[not(parent::mei:componentList)]
-    let $genres := distinct-values(collection("/db/apps/baudiWorks/data")//mei:work//mei:term[@type="genre"]/text() | collection("/db/apps/baudiWorks/data")//mei:work//mei:titlePart[@type='main' and not(@class)]/@type)
+    let $works := $app:collectionWorks[not(parent::mei:componentList)]
+    let $genres := distinct-values($app:collectionWorks//mei:term[@type="genre"]/text() | $app:collectionWorks//mei:titlePart[@type='main' and not(@class)]/@type)
     let $dict := collection("/db/apps/baudiResources/data")
     let $content := <div class="container">
          <ul class="nav nav-pills" role="tablist">
