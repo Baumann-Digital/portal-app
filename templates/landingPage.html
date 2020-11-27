@@ -23,7 +23,8 @@
     </head>
     <body id="body" class="d-flex flex-column">
         <nav data-template="templates:include" data-template-path="templates/baudiMainNav.html"></nav>
-<!--        <div style="height: 37px;"/>-->
+        <div data-template="app:alert"/>
+        <!--        <div style="height: 37px;"/>-->
         <main role="main" class="container mt-1" id="content"></main>
         <div class="modal fade" id="landingModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -74,6 +75,8 @@
         <script src="/exist/apps/baudiApp/resources/js/assets/mail/jqBootstrapValidation.js"></script>
         <script src="/exist/apps/baudiApp/resources/js/assets/mail/contact_me.js"></script>
         <!-- Core theme JS-->
+        <script src="/exist/apps/baudiApp/resources/lib/counterup/jquery.waypoints.min.js"/>
+        <script src="/exist/apps/baudiApp/resources/lib/counterup/jquery.counterup.js"/>
         <script src="/exist/apps/baudiApp/resources/js/landingPageScripts.js"></script>
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
