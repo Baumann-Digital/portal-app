@@ -6,9 +6,14 @@
                 <h1><i18n:text key="baudi.catalog.periodicals"/></h1>
             </div>
             <hr/>
+            <div data-template="app:registryFilterBar"/>
+            <hr/>
             <div>
                 <div data-template="app:registryPeriodicals"/>
             </div>
         </div>
     </div>
+    <script type="text/javascript"> window.onload = onPageLoad(); function onPageLoad() {
+        document.getElementById("ampel_rot").checked = true; document.getElementById("ampel_gelb").checked = true;
+        document.getElementById("ampel_gruen").checked = true; } </script>
 </div>
