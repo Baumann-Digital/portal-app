@@ -817,14 +817,14 @@ return
         else()}
     <div class="col">
       <ul class="nav nav-pills" role="tablist">
-          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.sources.tab.main')}</a></li>  
-          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#detail">{baudiShared:translate('baudi.catalog.sources.tab.detail')}</a></li>
+          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.catalog.sources.tab.main')}</a></li>  
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">{baudiShared:translate('baudi.catalog.sources.tab.detail')}</a></li>
           {if($sourceHasLyrics)then(<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">{baudiShared:translate('baudi.catalog.sources.tab.lyrics')}</a></li>)else()}
           <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>-->
       </ul>
       <!-- Tab panels -->
       <div class="tab-content">
-          <div class="tab-pane fade" id="main">
+          <div class="tab-pane fade show active" id="main">
           <div class="container">
           <br/>
               <table class="sourceView">
@@ -920,7 +920,7 @@ return
              </table>
               </div>
           </div>
-          <div class="tab-pane fade show active" id="detail">
+          <div class="tab-pane fade" id="detail">
               <div class="container">
               <br/>
                 {$msIdentifiers}
