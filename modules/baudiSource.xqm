@@ -321,7 +321,7 @@ let $listOfNotes := for $note in $notes
                         let $noteData := substring-after($note/@data, '#')
                         let $noteResp := substring-after($note/@resp, '#')
                         let $notePage := $source//mei:surface[matches(@xml:id, $noteData)]/@label/string()
-                        let $resp := functx:index-of-node($source//mei:hand, $source//mei:hand[@xml:id = $noteResp])
+                        let $resp := if($source//mei:hand[@xml:id = $noteResp]) then(functx:index-of-node($source//mei:hand, $source//mei:hand[@xml:id = $noteResp])) else()
                         return
                             <li>{concat('[Hand ', $resp, ', ', $notePage, ' ', string-join($notePlaceTranslated, ' '), '] ')} <i>{$note/text()}</i></li>
 let $table := <table class="sourceView">
