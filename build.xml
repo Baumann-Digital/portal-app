@@ -77,7 +77,7 @@
         <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
         <git command="reset">
             <args>
-                <arg value="-hard" />
+                <arg value="--hard" />
             </args>
         </git>
         <git command="stash">
