@@ -71,6 +71,11 @@
                 <arg value="temp"/>
             </args>
         </git>
+        <git command="stash">
+            <args>
+                <arg value="apply"/>
+            </args>
+        </git>
         <exec executable="python">
             <arg value="${pathResolverLocalhost}"/>
         </exec>
