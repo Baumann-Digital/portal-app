@@ -1671,14 +1671,25 @@ declare %templates:wrap function app:getPeriodicalsSummary($node as node(), $mod
 };
 
 
-declare function app:errorReport($node as node(), $model as map(*)){
+(:declare function app:errorReport($node as node(), $model as map(*)){
 
-let $errorReportDir := '/db/apps/baudiApp/errors'
+let $errorReportDir := '/db/apps/baudiApp/errors/'
 let $occurance := replace(request:get-url(),'https://localhost:8082/exist/apps/baudiApp/','https://baumann-digital.de/')
 let $error := <error url="{$occurance}"/>
 
 return
-    xmldb:store($errorReportDir, concat('error_', current-date(), '.xml'), $error)
+    xmldb:store($errorReportDir, 'error.xml', $error)
+};:)
+
+declare function app:errorReportMail($node as node(), $model as map(*)){
+
+let $mailto := 'mailto:baudi@baumann-digital.de'
+let $subject := 'Error%20Report'
+let $occurance := replace(request:get-url(),'http://localhost:8082/exist/apps/baudiApp','http://baumann-digital.de')
+let $body := concat('Hey Guys,%0D%0A%0D%0Aplease%20check%20this%20url:%0D%0A%0D%0A',$occurance,'%0D%0A%0D%0AThanks!')
+let $href := concat($mailto,'?subject=',$subject,'&amp;body=',$body)
+return
+    <button class="btn list-item"><a href="{$href}">berichten</a></button>
 };
 
 declare function app:countSources($node as node(), $model as map(*)){
