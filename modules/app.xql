@@ -1673,12 +1673,12 @@ declare %templates:wrap function app:getPeriodicalsSummary($node as node(), $mod
 
 declare function app:errorReport($node as node(), $model as map(*)){
 
-let $errorReportFile := doc('/db/apps/baudiApp/errorReport.xml')/errors
+let $errorReportDir := '/db/apps/baudiApp/errors'
 let $occurance := replace(request:get-url(),'https://localhost:8082/exist/apps/baudiApp/','https://baumann-digital.de/')
 let $error := <error url="{$occurance}"/>
 
 return
-    update insert $error into $errorReportFile
+    xmldb:store($errorReportDir, concat('error_', current-date(), '.xml'), $error)
 };
 
 declare function app:countSources($node as node(), $model as map(*)){
