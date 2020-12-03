@@ -436,7 +436,7 @@ declare function baudiSource:getSourceEditionStmt($id, $lang) {
                              then(baudiShared:getCorpNameFullLinked($edition//mei:publisher/mei:corpName))
                              else($edition//mei:publisher/mei:corpName)
     let $editionPubPlace := $edition//mei:pubPlace
-    let $editionDate := if($edition//mei:date/@*)then(baudiShared:formatDate($edition//mei:date,'full',$lang))else()
+    let $editionDate := if($edition//mei:bibl/mei:date/@*)then(baudiShared:formatDate($edition//mei:date,'full',$lang))else()
     let $editionDedicatee := if($edition//mei:dedicatee/data())
                              then(baudiShared:linkAll($edition//mei:dedicatee))
                              else()
