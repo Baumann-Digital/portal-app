@@ -1673,13 +1673,12 @@ declare %templates:wrap function app:getPeriodicalsSummary($node as node(), $mod
 
 declare function app:errorReport($node as node(), $model as map(*)){
 
-let $mailto := 'mailto:errors@baumann-digital.de'
-let $subject := 'Error%20Report'
+let $errorReportFile := doc('/db/apps/baudiApp/errorReport.xml')/errors
 let $occurance := replace(request:get-url(),'https://localhost:8082/exist/apps/baudiApp/','https://baumann-digital.de/')
-let $body := concat('Hey Guys,%0D%0A%0D%0Aplease%20check%20this%20url:%0D%0A%0D%0A',$occurance,'%0D%0A%0D%0Athanks!')
-let $href := concat($mailto,'?subject=',$subject,'&amp;body=',$body)
+let $error := <error url="{$occurance}"/>
+
 return
-    <button class="btn list-item-jra"><a href="{$href}">report</a></button>
+    update insert $error into $errorReportFile
 };
 
 declare function app:countSources($node as node(), $model as map(*)){
