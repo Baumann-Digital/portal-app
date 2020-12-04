@@ -97,6 +97,10 @@
         </git>
     </target>
     
+    <target name="deployDev" depends="xarDev">
+        
+    </target>
+    
     <target name="xarDev">
         <mkdir dir="${build.dir}"/>
         <delete file="./repo.xml"/>
