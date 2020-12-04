@@ -107,10 +107,7 @@
         <copy todir=".">
             <file file="repo/rwxrwx---/repo.xml"/>
         </copy>
-        <exec executable="python">
-            <arg value="${pathResolverDev}"/>
-        </exec>
-        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
+        <zip basedir="." destfile="${build.dir}/${project.app}-dev-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
         <git command="reset">
             <args>
                 <arg value="--hard" />
