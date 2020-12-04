@@ -21,40 +21,49 @@
         <!-- Custom styles for this template -->
         <link href="https://baumann-digital.de/resources/css/theme.css" rel="stylesheet" />
     </head>
-    <body id="body" class="d-flex flex-column">
+    <body id="body" class="d-flex flex-column" xmlns:i18n="http://exist-db.org/xquery/i18n">
         <nav data-template="templates:include" data-template-path="templates/baudiMainNav.html"></nav>
         <div data-template="app:alert"/>
         <!--        <div style="height: 37px;"/>-->
         <main role="main" class="container mt-1" id="content"></main>
         <div class="modal fade" id="landingModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Concerning the content</h4>
-                        <button type="button" class="close" data-dismiss="modal">X</button>
+            <div  data-template="i18n:translate" data-template-lang="en"
+                data-template-catalogues="/db/apps/baudiApp/resources/lang">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        
+                        <!-- Modal Header -->
+                        
+                        <div class="modal-header">
+                            <h4 class="modal-title"><i18n:text key="baudi.landing.modal.concerningContent"/></h4>
+                            <button type="button" class="close" data-dismiss="modal">X</button>
+                        </div>
+                        
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <i18n:text key="baudi.landing.modal.text.1"/>
+                            <br/>
+                            <i18n:text key="baudi.landing.modal.text.2"/>
+                        </div>
+                        
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><i18n:text key="baudi.landing.modal.start"/></button>
+                        </div>
+                        
                     </div>
-                    
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        This side contains almost parts of the project, because the content is part of an ongoing PhD-Project.
-                    </div>
-                    
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">start</button>
-                    </div>
-                    
                 </div>
             </div>
         </div>
         <div class="alert text-center cookiealert" role="alert">
-            <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website. <a href="https://cookiesandyou.com/" target="_blank">Learn more</a>
-            
-            <button type="button" class="btn btn-primary btn-sm acceptcookies">
-                I agree
-            </button>
+            <div  data-template="i18n:translate" data-template-lang="en"
+                data-template-catalogues="/db/apps/baudiApp/resources/lang">
+                <i18n:text key="baudi.landing.cookies.notice"/> <a href="https://cookiesandyou.com/" target="_blank"><i18n:text key="baudi.landing.cookies.learnMore"/></a>
+                
+                <button type="button" class="btn btn-primary btn-sm acceptcookies">
+                    <i18n:text key="baudi.landing.cookies.accept"/>
+                </button>
+            </div>
         </div>
         <footer data-template="templates:include" data-template-path="templates/baudiMainFooter.html"></footer>
         <!-- Bootstrap core JavaScript

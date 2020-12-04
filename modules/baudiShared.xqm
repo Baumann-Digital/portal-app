@@ -120,37 +120,6 @@ declare function baudiShared:translate($content) {
 };
 
 
-(:~
-: List all strings from list and retrun html <option>-Element
-:
-: @param $node the node
-: @param $model the model
-: @param $listName the requested options list
-:
-: @return a html <option>-Element ordered by translated option labels.
-:
-:)
-
-declare %templates:wrap function baudiShared:listMultiSelectOptions($node as node(), $model as map(*), $listName as xs:string) {
-    let $list := if ($listName = 'personRefs2RegerTypes')
-                    then ($app:personRefs2RegerTypes)
-                    else if ($listName = 'mriPersonaliaOrgaClassificationTypes')
-                    then ($app:mriPersonaliaOrgaClassificationTypes)
-                    else if ($listName = 'mriPostalObjektTypes')
-                    then ($app:mriPostalObjektTypes)
-                    else if ($listName = 'mriEventTypes')
-                    then ($app:mriEventTypes)
-                    else ()
-
-    for $type in $list
-        let $typeLabel := baudiShared:translate($type)
-        order by $typeLabel
-        return
-            <option value="{$type}">{$typeLabel}</option>
-};
-
-
-
 (: DATES:)
 
 
@@ -344,10 +313,6 @@ declare function baudiShared:shortenAndFormatDates($dateFrom, $dateTo, $form as 
 };
 
 
-
-
-
-
 declare function baudiShared:getBirthDeathDates($dates, $lang) {
     let $date := if ($dates/tei:date)
                         then (baudiShared:formatDate($dates/tei:date, 'full', $lang))
@@ -446,17 +411,6 @@ declare function baudiShared:getSelectedLanguage($node as node()*,$selectedLang 
     baudiShared:get-lang()
 };
 
-declare function baudiShared:getWorkTitle($work){
-    let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
-                         let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and @class='sort']/text()
-                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
-                         let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
-                         let $numberOpusCounter := if($numberOpusCount)
-                                                   then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
-                                                   else()
-    return
-        if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)
-};
 
 declare function baudiShared:stringJoinAll($node as node()) {
     string-join($node/string(),' | ')
@@ -477,6 +431,7 @@ declare function baudiShared:getPersNameFull($person as node()) {
     return
         $name
 };
+
 declare function baudiShared:getPersNameShort($person as node()) {
 
     let $forename := $person/tei:persName/tei:forename

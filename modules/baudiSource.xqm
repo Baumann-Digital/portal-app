@@ -28,8 +28,9 @@ declare function baudiSource:getManifestationTitle($sourceID as xs:string, $para
   let $sourceTitleFull := 'Full'
   let $sourceTitleShort := 'Short'
   let $sourceTitleUniform := $source//mei:work/mei:title[@type="uniform"]
-  let $sourceTitleUniformParts := ($sourceTitleUniform/mei:titlePart[@type='main'], $sourceTitleUniform/mei:titlePart[@type='subordinate'], $sourceTitleUniform/mei:titlePart[@type='perf'])
-  let $sourceTitleUniformJoined := string-join($sourceTitleUniformParts,' ')
+  let $sourceTitleUniformParts := ($sourceTitleUniform/mei:titlePart[@type='main'][. != ''], $sourceTitleUniform/mei:titlePart[@type='subordinate'][. != ''], $sourceTitleUniform/mei:titlePart[@type='perf'][. != ''])
+  let $sourceTitleUniformJoined := string-join($sourceTitleUniformParts,' | ')
+  let $param := if($param= 'sub') then('subordinate') else($param)
   let $sourceTitlePartParam := $source//mei:manifestationList/mei:manifestation//mei:titlePart[@type=$param]
 
 return
@@ -56,10 +57,8 @@ declare function baudiSource:getManifestationPersona($sourceID as xs:string, $pa
 };
 
 
-declare function baudiSource:getManifestationPerfRes($sourceID as xs:string) {
-    let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
-    let $sourceWork := $source//mei:work
-    let $perfResLists := $sourceWork//mei:perfResList
+declare function baudiSource:getManifestationPerfRes($sourceFile as node()*) {
+    let $perfResLists := $sourceFile//mei:perfResList
     let $perfResList := for $list in $perfResLists
                         let $perfResListName := $list/@auth
                         let $perfRess := $list//mei:perfRes/@auth
@@ -74,7 +73,7 @@ declare function baudiSource:getManifestationPerfRes($sourceID as xs:string) {
         $perfResList
 };
 
-declare function baudiSource:getAmbPitch($ambNote as node()) {
+declare function baudiSource:getAmbPitch($ambNote as node()*) {
   let $ambPname := $ambNote/@pname/string()
   let $ambAccid := $ambNote/@accid/string()
   let $ambOct := $ambNote/@oct/number()
@@ -97,7 +96,7 @@ declare function baudiSource:getAmbPitch($ambNote as node()) {
       else()
 };
 
-declare function baudiSource:getAmbitus($ambitus as node()) {
+declare function baudiSource:getAmbitus($ambitus as node()*) {
     let $lowest := if($ambitus/mei:ambNote[@type='lowest']) then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='lowest'])) else()
     let $lowestAlt := if($ambitus/mei:ambNote[@type='lowestAlt']) then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='lowestAlt'])) else()
     let $highest := if($ambitus/mei:ambNote[@type='highest'])then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='highest']))else()
@@ -114,9 +113,8 @@ declare function baudiSource:getAmbitus($ambitus as node()) {
             )
 };
 
-declare function baudiSource:getManifestationPerfResWithAmbitus($sourceID as xs:string) {
-    let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
-    let $sourceWork := $source//mei:work
+declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as node()*) {
+    let $sourceWork := $sourceFile//mei:work
     let $perfResLists := $sourceWork//mei:perfResList
     let $perfResList := for $list in $perfResLists
                         let $perfResListName := $list/@auth
@@ -280,7 +278,7 @@ return
 };
 
 
-declare function  baudiSource:getManifestationStamps($stampNotes) {
+declare function  baudiSource:getManifestationStamps($stampNotes as node()*) {
 
 let $listOfStamps := for $stamp in $stampNotes
                         let $stampPlace:= tokenize($stamp/@place, ' ')
@@ -320,7 +318,7 @@ let $listOfNotes := for $note in $notes
                                                             $i18n
                         let $noteData := substring-after($note/@data, '#')
                         let $noteResp := substring-after($note/@resp, '#')
-                        let $notePage := $source//mei:surface[matches(@xml:id, $noteData)]/@label/string()
+                        let $notePage := $source//mei:surface[@xml:id = $noteData]/@label/string()
                         let $resp := if($source//mei:hand[@xml:id = $noteResp]) then(functx:index-of-node($source//mei:hand, $source//mei:hand[@xml:id = $noteResp])) else()
                         return
                             <li>{concat('[Hand ', $resp, ', ', $notePage, ' ', string-join($notePlaceTranslated, ' '), '] ')} <i>{$note/text()}</i></li>
@@ -489,7 +487,7 @@ declare function baudiSource:getSourceEditionStmt($id, $lang) {
         else()
 };
 
-declare function baudiSource:renderTitlePage($source) {
+declare function baudiSource:renderTitlePage($source as node()*) {
 let $titlePage := $source//mei:titlePage
 
 return

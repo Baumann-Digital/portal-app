@@ -18,6 +18,13 @@
 
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Welcome!</msg>
+    <msg key="baudi.landing.modal.concerningContent">Attention!</msg>
+    <msg key="baudi.landing.modal.text.1">This portal is created as part of a promotion project. Since data repositories of a not yet finished promotion project are accessed for the display, some functionalities had to be deactivated for the time being.</msg>
+    <msg key="baudi.landing.modal.text.2">The goal is to provide insights into the diversity of data already now. In addition, simple framework data/basal reference data sets on works, persons, institutions and places that appear in the course of the project are to be shared in order to provide points of reference for other projects.</msg>
+    <msg key="baudi.landing.modal.start">Let's go!</msg>
+    <msg key="baudi.landing.cookies.notice">We use cookies to ensure you get the best experience on our website.</msg>
+    <msg key="baudi.landing.cookies.learnMore">Learn more</msg>
+    <msg key="baudi.landing.cookies.accept">Accept</msg>
     <msg key="baudi.landing.catalogues">Catalogues</msg>
     <msg key="baudi.landing.catalogues.sub">Here you can research the life, work and activities of Ludwig Baumann.</msg>
     <msg key="baudi.landing.catalogues.works">Works</msg>

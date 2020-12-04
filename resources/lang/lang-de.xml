@@ -18,6 +18,14 @@
 
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Willkommen!</msg>
+    <msg key="baudi.landing.modal.concerningContent">Zur Beachtung</msg>
+    <msg key="baudi.landing.modal.text.1">Dieses Portal entsteht als Teil eines Promotionsprojektes. Da für die Darstellung auf Datenrepositorien eines noch nicht abgeschlossenen Promotionsprojektes zugegriffen wird, mussten einige Funktionalitäten vorerst deaktiviert werden.
+        </msg>
+    <msg key="baudi.landing.modal.text.2">Ziel ist es bereits jetzt Einblicke in die Datenvielfalt zu geben. Auch sollen bereits einfache Rahmendaten/ basale Referenzdatensätze zu Werken, Peronen, Institutionen und Orten, die im Laufe des Projektes in Erscheinung treten, geteilt werden, um Anknüpfungspunkte für andere Projekte zu bieten.</msg>
+    <msg key="baudi.landing.modal.start">Los gehts!</msg>
+    <msg key="baudi.landing.cookies.notice">Wir verwenden Cookies, um Ihnen die bestmögliche Nutzung unserer Website zu gewährleisten.</msg>
+    <msg key="baudi.landing.cookies.learnMore">Mehr erfahren</msg>
+    <msg key="baudi.landing.cookies.accept">Verstanden</msg>
     <msg key="baudi.landing.catalogues">Kataloge</msg>
     <msg key="baudi.landing.catalogues.sub">Recherchieren Sie hier zu Leben, Werk und Wirken von Ludwig Baumann.</msg>
     <msg key="baudi.landing.catalogues.works">Werke</msg>
@@ -99,7 +107,7 @@
     <msg key="baudi.catalog.works.editor.female">Herausgeberin</msg>
     <msg key="baudi.catalog.works.opus.no">Nr.</msg>
     <msg key="baudi.catalog.works.components">Enthaltene Werke</msg>
-    <msg key="baudi.catalog.works.relSources">Verwandte Quellen</msg>
+    <msg key="baudi.catalog.works.relSources">Beteiligte Quellen</msg>
     <msg key="baudi.catalog.works.perfmedium">Besetzungsangabe</msg>
     <msg key="baudi.catalog.works.titleAlt">Alternativer Titel</msg>
     <msg key="baudi.catalog.works.subtitleAlt">Alternativer Untertitel</msg>

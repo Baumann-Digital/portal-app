@@ -21,6 +21,18 @@ import module namespace jsonp="http://www.jsonp.org";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
 
+declare function baudiWork:getWorkTitle($work as node()*){
+    let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
+                         let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[range:field-eq("titlePart-main", 'main') and @class='sort']/text()
+                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+                         let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
+                         let $numberOpusCounter := if($numberOpusCount)
+                                                   then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
+                                                   else()
+    return
+        if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)
+};
+
 (:declare function baudiWork:getLyricist($work as node()) {
   let $collectionPersons := collection('/db/apps/baudiPersons/data')//tei:person
   let $lyricists := $work//mei:lyricist/mei:persName
@@ -42,10 +54,8 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
           <h3>[lyricistID:'{$lyricistID/string()}', lyricistName:'{$lyricistName}', lyricistGender:'{$lyricistGender}']</h3>
 };:)
 
-declare function baudiWork:getPerfRes($workID as xs:string) {
-    let $workDoc := $app:collectionWorks[@xml:id=$workID]
-    let $work := $workDoc//mei:work
-    let $perfResLists := $workDoc//mei:perfMedium/mei:perfResList
+declare function baudiWork:getPerfRes($work as node()*) {
+    let $perfResLists := $work//mei:perfMedium/mei:perfResList
     let $perfResList := for $list in $perfResLists
                         let $perfResListName := $list/@auth
                         let $perfRess := $list//mei:perfRes/@auth
@@ -60,10 +70,8 @@ declare function baudiWork:getPerfRes($workID as xs:string) {
         $perfResList
 };
 
-declare function baudiWork:getPerfResDetail($workID as xs:string) {
-    let $workDoc := $app:collectionWorks[@xml:id=$workID]
-    let $work := $workDoc//mei:work
-    let $perfResList := $workDoc//mei:perfMedium//mei:perfResList
+declare function baudiWork:getPerfResDetail($work as node()*) {
+    let $perfResList := $work//mei:perfMedium//mei:perfResList
     let $perfResList := for $list in $perfResList
                         let $perfResListName := $list/@auth
                         let $perfRess := $list//mei:perfRes/@auth
