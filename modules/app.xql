@@ -1584,6 +1584,7 @@ let $editions := $app:collectionEditions//edirom:work
     {
         let $cards := for $work in $editions
                          let $work := $app:collectionWorks[@xml:id=$work/@xml:id]
+                         let $editionID := $work/ancestor::edirom:edition/@xml:id/string()
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/text()
                          let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
@@ -1639,7 +1640,7 @@ let $editions := $app:collectionEditions//edirom:work
                                                          then(baudiShared:translate('baudi.catalog.works.editor'),': ',$editor,<br/>)
                                                          else()}
                                    <hr/>
-                                   <a href="/exist/apps/EdiromOnline/?edition=xmldb:exist:///db/apps/baudiEdiromEditions/data/baudi_Vol-1.xml&amp;lang=de" target="_blank" class="card-link">Edirom</a></p>
+                                   <a href="{concat('http://baumann-digital.de:8082/exist/apps/EdiromOnline/?edition=xmldb:exist:///db/apps/baudiEdiromEditions/data/', $editionID, '.xml&lang=de')}" target="_blank" class="card-link">Edirom</a></p>
                                    
                                  </div>
                              </div>
