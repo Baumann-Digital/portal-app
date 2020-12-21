@@ -1628,7 +1628,7 @@ let $editions := $app:collectionEditions//edirom:work
                                                          then(baudiShared:translate('baudi.catalog.works.editor'),': ',$editor,<br/>)
                                                          else()}
                                    <hr/>
-                                   <a href="{concat('http://baumann-digital.de:8082/exist/apps/EdiromOnline/?edition=xmldb:exist:///db/apps/baudiEdiromEditions/data/', $editionID, '.xml&lang=de')}" target="_blank" class="card-link">Edirom</a></p>
+                                   <a href="{concat('http://baumann-digital.de:8082/exist/apps/EdiromOnline/?edition=xmldb:exist:///db/apps/baudiEdiromEditions/data/', $editionID, '.xml&amp;lang=de')}" target="_blank" class="card-link">Edirom</a></p>
                                    
                                  </div>
                              </div>
