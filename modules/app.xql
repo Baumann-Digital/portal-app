@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 module namespace app = "http://baumann-digital.de/ns/templates";
 
@@ -103,15 +103,15 @@ return
 
 declare function app:document($node as node(), $model as map(*)) {
 let $id := request:get-parameter("document-id", "error")
-let $dokument := collection("/db/apps/baudiSources/data/documents")/tei:TEI[@xml:id=$id]
-let $pages := $dokument/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
+let $doc := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@xml:id=$id]
+let $pages := $doc/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
 return
 (
 <div class="container">
     <div class="page-header">
         <a href="../registryDocuments.html">&#8592; zum Dokumentenverzeichnis</a>
-            <h1>{$dokument//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.))}</h1>
+            <h1>{$doc//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.))}</h1>
             <h5>{$id}</h5>
     </div>
     <ul class="nav nav-pills" role="tablist">
@@ -128,19 +128,7 @@ return
         {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/dokumentDatenblatt.xsl"), ())}
         </div>-->
         <div class="tab-pane fade show active" id="inhalt" >
-        {transform:transform($dokument//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())}
-        </div>
-        <div class="tab-pane fade" id="daten" >
-        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/namedDate.xsl"), ())}
-        </div>
-        <div class="tab-pane fade" id="personen" >
-        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/namedPers.xsl"), ())}
-        </div>
-         <div class="tab-pane fade" id="institutionen" >
-        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/namedInst.xsl"), ())}
-        </div>
-        <div class="tab-pane fade" id="orte" >
-        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/namedPlace.xsl"), ())}
+        {transform:transform($doc//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())}
         </div>
    </div>
 </div>
