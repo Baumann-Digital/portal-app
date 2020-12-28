@@ -176,11 +176,8 @@ return
   Vollansicht
 </button>
 </div>
-                <br/><br/>
-                <img src="{
-                if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('https://digilib.baumann-digital.de/documents/',$id,'-1','?dw=500'))}" class="img-thumbnail" width="400"/>
+                <br/>
+                {baudiSource:getFacsimilePreview($id)}
             </div>
         <div class="col">
                 <br/>
@@ -196,10 +193,7 @@ return
         <h5 class="modal-title" id="exampleModalCenterTitle">Seite 1 von 1</h5>
       </div>
       <div class="modal-body">
-        <img src="{
-                if (exists($letter//tei:div[@type='page' and @n='1' and @facs]))
-                then(concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n='1']/@facs))
-                else(concat('https://digilib.baumann-digital.de/documents/',$id,'-1','?dw=1000'))}" class="img-thumbnail center"/>
+        {baudiSource:getFacsimilePreview($id)}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Zurück</button>
@@ -212,8 +206,8 @@ return
     )
     else(
         for $page at $pos in $pages
-        let $letterOrigFacs := concat('https://digilib.baumann-digital.de/documents/',$letter//tei:div[@type='page' and @n=$page]/@facs)
-        let $letterOrigLink := concat('https://digilib.baumann-digital.de/documents/',$id,'-',$page,'?dw=500')
+        let $letterOrigFacs := concat('https://digilib.baumann-digital.de/BauDi/07/',$letter//tei:div[@type='page' and @n=$page]/@facs)
+        let $letterOrigLink := concat('https://digilib.baumann-digital.de/BauDi/07/',$id,'-',$page,'?dw=500')
      
         return
         
@@ -259,7 +253,6 @@ return
   </div>
 )
 };
-
 
 declare function app:registryPersons($node as node(), $model as map(*)) {
     
@@ -714,8 +707,8 @@ let $sourceTitlePage := if($source//mei:titlePage/mei:p/text())
 
 let $sourcePerfRes := baudiSource:getManifestationPerfResWithAmbitus($source)
 
-let $facsimileTarget := concat($app:BLBfacPath,$source//mei:facsimile[1]/mei:surface[@n="1"]/mei:graphic/@target)
-let $facsimileImageTarget := concat($app:BLBfacPathImage,$source//mei:facsimile[1]/mei:surface[@n="1"]/mei:graphic/@target)
+(:let $facsimileTarget := concat($app:BLBfacPath,$source//mei:facsimile[1]/mei:surface[@n="1"]/mei:graphic/@target)
+let $facsimileImageTarget := concat($app:BLBfacPathImage,$source//mei:facsimile[1]/mei:surface[@n="1"]/mei:graphic/@target):)
 
 let $msIdentifiers := baudiSource:getManifestationIdentifiers($id)
 
@@ -792,21 +785,7 @@ return
         <br/>
         <div class="row">
        {if(exists($source//mei:facsimile/mei:surface))
-       then(
-        <div class="col">
-                {
-                if(doc-available(concat($sourceOrig,'_001','.jpeg')))
-                then(<img src="{concat($sourceOrig,'_001','.jpeg')}" width="400"/>)
-                else if($source//mei:graphic[@targettype="blb-vlid"])
-                then(<a href="{$facsimileTarget}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat unter digital.blb-karlsruhe.de"><img class="img-thumbnail" src="{$facsimileImageTarget}" width="400"/></a>)
-                else()
-                }
-                
-                <div>
-                <br/>
-                {baudiShared:translate('baudi.catalog.sources.facsimile.source')}: Badische Landesbibliothek Karlsruhe</div>
-        </div>
-        )
+       then(baudiSource:getFacsimilePreview($id))
         else()}
     <div class="col">
       <ul class="nav nav-pills" role="tablist">
@@ -1698,7 +1677,6 @@ let $count := count($app:collectionLoci)
 return
     (<p class="counter">{$count}</p>)
 };
-
 declare function app:countEditions($node as node(), $model as map(*)){
 let $count := count($app:collectionEditions//edirom:work)
 return

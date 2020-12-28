@@ -184,10 +184,26 @@ let $msPaperDimensionsHeight := $source//mei:dimensions[@label="height"]/text()
 let $msPaperDimensionsHeightUnit := $source//mei:dimensions[@label="height"]/@unit/string()
 let $msPaperDimensionsWidth := $source//mei:dimensions[@label="width"]/text()
 let $msPaperDimensionsWidthUnit := $source//mei:dimensions[@label="width"]/@unit/string()
-let $msPaperDimensions := concat('ca. ', $msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, ' x ', $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit, ' (',baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions.height.short'), 'x', baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions.width.short'),')')
+let $height := if($msPaperDimensionsHeight) then(string-join(($msPaperDimensionsHeight, $msPaperDimensionsHeightUnit), ' ')) else()
+let $width := if($msPaperDimensionsWidth) then(string-join(($msPaperDimensionsWidth, $msPaperDimensionsWidthUnit), ' ')) else()
+let $msPaperDimensions := if($height or $width)
+                          then(concat('ca. ',
+                                      string-join(($height, $width), ' x '),
+                                      ' (',
+                                      string-join( (
+                                      if($height)
+                                      then(baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions.height.short'))
+                                      else(),
+                                      if($width)
+                                      then(baudiShared:translate('baudi.catalog.sources.msDesc.paper.dimensions.width.short'))
+                                      else()), 'x'),
+                                      ')'))
+                          else()
 
 let $msPaperOrientation := $source//mei:extent[@label="orientation"]/text()
-let $prPaperFormat := baudiSource:getPrintPaperFormat($msPaperOrientation,$msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit)
+let $prPaperFormat := if($msPaperOrientation and $msPaperDimensionsHeight and $msPaperDimensionsHeightUnit and $msPaperDimensionsWidth and $msPaperDimensionsWidthUnit)
+                      then(baudiSource:getPrintPaperFormat($msPaperOrientation,$msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit))
+                      else('Dimensions not recorded')
 
 let $msPaperFolii := $source//mei:extent[@label="folium"]/text()
 let $msPaperPages := $source//mei:extent[@label="pages"]/text()
@@ -493,4 +509,48 @@ let $titlePage := $source//mei:titlePage
 return
     transform:transform($titlePage,doc('/db/apps/baudiApp/resources/xslt/formattingTitlePage.xsl'),())
 
+};
+
+declare function baudiSource:getFacsimilePreview($id as xs:string) {
+
+let $sourceChiffre := subsequence(tokenize($id, '-'), 2, 1)
+
+let $source := if($sourceChiffre = '01')
+               then($app:collectionSourcesMusic[@xml:id= $id])
+               else if($sourceChiffre = '07')
+               then($app:collectionDocuments[@xml:id= $id])
+               else('no source found')
+
+let $digilibBasicPath := concat('https://digilib.baumann-digital.de/BauDi/', $sourceChiffre, '/')
+
+let $facsimileTarget := if($sourceChiffre = '01')
+                        then($app:collectionSourcesMusic[@xml:id= $id]//mei:facsimile[1]/mei:surface[if(@n='1')then(@n='1')else(1)]/mei:graphic/@target)
+                        else if($sourceChiffre = '07')
+                        then($app:collectionDocuments[@xml:id= $id]//tei:div[@type='page' and @n='1']/@facs)
+                        else('no facsimile found')
+
+let $digilibFacPath := concat($digilibBasicPath, $facsimileTarget)
+let $BLBfacPath := concat($app:BLBfacPath, $facsimileTarget)
+let $BLBfacPathImage := concat($app:BLBfacPathImage, $facsimileTarget)
+
+let $graphicLocal := if(starts-with($facsimileTarget, 'baudi-'))
+                     then(<img src="{concat($digilibFacPath, '?dw=500')}" class="img-thumbnail" width="400"/>)
+                     else()
+let $graphicBLB := if($source//mei:graphic[@targettype="blb-vlid"])
+                   then(<a href="{$BLBfacPath}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat unter digital.blb-karlsruhe.de">
+                            <img class="img-thumbnail" src="{$BLBfacPathImage}" width="400"/>
+                        </a>)
+                   else()
+let $graphicBLBLabel := <div>
+                            <br/>
+                            {baudiShared:translate('baudi.catalog.sources.facsimile.source')}: Badische Landesbibliothek Karlsruhe
+                        </div>
+
+return
+    <div class="col">
+        {if($graphicLocal) then($graphicLocal)
+         else if($graphicBLB) then($graphicBLB, $graphicBLBLabel)
+         else('noGraphic')}
+        
+    </div>
 };
