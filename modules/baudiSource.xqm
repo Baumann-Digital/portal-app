@@ -524,7 +524,7 @@ let $source := if($sourceChiffre = '01')
 let $digilibBasicPath := concat('https://digilib.baumann-digital.de/BauDi/', $sourceChiffre, '/')
 
 let $facsimileTarget := if($sourceChiffre = '01')
-                        then($app:collectionSourcesMusic[@xml:id= $id]//mei:facsimile[1]/mei:surface[if(@n='1')then(@n='1')else(1)]/mei:graphic/@target)
+                        then($app:collectionSourcesMusic[@xml:id= $id]//mei:facsimile[1]/mei:surface[if(@n='1')then(@n='1')else(1)][1]/mei:graphic/@target)
                         else if($sourceChiffre = '07')
                         then($app:collectionDocuments[@xml:id= $id]//tei:div[@type='page' and @n='1']/@facs)
                         else('no facsimile found')
