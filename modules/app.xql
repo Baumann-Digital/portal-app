@@ -1529,9 +1529,9 @@ return
                         let $sourceTitle := $source//mei:manifestation//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                         let $ediromSourceWindow := $source//mei:manifestation//mei:titlePart[@type='ediromSourceWindow']/normalize-space(.)
                         where $correspWork = $id
-                        order by $sort, $sourceTitle
+                        order by $sort ascending, lower-case($ediromSourceWindow) ascending
                         return
-                            <li>{$ediromSourceWindow} (<a href="{concat('../source/', $sourceId)}">{$sourceId}</a>)</li>
+                            <li sortNo="{$sort}">{$ediromSourceWindow} (<a href="{concat('../source/', $sourceId)}">{$sourceId}</a>)</li>
                     }
                 </ul>
             </td>
@@ -1547,7 +1547,7 @@ return
 };
 
 declare function app:registryEditions($node as node(), $model as map(*)) {
-let $editions := $app:collectionEditions//edirom:work
+    let $editions := $app:collectionEditions//edirom:work
     let $content := <div class="container">
          <ul class="nav nav-pills" role="tablist">
                 {let $editionsCount := count($editions)
@@ -1561,9 +1561,10 @@ let $editions := $app:collectionEditions//edirom:work
     <div class="container" >
     <div class="tab-content" style=" height: 600px; overflow-y: scroll;">
     {
-        let $cards := for $work in $editions
-                         let $work := $app:collectionWorks[@xml:id=$work/@xml:id]
-                         let $editionID := $work/ancestor::edirom:edition/@xml:id/string()
+        let $cards := for $edition in $editions
+                         let $workID := $edition/@xml:id
+                         let $work := $app:collectionWorks/id($workID)
+                         let $editionID := $edition/ancestor::edirom:edition/@xml:id/string()
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/text()
                          let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
@@ -1572,7 +1573,6 @@ let $editions := $app:collectionEditions//edirom:work
                          let $numberOpusCounter := if($numberOpusCount)
                                                    then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
                                                    else()
-                         let $id := $work/@xml:id/string()
                          let $composer := if($work//mei:composer//@auth)
                                           then(baudiShared:getName($work//mei:composer/mei:persName/@auth/string(), 'short'))
                                           else($work//mei:composer/string())
