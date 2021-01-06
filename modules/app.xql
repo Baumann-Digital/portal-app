@@ -408,7 +408,7 @@ let $content :=
                                            </div>
                                            <p class="card-text"/>
                                            
-                                           <a href="{concat($app:dbRoot,'/locus/',$id)}" class="card-link">{concat($name, ' (', $id, ')')}</a>
+                                           <a href="{concat($app:dbRoot,'/locus/',$id)}" class="card-link">{$id}</a>
                                            <hr/>
                                            <p>Tags</p>
                                          </div>
@@ -1331,7 +1331,7 @@ let $lyricistEntry := if($lyricistID)
                       else($lyricist)
 let $lyricistName := if($lyricistID)
                       then(baudiShared:getPersNameShortLinked($lyricistEntry))
-                      else($lyricist)
+                      else($lyricist/text())
 let $lyricistGender := if($lyricistEntry)
                        then('lyricist.female')
                        else('lyricist')
@@ -1404,7 +1404,16 @@ return
             <h5>ID: {$id}</h5>
         </div>
         <br/>
-    <div class="col">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+       <li class="nav-item">
+         <a class="nav-link active" id="pills-main-tab" data-toggle="pill" href="#pills-main" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
+       </li>
+       <li class="nav-item">
+         <a class="nav-link" id="pills-stemma-tab" data-toggle="pill" href="#pills-stemma" role="tab" aria-controls="pills-stemma" aria-selected="false">Stemma</a>
+       </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
         <table class="workView">
             <tr>
                 <th/>
@@ -1527,10 +1536,12 @@ return
             </td>
         </tr>
         </table>
-        
+        </div>
+        <div class="tab-pane fade show active" id="pills-stemma" role="tabpanel" aria-labelledby="pills-stemma-tab">
+            {baudiWork:getStemma($id, '', '')}
+        </div>
     </div>
-    
-    </div>
+</div>
 )
 };
 
@@ -1738,3 +1749,4 @@ let $errorReport := if(contains($app:dbRootUrl,$app:dbRootLocalhost)) then(<pre 
 return
     $errorReport
 };
+

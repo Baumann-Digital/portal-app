@@ -85,3 +85,7 @@ declare function baudiWork:getPerfResDetail($work as node()*) {
     return
         $perfResList
 };
+
+declare function baudiWork:getStemma($workID as xs:string, $height as xs:string?, $width as xs:string?) {
+    <img src="{concat('https://digilib.baumann-digital.de/BauDi/02/', $workID, '_stemma.png?dh=2000')}" class="img-fluid" alt="Responsive image" height="{$height}" width="{$width}"/>
+};
