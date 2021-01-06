@@ -1413,7 +1413,7 @@ return
        </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-  <div class="tab-pane fade" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
+  <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
         <table class="workView">
             <tr>
                 <th/>
@@ -1529,16 +1529,16 @@ return
                         let $sourceTitle := $source//mei:manifestation//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                         let $ediromSourceWindow := $source//mei:manifestation//mei:titlePart[@type='ediromSourceWindow']/normalize-space(.)
                         where $correspWork = $id
-                        order by $sort
+                        order by $sort, $sourceTitle
                         return
-                            <li>{$ediromSourceWindow} [{$sourceTypeTranslated}] (<a href="{concat('../source/', $sourceId)}">{$sourceId}</a>)</li>
+                            <li>{$ediromSourceWindow} (<a href="{concat('../source/', $sourceId)}">{$sourceId}</a>)</li>
                     }
                 </ul>
             </td>
         </tr>
         </table>
         </div>
-        <div class="tab-pane fade show active" id="pills-stemma" role="tabpanel" aria-labelledby="pills-stemma-tab">
+        <div class="tab-pane fade" id="pills-stemma" role="tabpanel" aria-labelledby="pills-stemma-tab">
             {baudiWork:getStemma($id, '', '')}
         </div>
     </div>
