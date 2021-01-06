@@ -1527,11 +1527,11 @@ return
                         let $correspWork := $source//mei:relation[@corresp=$id]/@corresp
                         let $correspWorkLabel := $source//mei:relation[@corresp=$id]/@label/string()
                         let $sourceTitle := $source//mei:manifestation//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
-                        let $sourceTitleDesc := $source//mei:manifestation//mei:titlePart[@type='desc' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
+                        let $ediromSourceWindow := $source//mei:manifestation//mei:titlePart[@type='ediromSourceWindow']/normalize-space(.)
                         where $correspWork = $id
                         order by $sort
                         return
-                            <li>{$sourceTitleDesc} [{$sourceTypeTranslated}] (<a href="{concat('../source/', $sourceId)}">{$sourceId}</a>)</li>
+                            <li>{$ediromSourceWindow} [{$sourceTypeTranslated}] (<a href="{concat('../source/', $sourceId)}">{$sourceId}</a>)</li>
                     }
                 </ul>
             </td>
