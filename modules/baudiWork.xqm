@@ -57,28 +57,37 @@ declare function baudiWork:getWorkTitle($work as node()*){
 declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
     let $perfMedium := $work//mei:perfMedium
     let $perfResLists := $perfMedium//mei:perfResList
-    let $perfResList := for $list at $n in $perfResLists
-                            let $perfResListName := $list/@auth
-                            let $perfRess := $list//mei:perfRes/@auth
-                            
-                            where $n > 1
-                            return
-                                if($perfResListName and $param = 'short')
-                                then(baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName)))
-                                else if ($param = 'detail')
-                                then(string-join(for $perfRes in $perfRess
-                                            return
-                                                baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfRes)),' | ')
-                                    )
-                                else if ($param = 'detailShort')
-                                then(string-join(for $perfRes in $perfRess
-                                                    let $perfResValue := functx:substring-before-if-contains($perfRes, '.')
-                                            return
-                                                baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResValue, '.short')),' | ')
-                                    )
-                                else(baudiShared:translate('baudi.unknown'))
-    return
-        string-join($perfResList, ' ')
+    
+    for $list at $n in $perfResLists
+        let $listName := $list/@auth
+        let $listType := $list/@type
+        let $perfResLabels := for $perfRes in $list/mei:perfRes
+                                  let $perfResAuth := baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfRes/@auth))
+                                  let $perfResSolo := if($perfRes/@solo = 'true') then(baudiShared:translate('baudi.registry.works.perfRes.solo')) else()
+                                  let $perfResAdLib := if($perfRes/@abLib = 'true') then(baudiShared:translate('baudi.registry.works.perfRes.abLib')) else()
+                                  let $perfResOption := if($perfResSolo or $perfResAdLib) then(concat('(',string-join(($perfResSolo, $perfResAdLib), ', '),')')) else()
+                                  return
+                                    if($listType = 'choose')
+                                    then(string-join(($perfResAuth, $perfResOption), concat(' ', baudiShared:translate('baudi.conjunction.or'),' ')))
+                                    else(string-join(($perfResAuth, $perfResOption), ' '))
+        return
+            if($listName)
+            then(concat(baudiShared:translate(concat('baudi.registry.works.perfRes.',$listName)), ' (', string-join($perfResLabels, ', '), ')'))
+            else(string-join($perfResLabels, ', '))
+            (:if($perfResListName and $param = 'short')
+            then(baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName)))
+            else if ($param = 'detail')
+            then(string-join(for $perfRes in $perfRess
+                        return
+                            baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfRes)),' | ')
+                )
+            else if ($param = 'detailShort')
+            then(string-join(for $perfRes in $perfRess
+                                let $perfResValue := functx:substring-before-if-contains($perfRes, '.')
+                        return
+                            baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResValue, '.short')),' | ')
+                )
+            else(baudiShared:translate('baudi.unknown')):)
 };
 
 
