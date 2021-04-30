@@ -71,9 +71,9 @@
     <!-- Team -->
     <msg key="baudi.landing.team">Unser Team</msg>
     <msg key="baudi.landing.team.desc">Seit 2016 auf den Spuren Ludwig Baumanns ...</msg>
-    <msg key="baudi.landing.team.about">Vom Zufallsfund zum Forschungsprojekt – Als wir 2016 zufällig auf den Namen Ludwig Baumann stießen, dachte keiner von uns daran, dass wir einmal sein Leben und Werk schwerpunkmäßig erforschen würden. Um so mehr freut es uns die Ergebnisse unserer Arbeit zu teilen und Andere für dieses Thema zu begeistern.</msg>
+    <msg key="baudi.landing.team.about">Vom Zufallsfund zum Forschungsprojekt – als wir 2016 zufällig auf den Namen Ludwig Baumann stießen, dachte keiner von uns daran, dass wir später einmal sein Leben und Werk schwerpunkmäßig erforschen würden. Um so mehr freut es uns die Ergebnisse unserer Arbeit zu teilen und Andere für dieses Thema zu begeistern.</msg>
     <msg key="baudi.landing.team.project.manager">Projektleiter</msg>
-    <msg key="baudi.landing.team.technical.stuff">Technischer Support</msg>
+    <msg key="baudi.landing.team.technical.manager">Technical Manager</msg>
     <msg key="baudi.landing.team.associate">Wissenschaftlicher Berater</msg>
     
     <!-- Contact form -->
@@ -84,7 +84,7 @@
     <msg key="baudi.landing.contact.your.name.req">Bitte trage deinen Namen ein.</msg>
     <msg key="baudi.landing.contact.your.mail">Deine Email *</msg>
     <msg key="baudi.landing.contact.your.mail.req">Bitte trage deine Email-Adresse ein.</msg>
-    <msg key="baudi.landing.contact.your.subject">Das Thema *</msg>
+    <msg key="baudi.landing.contact.your.subject">Der Betreff *</msg>
     <msg key="baudi.landing.contact.your.subject.req">Bitte gib einen Betreff ein.</msg>
     <msg key="baudi.landing.contact.your.message">Deine Nachricht an uns *</msg>
     <msg key="baudi.landing.contact.your.message.req">Bitte gib eine Nachricht ein.</msg>
