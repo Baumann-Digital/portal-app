@@ -1661,47 +1661,47 @@ declare %templates:wrap function app:getPeriodicalsSummary($node as node(), $mod
 declare function app:countSources($node as node(), $model as map(*)){
 let $count := count($app:collectionSourcesMusic)
 return
-    (<p class="counter">{$count}</p>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 declare function app:countWorks($node as node(), $model as map(*)){
 let $count := count($app:collectionWorks)
 return
-    (<span class="counter">{$count}</span>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 declare function app:countPersons($node as node(), $model as map(*)){
 let $count := count($app:collectionPersons)
 return
-    (<p class="counter">{$count}</p>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 declare function app:countInstitutions($node as node(), $model as map(*)){
 let $count := count($app:collectionInstitutions)
 return
-    (<p class="counter">{$count}</p>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 declare function app:countPeriodicals($node as node(), $model as map(*)){
 let $count := count($app:collectionPeriodicals)
 return
-    (<p class="counter">{$count}</p>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 declare function app:countDocuments($node as node(), $model as map(*)){
 let $count := count($app:collectionDocuments)
 return
-    (<p class="counter">{$count}</p>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 declare function app:countGalleryItems($node as node(), $model as map(*)){
 let $count := count($app:collectionGalleryItems)
 return
-    (<p class="counter">{$count}</p>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 declare function app:countLoci($node as node(), $model as map(*)){
 let $count := count($app:collectionLoci)
 return
-    (<p class="counter">{$count}</p>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 declare function app:countEditions($node as node(), $model as map(*)){
 let $count := count($app:collectionEditions//edirom:work)
 return
-    (<p class="counter">{$count}</p>)
+    (<span class="badge badge-light">{$count}</span>)
 };
 
 declare function app:alert($node as node(), $model as map(*)){
