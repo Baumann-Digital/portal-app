@@ -147,6 +147,11 @@
     <msg key="baudi.registry.works.meter">Meter</msg>
     <msg key="baudi.registry.works.tempo">Tempo</msg>
     <msg key="baudi.registry.works.perfRes">Performance resources</msg>
+    <msg key="baudi.registry.works.perfRes.solo">Solo</msg>
+    <msg key="baudi.registry.works.perfRes.adLib">ad lib.</msg>
+    <msg key="baudi.registry.works.perfRes.orchestra">Orchestra</msg>
+    <msg key="baudi.registry.works.perfRes.ensemble">Ensemble</msg>
+    <msg key="baudi.registry.works.perfRes.quartett.string">String Quartett</msg>
     <msg key="baudi.registry.works.perfRes.voice">Singing voice</msg>
     <msg key="baudi.registry.works.perfRes.voice.short">Voice</msg>
     <msg key="baudi.registry.works.perfRes.voice.high">High Voice</msg>
@@ -176,16 +181,16 @@
     <msg key="baudi.registry.works.perfRes.bass.ii">Bass II</msg>
     <msg key="baudi.registry.works.perfRes.chor">Choir</msg>
     <msg key="baudi.registry.works.perfRes.chor.short">Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir4voices">Choir (4 voices)</msg>
-    <msg key="baudi.registry.works.perfRes.choir4voices.short">Ch. (4 voc.)</msg>
-    <msg key="baudi.registry.works.perfRes.chorMen">Mens choir</msg>
-    <msg key="baudi.registry.works.perfRes.chorMen.short">M.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.chorWomen">Womens choir</msg>
-    <msg key="baudi.registry.works.perfRes.chorWomen.short">W.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.chorChildren">Childrens choir</msg>
-    <msg key="baudi.registry.works.perfRes.chorChildren.short">C.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choirMixed">Mixed choir</msg>
-    <msg key="baudi.registry.works.perfRes.choirMixed.short">Mxt. Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir.voices.4">Choir (4 voices)</msg>
+    <msg key="baudi.registry.works.perfRes.choir.voices.4.short">Ch. (4 voc.)</msg>
+    <msg key="baudi.registry.works.perfRes.chor.men">Mens choir</msg>
+    <msg key="baudi.registry.works.perfRes.chor.men.short">M.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.chor.women">Womens choir</msg>
+    <msg key="baudi.registry.works.perfRes.chor.women.short">W.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.chor.children">Childrens choir</msg>
+    <msg key="baudi.registry.works.perfRes.chor.children.short">C.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir.mixed">Mixed choir</msg>
+    <msg key="baudi.registry.works.perfRes.choir.mixed.short">Mxt. Ch.</msg>
     <msg key="baudi.registry.works.perfRes.piccolo">Piccolo</msg>
     <msg key="baudi.registry.works.perfRes.piccolo.short">Picc.</msg>
     <msg key="baudi.registry.works.perfRes.flute">Flute</msg>
@@ -204,12 +209,12 @@
     <msg key="baudi.registry.works.perfRes.bassoon.short">Bs.</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.i">Bassoon I</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.ii">Bassoon II</msg>
-    <msg key="baudi.registry.works.perfRes.corno">French horn</msg>
-    <msg key="baudi.registry.works.perfRes.corno.short">F.-hrn.</msg>
-    <msg key="baudi.registry.works.perfRes.corno.i">French horn I</msg>
-    <msg key="baudi.registry.works.perfRes.corno.ii">French horn II</msg>
-    <msg key="baudi.registry.works.perfRes.corno.iii">French horn III</msg>
-    <msg key="baudi.registry.works.perfRes.corno.iv">French horn IV</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french">French horn</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.short">F.-hrn.</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.i">French horn I</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.ii">French horn II</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.iii">French horn III</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.iv">French horn IV</msg>
     <msg key="baudi.registry.works.perfRes.trumpet">Trumpet</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.short">Trp.</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.i">Trumpet I</msg>
@@ -415,6 +420,7 @@
     <msg key="baudi.registry.mei.annot.place.rightmar">right</msg>
     
     <msg key="baudi.conjunction.for">for</msg>
+    <msg key="baudi.conjunction.or">or</msg>
     <msg key="baudi.unknown">N.N.</msg>
     
     <msg key="baudi.errorPage.heading">Oops, ...</msg>

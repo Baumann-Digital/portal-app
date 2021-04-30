@@ -147,6 +147,11 @@
     <msg key="baudi.registry.works.meter">Taktart</msg>
     <msg key="baudi.registry.works.tempo">Tempoangabe</msg>
     <msg key="baudi.registry.works.perfRes">Beteiligte Instrumente</msg>
+    <msg key="baudi.registry.works.perfRes.solo">Solo</msg>
+    <msg key="baudi.registry.works.perfRes.adLib">ad lib.</msg>
+    <msg key="baudi.registry.works.perfRes.orchestra">Orchester</msg>
+    <msg key="baudi.registry.works.perfRes.ensemble">Ensemble</msg>
+    <msg key="baudi.registry.works.perfRes.quartett.string">Streichquartett</msg>
     <msg key="baudi.registry.works.perfRes.voice">Singstimme</msg>
     <msg key="baudi.registry.works.perfRes.voice.short">Stimme</msg>
     <msg key="baudi.registry.works.perfRes.voice.high">Hohe Stimme</msg>
@@ -178,14 +183,14 @@
     <msg key="baudi.registry.works.perfRes.chor.short">Ch.</msg>
     <msg key="baudi.registry.works.perfRes.choir4voices">Chor (4-stimmig)</msg>
     <msg key="baudi.registry.works.perfRes.choir4voices.short">Ch. (4-st.)</msg>
-    <msg key="baudi.registry.works.perfRes.chorMen">Männerchor</msg>
-    <msg key="baudi.registry.works.perfRes.chorMen.short">M.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.chorWomen">Frauenchor</msg>
-    <msg key="baudi.registry.works.perfRes.chorWomen.short">F.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.chorChildren">Knabechor</msg>
-    <msg key="baudi.registry.works.perfRes.chorChildren.short">K.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choirMixed">Gemischter Chor</msg>
-    <msg key="baudi.registry.works.perfRes.choirMixed.short">Gem. Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.chor.men">Männerchor</msg>
+    <msg key="baudi.registry.works.perfRes.chor.men.short">M.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.chor.women">Frauenchor</msg>
+    <msg key="baudi.registry.works.perfRes.chor.women.short">F.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.chor.children">Knabenchor</msg>
+    <msg key="baudi.registry.works.perfRes.chor.children.short">K.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir.mixed">Gemischter Chor</msg>
+    <msg key="baudi.registry.works.perfRes.choir.mixed.short">Gem. Ch.</msg>
     <msg key="baudi.registry.works.perfRes.piccolo">Piccolo</msg>
     <msg key="baudi.registry.works.perfRes.piccolo.short">Picc.</msg>
     <msg key="baudi.registry.works.perfRes.flute">Flöte</msg>
@@ -204,12 +209,12 @@
     <msg key="baudi.registry.works.perfRes.bassoon.short">Fg.</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.i">Fagott I</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.ii">Fagott II</msg>
-    <msg key="baudi.registry.works.perfRes.corno">Horn</msg>
-    <msg key="baudi.registry.works.perfRes.corno.short">Hrn.</msg>
-    <msg key="baudi.registry.works.perfRes.corno.i">Horn I</msg>
-    <msg key="baudi.registry.works.perfRes.corno.ii">Horn II</msg>
-    <msg key="baudi.registry.works.perfRes.corno.iii">Horn III</msg>
-    <msg key="baudi.registry.works.perfRes.corno.iv">Horn IV</msg>
+    <msg key="baudi.registry.works.perfRes.string">Horn</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.short">Hrn.</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.i">Horn I</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.ii">Horn II</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.iii">Horn III</msg>
+    <msg key="baudi.registry.works.perfRes.horn.french.iv">Horn IV</msg>
     <msg key="baudi.registry.works.perfRes.trumpet">Trompete</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.short">Trp.</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.i">Trompete I</msg>
@@ -425,7 +430,12 @@
     <msg key="baudi.registry.mei.annot.place.rightmar">rechts</msg>
     
     <msg key="baudi.conjunction.for">für</msg>
+    <msg key="baudi.conjunction.or">oder</msg>
     <msg key="baudi.unknown">N.N.</msg>
     
     
+    <msg key="baudi.errorPage.heading">Upps, ...</msg>
+    <msg key="baudi.errorPage.sthWentWrong">Da ist wohl etwas schief gegangen!</msg>
+    <msg key="baudi.errorPage.teamIsInformed">Unser Team wurde über diese Fehlfunktion automatisch und anonym informiert. Wir bemühen uns den Fehler schnellstmöglichst zu beheben!</msg>
+    <msg key="baudi.errorPage.directConctact">In dringenden Fällen schreiben Sie uns bitte an info@baumann-digital.de</msg>
 </catalogue>
