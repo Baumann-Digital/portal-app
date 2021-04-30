@@ -1,18 +1,21 @@
 <div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
-    <h1>Upps, ...</h1>
-    <br/>
-    <div class="row">
-        <div class="col">
-            <br/>
-            <h5>Da ist wohl etwas schiefgelaufen!</h5>
-            <br/>
-            <p>Unser Team wird über diese Fehlfunktion automatisch und anonym in Kenntnis gesetzt.<br/>Wir bemühen uns um eine baldige Lösung!</p>
-            <p>In dringenden Fällen schreiben Sie uns bitte eine Nachicht an <a href="mailto:info@baumann-digital.de">info@baumann-digital.de</a> <br/>Wir werden Ihre Anfrage schnellstmöglichst bearbeiten!</p>
-            <br/>
+    <div  data-template="i18n:translate" data-template-lang="en"
+        data-template-catalogues="/db/apps/baudiApp/resources/lang">
+        <h1><i18n:text key="baudi.errorPage.heading"/></h1>
+        <br/>
+        <div class="row">
+            <div class="col">
+                <br/>
+                <h5><i18n:text key="baudi.errorPage.sthWentWrong"/></h5>
+                <br/>
+                <p><i18n:text key="baudi.errorPage.teamIsInformed"/></p>
+                <p><i18n:text key="baudi.errorPage.directConctact"/></p>
+                <br/>
+            </div>
+            <img class="col-4" src="https://digilib.baumann-digital.de/landingPage/catalogs/04-gallery-thumbnail.jpg?dh=1000&amp;dw=500"/>
         </div>
-        <img class="col-4" src="https://digilib.baumann-digital.de/landingPage/catalogs/04-gallery-thumbnail.jpg?dh=1000&amp;dw=500"/>
+        <div data-template="app:errorReport"/>
+        <pre class="error templates:error-description"/>
+        <br/>
     </div>
-    <div data-template="app:errorReport"/>
-    <pre class="error templates:error-description"/>
-    <br/>
 </div>
