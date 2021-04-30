@@ -1,4 +1,4 @@
-<project default="xar" name="${package(abbrev)}">
+<project default="deployLocal" name="${package(abbrev)}">
     <xmlproperty file="./expath-pkg.xml"/>
     <tstamp>
         <format property="DATETIME" pattern="yyyyMMdd-HHmm"  locale="en,UK" />
@@ -65,41 +65,19 @@
         <copy todir=".">
             <file file="repo/rwxrwxr-x/repo.xml"/>
         </copy>
-        <git command="stash">
-            <args>
-                <arg value="save"/>
-                <arg value="temp"/>
-            </args>
-        </git>
-        <git command="stash">
-            <args>
-                <arg value="apply"/>
-            </args>
-        </git>
+        <exec executable="/bin/bash">
+            <arg value="scripts/stashTemp.sh"/>
+        </exec>
         <exec executable="python">
             <arg value="${pathResolverLocalhost}"/>
         </exec>
         <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
-        <git command="reset">
-            <args>
-                <arg value="--hard" />
-            </args>
-        </git>
-        <git command="stash">
-            <args>
-                <arg value="apply"/>
-            </args>
-        </git>
-        <git command="stash">
-            <args>
-                <arg value="clear"/>
-            </args>
-        </git>
+        <exec executable="/bin/bash">
+            <arg value="scripts/resetAndClear.sh"/>
+        </exec>
     </target>
     
-    <target name="deployDev" depends="xarDev">
-        
-    </target>
+    <target name="deployDev" depends="xarDev"/>
     
     <target name="xarDev">
         <mkdir dir="${build.dir}"/>
@@ -108,11 +86,7 @@
             <file file="repo/rwxrwx---/repo.xml"/>
         </copy>
         <zip basedir="." destfile="${build.dir}/${project.app}-dev-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
-        <git command="reset">
-            <args>
-                <arg value="--hard" />
-            </args>
-        </git>
+       
     </target>
     
     <target name="xar" >
@@ -127,19 +101,5 @@
         <echo message="!!!!!!!!!!!    ${userPermissions}    !!!!!!!!!!!"/>
         <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"/>
     </target>
-    
-    <!--  git makro  -->
-    <macrodef name="git">
-        <attribute name="command" />
-        <attribute name="dir" default="" />
-        <element name="args" optional="true" />
-        <sequential>
-            <echo message="git @{command}" />
-            <exec executable="git" dir="@{dir}">
-                <arg value="@{command}" />
-                <args/>
-            </exec>
-        </sequential>
-    </macrodef>
     
 </project>
