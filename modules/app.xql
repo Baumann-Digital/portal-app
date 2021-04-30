@@ -107,11 +107,11 @@ declare function app:viewDocument($node as node(), $model as map(*)) {
     let $isLetter := exists($doc//tei:correspAction)
     return
         if($isLetter)
-        then(app:letter($node, $model))
-        else(app:document($node, $model))
+        then(app:viewLetter($node, $model))
+        else(app:viewDoc($node, $model))
 };
 
-declare function app:document($node as node(), $model as map(*)) {
+declare function app:viewDoc($node as node(), $model as map(*)) {
 let $id := request:get-parameter("document-id", "error")
 let $doc := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@xml:id=$id]
 let $pages := $doc/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
@@ -144,7 +144,7 @@ return
 )
 };
 
-declare function app:letter($node as node(), $model as map(*)) {
+declare function app:viewLetter($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("document-id", "error")
 let $letter := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI[@xml:id=$id]
@@ -433,7 +433,7 @@ return
    $content
 };
 
-declare function app:place($node as node(), $model as map(*)) {
+declare function app:viewPlace($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("locus-id", "error")
 let $ort := collection("/db/apps/baudiLoci/data")/tei:place[@id=$id]
@@ -506,7 +506,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
 
 };
 
-declare function app:institution($node as node(), $model as map(*)) {
+declare function app:viewInstitution($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("institution-id", "error")
 let $org := $app:collectionInstitutions[@xml:id=$id]
@@ -689,7 +689,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
         $content
        };
 
-declare function app:source($node as node(), $model as map(*)) {
+declare function app:viewSource($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("source-id", "error")
 let $lang := baudiShared:get-lang()
@@ -1128,7 +1128,7 @@ return
 )
 };
 
-declare function app:periodical($node as node(), $model as map(*)) {
+declare function app:viewPeriodical($node as node(), $model as map(*)) {
  
 let $id := request:get-parameter("periodical-id", "error")
 let $issue := collection("/db/apps/baudiPeriodicals/data")//tei:TEI[@xml:id=$id]
@@ -1314,7 +1314,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
         $content
        };
        
-declare function app:work($node as node(), $model as map(*)) {
+declare function app:viewWork($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("work-id", "error")
 let $lang := baudiShared:get-lang()
