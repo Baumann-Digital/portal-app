@@ -101,6 +101,16 @@ return
    $content
 };
 
+declare function app:viewDocument($node as node(), $model as map(*)) {
+    let $id := request:get-parameter("document-id", "error")
+    let $doc := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@xml:id=$id]
+    let $isLetter := exists($doc//tei:correspAction)
+    return
+        if($isLetter)
+        then(app:letter($node, $model))
+        else(app:document($node, $model))
+};
+
 declare function app:document($node as node(), $model as map(*)) {
 let $id := request:get-parameter("document-id", "error")
 let $doc := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@xml:id=$id]
@@ -110,7 +120,6 @@ return
 (
 <div class="container">
     <div class="page-header">
-        <a href="../registryDocuments.html">&#8592; zum Dokumentenverzeichnis</a>
             <h1>{$doc//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.))}</h1>
             <h5>{$id}</h5>
     </div>
@@ -137,7 +146,7 @@ return
 
 declare function app:letter($node as node(), $model as map(*)) {
 
-let $id := request:get-parameter("letter-id", "error")
+let $id := request:get-parameter("document-id", "error")
 let $letter := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI[@xml:id=$id]
 let $pages := $letter/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
