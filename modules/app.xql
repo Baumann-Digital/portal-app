@@ -1323,7 +1323,7 @@ let $fileURI := document-uri($work/root())
 let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(.)
 let $subtitle := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/normalize-space(.)
 let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
-let $perfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'perfmedium']
+let $titlePerfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'perfmedium']
 let $titleMainAlt := $work//mei:titlePart[@type = 'mainAlt']
 let $titleSubAlt := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subAlt']
 let $composer := $work//mei:composer
@@ -1387,19 +1387,8 @@ let $tempo := $work//mei:work/mei:tempo/text()
 let $workgroup := $work//mei:term[@type='workGroup']/text()
 let $genre := $work//mei:term[@type='genre']/text()
 
-let $perfResLists := $work//mei:perfResList
-let $perfResList := for $list in $perfResLists
-                        let $perfResListName := $list/@auth
-                        let $perfRess := $list//mei:perfRes/@auth
-                        return
-                            (
-                                <b>{baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName))}</b>,
-                                <ul style="list-style-type: square;">
-                                    {for $perfRes in $perfRess
-                                        return
-                                            <li>{baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfRes))}</li>}
-                                </ul>
-                            )
+let $perfMedium := baudiWork:getPerfRes($work, 'detail')
+
 
 let $incipURI := concat('http://localhost:8080/exist/rest',$fileURI) (: '?_query=//incip' :)
 
