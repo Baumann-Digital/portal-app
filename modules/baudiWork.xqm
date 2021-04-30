@@ -57,9 +57,11 @@ declare function baudiWork:getWorkTitle($work as node()*){
 declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
     let $perfMedium := $work//mei:perfMedium
     let $perfResLists := $perfMedium//mei:perfResList
-    let $perfResList := for $list in $perfResLists
+    let $perfResList := for $list at $n in $perfResLists
                             let $perfResListName := $list/@auth
                             let $perfRess := $list//mei:perfRes/@auth
+                            
+                            where $n > 1
                             return
                                 if($perfResListName and $param = 'short')
                                 then(baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName)))
@@ -68,9 +70,15 @@ declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
                                             return
                                                 baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfRes)),' | ')
                                     )
+                                else if ($param = 'detailShort')
+                                then(string-join(for $perfRes in $perfRess
+                                                    let $perfResValue := functx:substring-before-if-contains($perfRes, '.')
+                                            return
+                                                baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResValue, '.short')),' | ')
+                                    )
                                 else(baudiShared:translate('baudi.unknown'))
     return
-        $perfResList
+        string-join($perfResList, ' ')
 };
 
 

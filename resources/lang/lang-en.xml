@@ -229,8 +229,8 @@
     <msg key="baudi.registry.works.perfRes.violin.ii">Violin II</msg>
     <msg key="baudi.registry.works.perfRes.viola">Viola</msg>
     <msg key="baudi.registry.works.perfRes.viola.short">Vla.</msg>
-    <msg key="baudi.registry.works.perfRes.cello">Violoncello</msg>
-    <msg key="baudi.registry.works.perfRes.cello.short">Vlc.</msg>
+    <msg key="baudi.registry.works.perfRes.violoncello">Violoncello</msg>
+    <msg key="baudi.registry.works.perfRes.violoncello.short">Vlc.</msg>
     <msg key="baudi.registry.works.perfRes.doubleBass">Double Bass</msg>
     <msg key="baudi.registry.works.perfRes.doubleBass.short">Db.</msg>
     <msg key="baudi.registry.works.perfRes.piano">Piano</msg>

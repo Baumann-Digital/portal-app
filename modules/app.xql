@@ -1391,7 +1391,7 @@ let $tempo := $work//mei:work/mei:tempo/text()
 let $workgroup := $work//mei:term[@type='workGroup']/text()
 let $genre := $work//mei:term[@type='genre']/text()
 
-let $perfMedium := baudiWork:getPerfRes($work, 'detail')
+let $perfMedium := baudiWork:getPerfRes($work, 'detailShort')
 
 
 let $incipURI := concat('http://localhost:8080/exist/rest',$fileURI) (: '?_query=//incip' :)
@@ -1421,10 +1421,10 @@ return
                 <th/>
                 <th/>
             </tr>
-            {if($perfMedium)
+            {if($titlePerfMedium != '')
              then(<tr>
                     <td>{baudiShared:translate('baudi.registry.works.perfmedium')}</td>
-                    <td>{normalize-space($perfMedium)}</td>
+                    <td>{normalize-space($titlePerfMedium)}</td>
                   </tr>)
              else()}
              {if($titleMainAlt)
@@ -1492,10 +1492,10 @@ return
                     <td>{baudiShared:translate(concat('baudi.registry.works.',$genre))}</td>
                   </tr>)
              else()}
-             {if($perfResList)
+             {if($perfMedium != '')
              then(<tr>
                     <td style="vertical-align: top;">{baudiShared:translate('baudi.registry.works.perfRes')}</td>
-                    <td>{baudiWork:getPerfResDetail($work)}</td>
+                    <td>{baudiWork:getPerfRes($work,'detailShort')}</td>
                   </tr>)
              else()}
              </table>
@@ -1602,7 +1602,7 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
                                         <div class="col">
                                             <h5 class="card-title">{baudiWork:getWorkTitle($work)}</h5>
                                             {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
-                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiWork:getPerfRes($work)}</h6>
+                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiWork:getPerfRes($work, 'short')}</h6>
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
