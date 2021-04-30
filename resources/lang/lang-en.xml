@@ -57,10 +57,12 @@
     <msg key="baudi.landing.about.thesis.ma.text">Lorem ipsum dolor</msg>
     <msg key="baudi.landing.about.thesis.phd">Start of a PhD project</msg>
     <msg key="baudi.landing.about.thesis.phd.text">Lorem ipsum dolor</msg>
-    <msg key="baudi.landing.about.portal.launch">Finally online!</msg>
-    <msg key="baudi.landing.about.portal.launch.text">After several years of fundamental work, the Baumann portal is now online. And this, although the promotion project for Baumann is still running! Due to this fact we have decided to share only general catalogue data for the time being. As soon as the dissertation is finished, all prepared data about Ludwig Baumann will go online here!</msg>
     <msg key="baudi.landing.about.concert">Concert: Cantata</msg>
     <msg key="baudi.landing.about.concert.text">Lorem ipsum dolor</msg>
+    <msg key="baudi.landing.about.portal.digitized">Digitalisierung</msg>
+    <msg key="baudi.landing.about.portal.digitized.text">Im Dezember 2020 erreichte uns die Nachricht, dass die Badische Landesbibliothek Karlsruhe die Digitalisierung aller musikalischer Quellen Baumanns erfolgreich abgeschlossen hat.</msg>
+    <msg key="baudi.landing.about.portal.launch">Finally online!</msg>
+    <msg key="baudi.landing.about.portal.launch.text">After several years of fundamental work, the Baumann portal is now online. And this, although the promotion project for Baumann is still running! Due to this fact we have decided to share only general catalogue data for the time being. As soon as the dissertation is finished, all prepared data about Ludwig Baumann will go online here!</msg>
     <msg key="baudi.landing.about.be.part">Be Part</msg>
     <msg key="baudi.landing.about.of.our">Of This</msg>
     <msg key="baudi.landing.about.story">Story!</msg>
