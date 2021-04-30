@@ -138,3 +138,28 @@ table.sourceView tr td:first-of-type{
 .counter:after{
     content:')';
 }
+
+/*======================================
+//--//-->   Overlay
+======================================*/
+
+.overlay {
+  position: absolute; 
+  top: 0; 
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+  width: 93.5%;
+  height:100%;
+  transition: .5s ease;
+  opacity:0;
+  color: rgba(0, 174, 0, 0.9);
+  font-size: 24px;
+  font-weight:bold;
+  padding-top: 35%;
+  text-align: center;
+  align-items:center;
+}
+
+.portfolio-item:hover .overlay {
+  opacity: 1!important;
+}
