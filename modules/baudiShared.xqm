@@ -582,3 +582,14 @@ declare function baudiShared:getName($key as xs:string, $param as xs:string){
 declare function baudiShared:linkAll($node as node()){
     transform:transform($node,doc('/db/apps/baudiApp/resources/xslt/linking.xsl'),())
 };
+
+declare function baudiShared:checkGenderforLangValues($persID){
+    let $person := $app:collectionPersons[@xml:id=$persID]
+    let $gender := $person//tei:sex/string(@type)
+    return
+        if($gender = 'male')
+        then()
+        else if ($gender = 'female')
+        then('.female')
+        else('')
+};

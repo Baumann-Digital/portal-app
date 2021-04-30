@@ -1218,16 +1218,20 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                    then(concat(' ',baudiShared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $id := $work/@xml:id/string()
+                         let $composerID := $work//mei:composer//@auth
                          let $composer := if($work//mei:composer//@auth)
                                           then(baudiShared:getName($work//mei:composer/mei:persName/@auth/string(), 'short'))
                                           else($work//mei:composer/string())
+                         let $arrangerID := $work//mei:arranger//@auth
                          let $arranger := if($work//mei:arranger//@auth)
                                           then(baudiShared:getName($work//mei:arranger/mei:persName/@auth/string(), 'short'))
                                           else($work//mei:arranger/string())
+                         let $lyricistID := $work//mei:lyricist//@auth
                          let $lyricist := if($work//mei:lyricist//@auth)
                                           then(baudiShared:getName($work//mei:lyricist/mei:persName/@auth/string(), 'short'))
                                           else($work//mei:lyricist/string())
-                         let $editor := if($work//mei:editor//@auth)
+                         let $editorID := $work//mei:editor//@auth
+                         let $editor := if($editorID)
                                         then(baudiShared:getName($work//mei:editor/mei:persName/@auth/string(), 'short'))
                                         else($work//mei:editor/string())
                          let $componentWorksCount := count($work//mei:componentList/mei:work)
@@ -1263,23 +1267,23 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                         <div class="col">
                                             <h5 class="card-title">{baudiWork:getWorkTitle($work)}</h5>
                                             {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
-                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiWork:getPerfRes($work)}</h6>
+                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiWork:getPerfRes($work, 'short')}</h6>
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
                                         </div>
                                     </div>
                                     <p class="card-text">{if($composer)
-                                                         then(baudiShared:translate('baudi.registry.works.composer'),': ',$composer,<br/>)
+                                                         then(baudiShared:translate(concat('baudi.registry.works.composer',baudiShared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
                                                          else()}
                                                          {if($arranger)
-                                                         then(baudiShared:translate('baudi.registry.works.arranger'),': ',$arranger,<br/>)
+                                                         then(baudiShared:translate(concat('baudi.registry.works.arranger',baudiShared:checkGenderforLangValues($arrangerID))),': ',$arranger,<br/>)
                                                          else()}
                                                         {if($lyricist)
-                                                         then(baudiShared:translate('baudi.registry.works.lyricist'),': ',$lyricist,<br/>)
+                                                         then(baudiShared:translate(concat('baudi.registry.works.lyricist',baudiShared:checkGenderforLangValues($lyricistID))),': ',$lyricist,<br/>)
                                                          else()}
                                                          {if($editor)
-                                                         then(baudiShared:translate('baudi.registry.works.editor'),': ',$editor,<br/>)
+                                                         then(baudiShared:translate(concat('baudi.registry.works.editor',baudiShared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
                                                          else()}
                                                         {if($componentWorksCount >= 1)
                                                          then(concat(baudiShared:translate('baudi.registry.works.components'),': ',
