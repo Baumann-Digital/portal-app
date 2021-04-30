@@ -27,7 +27,7 @@ declare function baudiWork:getWorkTitle($work as node()*){
                          let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
-                                                   then(concat(' ',baudiShared:translate('baudi.catalog.works.opus.no'),' ',$numberOpusCount))
+                                                   then(concat(' ',baudiShared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
     return
         if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)
@@ -61,10 +61,10 @@ declare function baudiWork:getPerfRes($work as node()*) {
                         let $perfRess := $list//mei:perfRes/@auth
                         return
                             if($perfResListName)
-                            then(baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResListName)))
+                            then(baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName)))
                             else(string-join(for $perfRes in $perfRess
                                         return
-                                            baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfRes)),' | ')
+                                            baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfRes)),' | ')
                                 )
     return
         $perfResList
@@ -77,10 +77,10 @@ declare function baudiWork:getPerfResDetail($work as node()*) {
                         let $perfRess := $list//mei:perfRes/@auth
                         return
                             if($perfResListName)
-                            then(baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfResListName)))
+                            then(baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName)))
                             else(string-join(for $perfRes in $perfRess
                                         return
-                                            baudiShared:translate(concat('baudi.catalog.works.perfRes.',$perfRes)),' | ')
+                                            baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfRes)),' | ')
                                 )
     return
         $perfResList

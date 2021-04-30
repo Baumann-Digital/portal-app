@@ -485,7 +485,7 @@ declare function baudiShared:getPersonaLinked($id as xs:string) {
     return
         if($name)
         then(<a href="{$personLink}">{$name}</a>)
-        else (baudiShared:translate('baudi.catalog.persons.unknown'))
+        else (baudiShared:translate('baudi.registry.persons.unknown'))
 };
 
 declare function baudiShared:getOrgNameFull($org as node()) {
