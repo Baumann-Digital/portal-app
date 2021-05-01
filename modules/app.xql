@@ -3,15 +3,14 @@ xquery version "3.1";
 module namespace app = "http://baumann-digital.de/ns/templates";
 
 import module namespace templates = "http://exist-db.org/xquery/templates" ;
-import module namespace config = "https://exist-db.org/xquery/config" at "config.xqm";
+import module namespace config = "https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
 (:import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";:)
 import module namespace xmldb = "http://exist-db.org/xquery/xmldb";
-import module namespace i18n = "http://exist-db.org/xquery/i18n" at "i18n.xql";
-import module namespace baudiShared = "http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
-import module namespace baudiWork = "http://baumann-digital.de/ns/baudiWork" at "baudiWork.xqm";
-import module namespace baudiSource = "http://baumann-digital.de/ns/baudiSource" at "baudiSource.xqm";
-import module namespace functx = "http://www.functx.com" at "functx.xqm";
-
+import module namespace i18n = "http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
+import module namespace baudiShared = "http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.xqm";
+import module namespace baudiWork = "http://baumann-digital.de/ns/baudiWork" at "/db/apps/baudiApp/modules/baudiWork.xqm";
+import module namespace baudiSource = "http://baumann-digital.de/ns/baudiSource" at "/db/apps/baudiApp/modules/baudiSource.xqm";
+import module namespace functx = "http://www.functx.com" at "/db/apps/baudiApp/modules/functx.xqm";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare namespace mei = "http://www.music-encoding.org/ns/mei";
 declare namespace edirom = "http://www.edirom.de/ns/1.3";
