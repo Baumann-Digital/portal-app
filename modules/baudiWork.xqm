@@ -94,3 +94,49 @@ declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
 declare function baudiWork:getStemma($workID as xs:string, $height as xs:string?, $width as xs:string?) {
     <img src="{concat('https://digilib.baumann-digital.de/BauDi/02/', $workID, '_stemma.png?dh=2000')}" class="img-fluid" alt="Responsive image" height="{$height}" width="{$width}"/>
 };
+
+declare function baudiWork:hasIncipit($workID as xs:string){
+let $workFile := $app:collectionWorks[@xml:id=$workID]
+let $incipit := $workFile//mei:incip/node()
+return
+    if($incipit) then(true()) else(false())
+};
+
+declare function baudiWork:getIncipit($workID as xs:string){
+let $workFile := $app:collectionWorks[@xml:id=$workID]
+let $workFileName := concat($workID, '_incip.mei')
+let $incipit := $workFile//mei:incip/node()
+
+let $meiFile := <mei xmlns="http://www.music-encoding.org/ns/mei">
+                    <meiHead><fileDesc><titleStmt><title/></titleStmt><pubStmt/></fileDesc></meiHead>
+                    <music><body><mdiv>{$incipit}</mdiv></body></music>
+                </mei>
+let $meiFileStored := if(doc-available(concat('/db/apps/baudiWorks/data/', $workFileName)))
+                      then()
+                      else(xmldb:store('/db/apps/baudiWorks/data/', $workFileName, $meiFile))
+let $meiFileCall := concat(substring-before($app:dbRootUrl,'baudiApp'), 'baudiWorks/data/', $workFileName )
+let $script :=  <script type="module">
+                   import 'https://www.verovio.org/javascript/app/verovio-app.js';
+                    
+                    const options = {{
+                        defaultView: 'document', // instead of 'responsive' by default
+                        defaultZoom: 0 // 0-7, default is 3
+                    }}
+                   // Create the app - here with an empty option object
+                   const app = new Verovio.App(document.getElementById("appVerovio"), {{}});
+               
+                   // Load a file (MEI or MusicXML)
+                   fetch("{$meiFileCall}")
+                       .then(function(response) {{
+                           return response.text();
+                       }})
+                       .then(function(text) {{
+                           app.loadData(text);
+                       }});
+               </script> 
+
+return
+    (<div class="panel-body">
+        <div id="appVerovio" class="panel" style="border: 1px solid lightgray; min-height: 100px; max-height: 500px; min-width: 100px; max-width: 1000px;"/>
+     </div>, $script)
+};
