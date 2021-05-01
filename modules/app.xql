@@ -573,7 +573,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                          let $isSourceCollection := if($source//mei:term[@type='source' and .='collection']) then(true()) else(false())
                          let $title := $source//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                          let $titleSort := $title[1]
-                         let $titleSub := $source//mei:titlePart[@type='subordinate']/normalize-space(text()[1])
+                         let $titleSub := baudiSource:getManifestationTitle($id,'sub')
                          let $titleSub2 := $source//mei:titlePart[@type='ediromSourceWindow']/normalize-space(text()[1])
                          let $numberOpus := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='number' and @auth='opus']
                          let $numberOpusCount := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='counter']/text()
@@ -581,7 +581,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                                    then(concat(' ',baudiShared:translate('baudi.registry.sources.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $id := $source/ancestor::mei:mei/@xml:id/normalize-space(data(.))
-                         let $perfMedium := baudiSource:getManifestationPerfRes($source/ancestor::mei:mei)
+                         let $perfMedium := baudiSource:getManifestationPerfResWithAmbitus($source, 'full')
                          let $composer := $source//mei:composer
                          let $lyricist := $source//mei:lyricist
                          let $componentSources := for $componentSource in $source//mei:componentList/mei:manifestation
@@ -616,9 +616,8 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                  <div class="card-body">
                                    <div class="row justify-content-between">
                                         <div class="col">
-                                            <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
-                                            {if($titleSub != '')then(<h6 class="card-subtitle mb-2">{$titleSub}</h6>)else()}
-                                            {if($titleSub2 != '')then(<h6 class="card-subtitle mb-2">{$titleSub2}</h6>)else()}
+                                            <h5 class="card-title">{baudiSource:getManifestationTitle($id,'uniform')}</h5>
+                                            {if(baudiSource:getManifestationTitle($id,'sub'))then(<h6 class="card-subtitle mb-2">{$titleSub}</h6>)else()}
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
@@ -643,10 +642,10 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                         then(<i>{baudiWork:getWorkTitle($app:collectionWorks[range:field-eq("work-id", $sourceRelationID)])}</i>,
                                         '&#160;', $sourceRelationID/string())
                                         else('noch nicht erfolgt!')}</h6>
-                                            <h5 class="card-title">{if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)}</h5>
-                                            {if($titleSub != '')then(<h6 class="card-subtitle mb-2">{$titleSub}</h6>)else()}
+                                            <h5 class="card-title">{baudiSource:getManifestationTitle($id, 'main')}</h5>
+                                            {if($titleSub != '')then(<h6 class="card-subtitle mb-2">{baudiSource:getManifestationTitle($id, 'sub')}</h6>)else()}
                                             {if($titleSub2 != '')then(<h6 class="card-subtitle mb-2">{$titleSub2}</h6>)else()}
-                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', $perfMedium}</h6>
+                                            {if(baudiSource:getManifestationTitle($id, 'perf'))then(<h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiSource:getManifestationTitle($id, 'perf')}</h6>)else()}
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
@@ -713,7 +712,7 @@ let $sourceTitlePage := if($source//mei:titlePage/mei:p/text())
                         then(baudiSource:renderTitlePage($source))
                         else()
 
-let $sourcePerfRes := baudiSource:getManifestationPerfResWithAmbitus($source)
+let $sourcePerfRes := baudiSource:getManifestationPerfResWithAmbitus($source, 'full')
 
 (:let $facsimileTarget := concat($app:BLBfacPath,$source//mei:facsimile[1]/mei:surface[@n="1"]/mei:graphic/@target)
 let $facsimileImageTarget := concat($app:BLBfacPathImage,$source//mei:facsimile[1]/mei:surface[@n="1"]/mei:graphic/@target):)
@@ -1204,8 +1203,8 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
     <hr/>
     <br/>
     <!-- Tab panels -->
-    <div class="container" >
-    <div class="tab-content" style=" height: 600px; overflow-y: scroll;">
+    <div class="container overflow-auto" style="max-height: 600px;">
+    <div class="tab-content">
     {for $genre at $pos in $genres
         let $cards := for $work in $works[if($pos=1)then(.)else(.//mei:term[@type='genre' and . = $genre])]
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[range:field-eq("titlePart-main", 'main') and not(@class)]/normalize-space(text()[1])
@@ -1392,6 +1391,35 @@ let $genre := $work//mei:term[@type='genre']/text()
 
 let $perfMedium := baudiWork:getPerfRes($work, 'detailShort')
 
+let $relatedSourcesCards := for $source in $app:collectionSourcesMusic
+                let $sourceId := $source/@xml:id/string()
+                let $sourceType := $source//mei:term[@type='source'][1]/string()
+                let $sourceTypeTranslated := baudiShared:translate(concat('baudi.registry.sources.',$sourceType))
+                let $sort := switch ($sourceType)
+                                case 'manuscript' return '01'
+                                case 'msCopy' return '02'
+                                case 'print' return '03'
+                                case 'prCopy' return '04'
+                                case 'copy' return '05'
+                                case 'edition' return '06'
+                                default return '00'
+                let $correspWork := $source//mei:relation[@corresp=$id]/@corresp
+                let $correspWorkLabel := $source//mei:relation[@corresp=$id]/@label/string()
+                let $sourceTitle := $source//mei:manifestation//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
+                let $ediromSourceWindow := $source//mei:manifestation//mei:titlePart[@type='ediromSourceWindow']/normalize-space(.)
+                where $correspWork = $id
+                order by $sort ascending, lower-case($ediromSourceWindow) ascending
+                return
+                    (<div class="row justify-content-md-center" style="padding-bottom: 25px;">
+                      <div class="card col-8" sortNo="{$sort}">
+                          <div class="card-body">
+                            <h5 class="card-title">{functx:substring-before-if-contains($ediromSourceWindow, ' (')}</h5>
+                            <h6 class="card-subtitle text-muted mt-0">{substring-before(substring-after($ediromSourceWindow, ' ('), ')')}</h6>
+                            <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                            <a class="card-link" href="{concat('/', $sourceId)}">{$sourceId}</a>
+                          </div>
+                      </div>
+                    </div>)
 
 let $incipURI := concat('http://localhost:8080/exist/rest',$fileURI) (: '?_query=//incip' :)
 
@@ -1409,9 +1437,11 @@ return
        <li class="nav-item">
          <a class="nav-link active" id="pills-main-tab" data-toggle="pill" href="#pills-main" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
        </li>
-       <li class="nav-item">
+       {if(baudiWork:hasStemma($id))
+        then(<li class="nav-item">
          <a class="nav-link" id="pills-stemma-tab" data-toggle="pill" href="#pills-stemma" role="tab" aria-controls="pills-stemma" aria-selected="false">Stemma</a>
-       </li>
+       </li>)
+       else()}
     </ul>
     <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
@@ -1438,19 +1468,19 @@ return
                     <td>{normalize-space($titleSubAlt)}</td>
                   </tr>)
              else()}
-             {if(not($composerName = ''))
+             {if($composerName != '')
              then(<tr>
-                    <td>{baudiShared:translate(concat('baudi.registry.works.',$composerGender))}</td>
+                    <td>{baudiShared:translate(concat('baudi.registry.works.composer',baudiShared:checkGenderforLangValues($composerID)))}</td>
                     <td>{$composerName}</td>
                   </tr>)
              else()}
-             {if(not($lyricistName = ''))
+             {if($lyricistName != '')
              then(<tr>
-                    <td>{baudiShared:translate(concat('baudi.registry.works.',$lyricistGender))}</td>
+                    <td>{baudiShared:translate(concat('baudi.registry.works.lyricist',baudiShared:checkGenderforLangValues($lyricistID)))}</td>
                     <td>{$lyricistName}</td>
                   </tr>)
              else()}
-             {if(not($usedLang/data(.) = ''))
+             {if($usedLang/data(.) != '')
              then(<tr>
                     <td>{if(count($usedLang) = 1)
                          then(baudiShared:translate('baudi.registry.works.langUsed'))
@@ -1498,50 +1528,30 @@ return
                   </tr>)
              else()}
              </table>
-        
-        {if(exists($work//mei:incip/mei:score))
-                      then(<div class="panel-body" onload="myIncipit({$incipURI})">
-                               <!--  $manuscript//mei:work/mei:incip myIncipit('https://www.verovio.org/editor/brahms.mei') -->
-                               <div id="verovioIncipit"/> <!-- style="border: 1px solid lightgray; max-width: 50%; max-height: 300px;" -->
-                           </div>)
-                      else()}
-        
-        <table class="workView">
-        <tr>
-           <td colspan="2">Zugehörige Quellen:</td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <ul style="list-style-type: square;">
-                    {for $source in $app:collectionSourcesMusic
-                        let $sourceId := $source/@xml:id/string()
-                        let $sourceType := $source//mei:term[@type='source'][1]/string()
-                        let $sourceTypeTranslated := baudiShared:translate(concat('baudi.registry.sources.',$sourceType))
-                        let $sort := switch ($sourceType)
-                                        case 'manuscript' return '01'
-                                        case 'msCopy' return '02'
-                                        case 'print' return '03'
-                                        case 'prCopy' return '04'
-                                        case 'copy' return '05'
-                                        case 'edition' return '06'
-                                        default return '00'
-                        let $correspWork := $source//mei:relation[@corresp=$id]/@corresp
-                        let $correspWorkLabel := $source//mei:relation[@corresp=$id]/@label/string()
-                        let $sourceTitle := $source//mei:manifestation//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
-                        let $ediromSourceWindow := $source//mei:manifestation//mei:titlePart[@type='ediromSourceWindow']/normalize-space(.)
-                        where $correspWork = $id
-                        order by $sort ascending, lower-case($ediromSourceWindow) ascending
-                        return
-                            <li sortNo="{$sort}">{$ediromSourceWindow} (<a href="{concat('../source/', $sourceId)}">{$sourceId}</a>)</li>
-                    }
-                </ul>
-            </td>
-        </tr>
-        </table>
+        {if(baudiWork:hasIncipit($id))
+         then(<br/>,
+              <h4>Incipit</h4>,
+              <br/>,
+              baudiWork:getIncipit($id))
+         else()}
+        {if($relatedSourcesCards)
+        then(
+        <div>
+           <br/>
+           <h4>Zugehörige Quellen</h4>
+           <br/>
+           <div class="container overflow-auto" style="max-height: 500px;">
+            {$relatedSourcesCards}
+            </div>
+           <br/>
+        </div>)
+        else()}
         </div>
-        <div class="tab-pane fade" id="pills-stemma" role="tabpanel" aria-labelledby="pills-stemma-tab">
+        {if(baudiWork:hasStemma($id))
+        then(<div class="tab-pane fade" id="pills-stemma" role="tabpanel" aria-labelledby="pills-stemma-tab">
             {baudiWork:getStemma($id, '', '')}
-        </div>
+        </div>)
+        else()}
     </div>
 </div>
 )
