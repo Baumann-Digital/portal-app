@@ -191,7 +191,7 @@ return
                 <br/>
                 <strong>Transkription</strong>
                 <br/><br/>
-                {transform:transform($letter//tei:div[@type='page' and @n='1'],doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
+                {transform:transform($letter//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
         </div>
         <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="bigPicture" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">

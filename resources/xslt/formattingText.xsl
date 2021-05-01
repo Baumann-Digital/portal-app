@@ -9,8 +9,25 @@
     </xsl:template>
     <xsl:template match="lb">
         <br/>
-        <xsl:apply-templates/>
     </xsl:template>
+    <xsl:template match="lb[@type='dipl']">
+        <xsl:choose>
+            <xsl:when test="@subtype='hyphen'">-<br class="dipl"/></xsl:when>
+            <xsl:otherwise><br class="dipl"/></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <xsl:template match="pb">
+        <xsl:choose>
+            <xsl:when test="@subtype='hyphen'">-<hr/>
+                <div class="text-muted text-center"><xsl:value-of select="@n"/></div>
+                <hr/></xsl:when>
+            <xsl:otherwise>
+                <hr/>
+                <div class="text-muted text-center"><xsl:value-of select="@n"/></div>
+                <hr/></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
     
     <xsl:template match="div/head">
         <b class="heading">
