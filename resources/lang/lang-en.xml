@@ -150,13 +150,19 @@
     <msg key="baudi.registry.works.perfRes.solo">Solo</msg>
     <msg key="baudi.registry.works.perfRes.adLib">ad lib.</msg>
     <msg key="baudi.registry.works.perfRes.orchestra">Orchestra</msg>
+    <msg key="baudi.registry.works.perfRes.orchestra.short">Orch.</msg>
     <msg key="baudi.registry.works.perfRes.ensemble">Ensemble</msg>
-    <msg key="baudi.registry.works.perfRes.quartett.string">String Quartett</msg>
+    <msg key="baudi.registry.works.perfRes.ensemble.short">Ens.</msg>
+    <msg key="baudi.registry.works.perfRes.quartett.string">String quartett</msg>
+    <msg key="baudi.registry.works.perfRes.quartett.string.short">Str. quart.</msg>
     <msg key="baudi.registry.works.perfRes.voice">Singing voice</msg>
-    <msg key="baudi.registry.works.perfRes.voice.short">Voice</msg>
+    <msg key="baudi.registry.works.perfRes.voice.short">Voc.</msg>
     <msg key="baudi.registry.works.perfRes.voice.high">High Voice</msg>
-    <msg key="baudi.registry.works.perfRes.voice.middle">Middle Voice</msg>
+    <msg key="baudi.registry.works.perfRes.voice.high.short">H. voc.</msg>
+    <msg key="baudi.registry.works.perfRes.voice.middle">Middle Voc.</msg>
+    <msg key="baudi.registry.works.perfRes.voice.middle.short">M. voc.</msg>
     <msg key="baudi.registry.works.perfRes.voice.low">Low Voice</msg>
+    <msg key="baudi.registry.works.perfRes.voice.low.short">L. voc.</msg>
     <msg key="baudi.registry.works.perfRes.soprano">Soprano</msg>
     <msg key="baudi.registry.works.perfRes.soprano.short">S.</msg>
     <msg key="baudi.registry.works.perfRes.soprano.i">Soprano I</msg>
@@ -179,16 +185,16 @@
     <msg key="baudi.registry.works.perfRes.bass.short">B.</msg>
     <msg key="baudi.registry.works.perfRes.bass.i">Bass I</msg>
     <msg key="baudi.registry.works.perfRes.bass.ii">Bass II</msg>
-    <msg key="baudi.registry.works.perfRes.chor">Choir</msg>
-    <msg key="baudi.registry.works.perfRes.chor.short">Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir">Choir</msg>
+    <msg key="baudi.registry.works.perfRes.choir.short">Ch.</msg>
     <msg key="baudi.registry.works.perfRes.choir.voices.4">Choir (4 voices)</msg>
     <msg key="baudi.registry.works.perfRes.choir.voices.4.short">Ch. (4 voc.)</msg>
-    <msg key="baudi.registry.works.perfRes.chor.men">Mens choir</msg>
-    <msg key="baudi.registry.works.perfRes.chor.men.short">M.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.chor.women">Womens choir</msg>
-    <msg key="baudi.registry.works.perfRes.chor.women.short">W.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.chor.children">Childrens choir</msg>
-    <msg key="baudi.registry.works.perfRes.chor.children.short">C.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir.men">Mens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choir.men.short">M.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir.women">Womens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choir.women.short">W.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir.children">Childrens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choir.children.short">C.-Ch.</msg>
     <msg key="baudi.registry.works.perfRes.choir.mixed">Mixed choir</msg>
     <msg key="baudi.registry.works.perfRes.choir.mixed.short">Mxt. Ch.</msg>
     <msg key="baudi.registry.works.perfRes.piccolo">Piccolo</msg>
@@ -400,6 +406,7 @@
     <msg key="baudi.lang.ch">swiss</msg>
     <msg key="baudi.lang.a">austrian</msg>
     <msg key="baudi.lang.cz">czech</msg>
+    <msg key="baudi.lang.la">latin</msg>
     
     <!-- country -->
     <msg key="baudi.country.de">Germany</msg>
@@ -420,7 +427,9 @@
     <msg key="baudi.registry.mei.annot.place.rightmar">right</msg>
     
     <msg key="baudi.conjunction.for">for</msg>
+    <msg key="baudi.conjunction.for.short">f.</msg>
     <msg key="baudi.conjunction.or">or</msg>
+    <msg key="baudi.conjunction.or.short">or</msg>
     <msg key="baudi.unknown">N.N.</msg>
     
     <msg key="baudi.errorPage.heading">Oops, ...</msg>
