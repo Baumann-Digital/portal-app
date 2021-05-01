@@ -349,6 +349,7 @@
     <msg key="baudi.registry.sources.editionStmt.pubPlace">Erschienen in</msg>
     <msg key="baudi.registry.sources.editionStmt.pubDate">Erschienen am</msg>
     <msg key="baudi.registry.sources.editionStmt.dedication">Widmung</msg>
+    <msg key="baudi.registry.sources.relation">Zugehörigkeit</msg>
     
     
     <!-- Persons -->

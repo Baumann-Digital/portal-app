@@ -84,7 +84,7 @@ let $content :=    <div class="container">
                                                                 </div>
                                                            </div>
                                                            <p class="card-text"/>
-                                                           <a href="{concat($app:dbRoot, '/', $docType, '/', $id)}" class="card-link">{$id}</a>
+                                                           <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
                                                            <hr/>
                                                            <p>Tags</p>
                                                          </div>
@@ -296,7 +296,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                                        </div>
                                                        <p class="card-text"/>
                                                        
-                                                       <a href="{concat($app:dbRoot,'/person/',$id)}" class="card-link">{$id}</a>
+                                                       <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
                                                        <hr/>
                                                        <p>Tags</p>
                                                      </div>
@@ -312,7 +312,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
 
 };
 
-declare function app:person($node as node(), $model as map(*)) {
+declare function app:viewPerson($node as node(), $model as map(*)) {
  
 let $id := request:get-parameter("person-id", "error")
 let $person := collection("/db/apps/baudiPersons/data")//tei:person[@xml:id=$id]
@@ -416,7 +416,7 @@ let $content :=
                                            </div>
                                            <p class="card-text"/>
                                            
-                                           <a href="{concat($app:dbRoot,'/locus/',$id)}" class="card-link">{$id}</a>
+                                           <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
                                            <hr/>
                                            <p>Tags</p>
                                          </div>
@@ -488,7 +488,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                                </div>
                                <p class="card-text"/>
                                
-                               <a href="{concat($app:dbRoot,'/institution/',$id)}" class="card-link">{$id}</a>
+                               <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
                                <hr/>
                                <p>Tags</p>
                              </div>
@@ -570,17 +570,17 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     {for $genre at $pos in $genres
         let $cards := for $source in $sources[if($genre='main')then(.)else(.//mei:term[@type='source' and . = $genre])]
                          
+                         let $id := $source/ancestor::mei:mei/@xml:id/normalize-space(data(.))
                          let $isSourceCollection := if($source//mei:term[@type='source' and .='collection']) then(true()) else(false())
                          let $title := $source//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
                          let $titleSort := $title[1]
-                         let $titleSub := baudiSource:getManifestationTitle($id,'sub')
+                         let $titleSub := baudiSource:getManifestationTitle($source,'sub')
                          let $titleSub2 := $source//mei:titlePart[@type='ediromSourceWindow']/normalize-space(text()[1])
                          let $numberOpus := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='number' and @auth='opus']
                          let $numberOpusCount := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
                                                    then(concat(' ',baudiShared:translate('baudi.registry.sources.opus.no'),' ',$numberOpusCount))
                                                    else()
-                         let $id := $source/ancestor::mei:mei/@xml:id/normalize-space(data(.))
                          let $perfMedium := baudiSource:getManifestationPerfResWithAmbitus($source, 'full')
                          let $composer := $source//mei:composer
                          let $lyricist := $source//mei:lyricist
@@ -616,8 +616,8 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                  <div class="card-body">
                                    <div class="row justify-content-between">
                                         <div class="col">
-                                            <h5 class="card-title">{baudiSource:getManifestationTitle($id,'uniform')}</h5>
-                                            {if(baudiSource:getManifestationTitle($id,'sub'))then(<h6 class="card-subtitle mb-2">{$titleSub}</h6>)else()}
+                                            <h5 class="card-title">{baudiSource:getManifestationTitle($source,'uniform')}</h5>
+                                            {if(baudiSource:getManifestationTitle($source,'sub'))then(<h6 class="card-subtitle mb-2">{$titleSub}</h6>)else()}
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
@@ -638,14 +638,14 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                    <div class="row justify-content-between">
                                         <div class="col">
                                         <h6 class="text-muted">Werk zugewiesen:
-                                        {if($sourceRelationID)
+                                        {if(contains($sourceRelationID, '-02-'))
                                         then(<i>{baudiWork:getWorkTitle($app:collectionWorks[range:field-eq("work-id", $sourceRelationID)])}</i>,
                                         '&#160;', $sourceRelationID/string())
                                         else('noch nicht erfolgt!')}</h6>
-                                            <h5 class="card-title">{baudiSource:getManifestationTitle($id, 'main')}</h5>
-                                            {if($titleSub != '')then(<h6 class="card-subtitle mb-2">{baudiSource:getManifestationTitle($id, 'sub')}</h6>)else()}
+                                            <h5 class="card-title">{baudiSource:getManifestationTitle($source, 'main')}</h5>
+                                            {if($titleSub != '')then(<h6 class="card-subtitle mb-2">{baudiSource:getManifestationTitle($source, 'sub')}</h6>)else()}
                                             {if($titleSub2 != '')then(<h6 class="card-subtitle mb-2">{$titleSub2}</h6>)else()}
-                                            {if(baudiSource:getManifestationTitle($id, 'perf'))then(<h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiSource:getManifestationTitle($id, 'perf')}</h6>)else()}
+                                            {if(baudiSource:getManifestationTitle($source, 'perf'))then(<h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiSource:getManifestationTitle($source, 'perf')}</h6>)else()}
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
@@ -662,7 +662,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                      then(<i>{baudiShared:translate('baudi.registry.sources.components'), concat(' (', count($componentSources), ')')}</i>)
                                      else()}
                                    </p>
-                                   <a href="{concat($app:dbRoot,'/source/', $id)}" class="card-link">{$id}</a>
+                                   <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
@@ -692,19 +692,24 @@ declare function app:viewSource($node as node(), $model as map(*)) {
 let $id := request:get-parameter("source-id", "error")
 let $lang := baudiShared:get-lang()
 let $source := collection("/db/apps/baudiSources/data/music")//mei:mei[@xml:id=$id]
+let $manifestation := $source//mei:manifestation
 let $fileURI := document-uri($source/root())
 let $sourceType := $source//mei:term[@type='source'][1]/string()
 let $sourceWorkGroup := $source//mei:term[@type='workGroup'][1]/string()
 let $sourceOrig := concat($app:digilibPath,$source/@xml:id)
-let $sourceTitleUniform := baudiSource:getManifestationTitle($id,'uniform')
-let $sourceTitleMain := baudiSource:getManifestationTitle($id,'main')
-let $sourceTitleSub := baudiSource:getManifestationTitle($id,'sub')
-let $sourceTitlePerf := baudiSource:getManifestationTitle($id,'perf')
+let $sourceTitleUniform := baudiSource:getManifestationTitle($manifestation,'uniform')
+let $sourceTitleMain := baudiSource:getManifestationTitle($manifestation,'main')
+let $sourceTitleSub := baudiSource:getManifestationTitle($manifestation,'sub')
+let $sourceTitlePerf := baudiSource:getManifestationTitle($manifestation,'perf')
 
 let $sourceComposer := baudiSource:getManifestationPersona($id,'composer')
 let $sourceArranger := baudiSource:getManifestationPersona($id,'arranger')
 let $sourceEditor := baudiSource:getManifestationPersona($id,'editor')
 let $sourceLyricist := baudiSource:getManifestationPersona($id,'lyricist')
+
+let $relatedWorks := $source//mei:relation[@rel="isEmbodimentOf"]
+let $relatedWorkID := $source//mei:relation[@rel="isEmbodimentOf"]/string(@corresp)
+let $relatedWorkTitle := baudiWork:getWorkTitle($app:collectionWorks/id($relatedWorkID))
 
 let $sourceEditionStmt := baudiSource:getSourceEditionStmt($id, $lang)
 
@@ -713,9 +718,6 @@ let $sourceTitlePage := if($source//mei:titlePage/mei:p/text())
                         else()
 
 let $sourcePerfRes := baudiSource:getManifestationPerfResWithAmbitus($source, 'full')
-
-(:let $facsimileTarget := concat($app:BLBfacPath,$source//mei:facsimile[1]/mei:surface[@n="1"]/mei:graphic/@target)
-let $facsimileImageTarget := concat($app:BLBfacPathImage,$source//mei:facsimile[1]/mei:surface[@n="1"]/mei:graphic/@target):)
 
 let $msIdentifiers := baudiSource:getManifestationIdentifiers($id)
 
@@ -835,6 +837,12 @@ return
              else()}
              </table>
              <table class="sourceView">
+                {if($relatedWorkID)
+                then(<tr>
+                       <td>{baudiShared:translate('baudi.registry.sources.relation')}</td>
+                       <td>{if($relatedWorkID)then(<a href="{$relatedWorkID}">{$relatedWorkTitle}</a>)else(baudiShared:translate('baudi.unknown'))}</td>
+                     </tr>)
+                else()}
              {if($sourceComposer)
              then(<tr>
                     <td>{baudiShared:translate('baudi.registry.sources.composer')}</td>
@@ -1107,7 +1115,7 @@ let $cards := for $item in $collection
                                 {concat('Jg. ', $volume, ' H. ', $issue)}
                             </p>
                             <hr/>
-                            <a href="{concat($app:dbRoot,'/periodical/',$id)}" class="card-link">{$id}</a>
+                            <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
                         </div>
                     </div>
         
@@ -1291,7 +1299,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                          then(concat(baudiShared:translate('baudi.registry.works.relSources'), ': ',
                                                                 $relatedItemsCount),<br/>)
                                                          else()}</p>
-                                   <a href="{concat($app:dbRoot,'/work/',$id)}" class="card-link">{$id}</a>
+                                   <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>

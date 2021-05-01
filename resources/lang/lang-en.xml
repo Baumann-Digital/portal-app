@@ -338,6 +338,7 @@
     <msg key="baudi.registry.sources.msDesc.notes">Other notes</msg>
     <msg key="baudi.registry.sources.msDesc.scoreFormat">Score format</msg>
     <msg key="baudi.registry.sources.msDesc.condition">Condition</msg>
+    <msg key="baudi.registry.sources.relation">Relation</msg>
     
     <!-- Persons -->
     <msg key="baudi.registry.persons">Registry of Persons</msg>

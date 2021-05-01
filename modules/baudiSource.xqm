@@ -22,16 +22,16 @@ import module namespace jsonp="http://www.jsonp.org";
 
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
-declare function baudiSource:getManifestationTitle($sourceID as xs:string, $param as xs:string) {
+declare function baudiSource:getManifestationTitle($manifestation as node()*, $param as xs:string) {
   
-  let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
-  let $sourceTitleFull := 'Full'
-  let $sourceTitleShort := 'Short'
-  let $sourceTitleUniform := $source//mei:fileDesc//mei:title[@type="uniform"]
+  let $source := $manifestation
+  let $sourceTitleFull := string-join(($source//mei:titlePart[@type='main'], $source//mei:titlePart[@type='subordinate'], $source//mei:titlePart[@type='perf']), ' ')
+  let $sourceTitleShort := $source//mei:titlePart[@type='main']
+  let $sourceTitleUniform := $source/ancestor::mei:mei//mei:fileDesc//mei:title[@type="uniform"]
   let $sourceTitleUniformParts := ($sourceTitleUniform/mei:titlePart[@type='main'][. != ''], $sourceTitleUniform/mei:titlePart[@type='subordinate'][. != ''], $sourceTitleUniform/mei:titlePart[@type='perf'][. != ''])
   let $sourceTitleUniformJoined := string-join($sourceTitleUniformParts,' ')
   let $param := if($param= 'sub') then('subordinate') else($param)
-  let $sourceTitlePartParam := $source//mei:manifestationList/mei:manifestation//mei:titlePart[@type=$param]
+  let $sourceTitlePartParam := $source//mei:titlePart[@type=$param]
 
 return
     if ($param = 'full')
