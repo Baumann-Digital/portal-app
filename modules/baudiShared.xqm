@@ -416,57 +416,81 @@ declare function baudiShared:stringJoinAll($node as node()) {
     string-join($node/string(),' | ')
 };
 
-declare function baudiShared:getPersNameFull($person as node()) {
+(:~
+ : Function to get the name of a person by ID
+ : 
+ : @param $param possible values are 'full', 'short'
+ : @param $linking if the value is 'yes' the function tries to create a link to the authority file
+ : @return If linking than node(), else string
+ :)
 
-    let $forename := $person/tei:persName/tei:forename[@type='used'][1]
-    let $surname :=  $person/tei:persName/tei:surname[@type='used'][1]
-    let $name := if($surname and $forename)
-                                 then(concat($surname,', ',$forename))
-                                 else if($surname and not($forename))
-                                 then($surname)
-                                 else if (not($surname) and $forename)
-                                 then($forename)
-                                 else($person/tei:persName)
-    
+declare function baudiShared:getPersName($personID, $param as xs:string, $linking as xs:string?) {
+let $person :=$app:collectionPersons/id($personID)
+let $linkToRecord := string-join(($app:dbRoot, $personID), '/')
+let $persName := if($person/tei:persName[@role='uniform'])
+                  then($person/tei:persName[@role='uniform'])
+                  else($person/tei:persName[1])
+let $nameForename := $persName//tei:forename[not(@type='altWriting')]
+                      => string-join(' ')
+let $nameForenameAlt := concat('(auch ',$persName//tei:forename[@type='altWriting'], ')')
+let $nameNameLink := $persName//tei:nameLink/text()
+let $nameSurname := $persName//tei:surname[not(@type='altWriting')]
+                     => string-join(' ')
+let $nameSurnameAlt := concat('(auch ',$persName//tei:surname[@type='altWriting'], ')')
+let $nameGenName := $persName//tei:genName/text()
+let $nameAddNameTitle := $persName//tei:addName[matches(@type,"title")]/text()
+let $nameAddNameEpitet := $persName//tei:addName[matches(@type,"^epithet")]/text()
+
+let $nameRoleName := $persName//tei:roleName[1]/text()
+let $nameAddNameNick := $persName//tei:addName[matches(@type,"^nick")]
+                         => string-join(' ')
+let $affiliation := $persName//tei:affiliation/text()
+let $nameUnspecified := $persName//tei:name[matches(@type,'^unspecified')]/text()
+let $nameUnspec := if($affiliation and $nameUnspecified)
+                   then(concat($nameUnspecified, ' (',$affiliation,')'))
+                   else($nameUnspecified)
+let $nameStrings := if($param = "full")
+                    then(
+                            if($nameAddNameTitle or $nameForename or $nameForenameAlt or $nameAddNameEpitet or $nameNameLink or $nameSurname or $nameSurnameAlt or $nameGenName or $nameUnspec)
+                            then(string-join(($nameAddNameTitle, $nameForename, $nameForenameAlt, $nameAddNameEpitet, $nameNameLink, $nameSurname, $nameSurnameAlt, $nameUnspec, if($nameGenName) then(concat(' (',$nameGenName,')')) else()), ' '))
+                            else if($nameRoleName)
+                            then($nameRoleName)
+                            else if($nameAddNameNick)
+                            then($nameAddNameNick)
+                            else(baudiShared:translate('baudi.registry.persons.unknown'))
+                        )
+                    else if($param = 'short')
+                    then(if($nameForename or $nameNameLink or $nameSurname)
+                         then(string-join(($nameForename, $nameNameLink, $nameSurname, if($nameGenName) then(concat(' (',$nameGenName,')')) else()), ' '))
+                         else if($persName/text() !='')
+                          then(string-join($persName/text(), ' '))
+                         else(baudiShared:translate('baudi.registry.persons.unknown')))
+                    else if($param = 'reversed')
+                    then(
+                        if($nameSurname)
+                        then(concat($nameSurname,
+                                   if($nameGenName) then(concat(' (',$nameGenName,')')) else(),
+                                   if($nameAddNameTitle or $nameForename or $nameNameLink)
+                                   then(concat(', ', string-join(($nameAddNameTitle, $nameForename, $nameNameLink), ' ')))
+                                   else()))
+                        else if($nameForename)
+                        then(string-join(($nameForename, $nameNameLink, $nameUnspec), ' '),
+                             if($nameGenName) then(concat(' (',$nameGenName,')')) else())
+                        else if($nameRoleName)
+                        then($nameRoleName)
+                        else if($nameAddNameNick)
+                        then($nameAddNameNick)
+                        else(baudiShared:translate('baudi.registry.persons.unknown'))
+                    )
+                    
+                    else (baudiShared:translate('baudi.registry.persons.unknown'))
+                    
     return
-        $name
+        if($linking = 'yes')
+        then(<a href="{$linkToRecord}">{$nameStrings}</a>)
+        else($nameStrings)
 };
 
-declare function baudiShared:getPersNameShort($person as node()) {
-
-    let $forename := $person/tei:persName/tei:forename
-    let $surname :=  $person/tei:persName/tei:surname
-    let $name := if($surname and $forename)
-                 then(concat(string-join($surname, ' '),', ',string-join($forename,' ')))
-                 else if($surname and not($forename))
-                 then(string-join($surname,' '))
-                 else if (not($surname) and $forename)
-                 then(string-join($forename, ' '))
-                 else($person/tei:persName)
-    
-    return
-        $name
-};
-
-declare function baudiShared:getPersNameFullLinked($person as node()) {
-
-    let $personID := $person/@xml:id
-    let $personUri := concat($app:dbRoot, '/person/', $personID)
-    let $name := baudiShared:getPersNameFull($person)
-    
-    return
-        <a href="{$personUri}">{$name}</a>
-};
-
-declare function baudiShared:getPersNameShortLinked($person as node()) {
-    
-    let $personID := $person/@xml:id
-    let $personUri := concat($app:dbRoot, '/person/', $personID)
-    let $name := baudiShared:getPersNameShort($person)
-    
-    return
-        <a href="{$personUri}">{$name}</a>
-};
 
 declare function baudiShared:getPersonaLinked($id as xs:string) {
     
