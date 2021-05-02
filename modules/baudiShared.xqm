@@ -517,7 +517,7 @@ declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
         <a href="{$corpUri}">{$name}</a>
 };
 
-declare function baudiShared:getName($key as xs:string, $param as xs:string){
+(:declare function baudiShared:getName($key as xs:string, $param as xs:string){
 
     let $person :=$app:collectionPersons[range:field-eq("person-id", $key)]
     let $institution := $app:collectionInstitutions[range:field-eq("institution-id", $key)]
@@ -577,7 +577,7 @@ declare function baudiShared:getName($key as xs:string, $param as xs:string){
                  else('[NoInstitutionFound]')
     return
        $name
-};
+};:)
 
 declare function baudiShared:linkAll($node as node()){
     transform:transform($node,doc('/db/apps/baudiApp/resources/xslt/linking.xsl'),())
