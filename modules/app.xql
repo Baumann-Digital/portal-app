@@ -49,52 +49,51 @@ declare function app:registryDocuments($node as node(), $model as map(*)) {
 let $lang := baudiShared:get-lang()
 let $documents := $app:collectionDocuments
 
-let $content :=    <div class="container">
-                        <br/>
-                
-                        <div class="container" style=" height: 600px; overflow-y: scroll;">
-                            <div class="tab-content">
-                                {let $cards := for $document in $documents
-                                                
-                                                let $id := $document/@xml:id/string()
-                                                let $docType := if($document//tei:correspDesc) then('letter') else('document')
-                                                let $titel := $document//tei:fileDesc/tei:titleStmt/tei:title/data()
-                                                let $datumSent := $document//tei:correspAction[@type="sent"]/tei:date/@when
-                                                let $status := $document/@status/string()
-                                                let $statusSymbol := if($status='checked')
-                                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
-                                                                     else if($status='published')
-                                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                                                     else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
-                                                                      
-                                                order by $titel
-                                                return
-                                                     <div class="card bg-light mb-3">
-                                                         <div class="card-body">
-                                                           <div class="row justify-content-between">
-                                                                <div class="col">
-                                                                    {if($datumSent)
-                                                                    then(<h6 class="card-subtitle mb-2 text-muted">{format-date($datumSent, '[D]. [M]. [Y]', $lang, (), ())}</h6>)
-                                                                    else()}
-                                                                    <h5 class="card-title">{$titel}</h5>
-                                                                    <!--<h6 class="card-subtitle mb-2 text-muted"></h6>-->
-                                                                </div>
-                                                                <div class="col-2">
-                                                                    <p class="text-right">{$statusSymbol}</p>
-                                                                </div>
-                                                           </div>
-                                                           <p class="card-text"/>
-                                                           <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
-                                                           <hr/>
-                                                           <p>Tags</p>
-                                                         </div>
+let $content :=  <div class="container">
+                    <div class="container  overflow-auto" style="max-height: 500px;">
+                        <div class="tab-content">
+                            {let $cards := for $document in $documents
+                                            
+                                            let $id := $document/@xml:id/string()
+                                            let $docType := if($document//tei:correspDesc) then('letter') else('document')
+                                            let $titel := $document//tei:fileDesc/tei:titleStmt/tei:title/data()
+                                            let $datumSent := $document//tei:correspAction[@type="sent"]/tei:date/@when
+                                            let $status := $document/@status/string()
+                                            let $statusSymbol := if($status='checked')
+                                                                 then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                                                 else if($status='published')
+                                                                 then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
+                                                                 else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                                                  
+                                            order by $titel
+                                            return
+                                                 <div class="card bg-light mb-3">
+                                                     <div class="card-body">
+                                                       <div class="row justify-content-between">
+                                                            <div class="col">
+                                                                {if($datumSent)
+                                                                then(<h6 class="card-subtitle mb-2 text-muted">{format-date($datumSent, '[D]. [M]. [Y]', $lang, (), ())}</h6>)
+                                                                else()}
+                                                                <h5 class="card-title">{$titel}</h5>
+                                                                <!--<h6 class="card-subtitle mb-2 text-muted"></h6>-->
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <p class="text-right">{$statusSymbol}</p>
+                                                            </div>
+                                                       </div>
+                                                       <p class="card-text"/>
+                                                       <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
+                                                       <hr/>
+                                                       <p>Tags</p>
                                                      </div>
-                               
-                                    return
-                                        $cards}
-                             </div>
-                          </div>
-                   </div>
+                                                 </div>
+                           
+                                return
+                                    $cards}
+                         </div>
+                        <br/>
+                    </div>
+                 </div>
        
 return
    $content
@@ -267,11 +266,10 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
     let $lang := baudiShared:get-lang()
       
     let $content := <div class="container">
-                        <br/>
-                        <div class="container" style=" height: 600px; overflow-y: scroll;">
+                        <div class="container  overflow-auto" style="max-height: 500px;">
                             {let $cards := for $person in $app:collectionPersons
-                                            let $name := baudiShared:getPersNameShort($person)
                                             let $id := $person/@xml:id/string()
+                                            let $name := baudiShared:getPersName($id, 'short', 'no')
                                             
                                             let $status := $person/@status/string()
                                             let $statusSymbol := if($status='checked')
@@ -283,7 +281,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                             order by $name
                                              
                                             return
-                                                 <div class="card bg-light mb-3">
+                                                 <div class="card bg-light mb-3" name="{$status}">
                                                      <div class="card-body">
                                                        <div class="row justify-content-between">
                                                             <div class="col">
@@ -305,6 +303,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                     $cards
                             }
                         </div>
+                        <br/>
                    </div>
        
        return
@@ -315,65 +314,103 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
 declare function app:viewPerson($node as node(), $model as map(*)) {
  
 let $id := request:get-parameter("person-id", "error")
-let $person := collection("/db/apps/baudiPersons/data")//tei:person[@xml:id=$id]
-let $surname := $person//tei:surname[1]
-let $forename := string-join($person//tei:forename,' ')
-let $name := if($surname and $forename)
-             then(concat($forename,' ',$surname))
-             else if($surname and not($forename))
-             then($surname)
-             else if (not($surname) and $forename)
-             then($forename)
-             else($person/tei:persName)
+let $person := $app:collectionPersons/id($id)
+
+let $nameHead := baudiShared:getPersName($id, 'short', 'no')
+let $references := baudiShared:getReferences($id)
 
 return
 (
 <div class="container">
     <br/>
     <div class="page-header">
-        <h3>{$name}</h3>
+        <h3>{$nameHead}</h3>
         <h5>{$id}</h5>
     </div>
     <hr/>
 
     <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">Zur Person</a></li>  
-        <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">Erwähnungen</a></li>-->
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">{baudiShared:translate('baudi.registry.persons.general')}</a></li>  
+        {if($references) then(<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">{baudiShared:translate('baudi.registry.persons.references')}</a></li>) else()}
     </ul>
   <div class="tab-content">
     <div class="tab-pane fade show active" id="tab1">
     <br/>
-        {transform:transform($person,doc("/db/apps/baudiApp/resources/xslt/metadataPerson.xsl"), ())}
-        <!--
-        <h4>Bezeichnungen</h4>
-        <ul>
-        {
-        for $persName in $namedPersonsDist
-        let $persNameDist := $persName/normalize-space(data(.))
-        let $Quelle := $persName/ancestor::tei:TEI/@xml:id/data(.)
-        order by lower-case($persNameDist)
-        return
-        (
-        <li>{$persNameDist}</li>
-        )
-        }
-        </ul>
-        -->
+        <div class="container">
+            <div class="row">
+              <div class="col">Titel</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Vorname(n)</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Beiname</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Adelsprädikat</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Nachname(n)</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Beiname</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Pseudonym</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Spitzname</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Namensbezeichnung</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Funktion</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Tätigkeit</div>
+              <div class="col">Spalte 2</div>
+            </div>
+             <div class="row">
+              <div class="col">Lebensdaten</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Affiliation</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Normdaten</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Besonderes Ereignis</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Wirkungsorte</div>
+              <div class="col">Spalte 2</div>
+            </div>
+            <div class="row">
+              <div class="col">Notizen</div>
+              <div class="col">Spalte 2</div>
+            </div>
+        </div>
     </div>
-    <!--
-    <div class="tab-pane fade" id="tab2" >
-        <ul>
-        {
-            for $persName in $namedPersons
-            let $persNameDist := $persName/normalize-space(data(.))
-            let $Quelle := $persName/ancestor::tei:TEI/@xml:id/data(.)
-            order by lower-case($persNameDist)
-            return
-            <li>{$persNameDist} (in: <b>{concat($Quelle,'.xml')}</b>)</li>
-            }
-        </ul>
-    </div>
-    -->
+    <br/>
+    {if($references)
+    then(<div class="tab-pane fade" id="tab2" ><br/><div class="container  overflow-auto" style="max-height: 500px;">{$references}</div></div>)
+    else()}
     </div>
 </div>
 )
@@ -386,9 +423,7 @@ declare function app:registryPlaces($node as node(), $model as map(*)) {
 
 let $content := 
     <div class="container">
-        <br/>
-
-        <div class="container" style=" height: 600px; overflow-y: scroll;">
+        <div class="container  overflow-auto" style="max-height: 500px;">
             <div class="tab-content">
                 {let $cards := for $ort in $orte
                                 let $name := $ort/tei:placeName[1]
@@ -403,7 +438,7 @@ let $content :=
                                 order by $name
                                  
                                 return
-                                     <div class="card bg-light mb-3">
+                                     <div class="card bg-light mb-3" name="{$status}">
                                          <div class="card-body">
                                            <div class="row justify-content-between">
                                                 <div class="col">
@@ -426,6 +461,7 @@ let $content :=
                         $cards}
              </div>
           </div>
+   <br/>
    </div>
        
 return
@@ -441,7 +477,6 @@ let $name := $ort//tei:title/normalize-space(data(.))
 return
 (
     <div class="container">
-    <a href="../registryPlaces.html">&#8592; zum Ortsverzeichnis</a>
         <div class="page-header">
             <h1>{$name}</h1>
             <h5>{$id}</h5>
@@ -457,9 +492,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
     let $orgs := collection("/db/apps/baudiInstitutions/data")//tei:org
       
     let $content := <div class="container">
-    <br/>
-
-    <div class="container" style=" height: 600px; overflow-y: scroll;">
+    <div class="container  overflow-auto" style="max-height: 500px;">
     <div class="tab-content">
     {let $cards := for $org in $orgs
                     let $name := baudiShared:getOrgNameFull($org)
@@ -475,7 +508,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                     order by $name
                      
                     return
-                         <div class="card bg-light mb-3">
+                         <div class="card bg-light mb-3" name="{$status}">
                              <div class="card-body">
                                <div class="row justify-content-between">
                                     <div class="col">
@@ -498,6 +531,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
             $cards}
         </div>
       </div>
+   <br/>
    </div>
        
        return
@@ -565,7 +599,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
              }
     </ul>
     <!-- Tab panels -->
-    <div class="container" style=" height: 600px; overflow-y: scroll;">
+    <div class="container  overflow-auto" style="max-height: 500px;">
     <div class="tab-content">
     {for $genre at $pos in $genres
         let $cards := for $source in $sources[if($genre='main')then(.)else(.//mei:term[@type='source' and . = $genre])]
@@ -681,6 +715,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
             $tab}
         </div>
       </div>
+   <br/>
    </div>
        
        return
@@ -1128,7 +1163,10 @@ return
         </div>
         <hr/>
         <div class="container">
-            {$cards}
+            <div class="container  overflow-auto" style="max-height: 500px;">
+                {$cards}
+            </div>
+            <br/>
         </div>
     </div>
 )
@@ -1226,19 +1264,19 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $id := $work/@xml:id/string()
                          let $composerID := $work//mei:composer//@auth
                          let $composer := if($work//mei:composer//@auth)
-                                          then(baudiShared:getName($work//mei:composer/mei:persName/@auth/string(), 'short'))
+                                          then(baudiShared:getPersName($composerID, 'short', 'yes'))
                                           else($work//mei:composer/string())
                          let $arrangerID := $work//mei:arranger//@auth
                          let $arranger := if($work//mei:arranger//@auth)
-                                          then(baudiShared:getName($work//mei:arranger/mei:persName/@auth/string(), 'short'))
+                                          then(baudiShared:getPersName($arrangerID, 'short', 'yes'))
                                           else($work//mei:arranger/string())
                          let $lyricistID := $work//mei:lyricist//@auth
                          let $lyricist := if($work//mei:lyricist//@auth)
-                                          then(baudiShared:getName($work//mei:lyricist/mei:persName/@auth/string(), 'short'))
+                                          then(baudiShared:getPersName($lyricistID, 'short', 'yes'))
                                           else($work//mei:lyricist/string())
                          let $editorID := $work//mei:editor//@auth
                          let $editor := if($editorID)
-                                        then(baudiShared:getName($work//mei:editor/mei:persName/@auth/string(), 'short'))
+                                        then(baudiShared:getPersName($editorID, 'short', 'yes'))
                                         else($work//mei:editor/string())
                          let $componentWorksCount := count($work//mei:componentList/mei:work)
                          (:for $componentWork in $work//mei:componentList/mei:work
@@ -1318,6 +1356,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
             $tab}
         </div>
       </div>
+   <br/>
    </div>
        
        return
@@ -1338,19 +1377,11 @@ let $titleMainAlt := $work//mei:titlePart[@type = 'mainAlt']
 let $titleSubAlt := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subAlt']
 let $composer := $work//mei:composer
 let $composerID := $composer/mei:persName/@auth
-let $composerEntry := if($composerID)
-                      then($app:collectionPersons[matches(@xml:id,$composerID)])
-                      else($composer)
-let $composerName := baudiShared:getPersNameShortLinked($composerEntry)
+let $composerName := baudiShared:getPersName($composerID, 'short', 'yes')
 let $composerGender := if($composerEntry[@sex="female"]) then('composer.female') else('composer')
 let $lyricist := $work//mei:lyricist
 let $lyricistID := $lyricist/mei:persName/@auth
-let $lyricistEntry := if($lyricistID)
-                      then($app:collectionPersons[matches(@xml:id,$lyricistID)])
-                      else($lyricist)
-let $lyricistName := if($lyricistID)
-                      then(baudiShared:getPersNameShortLinked($lyricistEntry))
-                      else($lyricist/text())
+let $lyricistName := baudiShared:getPersName($lyricistID, 'short', 'yes')
 let $lyricistGender := if($lyricistEntry)
                        then('lyricist.female')
                        else('lyricist')
@@ -1538,7 +1569,7 @@ return
              </table>
         {if(baudiWork:hasIncipit($id))
          then(<br/>,
-              <h4>Incipit</h4>,
+              <h4>{baudiShared:translate('baudi.registry.works.incipit')}</h4>,
               <br/>,
               baudiWork:getIncipit($id))
          else()}
@@ -1546,7 +1577,7 @@ return
         then(
         <div>
            <br/>
-           <h4>Zugehörige Quellen</h4>
+           <h4>{baudiShared:translate('baudi.registry.works.relSources')}</h4>
            <br/>
            <div class="container overflow-auto" style="max-height: 500px;">
             {$relatedSourcesCards}
@@ -1578,7 +1609,7 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
     <br/>
     <!-- Tab panels -->
     <div class="container" >
-    <div class="tab-content" style=" height: 600px; overflow-y: scroll;">
+    <div class="container overflow-auto" style="max-height: 500px;">
     {
         let $cards := for $edition in $editions
                          let $workID := $edition/@xml:id
@@ -1593,16 +1624,16 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
                                                    then(concat(' ',baudiShared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $composer := if($work//mei:composer//@auth)
-                                          then(baudiShared:getName($work//mei:composer/mei:persName/@auth/string(), 'short'))
+                                          then(baudiShared:getPersName($work//mei:composer//@auth, 'short', 'yes'))
                                           else($work//mei:composer/string())
                          let $arranger := if($work//mei:arranger//@auth)
-                                          then(baudiShared:getName($work//mei:arranger/mei:persName/@auth/string(), 'short'))
+                                          then(baudiShared:getPersName($work//mei:arranger//@auth, 'short', 'yes'))
                                           else($work//mei:arranger/string())
                          let $lyricist := if($work//mei:lyricist//@auth)
-                                          then(baudiShared:getName($work//mei:lyricist/mei:persName/@auth/string(), 'short'))
+                                          then(baudiShared:getPersName($work//mei:lyricist//@auth, 'short', 'yes'))
                                           else($work//mei:lyricist/string())
                          let $editor := if($work//mei:editor//@auth)
-                                        then(baudiShared:getName($work//mei:editor/mei:persName/@auth/string(), 'short'))
+                                        then(baudiShared:getPersName($work//mei:editor//@auth, 'short', 'yes'))
                                         else($work//mei:editor/string())
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
@@ -1650,6 +1681,7 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
         return
             $tab}
         </div>
+        <br/>
       </div>
    </div>
        
