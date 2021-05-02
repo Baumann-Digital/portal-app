@@ -13,6 +13,7 @@ import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace transform="http://exist-db.org/xquery/transform";
+import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
 
 import module namespace functx="http://www.functx.com";
 import module namespace json="http://www.json.org";
@@ -74,7 +75,10 @@ declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
                                                                                   else if(matches($perfResAuth,'.iv'))
                                                                                   then(substring-before($perfResAuth,'.iv'))
                                                                                   else($perfResAuth)
-                                                          let $perfResAuth := baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2))
+                                                          let $ambitus := if($perfRes/mei:ambitus) then(baudiSource:getAmbitus($perfRes/mei:ambitus)) else()
+                                                          let $perfResAuth := if($ambitus and $param != 'short')
+                                                                              then(concat(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)), ' ', $ambitus))
+                                                                              else(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)))
                                                           let $perfResAuthShort := baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuthShorted, '.short'))
                                                           let $perfResSolo := if($perfRes/@solo) then(baudiShared:translate('baudi.registry.works.perfRes.solo')) else()
                                                           let $perfResAdLib := if($perfRes/@adLib) then(baudiShared:translate('baudi.registry.works.perfRes.adLib')) else()
@@ -125,34 +129,41 @@ let $incipit := $workFile//mei:incip/node()
 
 let $meiFile := <mei xmlns="http://www.music-encoding.org/ns/mei">
                     <meiHead><fileDesc><titleStmt><title/></titleStmt><pubStmt/></fileDesc></meiHead>
-                    <music><body><mdiv>{$incipit}</mdiv></body></music>
+                    <music><body>{$incipit}</body></music>
                 </mei>
-let $meiFileStored := if(doc-available(concat('/db/apps/baudiWorks/data/', $workFileName)))
-                      then()
-                      else(xmldb:store('/db/apps/baudiWorks/data/', $workFileName, $meiFile))
+let $meiFileStored := if(doc-available(concat('/db/apps/baudiWorks/data/', $workFileName)) = false())
+                      then(login:set-user("org.exist.login", (), true()),
+                           xmldb:store('/db/apps/baudiWorks/data/', $workFileName, $meiFile))
+                      else()
 let $meiFileCall := concat(substring-before($app:dbRootUrl,'baudiApp'), 'baudiWorks/data/', $workFileName )
 let $script :=  <script type="module">
-                   import 'https://www.verovio.org/javascript/app/verovio-app.js';
+                    import 'https://www.verovio.org/javascript/app/verovio-app.js';
                     
                     const options = {{
-                        defaultView: 'document', // instead of 'responsive' by default
-                        defaultZoom: 0 // 0-7, default is 3
+                        defaultView: 'responsive', // default is 'responsive', alternative is 'document'
+                        defaultZoom: 3, // 0-7, default is 4
+                        enableResponsive: true, // default is true
+                        enableDocument: true // default is true
                     }}
-                   // Create the app - here with an empty option object
-                   const app = new Verovio.App(document.getElementById("appVerovio"), {{}});
-               
-                   // Load a file (MEI or MusicXML)
-                   fetch("{$meiFileCall}")
-                       .then(function(response) {{
-                           return response.text();
-                       }})
-                       .then(function(text) {{
-                           app.loadData(text);
-                       }});
+                    
+                    // A MusicXML file
+                    // var file = 'https://www.verovio.org/examples/musicxml/Vivaldi_Concerto_No.4_in_F_Minor_Winter.xml';
+                    // A MEI file
+                    var file = '{$meiFileCall}';
+                    
+                    const app = new Verovio.App(document.getElementById("appVerovio"), options);
+                    fetch(file)
+                        .then(function(response) {{
+                            return response.text();
+                        }})
+                        .then(function(text) {{
+                            app.loadData(text);
+                        }});
+                   
                </script> 
 
 return
     (<div class="panel-body">
-        <div id="appVerovio" class="panel" style="border: 1px solid lightgray; min-height: 100px; max-height: 500px; min-width: 100px; max-width: 1000px;"/>
+        <div id="appVerovio" class="panel" style="border: 1px solid lightgray; min-height: 100px; max-height: 500px; min-width: 100px; max-width: 1000px;">Verovio is loading...</div>
      </div>, $script)
 };
