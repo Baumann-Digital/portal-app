@@ -1,3 +1,8 @@
+
+:root {
+  --darkgreen: #2B8E00;
+}
+
 .navbar-text > a {
 	color: inherit; 
 	text-decoration: none;
@@ -162,4 +167,80 @@ table.sourceView tr td:first-of-type{
 
 .portfolio-item:hover .overlay {
   opacity: 1!important;
+}
+
+/*======================================
+//--//-->   Register Sort Boxes
+======================================*/
+
+.RegisterSortBox:first-of-type {
+    width: 95%;
+    margin-top: 0em;
+    margin-left: auto;
+    margin-right: auto;
+/*    padding-top: 0.25em;*/
+}
+.RegisterSortBox {
+    width: 95%;
+    margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
+/*    padding-top: 0.25em;*/
+}
+
+.RegisterSortEntry {
+    font-size: 1.1em;
+    color: var(--darkgreen);
+    text-align: center;
+    font-weight: bold;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    background-color: #f0f0f0;
+    border-bottom: 2px solid var(--darkgreen);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.RegisterSortEntry2 {
+    font-size: 1.1em;
+    color: var(--darkgreen);
+    text-align: center;
+    font-weight: bold;
+    margin-left: 90px;
+    margin-right: 90px;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    background-color: #f0f0f0;
+    border-bottom: 2px solid var(--darkgreen);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.RegisterEntry {
+    border-bottom: 1px solid LightGray;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    margin-bottom: 0.25em;
+    margin-right: 0.75em;
+    margin-left: 0.75em;
+}
+
+.RegisterEntry2 {
+    border-bottom: 1px solid LightGray;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    margin-bottom: 0.25em;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.RegisterEntry:last-child
+{
+    border-bottom:none;
 }
