@@ -96,21 +96,21 @@ declare function baudiSource:getAmbPitch($ambNote as node()*) {
       else()
 };
 
-declare function baudiSource:getAmbitus($ambitus as node()*) {
+declare function baudiSource:getAmbitus($ambitus as node()*) as xs:string{
     let $lowest := if($ambitus/mei:ambNote[@type='lowest']) then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='lowest'])) else()
     let $lowestAlt := if($ambitus/mei:ambNote[@type='lowestAlt']) then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='lowestAlt'])) else()
     let $highest := if($ambitus/mei:ambNote[@type='highest'])then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='highest']))else()
     let $highestAlt := if($ambitus/mei:ambNote[@type='highestAlt'])then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='highestAlt']))else()
     return
-            (
+            concat('[',
             if($lowestAlt)
             then(concat($lowest, ' (', $lowestAlt,')'))
             else($lowest),
             '–',
             if($highestAlt)
             then($highest, ' (', $highestAlt,')')
-            else($highest)
-            )
+            else($highest),
+            ']')
 };
 
 declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as node()*, $param as xs:string) {
@@ -134,8 +134,8 @@ declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as n
                                                                                   then(substring-before($perfResAuth,'.iv'))
                                                                                   else($perfResAuth)
                                                           let $ambitus := if($perfRes/mei:ambitus) then(baudiSource:getAmbitus($perfRes/mei:ambitus)) else()
-                                                          let $perfResAuth := if($ambitus)
-                                                                              then(concat(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)), ' | ', $ambitus))
+                                                          let $perfResAuth := if($ambitus and $param != 'short')
+                                                                              then(concat(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)), ' ', $ambitus))
                                                                               else(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)))
                                                           let $perfResAuthShort := baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuthShorted, '.short'))
                                                           let $perfResSolo := if($perfRes/@solo) then(baudiShared:translate('baudi.registry.works.perfRes.solo')) else()
