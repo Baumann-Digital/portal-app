@@ -120,6 +120,7 @@
     <msg key="baudi.registry.works.langsUsed">Languages used</msg>
     <msg key="baudi.registry.works.category">Workgroup</msg>
     <msg key="baudi.registry.works.genre">Genre</msg>
+    <msg key="baudi.registry.works.incipit">Incipit</msg>
     <msg key="baudi.registry.works.key">Key</msg>
     <msg key="baudi.registry.works.pname.c">c</msg>
     <msg key="baudi.registry.works.pname.cf">c flat</msg>
@@ -342,6 +343,17 @@
     
     <!-- Persons -->
     <msg key="baudi.registry.persons">Registry of Persons</msg>
+    <msg key="baudi.registry.persons.general">General</msg>
+    <msg key="baudi.registry.persons.references">References</msg>
+    <msg key="baudi.registry.persons.references.sources.text">Documents</msg>
+    <msg key="baudi.registry.persons.references.sources.music">Musical Sources</msg>
+    <msg key="baudi.registry.persons.references.works">Works</msg>
+    <msg key="baudi.registry.persons.references.persons">Persons</msg>
+    <msg key="baudi.registry.persons.references.institutions">Institutions</msg>
+    <msg key="baudi.registry.persons.references.loci">Loci</msg>
+    <msg key="baudi.registry.persons.references.periodicals">Periodicals</msg>
+    <msg key="baudi.registry.persons.references.other">Other</msg>
+    
     <msg key="baudi.registry.persons.unknown">No entry found</msg>
     
     <!-- Institutions -->

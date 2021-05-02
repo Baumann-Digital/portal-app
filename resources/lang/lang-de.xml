@@ -113,7 +113,7 @@
     <msg key="baudi.registry.works.editor.female">Herausgeberin</msg>
     <msg key="baudi.registry.works.opus.no">Nr.</msg>
     <msg key="baudi.registry.works.components">Enthaltene Werke</msg>
-    <msg key="baudi.registry.works.relSources">Beteiligte Quellen</msg>
+    <msg key="baudi.registry.works.relSources">Zugehörige Quellen</msg>
     <msg key="baudi.registry.works.perfmedium">Besetzungsangabe</msg>
     <msg key="baudi.registry.works.titleAlt">Alternativer Titel</msg>
     <msg key="baudi.registry.works.subtitleAlt">Alternativer Untertitel</msg>
@@ -121,6 +121,7 @@
     <msg key="baudi.registry.works.langsUsed">Verwendete Sprachen</msg>
     <msg key="baudi.registry.works.category">Werkgruppe</msg>
     <msg key="baudi.registry.works.genre">Genre</msg>
+    <msg key="baudi.registry.works.incipit">Incipit</msg>
     <msg key="baudi.registry.works.key">Tonart</msg>
     <msg key="baudi.registry.works.pname.c">c</msg>
     <msg key="baudi.registry.works.pname.cf">ces</msg>
@@ -354,6 +355,17 @@
     
     <!-- Persons -->
     <msg key="baudi.registry.persons">Register der Personen</msg>
+    <msg key="baudi.registry.persons.general">Allgemein</msg>
+    <msg key="baudi.registry.persons.references">Referenzen</msg> <!-- Referenzen, Bezüge, Nachweise "Vorkommen" -->
+    <msg key="baudi.registry.persons.references.sources.text">Dokumente</msg>
+    <msg key="baudi.registry.persons.references.sources.music">Musikalische Quellen</msg>
+    <msg key="baudi.registry.persons.references.works">Werke</msg>
+    <msg key="baudi.registry.persons.references.persons">Personen</msg>
+    <msg key="baudi.registry.persons.references.institutions">Institutionen</msg>
+    <msg key="baudi.registry.persons.references.loci">Orte</msg>
+    <msg key="baudi.registry.persons.references.periodicals">Periodika</msg>
+    <msg key="baudi.registry.persons.references.other">Sonstige</msg>
+    
     <msg key="baudi.registry.persons.unknown">Kein Eintrag gefunden</msg>
     
     <!-- Institutions -->
