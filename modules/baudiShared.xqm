@@ -593,3 +593,104 @@ declare function baudiShared:checkGenderforLangValues($persID){
         then('.female')
         else('')
 };
+
+
+declare function baudiShared:getReferences($id) {
+    let $collectionReference := ($app:collectionPersons[matches(.//@key,$id)],
+                                 $app:collectionInstitutions[matches(.//@key,$id)],
+                                 $app:collectionPeriodicals[matches(.//@key,$id)],
+                                 $app:collectionLoci[matches(.//@key,$id)],
+                                 $app:collectionDocuments[matches(.//@key,$id)],
+                                 $app:collectionSourcesMusic[matches(.//@auth,$id)],
+                                 $app:collectionWorks[matches(.//@auth,$id)])
+    
+    let $entryGroups := for $doc in $collectionReference
+                          let $docRoot := $doc/root()/node()
+                          let $docID := $docRoot/@xml:id
+                          let $docIDStart := substring($docID,1,8)
+                          let $docInfo := if(starts-with($docRoot/@xml:id,'baudi-07-'))
+                                          then(baudiShared:translate('baudi.registry.persons.references.sources.text'))
+                                          else if (starts-with($docRoot/@xml:id,'baudi-02-'))
+                                          then (baudiShared:translate('baudi.registry.persons.references.works'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-04-'))
+                                          then(baudiShared:translate('baudi.registry.persons.references.persons'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-05-'))
+                                          then(baudiShared:translate('baudi.registry.persons.references.institutions'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-06-'))
+                                          then(baudiShared:translate('baudi.registry.persons.references.loci'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-09-'))
+                                          then(baudiShared:translate('baudi.registry.persons.references.periodicals'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-01-'))
+                                          then(baudiShared:translate('baudi.registry.persons.references.sources.music'))
+                                          else(baudiShared:translate('baudi.registry.persons.references.other'))
+                          let $entryOrder := if(starts-with($docRoot/@xml:id,'baudi-02-'))
+                                          then('002')
+                                          else if (starts-with($docRoot/@xml:id,'baudi-01-'))
+                                          then ('001')
+                                          else if(starts-with($docRoot/@xml:id,'baudi-07-'))
+                                          then('003')
+                                          else if(starts-with($docRoot/@xml:id,'baudi-04-'))
+                                          then('004')
+                                          else if(starts-with($docRoot/@xml:id,'baudi-05-'))
+                                          then('005')
+                                          else if(starts-with($docRoot/@xml:id,'baudi-06-'))
+                                          then('006')
+                                          else('007')
+                          let $correspActionSent := $docRoot//tei:correspAction[@type="sent"]
+                          let $correspActionReceived := $docRoot//tei:correspAction[@type="received"]
+                          let $correspSentTurned := baudiShared:getPersName($correspActionSent/tei:persName/@key, 'short','yes')
+                          let $correspReceivedTurned := baudiShared:getPersName($correspActionReceived/tei:persName/@key, 'short','yes')
+                          let $docDate := if($correspActionSent)
+                                          then('DATUM')
+                                          else(<br/>)
+                          let $workSortValue := 'sort'
+                          let $docTitle := if($correspActionSent)
+                                           then($correspSentTurned,<br/>,'an ',$correspReceivedTurned)
+                                           else if(starts-with($docRoot/@xml:id,'baudi-02-')) 
+                                           then($docRoot//mei:workList/mei:work[1]/mei:title[1]/string())
+                                           else if($docRoot/name()='TEI')
+                                           then($docRoot//tei:titleStmt/tei:title/string())
+                                           else('noTitle')
+                          let $entry := <div class="row RegisterEntry" xmlns="http://www.w3.org/1999/xhtml">
+                                          <div class="col-3" dateToSort="{$docDate}" workSort="{$workSortValue}">
+                                              {$docInfo}
+                                              {if($docDate and starts-with($docRoot/@xml:id,'A'))
+                                              then(' vom ','DATUM')
+                                              else()}
+                                         </div>
+                                         <div class="col" docTitle="{normalize-space($docTitle[1])}">{$docTitle}</div>
+                                         <div class="col-2"><a href="{$docID}">{string($docID)}</a></div>
+                                       </div>
+                          group by $docIDStart
+                          return
+                              (<div xmlns="http://www.w3.org/1999/xhtml" groupName="{$docIDStart}" order="{$entryOrder}">{for $each in $entry
+                                    order by if($each/div/@dateToSort !='')
+                                             then($each/div/@dateToSort)
+                                             else if($each/div/@workSort)
+                                             then($each/div/@workSort)
+                                             else ($each/div/@docTitle)
+                                    return
+                                        $each}</div>)
+   let $entryGroupsShow := for $groups in $entryGroups
+                              let $groupName := $groups/@groupName
+                              let $order := $groups/@order
+                              let $registerSortEntryLabel := switch ($groupName/string())
+                                                               case 'baudi-01-' return baudiShared:translate('baudi.registry.persons.references.sources.music')
+                                                               case 'baudi-02-' return baudiShared:translate('baudi.registry.persons.references.works')
+                                                               case 'baudi-04-' return baudiShared:translate('baudi.registry.persons.references.persons')
+                                                               case 'baudi-05-' return baudiShared:translate('baudi.registry.persons.references.institutions')
+                                                               case 'baudi-06-' return baudiShared:translate('baudi.registry.persons.references.loci')
+                                                               case 'baudi-07-' return baudiShared:translate('baudi.registry.persons.references.sources.text')
+                                                               case 'baudi-09-' return baudiShared:translate('baudi.registry.persons.references.periodicals')
+                                                               default return baudiShared:translate('baudi.registry.persons.references.other')
+                                order by $order
+                                return
+                                 <div class="RegisterSortBox" xmlns="http://www.w3.org/1999/xhtml">
+                                          <div class="RegisterSortEntry">{$registerSortEntryLabel}</div>
+                                          {for $group in $groups
+                                              return
+                                                  $group}
+                                 </div>
+   return
+    $entryGroupsShow
+};
