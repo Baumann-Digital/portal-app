@@ -9,7 +9,7 @@ div.page {
     width: 80%;
     border: 2px solid grey;
     padding: 5px;
-    position:absolute;
+/*    position:absolute;*/
 }
 div.titlepage {
     margin: auto;
