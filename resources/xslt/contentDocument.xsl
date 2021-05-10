@@ -12,27 +12,6 @@
             <xsl:apply-templates/>
         </div>
     </xsl:template>
-    <xsl:template match="div[@type = 'page']">
-        <xsl:for-each select=".">
-            <br/>
-            <div class="page">
-                <p class="text-center">
-                    [Seite <xsl:value-of select="@n"/>]
-                </p>
-                <xsl:if test="exists(@decls)">
-                    <p class="text-right">
-                        <i>Abschnitt: <xsl:value-of select="@decls"/>
-                        </i>
-                    </p>
-                </xsl:if>
-                <xsl:apply-templates/>
-                <br/>
-                <p class="text-center">
-                    [Seite <xsl:value-of select="@n"/>]
-                </p>
-            </div>
-        </xsl:for-each>
-    </xsl:template>
     
     <xsl:template match="table">
         <xsl:choose>
@@ -147,4 +126,6 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+
 </xsl:stylesheet>

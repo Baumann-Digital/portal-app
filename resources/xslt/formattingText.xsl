@@ -44,7 +44,7 @@
             <xsl:apply-templates/>
         </i>
     </xsl:template>
-    <xsl:template match="hi[@rend = 'underline']">
+    <xsl:template match="hi[contains(@rend,'underline')]">
         <span style="text-decoration: underline;">
             <xsl:apply-templates/>
         </span>
@@ -65,20 +65,25 @@
         </span>
     </xsl:template>
     
-    <xsl:template match="hi[@rend = 'left']">
-        <p class="text-left">
+    <xsl:template match="node()[contains(@rend , 'left')]">
+        <span class="text-left">
             <xsl:apply-templates/>
-        </p>
+        </span>
     </xsl:template>
-    <xsl:template match="hi[@rend = 'center']">
-        <p class="text-center">
+    <xsl:template match="node()[contains(@rend,'center')]">
+        <span class="text-center">
             <xsl:apply-templates/>
-        </p>
+        </span>
     </xsl:template>
-    <xsl:template match="hi[@rend = 'right']">
-        <p class="text-right">
+    <xsl:template match="node()[contains(@rend ,'right')]">
+        <span class="text-right">
             <xsl:apply-templates/>
-        </p>
+        </span>
+    </xsl:template>
+    <xsl:template match="node()[contains(@rend , 'justify')]">
+        <span class="text-justify">
+            <xsl:apply-templates/>
+        </span>
     </xsl:template>
     <xsl:template match="hi[@rend = 'code']">
         <span class="font-family: monospace, monospace; padding: 1rem; word-wrap: normal;">
@@ -86,20 +91,30 @@
         </span>
     </xsl:template>
     
-    <xsl:template match="hi[@rend='heading1']">
+    <xsl:template match="hi[contains(@rend,'heading1')]">
         <h1>
             <xsl:apply-templates/>
         </h1>
     </xsl:template>
-    <xsl:template match="hi[@rend='heading3']">
+    <xsl:template match="hi[contains(@rend,'heading3')]">
         <h3>
             <xsl:apply-templates/>
         </h3>
     </xsl:template>
-    <xsl:template match="hi[@rend='heading5']">
+    <xsl:template match="hi[contains(@rend,'heading5')]">
         <h5>
             <xsl:apply-templates/>
         </h5>
+    </xsl:template>
+    <xsl:template match="hi[contains(@rend,'sup')]">
+        <sup>
+            <xsl:apply-templates/>
+        </sup>
+    </xsl:template>
+    <xsl:template match="hi[contains(@rend,'sub')]">
+        <sub>
+            <xsl:apply-templates/>
+        </sub>
     </xsl:template>
     
     <xsl:template match="note[@type = 'editor']">
