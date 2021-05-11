@@ -372,7 +372,17 @@
     <msg key="baudi.registry.institutions">Register der Institutionen</msg>
     
     <!-- Places -->
-    <msg key="baudi.registry.places">Register der Orte</msg>
+    <msg key="baudi.registry.loci">Register der Orte</msg>
+    <msg key="baudi.registry.loci.tag.address">Adresse</msg>
+    <msg key="baudi.registry.loci.tag.city">Gemeinde</msg>
+    <msg key="baudi.registry.loci.tag.farm">Wohnplatz</msg>
+    <msg key="baudi.registry.loci.tag.locus">Ort</msg>
+    <msg key="baudi.registry.loci.tag.mountain">Berg</msg>
+    <msg key="baudi.registry.loci.tag.pont">See</msg>
+    <msg key="baudi.registry.loci.tag.region">Region</msg>
+    
+    <!-- Letters -->
+    <msg key="baudi.registry.letters">Registry of Letters</msg>
     
     <!-- Documents -->
     <msg key="baudi.registry.documents">Register der Dokumente</msg>

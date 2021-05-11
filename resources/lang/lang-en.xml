@@ -359,6 +359,16 @@
     <!-- Institutions -->
     <msg key="baudi.registry.institutions">Registry of Institutions</msg>
     
+    <!-- Places -->
+    <msg key="baudi.registry.loci">Registry of Loci</msg>
+    <msg key="baudi.registry.loci.tag.address">address</msg>
+    <msg key="baudi.registry.loci.tag.city">city</msg>
+    <msg key="baudi.registry.loci.tag.farm">farm</msg>
+    <msg key="baudi.registry.loci.tag.locus">locus</msg>
+    <msg key="baudi.registry.loci.tag.mountain">mountain</msg>
+    <msg key="baudi.registry.loci.tag.pont">pont</msg>
+    <msg key="baudi.registry.loci.tag.region">region</msg>
+    
     <!-- Letters -->
     <msg key="baudi.registry.letters">Registry of Letters</msg>
     
