@@ -416,7 +416,7 @@ return
 )
 };
 
-declare function app:registryPlaces($node as node(), $model as map(*)) {
+declare function app:registryLoci($node as node(), $model as map(*)) {
 
     let $lang := baudiShared:get-lang()
     let $orte := collection("/db/apps/baudiLoci/data")//tei:place
@@ -468,11 +468,10 @@ return
    $content
 };
 
-declare function app:viewPlace($node as node(), $model as map(*)) {
+declare function app:viewLocus($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("locus-id", "error")
-let $ort := collection("/db/apps/baudiLoci/data")/tei:place[@id=$id]
-let $name := $ort//tei:title/normalize-space(data(.))
+let $name := baudiLocus:getLocusName($id)
 
 return
 (

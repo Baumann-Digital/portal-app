@@ -106,7 +106,7 @@ else
                         <dispatch
                             xmlns="http://exist.sourceforge.net/NS/exist">
                             <forward
-                                url="{$exist:controller}/html/viewPlace.html">
+                                url="{$exist:controller}/html/viewLocus.html">
                                 <add-parameter
                                     name="locus-id"
                                     value="{$exist:resource}"/>
