@@ -10,6 +10,7 @@ import module namespace i18n = "http://exist-db.org/xquery/i18n" at "/db/apps/ba
 import module namespace baudiShared = "http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.xqm";
 import module namespace baudiWork = "http://baumann-digital.de/ns/baudiWork" at "/db/apps/baudiApp/modules/baudiWork.xqm";
 import module namespace baudiSource = "http://baumann-digital.de/ns/baudiSource" at "/db/apps/baudiApp/modules/baudiSource.xqm";
+import module namespace baudiLocus = "http://baumann-digital.de/ns/baudiLocus" at "/db/apps/baudiApp/modules/baudiLocus.xqm";
 import module namespace functx = "http://www.functx.com" at "/db/apps/baudiApp/modules/functx.xqm";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare namespace mei = "http://www.music-encoding.org/ns/mei";
@@ -22,6 +23,7 @@ declare variable $app:dbRootDev as xs:string := 'http://localhost:8088/exist/app
 declare variable $app:dbRootPortal as xs:string := 'http://localhost:8082/exist/apps/baudiApp';
 declare variable $app:dbRoot as xs:string := if(contains($app:dbRootUrl,$app:dbRootLocalhost))then('/exist/apps/baudiApp')else('');
 declare variable $app:digilibPath as xs:string := 'https://digilib.baumann-digital.de';
+declare variable $app:geonames as xs:string := 'https://www.geonames.org/';
 declare variable $app:BLBfacPath as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/content/pageview/';
 declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/image/view/';
 
@@ -481,7 +483,7 @@ return
             <h5>{$id}</h5>
         </div>
         Hier wirds irgendwann noch ein paar Infos zu <br/>{$name}<br/> geben.
-        {transform:transform($ort,doc("/db/apps/baudiApp/resources/xslt/metadataPlace.xsl"), ())}
+        {baudiLocus:getGeonamesData($id)}
     </div>
 )
 };

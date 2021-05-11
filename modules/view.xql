@@ -16,6 +16,7 @@ import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
 import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
+import module namespace baudiLocus="http://baumann-digital.de/ns/baudiShared" at "baudiLocus.xqm";
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
