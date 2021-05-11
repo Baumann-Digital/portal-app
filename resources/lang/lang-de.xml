@@ -376,7 +376,7 @@
     <msg key="baudi.registry.loci.tag.address">Adresse</msg>
     <msg key="baudi.registry.loci.tag.city">Gemeinde</msg>
     <msg key="baudi.registry.loci.tag.farm">Wohnplatz</msg>
-    <msg key="baudi.registry.loci.tag.locus">Ort</msg>
+    <msg key="baudi.registry.loci.tag.locus">Örtlichkeit</msg>
     <msg key="baudi.registry.loci.tag.mountain">Berg</msg>
     <msg key="baudi.registry.loci.tag.pont">See</msg>
     <msg key="baudi.registry.loci.tag.region">Region</msg>

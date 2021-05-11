@@ -421,32 +421,31 @@ return
 declare function app:registryLoci($node as node(), $model as map(*)) {
 
     let $lang := baudiShared:get-lang()
-    let $orte := collection("/db/apps/baudiLoci/data")//tei:place
+    let $loci := collection("/db/apps/baudiLoci/data")//tei:place
 
 let $content := 
     <div class="container">
         <div class="container  overflow-auto" style="max-height: 500px;">
             <div class="tab-content">
-                {let $cards := for $ort in $orte
-                                let $name := $ort/tei:placeName[1]
-                                let $id := $ort/@xml:id/string()
-                                let $status := $ort/@status/string()
+                {let $cards := for $locus in $loci
+                                let $name := $locus/tei:placeName[1]
+                                let $id := $locus/@xml:id/string()
+                                let $status := $locus/@status/string()
                                 let $statusSymbol := if($status='checked')
                                                      then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
                                                      else if($status='published')
                                                      then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
                                                      else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
-                                let $link := $id (: <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">$id</a> :)
-                                let $tags := ''
+                                let $link :=  if($locus//tei:geo/text() !='') then(<a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>) else($id) 
+                                let $tags := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.registry.loci.tag.',$locus/@type))}</label>
+                                
                                 order by $name
-                                 
                                 return
                                      <div class="card bg-light mb-3" name="{$status}">
                                          <div class="card-body">
                                            <div class="row justify-content-between">
                                                 <div class="col">
                                                     <h5 class="card-title">{$name}</h5>
-                                                    <h6 class="card-subtitle mb-2 text-muted"></h6>
                                                 </div>
                                                 <div class="col-2">
                                                     <p class="text-right">{$statusSymbol}</p>
@@ -482,8 +481,7 @@ return
             <h1>{$name}</h1>
             <h5>{$id}</h5>
         </div>
-        Hier wirds irgendwann noch ein paar Infos zu <br/>{$name}<br/> geben.
-        {baudiLocus:getGeonamesData($id)}
+        {baudiLocus:getGoogleMap($id)}
     </div>
 )
 };
