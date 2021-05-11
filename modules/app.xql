@@ -436,7 +436,8 @@ let $content :=
                                                      else if($status='published')
                                                      then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
                                                      else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
-                                                      
+                                let $link := $id (: <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">$id</a> :)
+                                let $tags := ''
                                 order by $name
                                  
                                 return
@@ -452,10 +453,9 @@ let $content :=
                                                 </div>
                                            </div>
                                            <p class="card-text"/>
-                                           
-                                           <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
+                                           {$link}
                                            <hr/>
-                                           <p>Tags</p>
+                                           {$tags}
                                          </div>
                                      </div>
                
