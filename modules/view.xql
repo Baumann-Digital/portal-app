@@ -15,8 +15,12 @@ import module namespace config="https://exist-db.org/xquery/config" at "config.x
 import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
-import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
-import module namespace baudiLocus="http://baumann-digital.de/ns/baudiShared" at "baudiLocus.xqm";
+import module namespace baudiShared = "http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.xqm";
+import module namespace baudiWork = "http://baumann-digital.de/ns/baudiWork" at "/db/apps/baudiApp/modules/baudiWork.xqm";
+import module namespace baudiSource = "http://baumann-digital.de/ns/baudiSource" at "/db/apps/baudiApp/modules/baudiSource.xqm";
+import module namespace baudiLocus = "http://baumann-digital.de/ns/baudiLocus" at "/db/apps/baudiApp/modules/baudiLocus.xqm";
+import module namespace baudiPersons="http://baumann-digital.de/ns/baudiPersons" at "/db/apps/baudiApp/modules/baudiPersons.xqm";
+
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 

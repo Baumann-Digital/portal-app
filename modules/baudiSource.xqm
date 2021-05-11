@@ -8,6 +8,7 @@ declare namespace mei="http://www.music-encoding.org/ns/mei";
 import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql";
 import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
 import module namespace baudiWork="http://baumann-digital.de/ns/baudiWork" at "baudiWork.xqm";
+import module namespace baudiPersons="http://baumann-digital.de/ns/baudiPersons" at "/db/apps/baudiApp/modules/baudiPersons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
