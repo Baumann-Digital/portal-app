@@ -140,7 +140,7 @@ return
         {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/dokumentDatenblatt.xsl"), ())}
         </div>-->
         <div class="tab-pane fade show active" id="inhalt" >
-        {transform:transform($doc//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())}
+        {transform:transform($doc//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), $app:dbRootParam)}
         </div>
    </div>
 </div>
@@ -174,7 +174,7 @@ return
     <!-- Tab panels -->
     <div class="tab-content">
     <div class="tab-pane fade" id="datenblatt" role="tabpanel">
-        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudiApp/resources/xslt/metadataLetter.xsl"), ())}
+        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudiApp/resources/xslt/metadataLetter.xsl"), $app:dbRootParam)}
     </div>
     
     {if (count($pages)=1)
