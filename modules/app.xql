@@ -23,6 +23,8 @@ declare variable $app:dbRootLocalhost as xs:string := 'http://localhost:8080/exi
 declare variable $app:dbRootDev as xs:string := 'http://localhost:8088/exist/apps/baudiApp';
 declare variable $app:dbRootPortal as xs:string := 'http://localhost:8082/exist/apps/baudiApp';
 declare variable $app:dbRoot as xs:string := if(contains($app:dbRootUrl,$app:dbRootLocalhost))then('/exist/apps/baudiApp')else('');
+declare variable $app:dbRootParam as node() := <parameters><param name="dbRootParam" value="{$app:dbRoot}"/></parameters>;
+
 declare variable $app:digilibPath as xs:string := 'https://digilib.baumann-digital.de';
 declare variable $app:geonames as xs:string := 'https://www.geonames.org/';
 declare variable $app:BLBfacPath as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/content/pageview/';
@@ -1066,7 +1068,7 @@ return
         </div>
         <hr/>
         <div class="container">
-            {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+            {transform:transform($text, doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), $app:dbRootParam)}
         </div>
     </div>
 };
