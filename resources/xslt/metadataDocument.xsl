@@ -1,6 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="2.0">
     <xsl:output method="xhtml" encoding="UTF-8"/>
     <xsl:include href="linking.xsl"/>
+    <xsl:param name="dbRootParam"/>
     <xsl:template match="/">
         <br/>
         <table>
@@ -11,7 +12,7 @@
                     <xsl:value-of select="//sourceDesc/bibl/title"/>
                     <xsl:choose>
                         <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', //sourceDesc/bibl/title/@key, '.xml'))">
-                            <a href="{concat($viewPerson, //sourceDesc/bibl/title/@key, '.html')}" target="_blank">
+                            <a href="{concat($dbRootParam, //sourceDesc/bibl/title/@key, '.html')}" target="_blank">
                                 <xsl:value-of select="//sourceDesc/bibl/title"/>
                             </a>
                         </xsl:when>
