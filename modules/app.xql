@@ -484,7 +484,7 @@ return
             <h1>{$name}</h1>
             <h5>{$id}</h5>
         </div>
-        {baudiLocus:getGoogleMap($id)}
+        {baudiLocus:getOpenStreetMap($id)}
     </div>
 )
 };

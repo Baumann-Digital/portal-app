@@ -18,29 +18,37 @@ import module namespace jsonp="http://www.jsonp.org";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
 
 
-declare function baudiLocus:getGoogleMap($locusID as xs:string) {
+declare function baudiLocus:getOpenStreetMap($locusID as xs:string) {
     let $locus := $app:collectionLoci/id($locusID)
-    let $geoCoord := $locus//tei:geo/text() => replace(' ', ',')
+    let $geoCoord1 := substring-before($locus//tei:geo/text(), ' ')
+    let $geoCoord2 := substring-after($locus//tei:geo/text(), ' ')
     
-    let $map := <div id="googleMap">
-                    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"/>
-                    <div style="width:600px;height:500px" id="gmeg_map_canvas"/>
-                    <span style="font-size: 10px; color: #111; text-decoration: none;">Powered by </span><a style="font-size: 10px; color: #111; text-decoration: none;" href="https://www.mso-digital.de/sea/google-ads/" title="MSO Digital">Google Ads Agentur</a>
-                    <span style="font-size: 10px; color: #111; text-decoration: none;"> und 
-                    </span><a style="font-size: 10px; color: #111; text-decoration: none;" href="https://mso-digital.de/mapsgenerator/" title="Google Maps auf der Website einbinden">Google Maps einbinden</a>
-                    <script>var gmegMap, gmegMarker, gmegInfoWindow, gmegLatLng;function gmegInitializeMap(){{
-                                gmegLatLng = new google.maps.LatLng({$geoCoord});
-                                gmegMap = new google.maps.Map(document.getElementById("gmeg_map_canvas"),{{
-                                    zoom:15,center:gmegLatLng,mapTypeId:google.maps.MapTypeId.HYBRID}});
-                                    gmegMarker = new google.maps.Marker({{map:gmegMap,position:gmegLatLng}});
-                                    gmegInfoWindow = new google.maps.InfoWindow({{content:'<b>{baudiLocus:getLocusName($locusID)}</b>'}});
-                                    gmegInfoWindow.open(gmegMap,gmegMarker);}}
-                                    google.maps.event.addDomListener(window,"load",gmegInitializeMap);</script>
-                  </div>
-    
+    let $mapOSM := <div>
+                       <div id="Map" style="height:350px"></div>
+                       <script src="http://localhost:8080/exist/apps/baudiApp/resources/js/OpenLayers-2.13.1/OpenLayers.js"></script>
+                       <script>
+                           var lat = {$geoCoord1};
+                           var lon = {$geoCoord2};
+                           var zoom = 13;
+                       
+                           var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
+                           var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+                           var position       = new OpenLayers.LonLat(lon, lat).transform( fromProjection, toProjection);
+                       
+                           map = new OpenLayers.Map("Map");
+                           var mapnik         = new OpenLayers.Layer.OSM();
+                           map.addLayer(mapnik);
+                       
+                           var markers = new OpenLayers.Layer.Markers( "Markers" );
+                           map.addLayer(markers);
+                           markers.addMarker(new OpenLayers.Marker(position));
+                       
+                           map.setCenter(position, zoom);
+                       </script>
+                      </div>
     return
-        if($geoCoord)
-        then($map)
+        if($geoCoord1 and $geoCoord2)
+        then($mapOSM)
         else()
 };
 
