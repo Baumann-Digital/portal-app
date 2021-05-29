@@ -19,15 +19,13 @@
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Welcome!</msg>
     <msg key="baudi.landing.modal.concerningContent">Attention!</msg>
-    <msg key="baudi.landing.modal.text.1">This portal is created as part of a promotion project. Since data repositories of a not yet finished promotion project are accessed for the display, some functionalities had to be deactivated for the time being.</msg>
-    <msg key="baudi.landing.modal.text.2">The goal is to provide insights into the diversity of data already now. In addition, simple framework data/basal reference data sets on works, persons, institutions and places that appear in the course of the project are to be shared in order to provide points of reference for other projects.</msg>
+    <msg key="baudi.landing.modal.text.1">This portal is created as part of a still ongoing PhD project. Due to this, some functionalities had to be disabled for the time being. As soon as the applicable embargo periods have expired, this portal will be fully available.</msg>
+    <msg key="baudi.landing.modal.text.2">Despite the limitations, insights into the diversity of data are already to be given. For this purpose, reference data sets on works, persons, institutions and places that appear in the course of the project are available. You are welcome to use these as starting points!</msg>
     <msg key="baudi.landing.modal.start">Let's go!</msg>
-    <msg key="baudi.landing.cookies.notice">Cookies facilitate the provision of our services. By using our services, you consent to our use of cookies.</msg>
-    
-    <msg key="baudi.landing.cookies.learnMore">Learn more</msg>
-    
-    <msg key="baudi.landing.cookies.accept">Got it!</msg>
+    <msg key="baudi.landing.cookies.notice">The Internet pages use so-called cookies in several places. They serve to make our offer more user-friendly, effective and secure. Cookies are small text files that are stored on your computer and saved by your browser. Most of the cookies we use are so-called "session cookies". They are automatically deleted after the end of your visit. Cookies do not cause any damage to your computer and do not contain viruses. If you remain on this site, you agree to the use of cookies.</msg>
     <msg key="baudi.landing.overlay.inPreparation">In preparation</msg>
+    <msg key="baudi.landing.cookies.learnMore">Learn more</msg>
+    <msg key="baudi.landing.cookies.accept">Got it!</msg>
     <msg key="baudi.landing.registries">Registries</msg>
     <msg key="baudi.landing.registries.sub">Here you can research the life, work and activities of Ludwig Baumann.</msg>
     <msg key="baudi.landing.registries.works">Works</msg>
@@ -59,8 +57,8 @@
     <msg key="baudi.landing.about.thesis.phd.text">Lorem ipsum dolor</msg>
     <msg key="baudi.landing.about.concert">Concert: Cantata</msg>
     <msg key="baudi.landing.about.concert.text">Lorem ipsum dolor</msg>
-    <msg key="baudi.landing.about.portal.digitized">Digitalisierung</msg>
-    <msg key="baudi.landing.about.portal.digitized.text">Im Dezember 2020 erreichte uns die Nachricht, dass die Badische Landesbibliothek Karlsruhe die Digitalisierung aller musikalischer Quellen Baumanns erfolgreich abgeschlossen hat.</msg>
+    <msg key="baudi.landing.about.portal.digitized">Digitization</msg>
+    <msg key="baudi.landing.about.portal.digitized.text">In December 2020, we received the news that the Badische Landesbibliothek Karlsruhe has successfully completed the digitization of all of Baumann's musical sources. Many thanks to Annett-Kristin Oberhoff and Brigitte Knödler-Kagoshima for their tireless efforts.</msg>
     <msg key="baudi.landing.about.portal.launch">Finally online!</msg>
     <msg key="baudi.landing.about.portal.launch.text">After several years of fundamental work, the Baumann portal is now online. And this, although the promotion project for Baumann is still running! Due to this fact we have decided to share only general catalogue data for the time being. As soon as the dissertation is finished, all prepared data about Ludwig Baumann will go online here!</msg>
     <msg key="baudi.landing.about.be.part">Be Part</msg>
@@ -147,6 +145,7 @@
     <msg key="baudi.registry.works.minor">minor</msg>
     <msg key="baudi.registry.works.meter">Meter</msg>
     <msg key="baudi.registry.works.tempo">Tempo</msg>
+    
     <msg key="baudi.registry.works.perfRes">Performance resources</msg>
     <msg key="baudi.registry.works.perfRes.solo">Solo</msg>
     <msg key="baudi.registry.works.perfRes.adLib">ad lib.</msg>
@@ -281,6 +280,7 @@
     <msg key="baudi.registry.sources.orchestra">Orchestral</msg>
     <msg key="baudi.registry.sources.instrumental">Instrumental</msg>
     <msg key="baudi.registry.sources.opus.no">No.</msg>
+    <msg key="baudi.registry.sources.sourceType">Quellenart</msg>
     <msg key="baudi.registry.sources.print">Print</msg>
     <msg key="baudi.registry.sources.prints">Prints</msg>
     <msg key="baudi.registry.sources.reprint">Reprint</msg>
@@ -293,10 +293,10 @@
     <msg key="baudi.registry.sources.collections">Collections</msg>
     <msg key="baudi.registry.sources.part">Part</msg>
     <msg key="baudi.registry.sources.parts">Parts</msg>
-    <msg key="baudi.registry.sources.collection.ms">Collection (ms.)</msg>
-    <msg key="baudi.registry.sources.collections.ms">Collections (ms.)</msg>
-    <msg key="baudi.registry.sources.collection.pr">Collection (pr.)</msg>
-    <msg key="baudi.registry.sources.collections.pr">Collections (pr.)</msg>
+    <msg key="baudi.registry.sources.collections.manuscript">Collection (ms.)</msg>
+    <msg key="baudi.registry.sources.collections.manuscripts">Collections (ms.)</msg>
+    <msg key="baudi.registry.sources.collections.print">Collection (pr.)</msg>
+    <msg key="baudi.registry.sources.collections.prints">Collections (pr.)</msg>
     <msg key="baudi.registry.sources.todo">ToDo</msg>
     <msg key="baudi.registry.sources.components">Component sources</msg>
     <msg key="baudi.registry.sources.facsimile">Facsimile</msg>
@@ -311,6 +311,8 @@
     <msg key="baudi.registry.sources.msDesc.paper.dimensions.height.short">H</msg>
     <msg key="baudi.registry.sources.msDesc.paper.dimensions.width">Width</msg>
     <msg key="baudi.registry.sources.msDesc.paper.dimensions.width.short">W</msg>
+    <msg key="baudi.registry.sources.msDesc.paper.format">Format</msg>
+    <msg key="baudi.registry.sources.msDesc.paper.format.unknown">Format unknown</msg>
     <msg key="baudi.registry.sources.msDesc.paper.orientation">Orientation</msg>
     <msg key="baudi.registry.sources.msDesc.paper.orientation.portrait">Portrait</msg>
     <msg key="baudi.registry.sources.msDesc.paper.orientation.landscape">Landscape</msg>
@@ -335,10 +337,17 @@
     <msg key="baudi.registry.sources.msDesc.hands.medium.ink.black">Black ink</msg>
     <msg key="baudi.registry.sources.msDesc.hands.medium.ink.red">Red ink</msg>
     <msg key="baudi.registry.sources.msDesc.paperNotes">Paper notes</msg>
+    <msg key="baudi.registry.sources.msDesc.plateNum">Plate number</msg>
     <msg key="baudi.registry.sources.msDesc.stamps">Stamps</msg>
     <msg key="baudi.registry.sources.msDesc.notes">Other notes</msg>
     <msg key="baudi.registry.sources.msDesc.scoreFormat">Score format</msg>
     <msg key="baudi.registry.sources.msDesc.condition">Condition</msg>
+    <msg key="baudi.registry.sources.editionStmt.title">Title of the Publication</msg>
+    <msg key="baudi.registry.sources.editionStmt.titlePage">Titlepage</msg>
+    <msg key="baudi.registry.sources.editionStmt.publisher">Publisher</msg>
+    <msg key="baudi.registry.sources.editionStmt.pubPlace">Publication place</msg>
+    <msg key="baudi.registry.sources.editionStmt.pubDate">Publication date</msg>
+    <msg key="baudi.registry.sources.editionStmt.dedication">Widmung</msg>
     <msg key="baudi.registry.sources.relation">Relation</msg>
     
     <!-- Persons -->
@@ -354,7 +363,7 @@
     <msg key="baudi.registry.persons.references.periodicals">Periodicals</msg>
     <msg key="baudi.registry.persons.references.other">Other</msg>
     
-    <msg key="baudi.registry.persons.unknown">No entry found</msg>
+    <msg key="baudi.registry.persons.unknown">N.N.</msg>
     
     <!-- Institutions -->
     <msg key="baudi.registry.institutions">Registry of Institutions</msg>

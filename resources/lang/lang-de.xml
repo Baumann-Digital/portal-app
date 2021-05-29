@@ -19,14 +19,11 @@
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Willkommen!</msg>
     <msg key="baudi.landing.modal.concerningContent">Zur Beachtung</msg>
-    <msg key="baudi.landing.modal.text.1">Dieses Portal entsteht als Teil eines Promotionsprojektes. Da für die Darstellung auf Datenrepositorien eines noch nicht abgeschlossenen Promotionsprojektes zugegriffen wird, mussten einige Funktionalitäten vorerst deaktiviert werden.
-        </msg>
-    <msg key="baudi.landing.modal.text.2">Ziel ist es bereits jetzt Einblicke in die Datenvielfalt zu geben. Auch sollen bereits einfache Rahmendaten/ basale Referenzdatensätze zu Werken, Peronen, Institutionen und Orten, die im Laufe des Projektes in Erscheinung treten, geteilt werden, um Anknüpfungspunkte für andere Projekte zu bieten.</msg>
+    <msg key="baudi.landing.modal.text.1">Dieses Portal entsteht als Teil eines noch andauernden Promotionsprojektes. Aufgrund dessen mussten einige Funktionalitäten vorerst deaktiviert werden. Sobald die geltenden Embargo-Fristen abgelaufen sind, wird dieses Portal in vollem Umfang zur Verfügung stehen.</msg>
+    <msg key="baudi.landing.modal.text.2">Trotz der Einschränkungen, sollen bereits jetzt Einblicke in die Datenvielfalt gegeben werden. Hierfür stehen Referenzdatensätze zu Werken, Personen, Institutionen und Orten, die im Laufe des Projektes in Erscheinung treten, bereit. Diese dürfen gerne als Anknüpfungspunkte genutzt werden!</msg>
     <msg key="baudi.landing.modal.start">Los gehts!</msg>
-    <msg key="baudi.landing.cookies.notice">Cookies erleichtern die Bereitstellung unserer Dienste. Mit der Nutzung unserer Dienste erklären Sie sich damit einverstanden, dass wir Cookies verwenden.</msg>
-    <!--Die Internetseiten verwenden an mehreren Stellen so genannte Cookies. Sie dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen. Cookies sind kleine Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser speichert. Die meisten der von uns verwendeten Cookies sind so genannte „Session-Cookies“. Sie werden nach Ende Ihres Besuchs automatisch gelöscht. Cookies richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren.-->
+    <msg key="baudi.landing.cookies.notice">Die Internetseiten verwenden an mehreren Stellen so genannte Cookies. Sie dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen. Cookies sind kleine Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser speichert. Die meisten der von uns verwendeten Cookies sind so genannte „Session-Cookies“. Sie werden nach Ende Ihres Besuchs automatisch gelöscht. Cookies richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren. Wenn Sie auf dieser Seite verbleiben, erklären Sie sich damit einverstanden, dass Cookies verwendet werden.</msg>
     <msg key="baudi.landing.overlay.inPreparation">In Vorbereitung</msg>
-    
     <msg key="baudi.landing.cookies.learnMore">Mehr erfahren</msg>
     <msg key="baudi.landing.cookies.accept">Verstanden!</msg>
     <msg key="baudi.landing.registries">Register</msg>
@@ -94,9 +91,9 @@
     <msg key="baudi.registry.works.all">Alle Werke</msg>
     <msg key="baudi.registry.works.song">Lieder</msg>
     <msg key="baudi.registry.works.choir">Chöre</msg>
+    <msg key="baudi.registry.works.cantata">Kantaten</msg>
     <msg key="baudi.registry.works.chamber">Kammermusik</msg>
     <msg key="baudi.registry.works.ensemble">Ensemble</msg>
-    <msg key="baudi.registry.works.cantata">Kantaten</msg>
     <msg key="baudi.registry.works.vocal">Vokalmusik</msg>
     <msg key="baudi.registry.works.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.registry.works.orchestra">Orchestermusik</msg>
@@ -148,6 +145,7 @@
     <msg key="baudi.registry.works.minor">Moll</msg>
     <msg key="baudi.registry.works.meter">Taktart</msg>
     <msg key="baudi.registry.works.tempo">Tempoangabe</msg>
+    
     <msg key="baudi.registry.works.perfRes">Beteiligte Instrumente</msg>
     <msg key="baudi.registry.works.perfRes.solo">Solo</msg>
     <msg key="baudi.registry.works.perfRes.adLib">ad lib.</msg>
@@ -279,8 +277,8 @@
     <msg key="baudi.registry.sources.cantata">Kantaten</msg>
     <msg key="baudi.registry.sources.chamber">Kammermusik</msg>
     <msg key="baudi.registry.sources.vocal">Vokalmusik</msg>
-    <msg key="baudi.registry.sources.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.registry.sources.orchestra">Orchestermusik</msg>
+    <msg key="baudi.registry.sources.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.registry.sources.opus.no">Nr.</msg>
     <msg key="baudi.registry.sources.sourceType">Quellenart</msg>
     <msg key="baudi.registry.sources.print">Druck</msg>
@@ -346,9 +344,9 @@
     <msg key="baudi.registry.sources.msDesc.condition">Zustand</msg>
     <msg key="baudi.registry.sources.editionStmt.title">Titel der Veröffentlichung</msg>
     <msg key="baudi.registry.sources.editionStmt.titlePage">Titelseite</msg>
-    <msg key="baudi.registry.sources.editionStmt.publisher">Erschienen bei</msg>
-    <msg key="baudi.registry.sources.editionStmt.pubPlace">Erschienen in</msg>
-    <msg key="baudi.registry.sources.editionStmt.pubDate">Erschienen am</msg>
+    <msg key="baudi.registry.sources.editionStmt.publisher">Verlag</msg>
+    <msg key="baudi.registry.sources.editionStmt.pubPlace">Veröffentlichungsort</msg>
+    <msg key="baudi.registry.sources.editionStmt.pubDate">Veröffentlichungsdatum</msg>
     <msg key="baudi.registry.sources.editionStmt.dedication">Widmung</msg>
     <msg key="baudi.registry.sources.relation">Zugehörigkeit</msg>
     
@@ -366,7 +364,7 @@
     <msg key="baudi.registry.persons.references.periodicals">Periodika</msg>
     <msg key="baudi.registry.persons.references.other">Sonstige</msg>
     
-    <msg key="baudi.registry.persons.unknown">Kein Eintrag gefunden</msg>
+    <msg key="baudi.registry.persons.unknown">N.N.</msg>
     
     <!-- Institutions -->
     <msg key="baudi.registry.institutions">Register der Institutionen</msg>
@@ -417,6 +415,7 @@
     <msg key="breadCrumb.persons">Personen</msg>
     <msg key="breadCrumb.events">Ereignisse</msg>
 
+    <!-- Months -->
     <msg key="january">Januar</msg>
     <msg key="february">Februar</msg>
     <msg key="march">März</msg>
@@ -465,7 +464,6 @@
     <msg key="baudi.conjunction.or">oder</msg>
     <msg key="baudi.conjunction.or.short">o.</msg>
     <msg key="baudi.unknown">N.N.</msg>
-    
     
     <msg key="baudi.errorPage.heading">Upps, ...</msg>
     <msg key="baudi.errorPage.sthWentWrong">Da ist wohl etwas schief gegangen!</msg>
