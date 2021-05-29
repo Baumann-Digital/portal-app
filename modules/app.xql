@@ -1379,10 +1379,12 @@ let $titleMainAlt := $work//mei:titlePart[@type = 'mainAlt']
 let $titleSubAlt := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subAlt']
 let $composer := $work//mei:composer
 let $composerID := $composer/mei:persName/@auth
+let $composerEntry := $app:collectionPersons/id($composerID)
 let $composerName := baudiShared:getPersName($composerID, 'short', 'yes')
 let $composerGender := if($composerEntry[@sex="female"]) then('composer.female') else('composer')
 let $lyricist := $work//mei:lyricist
 let $lyricistID := $lyricist/mei:persName/@auth
+let $lyricistEntry := $app:collectionPersons/id($lyricistID)
 let $lyricistName := baudiShared:getPersName($lyricistID, 'short', 'yes')
 let $lyricistGender := if($lyricistEntry)
                        then('lyricist.female')
