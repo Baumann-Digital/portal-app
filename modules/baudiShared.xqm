@@ -432,6 +432,7 @@ let $persName := if($person/tei:persName[@role='uniform'])
                   then($person/tei:persName[@role='uniform'])
                   else($person/tei:persName[1])
 let $nameForename := $persName//tei:forename[not(@type='altWriting')]
+let $nameForenames := $persName//tei:forename[not(@type='altWriting')]
                       => string-join(' ')
 let $nameForenameAlt := concat('(auch ',$persName//tei:forename[@type='altWriting'], ')')
 let $nameNameLink := $persName//tei:nameLink/text()
@@ -452,8 +453,8 @@ let $nameUnspec := if($affiliation and $nameUnspecified)
                    else($nameUnspecified)
 let $nameStrings := if($param = "full")
                     then(
-                            if($nameAddNameTitle or $nameForename or $nameForenameAlt or $nameAddNameEpitet or $nameNameLink or $nameSurname or $nameSurnameAlt or $nameGenName or $nameUnspec)
-                            then(string-join(($nameAddNameTitle, $nameForename, $nameForenameAlt, $nameAddNameEpitet, $nameNameLink, $nameSurname, $nameSurnameAlt, $nameUnspec, if($nameGenName) then(concat(' (',$nameGenName,')')) else()), ' '))
+                            if($nameAddNameTitle or $nameForenames or $nameForenameAlt or $nameAddNameEpitet or $nameNameLink or $nameSurname or $nameSurnameAlt or $nameGenName or $nameUnspec)
+                            then(string-join(($nameAddNameTitle, $nameForenames, $nameForenameAlt, $nameAddNameEpitet, $nameNameLink, $nameSurname, $nameSurnameAlt, $nameUnspec, if($nameGenName) then(concat(' (',$nameGenName,')')) else()), ' '))
                             else if($nameRoleName)
                             then($nameRoleName)
                             else if($nameAddNameNick)
