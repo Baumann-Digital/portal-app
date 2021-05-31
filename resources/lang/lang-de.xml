@@ -24,6 +24,7 @@
     <msg key="baudi.landing.modal.start">Los gehts!</msg>
     <msg key="baudi.landing.cookies.notice">Die Internetseiten verwenden an mehreren Stellen so genannte Cookies. Sie dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen. Cookies sind kleine Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser speichert. Die meisten der von uns verwendeten Cookies sind so genannte „Session-Cookies“. Sie werden nach Ende Ihres Besuchs automatisch gelöscht. Cookies richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren. Wenn Sie auf dieser Seite verbleiben, erklären Sie sich damit einverstanden, dass Cookies verwendet werden.</msg>
     <msg key="baudi.landing.overlay.inPreparation">In Vorbereitung</msg>
+    <msg key="baudi.landing.overlay.comingSoon">coming soon!</msg>
     <msg key="baudi.landing.cookies.learnMore">Mehr erfahren</msg>
     <msg key="baudi.landing.cookies.accept">Verstanden!</msg>
     <msg key="baudi.landing.registries">Register</msg>

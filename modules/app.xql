@@ -1068,7 +1068,8 @@ return
         </div>
         <hr/>
         <div class="container">
-            {transform:transform($text, doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), $app:dbRootParam)}
+            {$text
+            (: transform:transform($text, doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), $app:dbRootParam) :)}
         </div>
     </div>
 };

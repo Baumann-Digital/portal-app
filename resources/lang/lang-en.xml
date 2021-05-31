@@ -24,6 +24,7 @@
     <msg key="baudi.landing.modal.start">Let's go!</msg>
     <msg key="baudi.landing.cookies.notice">The Internet pages use so-called cookies in several places. They serve to make our offer more user-friendly, effective and secure. Cookies are small text files that are stored on your computer and saved by your browser. Most of the cookies we use are so-called "session cookies". They are automatically deleted after the end of your visit. Cookies do not cause any damage to your computer and do not contain viruses. If you remain on this site, you agree to the use of cookies.</msg>
     <msg key="baudi.landing.overlay.inPreparation">In preparation</msg>
+    <msg key="baudi.landing.overlay.comingSoon">coming soon!</msg>
     <msg key="baudi.landing.cookies.learnMore">Learn more</msg>
     <msg key="baudi.landing.cookies.accept">Got it!</msg>
     <msg key="baudi.landing.registries">Registries</msg>
