@@ -89,6 +89,19 @@
        
     </target>
     
+    <target name="deployPortal" depends="xarPortal"/>
+    
+    <target name="xarPortal">
+        <mkdir dir="${build.dir}"/>
+        <delete file="./repo.xml"/>
+        <copy todir=".">
+            <file file="repo/rwxrwxr-x/repo.xml"/>
+        </copy>
+        <zip basedir="." destfile="${build.dir}/${project.app}-portal-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json buildBaudiApp.sh"/>
+        
+    </target>
+    
+    
     <target name="xar" >
         <delete file="./repo.xml"/>
         <input message="set user permissions (default: user=yes,group=yes;other=no)" defaultvalue="rwxrwx---" addproperty="userPermissions"/>
