@@ -431,7 +431,9 @@ let $linkToRecord := string-join(($app:dbRoot, $personID), '/')
 let $persName := if($person/tei:persName[@role='uniform'])
                   then($person/tei:persName[@role='uniform'])
                   else($person/tei:persName[1])
-let $nameForename := $persName//tei:forename[not(@type='altWriting')]
+let $nameForename := if($persName//tei:forename[@type='used'])
+                     then($persName//tei:forename[not(@type='altWriting') and @type='used'])
+                     else($persName//tei:forename[1])
 let $nameForenames := $persName//tei:forename[not(@type='altWriting')]
                       => string-join(' ')
 let $nameForenameAlt := concat('(auch ',$persName//tei:forename[@type='altWriting'], ')')
