@@ -5,6 +5,8 @@ module namespace baudiShared="http://baumann-digital.de/ns/baudiShared";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 
+import module namespace console="http://exist-db.org/xquery/console";
+
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
 import module namespace baudiPersons="http://baumann-digital.de/ns/baudiPersons" at "/db/apps/baudiApp/modules/baudiPersons.xqm";
 
@@ -18,13 +20,11 @@ import module namespace functx="http://www.functx.com";
 import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
 
-
-
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
 declare variable $baudiShared:xsltTEI as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/tei/html5/html5.xsl');
-
-
+declare variable $baudiShared:xsltFormattingText as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingText.xsl');
+declare variable $baudiShared:xsltFormattingTextWithoutLinks as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingTextWithoutLinks.xsl');
 (:~ 
 : MRP Main Nav lang switch
 :
@@ -58,57 +58,25 @@ declare function baudiShared:get-lang() as xs:string? {
 
 declare function baudiShared:getI18nText($doc) {
     let $lang := baudiShared:get-lang()
+    let $log := console:log(concat('lang: ', $lang))
     return
-        if ($lang != 'de')
-        then (
+            if(exists($doc//tei:text[@xml:lang]))
+            then(
+                if($doc//tei:text[@xml:lang = $lang])
+                then(transform:transform($doc//tei:text[@xml:lang = $lang], $baudiShared:xsltFormattingTextWithoutLinks, ()))
+                else(transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
+                )
             
             (: Is there tei:div[@xml:lang] ?:)
-            if (exists($doc//tei:body/tei:div[@xml:lang]))
-            then (
-            
-                (: Is there a $lang summary? :)
-                if ($doc//tei:body/tei:div[@xml:lang = $lang and exists(@type = 'summary')])
-                then (
-                    transform:transform($doc//tei:body/tei:div[@xml:lang = $lang and @type = 'summary'], $baudiShared:xsltTEI, ()),
-                    transform:transform($doc//tei:body/tei:div[@xml:lang = 'de'], $baudiShared:xsltTEI, ())
+            else if (exists($doc//tei:text/tei:body/tei:div[@xml:lang]))
+            then(
+                if($doc//tei:text/tei:body/tei:div[@xml:lang = $lang])
+                then(transform:transform($doc//tei:text/tei:body/tei:div[@xml:lang = $lang], $baudiShared:xsltFormattingTextWithoutLinks, ()))
+                else(transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
                 )
                 
-                (: No $lang or 'en' summary but $lang tei:div (text)? :)
-                else if ($doc//tei:body/tei:div[@xml:lang = $lang])
-                then (
-                    transform:transform($doc//tei:body/tei:div[@xml:lang = $lang], $baudiShared:xsltTEI, ())
-                )
-            
-                (: Is there no $lang summary but an 'en' summary? :)
-                else if ($doc//tei:body/tei:div[@xml:lang = 'en' and exists(@type = 'summary')])
-                then (
-                    transform:transform($doc//tei:body/tei:div[@xml:lang = 'en' and @type = 'summary'], $baudiShared:xsltTEI, ()),
-                    transform:transform($doc//tei:body/tei:div[@xml:lang = 'de'], $baudiShared:xsltTEI, ())
-                )
-                
-                (: No summary but 'en' tei:div (text)? :)
-                else if ($doc//tei:body/tei:div[@xml:lang = 'en'])
-                then (
-                    transform:transform($doc//tei:body/tei:div[@xml:lang = 'en'], $baudiShared:xsltTEI, ())
-                )
-            
                 (: There is no other tei:div than 'de' :)
-                else (
-                    transform:transform($doc//tei:body/tei:div[@xml:lang = 'de'], $baudiShared:xsltTEI, ())
-                )
-        
-            )
-            
-            (: No tei:div[@xml:lang]:)
-            else (transform:transform($doc//tei:body/tei:div, $baudiShared:xsltTEI, ()))
-        )
-        
-        (: $lang = 'de' :)
-        else (
-            if (exists($doc//tei:body/tei:div[@xml:lang]))
-            then (transform:transform($doc//tei:body/tei:div[@xml:lang = $lang]/*, $baudiShared:xsltTEI, ()))
-            else (transform:transform($doc//tei:body/tei:div, $baudiShared:xsltTEI, ()))
-        )
+            else (transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
 };
 
 
