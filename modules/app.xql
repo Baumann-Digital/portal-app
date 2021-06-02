@@ -1773,7 +1773,7 @@ declare function app:portalVersion($node as node(), $model as map(*)){
  let $package := doc('/db/apps/baudiApp/expath-pkg.xml')
  let $version := $package//pkg:package/@version/string()
     return
-        <p class="subtitle-b">{concat('(Version ',$version,')')}</p>
+        <p class="text-muted">{concat('Version ',$version)}</p>
 };
 
 declare function app:registryFilterBar($node as node(), $model as map(*)){
