@@ -7,6 +7,7 @@
     <property name="project.version" value="${package(version)}"/>
     <property name="project.app" value="${package(abbrev)}"/>
     <property name="build.dir" value="./build"/>
+    <property name="build.dir.target.portal" value="../all_xars_server_portal"/>
     <property name="p.target.user" value="deploy"/>
     <property name="p.target.pass" value=""/>
     <property name="p.local.exist.url" value="xmldb:exist://localhost:8080/exist/xmlrpc/db/"/>
@@ -97,7 +98,7 @@
         <copy todir=".">
             <file file="repo/rwxrwxr-x/repo.xml"/>
         </copy>
-        <zip basedir="." destfile="${build.dir}/${project.app}-portal-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json buildBaudiApp.sh"/>
+        <zip basedir="." destfile="${build.dir.target.portal}/${project.app}_portal_${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json buildBaudiApp.sh"/>
         
     </target>
     
