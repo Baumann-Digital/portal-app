@@ -13,6 +13,7 @@ import module namespace baudiSource = "http://baumann-digital.de/ns/baudiSource"
 import module namespace baudiLocus = "http://baumann-digital.de/ns/baudiLocus" at "/db/apps/baudiApp/modules/baudiLocus.xqm";
 import module namespace baudiPersons="http://baumann-digital.de/ns/baudiPersons" at "/db/apps/baudiApp/modules/baudiPersons.xqm";
 import module namespace functx = "http://www.functx.com" at "/db/apps/baudiApp/modules/functx.xqm";
+import module namespace console="http://exist-db.org/xquery/console";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare namespace mei = "http://www.music-encoding.org/ns/mei";
 declare namespace edirom = "http://www.edirom.de/ns/1.3";
@@ -1038,39 +1039,31 @@ return
 
 declare function app:aboutProject($node as node(), $model as map(*)) {
 
-let $text := doc("/db/apps/baudiTexts/data/portal/aboutProject.xml")/tei:TEI//tei:body
+let $text := doc("/db/apps/baudiTexts/data/portal/aboutProject.xml")/tei:TEI
 
 
 return
 (
     <div class="container">
-        <br/>
-        <div class="page-header">
-            <h1>Was ist <i>BauDi</i>?</h1>
-        </div>
-        <hr/>
-        <div class="container">
-            {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
-        </div>
+    <br/>
+        {baudiShared:getI18nText($text)}
     </div>
 )
 };
 
 declare function app:aboutBaumann($node as node(), $model as map(*)) {
 
-let $text := doc("/db/apps/baudiTexts/data/portal/aboutBaumann.xml")/tei:TEI//tei:text
+let $text := doc("/db/apps/baudiTexts/data/portal/aboutBaumann.xml")/tei:TEI
 
 return
     <div class="container">
         <br/>
         <div class="page-header">
             <h1>Ludwig Baumann <span class="text-muted" style="font-size: x-large;">(1866–1944)</span></h1>
-        </div>
         <hr/>
-        <div class="container">
-            {$text
-            (: transform:transform($text, doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), $app:dbRootParam) :)}
         </div>
+            {baudiShared:getI18nText($text)
+            (: transform:transform($text, doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), $app:dbRootParam) :)}
     </div>
 };
 
