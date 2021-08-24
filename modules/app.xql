@@ -323,6 +323,7 @@ let $id := request:get-parameter("person-id", "error")
 let $person := $app:collectionPersons/id($id)
 
 let $nameHead := baudiShared:getPersName($id, 'short', 'no')
+
 let $references := baudiShared:getReferences($id)
 
 return
@@ -343,42 +344,52 @@ return
     <div class="tab-pane fade show active" id="tab1">
     <br/>
         <div class="container">
-            <div class="row">
-              <div class="col">Titel</div>
-              <div class="col">Spalte 2</div>
-            </div>
+            {if(baudiPersons:getTitle($id))
+            then(<div class="row">
+                   <div class="col">Titel</div>
+                   <div class="col">{baudiPersons:getTitle($id)}</div>
+                 </div>)
+            else()}
             <div class="row">
               <div class="col">Vorname(n)</div>
-              <div class="col">Spalte 2</div>
+              <div class="col">{if(baudiPersons:getFornames($id))
+                                then(baudiPersons:getFornames($id))
+                                else(baudiShared:translate('baudi.notKnown'))}</div>
             </div>
-            <div class="row">
+            {if(baudiPersons:getEpithet($id))
+            then(<div class="row">
               <div class="col">Beiname</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            <div class="row">
+              <div class="col">{baudiPersons:getEpithet($id)}</div>
+            </div>)
+            else()}
+            {if(baudiPersons:getNameLink($id))
+            then(<div class="row">
               <div class="col">Adelsprädikat</div>
-              <div class="col">Spalte 2</div>
-            </div>
+              <div class="col">{baudiPersons:getNameLink($id)}</div>
+            </div>)
+            else()}
             <div class="row">
               <div class="col">Nachname(n)</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            <div class="row">
-              <div class="col">Beiname</div>
-              <div class="col">Spalte 2</div>
+              <div class="col">{if(baudiPersons:getSurnames($id))
+                                then(baudiPersons:getSurnames($id))
+                                else(baudiShared:translate('baudi.notKnown'))}</div>
             </div>
             <div class="row">
               <div class="col">Pseudonym</div>
               <div class="col">Spalte 2</div>
             </div>
-            <div class="row">
+            {if(baudiPersons:getNickName($id))
+            then(<div class="row">
               <div class="col">Spitzname</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            <div class="row">
+              <div class="col">{baudiPersons:getNickName($id)}</div>
+            </div>)
+            else()}
+            {if(baudiPersons:getNameUnspec($id))
+            then(<div class="row">
               <div class="col">Namensbezeichnung</div>
-              <div class="col">Spalte 2</div>
-            </div>
+              <div class="col">{baudiPersons:getNameUnspec($id)}</div>
+            </div>)
+            else()}
             <div class="row">
               <div class="col">Funktion</div>
               <div class="col">Spalte 2</div>
@@ -391,10 +402,12 @@ return
               <div class="col">Lebensdaten</div>
               <div class="col">Spalte 2</div>
             </div>
-            <div class="row">
+            {if(baudiPersons:getAffiliations($id))
+             then(<div class="row">
               <div class="col">Affiliation</div>
-              <div class="col">Spalte 2</div>
-            </div>
+              <div class="col">{baudiPersons:getAffiliations($id)}</div>
+            </div>)
+            else()}
             <div class="row">
               <div class="col">Normdaten</div>
               <div class="col">Spalte 2</div>
