@@ -57,7 +57,7 @@
     <msg key="baudi.landing.about.thesis.phd">Beginn eines Promotionsprojektes</msg>
     <msg key="baudi.landing.about.thesis.phd.text">Dass diese erste Beschäftigung nur die Grundsteinlegung sein sollte wurde uns bereits beim Verfassen der Arbeiten bewusst. Der überlieferte Musikalienbestand war weitaus größer, als es zunächst den Anschein hatte, denn es waren nicht alle Quellen digitalisiert worden. Bei der Recherche für meine (Dennis Ried) Masterarbeit, bei der ich realisierte, was es alles zu tun gibt und was ich alles zeitlich nicht schaffen werde, entzündete sich ein ein kleines Licht: Es war die Hoffnung, dass nach der Masterthesis nicht alles in der Schublade verwindet. Mit der Aufnahme meines Promotionsstudiums habe ich die Möglichkeit nicht nur das Leben und Werk, sondern auch das Wirken Baumanns näher zu untersuchen. Bis heute herrscht in mir das brennende Interesse diese Stuen weiterzuführen und einen Zugang zu Ludwig Baumann zu bieten.</msg>
     <msg key="baudi.landing.about.concert">Konzert: Kantate</msg>
-    <msg key="baudi.landing.about.concert.text">Am 23. und 24. März 2019 wurde Baumanns einzige Kantate »Den Gefallenen zum Gedächtnis, den Trauernden zum Trost« nach über 70 Jahren wieder aufgeführt (Karlsurhe/Ettlingen). Unter der musikalischen Leitung von Jasper Lecon musizierten Lea Lampartner (Sporan), Daniel Fütterer (Orgel), Chor der evang. Hoffnungs- und Versöhnungsgemeinde Karlsruhe, Chor der VHS-Karlsruhe, ein Projektchor und das Orchester der VHS Karlsruhe</msg>
+    <msg key="baudi.landing.about.concert.text">Am 23. und 24. März 2019 wurde Baumanns einzige Kantate »Den Gefallenen zum Gedächtnis, den Trauernden zum Trost« nach über 70 Jahren wieder aufgeführt (Karlsurhe/Ettlingen). Unter der musikalischen Leitung von Jasper Lecon musizierten Lea Lampartner (Sporan), Daniel Fütterer (Orgel), Chor der evang. Hoffnungs- und Versöhnungsgemeinde Karlsruhe, Chor der VHS-Karlsruhe, ein Projektchor und das Orchester der VHS Karlsruhe.</msg>
     <msg key="baudi.landing.about.portal.digitized">Digitalisierung</msg>
     <msg key="baudi.landing.about.portal.digitized.text">Im Dezember 2020 erreichte uns die Nachricht, dass die Badische Landesbibliothek Karlsruhe die Digitalisierung aller musikalischer Quellen Baumanns erfolgreich abgeschlossen hat. Herzlichen Dank an Annett-Kristin Oberhoff und Brigitte Knödler-Kagoshima für ihren unermüdlichen Einsatz.</msg>
     <msg key="baudi.landing.about.portal.launch">Endlich online!</msg>
@@ -119,7 +119,8 @@
     <msg key="baudi.registry.works.langsUsed">Verwendete Sprachen</msg>
     <msg key="baudi.registry.works.category">Werkgruppe</msg>
     <msg key="baudi.registry.works.genre">Genre</msg>
-    <msg key="baudi.registry.works.incipit">Incipit</msg>
+    <msg key="baudi.registry.works.incipit">Incipit (Musik)</msg>
+    <msg key="baudi.registry.works.incipit.text">Incipit (Text)</msg>
     <msg key="baudi.registry.works.key">Tonart</msg>
     <msg key="baudi.registry.works.pname.c">c</msg>
     <msg key="baudi.registry.works.pname.cf">ces</msg>

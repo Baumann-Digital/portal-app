@@ -51,13 +51,13 @@
     <!-- About -->
     <msg key="baudi.landing.about.sub">Life, Works and Activities</msg>
     <msg key="baudi.landing.about.start">A lucky discovery</msg>
-    <msg key="baudi.landing.about.start.text">Lorem ipsum dolor</msg>
+    <msg key="baudi.landing.about.start.text">As a student assistant in the digitization workshop of the Baden State Library, Karlsruhe music manuscripts were one of the items on my agenda in 2016. Tobias Bachmann, who was in charge of digitization at the time, brought this collection to the attention of others (Daniel Fütterer, Dennis Ried). The first project idea for Baumann's music manuscripts was not long in coming...</msg>
     <msg key="baudi.landing.about.thesis.ma">Three master theses</msg>
-    <msg key="baudi.landing.about.thesis.ma.text">Lorem ipsum dolor</msg>
+    <msg key="baudi.landing.about.thesis.ma.text">As we (Bachmann, Fütterer, Ried) were at the end of our Master's studies, the lucky find "Baumann" was just ideal. In 2016-2017, we were able to make a first fundamental contribution to Baumann-Digital: We wrote our master's theses on Ludwig Baumann from different points of view:  Tobias Bachmann: Modellhafte Eröterung der Mehrwertgestaltung bei der Visualisierung von Forschungsdaten. Using the example of the digital edition of Ludwig Baumann's works | Daniel Fütterer: Edition of selected works by Ludwig Baumann. Application and Analysis of Alternative Edition Methods | Dennis Ried: Ludwig Baumann. Biographical aspects and conception of a catalog raisonné.</msg>
     <msg key="baudi.landing.about.thesis.phd">Beginning of a PhD project</msg>
-    <msg key="baudi.landing.about.thesis.phd.text">Lorem ipsum dolor</msg>
+    <msg key="baudi.landing.about.thesis.phd.text">We were already aware that this first task was only the laying of the foundation stone when we were writing the work. The surviving stock of music was much larger than it first appeared, because not all sources had been digitized. While researching for my (Dennis Ried) master's thesis, realizing what all there was to do and what I would not be able to accomplish in terms of time, a small light ignited: it was the hope that after the master's thesis, not everything would be left to rot in a drawer. With the start of my doctoral studies I have the opportunity to examine not only the life and work, but also the work of Baumann more closely. To this day, there is a burning interest in me to continue these studies and to offer an approach to Ludwig Baumann.</msg>
     <msg key="baudi.landing.about.concert">Concert: Cantata</msg>
-    <msg key="baudi.landing.about.concert.text">Lorem ipsum dolor</msg>
+    <msg key="baudi.landing.about.concert.text">On March 23 and 24, 2019, Baumann's only cantata "Den Gefallenen zum Gedächtnis, den Trauernden zum Trost" was performed again after more than 70 years (Karlsurhe/Ettlingen). Under the musical direction of Jasper Lecon, Lea Lampartner (Sporan), Daniel Fütterer (organ), choir of the evang. Hoffnungs- und Versöhnungsgemeinde Karlsruhe, choir of the VHS-Karlsruhe, a project choir and the orchestra of the VHS Karlsruhe made music.</msg>
     <msg key="baudi.landing.about.portal.digitized">Digitization</msg>
     <msg key="baudi.landing.about.portal.digitized.text">In December 2020, we received the news that the Badische Landesbibliothek Karlsruhe has successfully completed the digitization of all of Baumann's musical sources. Many thanks to Annett-Kristin Oberhoff and Brigitte Knödler-Kagoshima for their tireless efforts.</msg>
     <msg key="baudi.landing.about.portal.launch">Finally online!</msg>
@@ -119,7 +119,8 @@
     <msg key="baudi.registry.works.langsUsed">Languages used</msg>
     <msg key="baudi.registry.works.category">Workgroup</msg>
     <msg key="baudi.registry.works.genre">Genre</msg>
-    <msg key="baudi.registry.works.incipit">Incipit</msg>
+    <msg key="baudi.registry.works.incipit">Incipit (music)</msg>
+    <msg key="baudi.registry.works.incipit.text">Incipit (text)</msg>
     <msg key="baudi.registry.works.key">Key</msg>
     <msg key="baudi.registry.works.pname.c">c</msg>
     <msg key="baudi.registry.works.pname.cf">c flat</msg>
