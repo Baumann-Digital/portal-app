@@ -116,14 +116,14 @@ declare function baudiWork:getStemma($workID as xs:string, $height as xs:string?
     <img src="{concat('https://digilib.baumann-digital.de/BauDi/02/', $workID, '_stemma.png?dh=2000')}" class="img-fluid" alt="Responsive image" height="{$height}" width="{$width}"/>
 };
 
-declare function baudiWork:hasIncipit($workID as xs:string){
+declare function baudiWork:hasIncipitMusic($workID as xs:string){
 let $workFile := $app:collectionWorks[@xml:id=$workID]
-let $incipit := $workFile//mei:incip/node()
+let $incipit := $workFile//mei:incip[.//mei:score]/node()
 return
     if($incipit) then(true()) else(false())
 };
 
-declare function baudiWork:getIncipit($workID as xs:string){
+declare function baudiWork:getIncipitMusic($workID as xs:string){
 let $workFile := $app:collectionWorks[@xml:id=$workID]
 let $workFileName := concat($workID, '_incip.mei')
 let $incipit := $workFile//mei:incip/node()
@@ -164,7 +164,12 @@ let $script :=  <script type="module">
                </script> 
 
 return
-    (<div class="panel-body">
-        <div id="appVerovio" class="panel" style="border: 1px solid lightgray; min-height: 100px; max-height: 500px; min-width: 100px; max-width: 1000px;">Verovio is loading...</div>
-     </div>, $script)
+    if($incipit)
+    then(
+        <div class="panel-body">
+            <div id="appVerovio" class="panel" style="border: 1px solid lightgray; min-height: 100px; max-height: 500px; min-width: 100px; max-width: 1000px;">Verovio is loading...</div>
+        </div>,
+        $script
+        )
+        else()
 };

@@ -1420,8 +1420,12 @@ let $meter := for $each in $work//mei:meter
                 return
                     if($meterSymbol)
                     then($meterSymbol)
-                    else(concat($meterCount, '/', $meterUnit))
+                    else if($meterCount and $meterUnit)
+                    then(concat($meterCount, '/', $meterUnit))
+                    else()
 let $tempo := $work//mei:work/mei:tempo/text()
+
+let $incipText := $work//mei:incip/mei:incipText//text() => string-join(' ')
 
 let $workgroup := $work//mei:term[@type='workGroup']/text()
 let $genre := $work//mei:term[@type='genre']/text()
@@ -1479,6 +1483,11 @@ return
          <a class="nav-link" id="pills-stemma-tab" data-toggle="pill" href="#pills-stemma" role="tab" aria-controls="pills-stemma" aria-selected="false">Stemma</a>
        </li>)
        else()}
+       {if(1=1)
+        then(<li class="nav-item">
+         <a class="nav-link" id="pills-stemma-tab" data-toggle="pill" href="#pills-stemma" role="tab" aria-controls="pills-stemma" aria-selected="false">Stemma</a>
+       </li>)
+       else()}
     </ul>
     <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
@@ -1527,14 +1536,19 @@ return
                     <td>{string-join($usedLang,', ')}</td>
                   </tr>)
              else()}
-             
-             {if(count($key) > 0)
+             {if($incipText != '')
+             then(<tr>
+                    <td>{baudiShared:translate('baudi.registry.works.incipit.text')}</td>
+                    <td><em>{$incipText}</em></td>
+                  </tr>)
+             else()}
+             {if($key)
              then(<tr>
                     <td>{baudiShared:translate('baudi.registry.works.key')}</td>
                     <td>{normalize-space(string-join($key, ' | '))}</td>
                   </tr>)
              else()}
-             {if(count($meter) > 0)
+             {if($meter)
              then(<tr>
                     <td>{baudiShared:translate('baudi.registry.works.meter')}</td>
                     <td>{$meter}</td>
@@ -1565,11 +1579,11 @@ return
                   </tr>)
              else()}
              </table>
-        {if(baudiWork:hasIncipit($id))
+        {if(baudiWork:hasIncipitMusic($id))
          then(<br/>,
               <h4>{baudiShared:translate('baudi.registry.works.incipit')}</h4>,
               <br/>,
-              baudiWork:getIncipit($id))
+              baudiWork:getIncipitMusic($id))
          else()}
         {if($relatedSourcesCards)
         then(
