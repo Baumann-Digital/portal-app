@@ -1790,12 +1790,14 @@ declare function app:registryFilterBar($node as node(), $model as map(*)){
 
 declare function app:errorReport($node as node(), $model as map(*)){
 
+let $errorMsg := templates:error-description($node, $model)
 let $errorReportDir := '/db/apps/baudiApp/errors/'
 let $url := request:get-url()
-let $error := <error url="{$url}"/>
-let $logIn := xmldb:login($errorReportDir,'dried', '')
-let $store := xmldb:store($errorReportDir, concat('error_', replace(substring-before(string(current-dateTime()), '+'),':','-'), '.xml'), $error)
-let $errorReport := if(contains($app:dbRootUrl,$app:dbRootLocalhost)) then(<pre class="error templates:error-description"/>) else()
+let $dateTime := replace(substring-before(string(current-dateTime()), '+'),':','-')
+let $error := <file url="{$url}" timeStamp="{$dateTime}">{$errorMsg}</file>
+let $logIn := xmldb:login($errorReportDir,'errors', '')
+let $store := xmldb:store($errorReportDir, concat('error_', $dateTime, '.xml'), $error)
+let $errorReport := if(contains($app:dbRootUrl,$app:dbRootLocalhost)) then(<pre class="error">{$errorMsg}</pre>) else()
 return
     $errorReport
 };
