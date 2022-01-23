@@ -1,4 +1,4 @@
-[![BauDi Logo](https://raw.githubusercontent.com/Baumann-Digital/portal-app/develop/icon.png)](https://baumann-digital.de/)
+[![BauDi Logo](https://raw.githubusercontent.com/Baumann-Digital/portal-app/develop/resources/img/logo_baudi.png)](https://baumann-digital.de/)
 
 # BauDi portal-app
 
