@@ -1,119 +1,120 @@
-<project default="deployLocal" name="${package(abbrev)}">
-    <xmlproperty file="./expath-pkg.xml"/>
-    <tstamp>
-        <format property="DATETIME" pattern="yyyyMMdd-HHmm"  locale="en,UK" />
-    </tstamp>
-    <property name="env.EXIST_PATH" value="/opt/exist/exist-distribution-5.2.0"/>
-    <property name="project.version" value="${package(version)}"/>
-    <property name="project.app" value="${package(abbrev)}"/>
-    <property name="build.dir" value="./build"/>
-    <property name="build.dir.target.portal" value="../all_xars_server_portal"/>
-    <property name="p.target.user" value="deploy"/>
-    <property name="p.target.pass" value=""/>
-    <property name="p.local.exist.url" value="xmldb:exist://localhost:8080/exist/xmlrpc/db/"/>
-    <property name="p.target.exist.tmp" value="installer"/>
-    <property name="xar.name" value="${project.app}-${project.version}-${DATETIME}.xar"/>
-    <property name="xar.destination" value=""/>
-    <property environment="env" />
-    <property name="pathResolverLocalhost"
-        location="scripts/pathResolverLocalhost.py"/>
-    <property name="pathResolverDev"
-        location="scripts/pathResolverDev.py"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="deploy" name="baudiApp" basedir="." xmlns:unless="ant:unless">
+    <dirname property="baudiApp" file="${ant.file.baudiApp}"/>
     
-    <!-- export EXIST_PATH=/opt/exist/exist-distribution-5.2.0 -->
-    <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
-        <classpath>
-            <fileset dir="${env.EXIST_PATH}/lib">
+    <!-- import default properties from file -->
+    <property file="${baudiApp.basedir}/local.build.properties"/>
+    <property file="${baudiApp.basedir}/build.properties"/>
+    
+    <target name="clean-all">
+        <delete dir="${build.dir}"/>
+        <delete file="expath-pkg.xml"/>
+        <delete file="repo.xml"/>
+    </target>
+    
+    <target name="clean" if="${build.dir}">
+        <delete includeemptydirs="true">
+            <fileset dir="${build.dir}" defaultexcludes="false">
+                <!--<include name="*.xml"/>
+                <include name="*.txt"/>-->
+                <include name="**/*"/>
+                <exclude name="*.xar"/>
+                <exclude name="*.tar.gz"/>
+            </fileset>
+        </delete>
+    </target>
+    
+    <target name="init" depends="get-current-hash-of-HEAD">
+        <mkdir dir="${build.dir}"/>
+    </target>
+    
+    <target name="get-current-hash-of-HEAD">
+        <description>Get the hash of the current git HEAD</description>
+        <exec executable="${bash.command}" outputproperty="local.revision">
+            <arg value="-c"/>
+            <arg value="${git.command} rev-parse --short HEAD"/>
+            <env key="LANG" value="C"/>
+        </exec>
+        <echo>Current HEAD: ${local.revision}</echo>
+    </target>
+    
+    <target name="data-package" depends="init">
+        <copy file="expath-pkg.xml.tmpl" tofile="expath-pkg.xml" filtering="true" overwrite="true">
+            <filterset>
+                <filter token="project.app" value="${project.app}"/>
+                <filter token="project.name" value="${project.name}"/>
+                <filter token="project.version" value="${local.revision}"/>
+                <filter token="project.url" value="${project.url}"/>
+            </filterset>
+        </copy>
+        <copy file="repo.xml.tmpl" tofile="repo.xml" filtering="true" overwrite="true">
+            <filterset>
+                <filter token="data.target" value="${project.app}"/>
+                <filter token="project.name" value="${project.name}"/>
+                <filter token="db.user.name" value="${db.user.name}"/>
+                <filter token="db.user.password" value="${db.user.password}"/>
+                <filter token="db.user.group" value="${db.user.group}"/>
+                <filter token="db.user.permissions" value="${db.user.permissions}"/>
+            </filterset>
+        </copy>
+        <zip destfile="${build.dir}/${project.app}-${local.revision}.xar">
+            <fileset dir=".">
+                <include name="**/*.*"/>
+                <exclude name="**/baudi-06-dummy.xml"/>
+                <exclude name="build.xml"/>
+                <exclude name=".existdb.json"/>
+                <exclude name=".git*"/>
+                <exclude name="*.tmpl"/>
+                <exclude name="*.xpr"/>
+                <exclude name="*.properties"/>
+                <exclude name="build/**"/>
+                <exclude name="blob/"/>
+                <exclude name="**/__contents__.xml"/>
+            </fileset>
+        </zip>
+    </target>
+    
+    <!-- Deploy directly to localhost -->
+    <target name="deploy" depends="clean, data-package">
+        <path id="classpath.eXist5">
+            <fileset dir="${exist5.libs}" erroronmissingdir="no">
                 <include name="*.jar"/>
             </fileset>
-        </classpath>
-    </typedef>
-    
-    <!-- upload to localhost -->
-    <target name="uploadLocal" depends="xarLocal">
-        <echo message="Uploading packages to localhost ..."/>
-        <xdb:store xmlns:xdb="http://exist-db.org/ant" uri="${p.local.exist.url}${p.target.exist.tmp}" user="${p.target.user}" password="${p.target.pass}" createcollection="true">
-            <fileset dir="${build.dir}">
-                <include name="${xar.name}"/>
-            </fileset>
+        </path>
+        <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
+            <classpath refid="classpath.eXist5"/>
+        </typedef>
+        
+        <!-- store xar-file in eXist-db -->
+        <xdb:store xmlns:xdb="http://exist-db.org/ant"
+            uri="${exist.db}/tmp"
+            createcollection="true"
+            createsubcollections="true"
+            user="${exist.user}"
+            password="${exist.pass}"
+            failonerror="true">
+            <fileset file="${build.dir}/${project.app}-${local.revision}.xar"/>
         </xdb:store>
-    </target>
-    <target name="deployLocal" depends="uploadLocal">
-        <echo message="Deploying xar ${xar.name}"/>
-        <xdb:xquery xmlns:xdb="http://exist-db.org/ant" uri="${p.local.exist.url}${p.target.exist.tmp}" user="${p.target.user}" password="${p.target.pass}"
-            queryFile="scripts/deploy.xql" outputproperty="deploy.output">
-            <variable name="temp" value="${p.target.exist.tmp}"/>
-            <variable name="xar" value="${xar.name}"/>
-        </xdb:xquery>
-        <echo message="${deploy.output}"/>
-        <xdb:remove xmlns:xdb="http://exist-db.org/ant" uri="${p.local.exist.url}${p.target.exist.tmp}" resource="${xar.name}" user="${p.target.user}" password="${p.target.pass}"/>
         
-        <!-- postDeploy-Actions -->
-        <!--<echo message="Prepairing postDeploy.xql"/>
-        <loadfile property="postDeployXQuery" srcFile="scripts/postDeployLocalhost.xql"/>
-        
-        <echo message="Executing postDeploy.xql"/>
+        <!-- Deploy the xar -->
         <xdb:xquery  xmlns:xdb="http://exist-db.org/ant"
-            uri="${p.local.exist.url}" query="${postDeployXQuery}"
-            user="${p.target.user}" password="${p.target.pass}"/>
-        <echo message="postDeploy.xql executed"/>-->
+            uri="${exist.db}"
+            user="${exist.user}"
+            password="${exist.pass}">
+            (
+            if("${project.url}" = repo:list()) then (
+            repo:undeploy("${project.url}"),
+            repo:remove("${project.url}")
+            )
+            else (),
+            repo:install-and-deploy-from-db("/db/tmp/${project.app}-${local.revision}.xar")
+            )
+        </xdb:xquery>
     </target>
     
-    
-    <target name="xarLocal">
-        <mkdir dir="${build.dir}"/>
-        <delete file="./repo.xml"/>
-        <copy todir=".">
-            <file file="repo/rwxrwxr-x/repo.xml"/>
-        </copy>
-        <exec executable="/bin/bash">
-            <arg value="scripts/stashTemp.sh"/>
-        </exec>
-        <exec executable="python">
-            <arg value="${pathResolverLocalhost}"/>
-        </exec>
-        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
-        <exec executable="/bin/bash">
-            <arg value="scripts/resetAndClear.sh"/>
-        </exec>
-    </target>
-    
-    <target name="deployDev" depends="xarDev"/>
-    
-    <target name="xarDev">
-        <mkdir dir="${build.dir}"/>
-        <delete file="./repo.xml"/>
-        <copy todir=".">
-            <file file="repo/rwxrwx---/repo.xml"/>
-        </copy>
-        <zip basedir="." destfile="${build.dir}/${project.app}-dev-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
-       
-    </target>
-    
-    <target name="deployPortal" depends="xarPortal"/>
-    
-    <target name="xarPortal">
-        <mkdir dir="${build.dir}"/>
-        <delete file="./repo.xml"/>
-        <copy todir=".">
-            <file file="repo/rwxrwxr-x/repo.xml"/>
-        </copy>
-        <zip basedir="." destfile="${build.dir.target.portal}/${project.app}_portal_${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json buildBaudiApp.sh"/>
-        
-    </target>
-    
-    
-    <target name="xar" >
-        <delete file="./repo.xml"/>
-        <input message="set user permissions (default: user=yes,group=yes;other=no)" defaultvalue="rwxrwx---" addproperty="userPermissions"/>
-        <copyfile src="repo/${userPermissions}/repo.xml" dest="./repo.xml" forceoverwrite="yes"/>
-        <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar" excludes="build/ .existdb.json build.sh"/>
-        <echo message=""/>
-        <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"/>
-        <echo message="!!!!!!! user permissions set to !!!!!!!"/>
-        <echo message="!!!!!!!!!!!    ${userPermissions}    !!!!!!!!!!!"/>
-        <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"/>
-    </target>
+    <!--<property name="pathResolverLocalhost"
+        location="scripts/pathResolverLocalhost.py"/>
+    <property name="pathResolverDev"
+        location="scripts/pathResolverDev.py"/>-->
     
 </project>
