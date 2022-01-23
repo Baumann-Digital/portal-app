@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="deploy" name="baudiApp" basedir="." xmlns:unless="ant:unless">
-    <dirname property="baudiApp" file="${ant.file.baudiApp}"/>
+    <dirname property="baudiApp.basedir" file="${ant.file.baudiApp}"/>
     
     <!-- import default properties from file -->
     <property file="${baudiApp.basedir}/local.build.properties"/>
