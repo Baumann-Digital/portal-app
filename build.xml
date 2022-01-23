@@ -8,11 +8,17 @@
     
     <target name="clean-all">
         <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
         <delete file="expath-pkg.xml"/>
         <delete file="repo.xml"/>
     </target>
     
-    <target name="clean" if="${build.dir}">
+    <target name="clean">
+        <antcall target="clean-build"/>
+        <antcall target="clean-dist"/>
+    </target>
+    
+    <target name="clean-build" if="${build.dir}">
         <delete includeemptydirs="true">
             <fileset dir="${build.dir}" defaultexcludes="false">
                 <!--<include name="*.xml"/>
@@ -20,6 +26,14 @@
                 <include name="**/*"/>
                 <exclude name="*.xar"/>
                 <exclude name="*.tar.gz"/>
+            </fileset>
+        </delete>
+    </target>
+    
+    <target name="clean-dist" if="${dist.dir}">
+        <delete includeemptydirs="true">
+            <fileset dir="${dist.dir}" defaultexcludes="false">
+                <include name="**/*"/>
             </fileset>
         </delete>
     </target>
