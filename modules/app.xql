@@ -31,15 +31,15 @@ declare variable $app:geonames as xs:string := 'https://www.geonames.org/';
 declare variable $app:BLBfacPath as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/content/pageview/';
 declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/image/view/';
 
-declare variable $app:collectionWorks := collection('/db/apps/baudiWorks/data')//mei:work;
-declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiSources/data/music')//mei:mei;
-declare variable $app:collectionPersons := collection('/db/apps/baudiPersons/data')//tei:person;
-declare variable $app:collectionInstitutions := collection('/db/apps/baudiInstitutions/data')//tei:org;
-declare variable $app:collectionPeriodicals := collection('/db/apps/baudiPeriodicals/data')//tei:TEI;
-declare variable $app:collectionLoci := collection('/db/apps/baudiLoci/data')//tei:place;
-declare variable $app:collectionGalleryItems := 0 (:collection('/db/apps/baudiGalleryItems/data')//tei:TEI:);
-declare variable $app:collectionDocuments := collection('/db/apps/baudiSources/data/documents')//tei:TEI;
-declare variable $app:collectionEditions := collection('/db/apps/baudiEdiromEditions/data')//edirom:edition;
+declare variable $app:collectionWorks := collection('/db/apps/baudiData/works')//mei:work;
+declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiData/sources/music')//mei:mei;
+declare variable $app:collectionPersons := collection('/db/apps/baudiData/persons')//tei:person;
+declare variable $app:collectionInstitutions := collection('/db/apps/baudiData/institutions')//tei:org;
+declare variable $app:collectionPeriodicals := collection('/db/apps/baudiData/periodicals')//tei:TEI;
+declare variable $app:collectionLoci := collection('/db/apps/baudiData/loci')//tei:place;
+declare variable $app:collectionGalleryItems := 0 (:collection('/db/apps/baudiData/galleryItems/data')//tei:TEI:);
+declare variable $app:collectionDocuments := collection('/db/apps/baudiData/sources/documents')//tei:TEI;
+declare variable $app:collectionEditions := collection('/db/apps/baudiData/editions')//edirom:edition;
 
 declare function app:langSwitch($node as node(), $model as map(*)) {
     let $supportedLangVals := ('de', 'en')
