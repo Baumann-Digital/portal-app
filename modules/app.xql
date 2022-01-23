@@ -12,12 +12,14 @@ import module namespace baudiWork = "http://baumann-digital.de/ns/baudiWork" at 
 import module namespace baudiSource = "http://baumann-digital.de/ns/baudiSource" at "/db/apps/baudiApp/modules/baudiSource.xqm";
 import module namespace baudiLocus = "http://baumann-digital.de/ns/baudiLocus" at "/db/apps/baudiApp/modules/baudiLocus.xqm";
 import module namespace baudiPersons="http://baumann-digital.de/ns/baudiPersons" at "/db/apps/baudiApp/modules/baudiPersons.xqm";
+import module namespace baudiEditions="http://baumann-digital.de/ns/baudiEditions" at "/db/apps/baudiApp/modules/baudiEditions.xqm";
 import module namespace functx = "http://www.functx.com" at "/db/apps/baudiApp/modules/functx.xqm";
 import module namespace console="http://exist-db.org/xquery/console";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare namespace mei = "http://www.music-encoding.org/ns/mei";
 declare namespace edirom = "http://www.edirom.de/ns/1.3";
 declare namespace pkg = "http://expath.org/ns/pkg";
+declare namespace baudiCR = "http://www.baumann-digital.de/ns/criticalReport";
 
 declare variable $app:dbRootUrl as xs:string := request:get-url();
 declare variable $app:dbRootLocalhost as xs:string := 'http://localhost:8080/exist/apps/baudiApp';
@@ -40,6 +42,8 @@ declare variable $app:collectionLoci := collection('/db/apps/baudiData/loci')//t
 declare variable $app:collectionGalleryItems := 0 (:collection('/db/apps/baudiData/galleryItems/data')//tei:TEI:);
 declare variable $app:collectionDocuments := collection('/db/apps/baudiData/sources/documents')//tei:TEI;
 declare variable $app:collectionEditions := collection('/db/apps/baudiData/editions')//edirom:edition;
+declare variable $app:collectionEditionsPath := collection('/db/apps/baudiData/editions');
+
 
 declare function app:langSwitch($node as node(), $model as map(*)) {
     let $supportedLangVals := ('de', 'en')

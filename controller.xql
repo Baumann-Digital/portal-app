@@ -244,6 +244,32 @@ else
                                                     url="{$exist:controller}/modules/view.xql"/>
                                             </error-handler>
                                         </dispatch>
+                                    else
+                                    if (starts-with($exist:resource, "baudi-14-")) then
+                                        <dispatch
+                                            xmlns="http://exist.sourceforge.net/NS/exist">
+                                            <forward
+                                                url="{$exist:controller}/html/viewEdition.html">
+                                                <add-parameter
+                                                    name="edition-id"
+                                                    value="{$exist:resource}"/>
+                                            </forward>
+                                            <view>
+                                                <forward
+                                                    url="{$exist:controller}/modules/view.xql">
+                                                    <add-parameter
+                                                        name="edition-id"
+                                                        value="{$exist:resource}"/>
+                                                </forward>
+                                            </view>
+                                            <error-handler>
+                                                <forward
+                                                    url="{$exist:controller}/templates/error-page.html"
+                                                    method="get"/>
+                                                <forward
+                                                    url="{$exist:controller}/modules/view.xql"/>
+                                            </error-handler>
+                                        </dispatch>
                                     
                                     else
                                         if ($exist:path eq "/") then
