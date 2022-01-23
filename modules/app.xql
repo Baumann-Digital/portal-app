@@ -1274,7 +1274,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $numberOpusCounter := if($numberOpusCount)
                                                    then(concat(' ',baudiShared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
-                         let $id := $work/@xml:id/string()
+                         let $workID := $work/@xml:id/string()
                          let $composerID := $work//mei:composer//@auth
                          let $composer := if($work//mei:composer//@auth)
                                           then(baudiShared:getPersName($composerID, 'short', 'yes'))
@@ -1350,7 +1350,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                          then(concat(baudiShared:translate('baudi.registry.works.relSources'), ': ',
                                                                 $relatedItemsCount),<br/>)
                                                          else()}</p>
-                                   <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
+                                   <a href="{string-join(($app:dbRoot, $workID), '/')}" class="card-link">{$workID}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
@@ -1378,9 +1378,9 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
        
 declare function app:viewWork($node as node(), $model as map(*)) {
 
-let $id := request:get-parameter("work-id", "error")
+let $workID := request:get-parameter("work-id", "error")
 let $lang := baudiShared:get-lang()
-let $work := collection("/db/apps/baudiWorks/data")//mei:work[@xml:id=$id]
+let $work := $app:collectionWorks//mei:work[@xml:id=$workID]
 let $fileURI := document-uri($work/root())
 let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(.)
 let $subtitle := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/normalize-space(.)
@@ -1396,7 +1396,7 @@ let $composerGender := if($composerEntry[@sex="female"]) then('composer.female')
 let $lyricist := $work//mei:lyricist
 let $lyricistID := $lyricist/mei:persName/@auth
 let $lyricistEntry := $app:collectionPersons/id($lyricistID)
-let $lyricistName := baudiShared:getPersName($lyricistID, 'short', 'yes')
+let $lyricistName := if($lyricistID)then(baudiShared:getPersName($lyricistID, 'short', 'yes'))else($lyricist//text()/normalize-space())
 let $lyricistGender := if($lyricistEntry)
                        then('lyricist.female')
                        else('lyricist')
@@ -1461,11 +1461,11 @@ let $relatedSourcesCards := for $source in $app:collectionSourcesMusic
                                 case 'copy' return '05'
                                 case 'edition' return '06'
                                 default return '00'
-                let $correspWork := $source//mei:relation[@corresp=$id]/@corresp
-                let $correspWorkLabel := $source//mei:relation[@corresp=$id]/@label/string()
+                let $correspWork := $source//mei:relation[@corresp=$workID]/@corresp
+                let $correspWorkLabel := $source//mei:relation[@corresp=$workID]/@label/string()
                 let $sourceTitle := $source//mei:manifestation//mei:titlePart[@type='main' and not(@class) and not(./ancestor::mei:componentList)]/normalize-space(text()[1])
-                let $ediromSourceWindow := $source//mei:manifestation//mei:titlePart[@type='ediromSourceWindow']/normalize-space(.)
-                where $correspWork = $id
+                let $ediromSourceWindow := $source//mei:manifestation//mei:titlePart[@type='ediromSourceWindow'][1]/normalize-space(.)
+                where $correspWork = $workID
                 order by $sort ascending, lower-case($ediromSourceWindow) ascending
                 return
                     (<div class="row justify-content-md-center" style="padding-bottom: 25px;">
@@ -1474,12 +1474,28 @@ let $relatedSourcesCards := for $source in $app:collectionSourcesMusic
                             <h5 class="card-title">{functx:substring-before-if-contains($ediromSourceWindow, ' (')}</h5>
                             <h6 class="card-subtitle text-muted mt-0">{substring-before(substring-after($ediromSourceWindow, ' ('), ')')}</h6>
                             <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-                            <a class="card-link" href="{concat('/', $sourceId)}">{$sourceId}</a>
+                            <a class="card-link" href="{concat($app:dbRoot,'/', $sourceId)}">{$sourceId}</a>
                           </div>
                       </div>
                     </div>)
 
 let $incipURI := concat('http://localhost:8080/exist/rest',$fileURI) (: '?_query=//incip' :)
+
+let $editions := $app:collectionEditions[.//edirom:work[@xml:id=$workID]]
+let $editionsContent :=
+    for $edition in $editions
+        let $editionId := $edition/string(@xml:id)
+        return
+            (<div class="row justify-content-md-center" style="padding-bottom: 25px;">
+              <div class="card col-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{baudiWork:getWorkTitle($work)}</h5>
+                    <h6 class="card-subtitle text-muted mt-0">Neuedition</h6>
+                    <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                    <a class="card-link" href="{concat($app:dbRoot,'/', $editionId)}">{$editionId}</a>
+                  </div>
+              </div>
+            </div>)
 
 return
 (
@@ -1488,21 +1504,21 @@ return
         <div class="page-header">
             <h1>{if($numberOpus)then(concat($title,' op. ',$numberOpus))else($title)}</h1>
             {if($subtitle)then(<h4 class="text-muted">{$subtitle}</h4>)else()}
-            <h5>ID: {$id}</h5>
+            <h5>ID: {$workID}</h5>
         </div>
         <br/>
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
        <li class="nav-item">
          <a class="nav-link active" id="pills-main-tab" data-toggle="pill" href="#pills-main" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
        </li>
-       {if(baudiWork:hasStemma($id))
+       {if(baudiWork:hasStemma($workID))
         then(<li class="nav-item">
          <a class="nav-link" id="pills-stemma-tab" data-toggle="pill" href="#pills-stemma" role="tab" aria-controls="pills-stemma" aria-selected="false">Stemma</a>
        </li>)
        else()}
-       {if(1=1)
+       {if(baudiEditions:hasEditions($workID))
         then(<li class="nav-item">
-         <a class="nav-link" id="pills-stemma-tab" data-toggle="pill" href="#pills-stemma" role="tab" aria-controls="pills-stemma" aria-selected="false">Stemma</a>
+         <a class="nav-link" id="pills-edition-tab" data-toggle="pill" href="#pills-edition" role="tab" aria-controls="pills-edition" aria-selected="false">Edition</a>
        </li>)
        else()}
     </ul>
@@ -1596,11 +1612,11 @@ return
                   </tr>)
              else()}
              </table>
-        {if(baudiWork:hasIncipitMusic($id))
+        {if(baudiWork:hasIncipitMusic($workID))
          then(<br/>,
               <h4>{baudiShared:translate('baudi.registry.works.incipit')}</h4>,
               <br/>,
-              baudiWork:getIncipitMusic($id))
+              baudiWork:getIncipitMusic($workID))
          else()}
         {if($relatedSourcesCards)
         then(
@@ -1615,9 +1631,14 @@ return
         </div>)
         else()}
         </div>
-        {if(baudiWork:hasStemma($id))
+        {if(baudiWork:hasStemma($workID))
         then(<div class="tab-pane fade" id="pills-stemma" role="tabpanel" aria-labelledby="pills-stemma-tab">
-            {baudiWork:getStemma($id, '', '')}
+            {baudiWork:getStemma($workID, '', '')}
+        </div>)
+        else()}
+        {if(baudiEditions:hasEditions($workID))
+        then(<div class="tab-pane fade" id="pills-edition" role="tabpanel" aria-labelledby="pills-edition-tab">
+            {$editionsContent}
         </div>)
         else()}
     </div>
@@ -1698,7 +1719,7 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
                                                          then(baudiShared:translate('baudi.registry.works.editor'),': ',$editor,<br/>)
                                                          else()}
                                    <hr/>
-                                   <a href="{concat('http://baumann-digital.de:8082/exist/apps/EdiromOnline/?edition=xmldb:exist:///db/apps/baudiEdiromEditions/data/', $editionID, '.xml&amp;lang=de')}" target="_blank" class="card-link">Edirom</a></p>
+                                   <a class="card-link" href="{concat($app:dbRoot,'/', $editionID)}">{$editionID}</a></p>
                                    
                                  </div>
                              </div>
@@ -1716,6 +1737,101 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
        
        return
         $content
+};
+
+declare function app:viewEdition($node as node(), $model as map(*)) {
+    let $editionID := request:get-parameter("edition-id", "error")
+    let $lang := baudiShared:get-lang()
+    let $edition := $app:collectionEditions[@xml:id=$editionID]
+    let $fileURI := document-uri($edition/root())
+    let $editionTitle := $edition//edirom:editionName//text()
+    let $criticalReports := $app:collectionEditionsPath//baudiCR:criticalReport
+    let $correspWorkID := $criticalReports[1]/string(@work)
+    let $correspWorkLabel := baudiWork:getWorkTitle($app:collectionWorks[@xml:id=$correspWorkID])
+    let $remarks := 
+        for $remark in $criticalReports//baudiCR:remark
+            let $remarkID := $remark/string(@xml:id)
+            let $remarkCat := $remark/string(@type)
+            let $remarkCatTranslated := baudiShared:translate(concat('baudi.registry.editions.remark.cat.',$remarkCat))
+            let $remarkNote := $remark/baudiCR:note//text()
+            let $measureStart := $remark/baudiCR:measureStart/text()
+            let $countTimeStart := $remark/baudiCR:countTimeStart/text()
+            let $measureEnd := $remark/baudiCR:measureEnd/text()
+            let $countTimeEnd := $remark/baudiCR:countTimeEnd/text()
+            let $mdiv := $remark/baudiCR:mdiv/text()
+            let $timing := concat('Satz ', $mdiv, ', T. ',
+            string-join((
+                concat($measureStart, '^', $countTimeStart),
+                concat($measureEnd, '^', $countTimeEnd)
+                ), '–')
+            )
+            let $sortCat := switch ($remarkCat)
+                            case 'editorial' return '01'
+                            case 'reading' return '02'
+                            case 'annot' return '03'
+                            default return '99'
+            order by
+                number($mdiv) ascending,
+                $sortCat ascending,
+                number($measureStart) ascending,
+                number($countTimeStart) ascending
+            return
+                (<div class="row justify-content-md-center" style="padding-bottom: 25px;">
+                  <div class="card col-8">
+                      <div class="card-body">
+                        <h5 class="card-title">{$timing}</h5>
+                        <h6 class="card-subtitle text-muted mt-0">{$remarkCat}</h6>
+                        <p class="card-text">{$remarkNote}</p>
+                      </div>
+                  </div>
+                </div>)
+    
+    return
+(
+    <div class="container">
+        <br/>
+        <div class="page-header">
+            <h1>{$editionTitle}</h1>
+            <h5>{$editionID}</h5>
+            <hr/>
+            <h6><a href="{concat($app:dbRoot, '/', $correspWorkID)}">{$correspWorkLabel}</a></h6>
+        </div>
+        <br/>
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+       <li class="nav-item">
+         <a class="nav-link active" id="pills-main-tab" data-toggle="pill" href="#pills-main" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
+       </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
+        <table class="editionView">
+            <tr>
+                <th/>
+                <th/>
+            </tr>
+            
+            <tr>
+                 <td>Metadaten</td>
+                 <td>values...</td>
+            </tr>
+        </table>
+        {if($remarks)
+        then(
+        <div>
+           <br/>
+           <h4>{baudiShared:translate('baudi.registry.editions.remarks')}</h4>
+           <br/>
+           <div class="container overflow-auto" style="max-height: 500px;">
+            {$remarks}
+            </div>
+           <br/>
+        </div>)
+        else()}
+        </div>
+    </div>
+</div>
+)
+
 };
 
 declare function local:getPeriodicals($model) {
@@ -1826,7 +1942,7 @@ let $errorReportDir := '/db/apps/baudiApp/errors/'
 let $url := request:get-url()
 let $dateTime := replace(substring-before(string(current-dateTime()), '+'),':','-')
 let $error := <file url="{$url}" timeStamp="{$dateTime}">{$errorMsg}</file>
-let $logIn := xmldb:login($errorReportDir,'errors', '')
+let $logIn := xmldb:login($errorReportDir,'admin', '')
 let $store := xmldb:store($errorReportDir, concat('error_', $dateTime, '.xml'), $error)
 let $errorReport := if(contains($app:dbRootUrl,$app:dbRootLocalhost)) then(<pre class="error">{$errorMsg}</pre>) else()
 return
