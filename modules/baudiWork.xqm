@@ -4,6 +4,7 @@ module namespace baudiWork="http://baumann-digital.de/ns/baudiWork";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
+declare namespace edirom="http://www.edirom.de/ns/1.3";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
 import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.xqm";
@@ -115,6 +116,7 @@ declare function baudiWork:hasStemma($workID as xs:string){
 declare function baudiWork:getStemma($workID as xs:string, $height as xs:string?, $width as xs:string?) {
     <img src="{concat('https://digilib.baumann-digital.de/BauDi/02/', $workID, '_stemma.png?dh=2000')}" class="img-fluid" alt="Responsive image" height="{$height}" width="{$width}"/>
 };
+
 
 declare function baudiWork:hasIncipitMusic($workID as xs:string){
 let $workFile := $app:collectionWorks[@xml:id=$workID]
