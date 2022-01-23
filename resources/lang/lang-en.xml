@@ -389,6 +389,9 @@
     <!-- Periodicals -->
     <msg key="baudi.registry.periodicals">Periodicals</msg>
     
+    <!-- Editions -->
+    <msg key="baudi.registry.editions.remarks">Critical Remarks</msg>
+    
     <!-- Tags -->
     <msg key="baudi.registry.tag.song">Song</msg>
     <msg key="baudi.registry.tag.choir">Choir</msg>

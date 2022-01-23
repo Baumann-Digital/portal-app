@@ -390,6 +390,9 @@
     <!-- Periodicals -->
     <msg key="baudi.registry.periodicals">Register der Zeitschriften</msg>
     
+    <!-- Editions -->
+    <msg key="baudi.registry.editions.remarks">Kritische Anmerkungen</msg>
+    
     <!-- Tags -->
     <msg key="baudi.registry.tag.song">Lied</msg>
     <msg key="baudi.registry.tag.choir">Chor</msg>
