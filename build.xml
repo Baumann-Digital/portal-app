@@ -82,6 +82,23 @@
     
     <target name="dist" depends="init">
         
+        <copy todir="dist/">
+            <fileset dir=".">
+                <include name="**/*.*"/>
+                <exclude name="build.xml"/>
+                <exclude name=".existdb.json"/>
+                <exclude name=".git*"/>
+                <exclude name="*.tmpl"/>
+                <exclude name="*.xpr"/>
+                <exclude name="*.properties"/>
+                <exclude name="build/**"/>
+                <exclude name="dist/**"/>
+                <exclude name="scripts/**"/>
+                <exclude name="blob/"/>
+                <exclude name="**/__contents__.xml"/>
+            </fileset>
+        </copy>
+        
         <antcall target="path-resolving"/>
         
         <copy file="expath-pkg.xml.tmpl" tofile="dist/expath-pkg.xml" filtering="true" overwrite="true">
@@ -105,15 +122,6 @@
         <zip destfile="${build.dir}/${project.app}-${local.revision}.xar">
             <fileset dir="dist/">
                 <include name="**/*.*"/>
-                <exclude name="build.xml"/>
-                <exclude name=".existdb.json"/>
-                <exclude name=".git*"/>
-                <exclude name="*.tmpl"/>
-                <exclude name="*.xpr"/>
-                <exclude name="*.properties"/>
-                <exclude name="build/**"/>
-                <exclude name="blob/"/>
-                <exclude name="**/__contents__.xml"/>
             </fileset>
         </zip>
     </target>
