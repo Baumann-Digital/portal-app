@@ -11,7 +11,7 @@ def findReplace(directory, find, replace, filePattern):
             with open(filepath, "w") as f:
                 f.write(s)
 
-collection = "/Users/dried/Repositories/Baudi/portal-app"
+collection = "/Users/dried/Repositories/Baudi/portal-app/dist"
 
 old = 'https://baumann-digital.de'
 new = 'http://localhost:8080/exist/apps/baudiApp'
