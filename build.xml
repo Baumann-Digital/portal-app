@@ -60,7 +60,6 @@
         <zip destfile="${build.dir}/${project.app}-${local.revision}.xar">
             <fileset dir=".">
                 <include name="**/*.*"/>
-                <exclude name="**/baudi-06-dummy.xml"/>
                 <exclude name="build.xml"/>
                 <exclude name=".existdb.json"/>
                 <exclude name=".git*"/>
