@@ -81,7 +81,7 @@
     </target>
     
     <target name="dist" depends="init">
-        
+        <property name="project.app.pkg.name" value="${project.app}-${project.version}-${local.revision}.xar"/>
         <copy todir="dist/">
             <fileset dir=".">
                 <include name="**/*.*"/>
@@ -120,7 +120,7 @@
                 <filter token="db.user.permissions" value="${db.user.permissions}"/>
             </filterset>
         </copy>
-        <zip destfile="${build.dir}/${project.app}-${project.version}-${local.revision}.xar">
+        <zip destfile="${build.dir}/${project.app.pkg.name}">
             <fileset dir="dist/">
                 <include name="**/*.*"/>
             </fileset>
@@ -148,7 +148,7 @@
             user="${exist.user}"
             password="${exist.pass}"
             failonerror="true">
-            <fileset file="${build.dir}/${project.app}-${local.revision}.xar"/>
+            <fileset file="${build.dir}/${project.app.pkg.name}"/>
         </xdb:store>
         
         <!-- Deploy the xar -->
@@ -162,7 +162,7 @@
             repo:remove("${project.url}")
             )
             else (),
-            repo:install-and-deploy-from-db("/db/tmp/${project.app}-${local.revision}.xar")
+            repo:install-and-deploy-from-db("/db/tmp/${project.app.pkg.name}")
             )
         </xdb:xquery>
     </target>
