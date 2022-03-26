@@ -43,6 +43,7 @@ declare variable $app:collectionGalleryItems := 0 (:collection('/db/apps/baudiDa
 declare variable $app:collectionDocuments := collection('/db/apps/baudiData/sources/documents')//tei:TEI;
 declare variable $app:collectionEditions := collection('/db/apps/baudiData/editions')//edirom:edition;
 declare variable $app:collectionEditionsPath := collection('/db/apps/baudiData/editions');
+declare variable $app:collStrTexts := '/db/apps/baudiData/texts';
 
 
 declare function app:langSwitch($node as node(), $model as map(*)) {
@@ -1070,7 +1071,7 @@ return
 
 declare function app:aboutBaumann($node as node(), $model as map(*)) {
 
-let $text := doc("/db/apps/baudiTexts/data/portal/aboutBaumann.xml")/tei:TEI
+let $text := doc(concat($app:collStrTexts, "/portal/aboutBaumann.xml"))/tei:TEI
 
 return
     <div class="container">
@@ -1086,7 +1087,7 @@ return
 
 declare function app:impressum($node as node(), $model as map(*)) {
 
-let $text := doc("/db/apps/baudiTexts/data/portal/impressum.xml")//tei:body
+let $text := doc(concat($app:collStrTexts, "/portal/impressum.xml"))//tei:body
 
 return
 (
@@ -1105,7 +1106,7 @@ return
 
 declare function app:indexPage($node as node(), $model as map(*)) {
 
-let $text := doc('/db/apps/baudiTexts/data/portal/index.xml')
+let $text := doc(concat($app:collStrTexts, '/portal/index.xml'))
 
 return
 (
