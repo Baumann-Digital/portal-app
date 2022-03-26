@@ -53,33 +53,6 @@
         <echo>Current HEAD: ${local.revision}</echo>
     </target>
     
-    <condition property="path.resolve.is.local">
-        <contains string="${path.resolve.property}" substring="local"/>
-    </condition>
-    <condition property="path.resolve.is.develop">
-        <contains string="${path.resolve.property}" substring="develop"/>
-    </condition>
-    <condition property="path.resolve.is.public">
-        <contains string="${path.resolve.property}" substring="public"/>
-    </condition>
-    
-    <target name="path-resolving-local" if="${path.resolve.is.local}">
-        <exec executable="python">
-            <arg value="scripts/pathResolverLocalhost.py"/>
-        </exec>
-    </target>
-    
-    <target name="path-resolving-dev" if="${path.resolve.is.dev}">
-        <exec executable="python">
-            <arg value="scripts/pathResolverDev.py"/>
-        </exec>
-    </target>
-    
-    <target name="path-resolving">
-        <antcall target="path-resolving-local"/>
-        <antcall target="path-resolving-dev"/>
-    </target>
-    
     <target name="dist" depends="init">
         <property name="project.app.pkg.name" value="${project.app}-${project.version}-${local.revision}.xar"/>
         <copy todir="dist/">
@@ -98,8 +71,6 @@
                 <exclude name="**/__contents__.xml"/>
             </fileset>
         </copy>
-        
-        <antcall target="path-resolving"/>
         
         <copy file="expath-pkg.xml.tmpl" tofile="dist/expath-pkg.xml" filtering="true" overwrite="true">
             <filterset>
