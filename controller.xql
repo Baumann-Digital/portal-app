@@ -30,7 +30,7 @@ else
             <dispatch
                 xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward
-                    url="{$exist:controller}/html/{$exist:resource}"/>
+                    url="{$exist:controller}/templates/{$exist:resource}"/>
                 <view>
                     <forward
                         url="{$exist:controller}/modules/view.xql"/>
@@ -50,7 +50,7 @@ else
                 <dispatch
                     xmlns="http://exist.sourceforge.net/NS/exist">
                     <forward
-                        url="{$exist:controller}/html/viewDocument.html">
+                        url="{$exist:controller}/templates/viewDocument.html">
                         <add-parameter
                             name="document-id"
                             value="{$exist:resource}"/>
@@ -78,7 +78,7 @@ else
                     <dispatch
                         xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward
-                            url="{$exist:controller}/html/viewPerson.html">
+                            url="{$exist:controller}/templates/viewPerson.html">
                             <add-parameter
                                 name="person-id"
                                 value="{$exist:resource}"/>
@@ -106,7 +106,7 @@ else
                         <dispatch
                             xmlns="http://exist.sourceforge.net/NS/exist">
                             <forward
-                                url="{$exist:controller}/html/viewLocus.html">
+                                url="{$exist:controller}/templates/viewLocus.html">
                                 <add-parameter
                                     name="locus-id"
                                     value="{$exist:resource}"/>
@@ -134,7 +134,7 @@ else
                             <dispatch
                                 xmlns="http://exist.sourceforge.net/NS/exist">
                                 <forward
-                                    url="{$exist:controller}/html/viewInstitution.html">
+                                    url="{$exist:controller}/templates/viewInstitution.html">
                                     <add-parameter
                                         name="institution-id"
                                         value="{$exist:resource}"/>
@@ -162,7 +162,7 @@ else
                                 <dispatch
                                     xmlns="http://exist.sourceforge.net/NS/exist">
                                     <forward
-                                        url="{$exist:controller}/html/viewWork.html">
+                                        url="{$exist:controller}/templates/viewWork.html">
                                         <add-parameter
                                             name="work-id"
                                             value="{$exist:resource}"/>
@@ -192,7 +192,7 @@ else
                                     <dispatch
                                         xmlns="http://exist.sourceforge.net/NS/exist">
                                         <forward
-                                            url="{$exist:controller}/html/viewSource.html">
+                                            url="{$exist:controller}/templates/viewSource.html">
                                             <add-parameter
                                                 name="source-id"
                                                 value="{$exist:resource}"/>
@@ -223,7 +223,7 @@ else
                                         <dispatch
                                             xmlns="http://exist.sourceforge.net/NS/exist">
                                             <forward
-                                                url="{$exist:controller}/html/viewPeriodical.html">
+                                                url="{$exist:controller}/templates/viewPeriodical.html">
                                                 <add-parameter
                                                     name="periodical-id"
                                                     value="{$exist:resource}"/>
@@ -249,7 +249,7 @@ else
                                         <dispatch
                                             xmlns="http://exist.sourceforge.net/NS/exist">
                                             <forward
-                                                url="{$exist:controller}/html/viewEdition.html">
+                                                url="{$exist:controller}/templates/viewEdition.html">
                                                 <add-parameter
                                                     name="edition-id"
                                                     value="{$exist:resource}"/>
