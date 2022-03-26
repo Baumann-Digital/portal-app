@@ -605,7 +605,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     let $lang := baudiShared:get-lang()
     let $sources := $app:collectionSourcesMusic//mei:manifestationList/mei:manifestation (:[1]/ancestor::mei:mei:)
     
-    let $genres := distinct-values(collection("/db/apps/baudiSources/data/music")//mei:term[@type="source"] | collection("/db/apps/baudiSources/data/music")//mei:titlePart[@type='main' and not(@class)]/@type)
+    let $genres := distinct-values($app:collectionSourcesMusic//mei:term[@type="source"] | $app:collectionSourcesMusic//mei:titlePart[@type='main' and not(@class)]/@type)
     
     let $content :=<div class="container">
     <br/>
