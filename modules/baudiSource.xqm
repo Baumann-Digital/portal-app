@@ -5,13 +5,13 @@ module namespace baudiSource="http://baumann-digital.de/ns/baudiSource";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 
-import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql";
-import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "baudiShared.xqm";
-import module namespace baudiWork="http://baumann-digital.de/ns/baudiWork" at "baudiWork.xqm";
+import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
+import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.xqm";
+import module namespace baudiWork="http://baumann-digital.de/ns/baudiWork" at "/db/apps/baudiApp/modules/baudiWork.xqm";
 import module namespace baudiPersons="http://baumann-digital.de/ns/baudiPersons" at "/db/apps/baudiApp/modules/baudiPersons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/templates";
-import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
+import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace transform="http://exist-db.org/xquery/transform";
 

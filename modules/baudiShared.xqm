@@ -20,7 +20,7 @@ import module namespace functx="http://www.functx.com";
 import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
 
-import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
+import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules//db/apps/baudiApp/modules/i18n.xql";
 
 declare variable $baudiShared:xsltTEI as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/tei/html5/html5.xsl');
 declare variable $baudiShared:xsltFormattingText as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingText.xsl');
