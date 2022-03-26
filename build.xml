@@ -105,7 +105,8 @@
             <filterset>
                 <filter token="project.app" value="${project.app}"/>
                 <filter token="project.name" value="${project.name}"/>
-                <filter token="project.version" value="${local.revision}"/>
+                <filter token="project.version" value="${project.version}"/>
+                <filter token="project.version.hash" value="${local.revision}"/>
                 <filter token="project.url" value="${project.url}"/>
             </filterset>
         </copy>
@@ -119,11 +120,13 @@
                 <filter token="db.user.permissions" value="${db.user.permissions}"/>
             </filterset>
         </copy>
-        <zip destfile="${build.dir}/${project.app}-${local.revision}.xar">
+        <zip destfile="${build.dir}/${project.app}-${project.version}-${local.revision}.xar">
             <fileset dir="dist/">
                 <include name="**/*.*"/>
             </fileset>
         </zip>
+        <delete file="expath-pkg.xml"/>
+        <delete file="repo.xml"/>
     </target>
     
     <!-- Deploy directly to localhost -->
