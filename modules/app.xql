@@ -1912,8 +1912,10 @@ declare function app:alert($node as node(), $model as map(*)){
 declare function app:portalVersion($node as node(), $model as map(*)){
  let $package := doc('/db/apps/baudiApp/expath-pkg.xml')
  let $version := $package//pkg:package/@version/string()
+ let $versionStr := substring-before($version, '-')
+ let $versionHash := substring-after($version, '-')
     return
-        <p class="text-muted">{concat('Version ',$version)}</p>
+        <p class="text-muted">{concat('Version ',$versionStr, ' | Hash: ',$versionHash)}</p>
 };
 
 declare function app:registryFilterBar($node as node(), $model as map(*)){
