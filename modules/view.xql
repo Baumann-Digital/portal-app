@@ -5,7 +5,7 @@
  :)
 xquery version "3.0";
 
-import module namespace templates="http://exist-db.org/xquery/templates" ;
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace i18n="http://exist-db.org/xquery/i18n-templates" at "/db/apps/baudiApp/modules/i18n-templates.xql";
 (: 
  : The following modules provide functions which will be called by the 

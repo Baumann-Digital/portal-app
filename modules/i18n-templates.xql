@@ -3,8 +3,8 @@ module namespace intl="http://exist-db.org/xquery/i18n-templates";
 (:~
  : i18n template functions. Integrates the i18n library module. Called from the templating framework.
  :)
-import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
 
 (:~

@@ -8,7 +8,7 @@ module namespace baudiVersions="http://baumann-digital.de/ns/versions";
 
 import module namespace functx = "http://www.functx.com";
 
-declare namespace templates="http://exist-db.org/xquery/templates";
+declare namespace templates="http://exist-db.org/xquery/html-templating";
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 

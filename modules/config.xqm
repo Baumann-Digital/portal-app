@@ -5,7 +5,7 @@ xquery version "3.0";
  : within a module.
  :)
 module namespace config="https://exist-db.org/xquery/config";
-declare namespace templates="http://exist-db.org/xquery/templates";
+declare namespace templates="http://exist-db.org/xquery/html-templating";
 
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";

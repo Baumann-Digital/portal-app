@@ -2,7 +2,7 @@ xquery version "3.1";
 
 module namespace app = "http://baumann-digital.de/ns/templates";
 
-import module namespace templates = "http://exist-db.org/xquery/templates" ;
+import module namespace templates = "http://exist-db.org/xquery/html-templating";
 import module namespace config = "https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
 (:import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";:)
 import module namespace xmldb = "http://exist-db.org/xquery/xmldb";
