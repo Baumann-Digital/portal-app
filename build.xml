@@ -126,7 +126,8 @@
         <xdb:xquery  xmlns:xdb="http://exist-db.org/ant"
             uri="${exist.db}"
             user="${exist.user}"
-            password="${exist.pass}">
+            password="${exist.pass}"
+            failonerror="true">
             (
             if("${project.url}" = repo:list()) then (
             repo:undeploy("${project.url}"),
