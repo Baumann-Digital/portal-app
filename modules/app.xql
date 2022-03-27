@@ -893,10 +893,10 @@ return
              else()}
              </table>
              <table class="sourceView">
-                {if($relatedWorkID)
+                {if(exists($relatedWorkID))
                 then(<tr>
                        <td>{baudiShared:translate('baudi.registry.sources.relation')}</td>
-                       <td>{if($relatedWorkID)then(<a href="{$relatedWorkID}">{$relatedWorkTitle}</a>)else(baudiShared:translate('baudi.unknown'))}</td>
+                       <td>{if(exists($relatedWorkID))then(<a href="{$relatedWorkID}">{$relatedWorkTitle}</a>)else(baudiShared:translate('baudi.unknown'))}</td>
                      </tr>)
                 else()}
              {if($sourceComposer)
@@ -1577,7 +1577,7 @@ return
                     <td><em>{$incipText}</em></td>
                   </tr>)
              else()}
-             {if($key)
+             {if(exists($key))
              then(<tr>
                     <td>{baudiShared:translate('baudi.registry.works.key')}</td>
                     <td>{normalize-space(string-join($key, ' | '))}</td>
