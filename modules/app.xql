@@ -1472,7 +1472,8 @@ let $relatedSourcesCards := for $source in $app:collectionSourcesMusic
                     (<div class="row justify-content-md-center" style="padding-bottom: 25px;">
                       <div class="card col-8" sortNo="{$sort}">
                           <div class="card-body">
-                            <h5 class="card-title">{functx:substring-before-if-contains($ediromSourceWindow, ' (')}</h5>
+                          <h5 class="card-title">{$sourceTitle}</h5>
+<!--                            <h5 class="card-title">{functx:substring-before-if-contains($ediromSourceWindow, ' (')}</h5>-->
                             <h6 class="card-subtitle text-muted mt-0">{substring-before(substring-after($ediromSourceWindow, ' ('), ')')}</h6>
                             <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
                             <a class="card-link" href="{concat($app:dbRoot,'/', $sourceId)}">{$sourceId}</a>
