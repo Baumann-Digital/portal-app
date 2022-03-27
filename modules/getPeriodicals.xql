@@ -15,7 +15,7 @@ declare option output:media-type "application/json";:)
 
 
 (: Postal Objects collection :)
-declare variable $periodicalsCollectionURI as xs:string := 'xmldb:exist:///db/apps/baudiSources/data/periodicals';
+declare variable $periodicalsCollectionURI as xs:string := 'xmldb:exist:///db/apps/baudiData/sources/periodicals';
 
 declare function local:getPeriodicalBaudiIdentifier($periodical) {
     $periodical/@xml:id/string()

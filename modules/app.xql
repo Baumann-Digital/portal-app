@@ -112,7 +112,7 @@ return
 
 declare function app:viewDocument($node as node(), $model as map(*)) {
     let $id := request:get-parameter("document-id", "error")
-    let $doc := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@xml:id=$id]
+    let $doc := $app:collectionDocuments[@xml:id=$id]
     let $isLetter := exists($doc//tei:correspAction)
     return
         if($isLetter)
@@ -122,7 +122,7 @@ declare function app:viewDocument($node as node(), $model as map(*)) {
 
 declare function app:viewDoc($node as node(), $model as map(*)) {
 let $id := request:get-parameter("document-id", "error")
-let $doc := collection("/db/apps/baudiSources/data/documents")//tei:TEI[@xml:id=$id]
+let $doc := $app:collectionDocuments[@xml:id=$id]
 let $pages := $doc/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
 return
@@ -156,7 +156,7 @@ return
 declare function app:viewLetter($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("document-id", "error")
-let $letter := collection("/db/apps/baudiSources/data/documents/letters")//tei:TEI[@xml:id=$id]
+let $letter := collection("/db/apps/baudiData/sources/documents/letters")//tei:TEI[@xml:id=$id]
 let $pages := $letter/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
 return
@@ -443,7 +443,7 @@ return
 declare function app:registryLoci($node as node(), $model as map(*)) {
 
     let $lang := baudiShared:get-lang()
-    let $loci := collection("/db/apps/baudiLoci/data")//tei:place
+    let $loci := $app:collectionLoci
 
 let $content := 
     <div class="container">
@@ -510,7 +510,7 @@ return
 
 declare function app:registryInstitutions($node as node(), $model as map(*)) {
     let $lang := baudiShared:get-lang()
-    let $orgs := collection("/db/apps/baudiInstitutions/data")//tei:org
+    let $orgs := $app:collectionInstitutions
       
     let $content := <div class="container">
     <div class="container  overflow-auto" style="max-height: 500px;">
@@ -747,7 +747,7 @@ declare function app:viewSource($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("source-id", "error")
 let $lang := baudiShared:get-lang()
-let $source := collection("/db/apps/baudiSources/data/music")//mei:mei[@xml:id=$id]
+let $source := $app:collectionSourcesMusic[@xml:id=$id]
 let $manifestation := $source//mei:manifestation
 let $fileURI := document-uri($source/root())
 let $sourceType := $source//mei:term[@type='source'][1]/string()
@@ -1057,7 +1057,7 @@ return
 
 declare function app:aboutProject($node as node(), $model as map(*)) {
 
-let $text := doc("/db/apps/baudiTexts/data/portal/aboutProject.xml")/tei:TEI
+let $text := doc(concat($app:collStrTexts,'/portal/aboutProject.xml'))/tei:TEI
 
 
 return
@@ -1189,7 +1189,7 @@ return
 declare function app:viewPeriodical($node as node(), $model as map(*)) {
  
 let $id := request:get-parameter("periodical-id", "error")
-let $issue := collection("/db/apps/baudiPeriodicals/data")//tei:TEI[@xml:id=$id]
+let $issue := $app:collectionPeriodicals[@xml:id=$id]
 let $titleIssue := $issue//tei:fileDesc/tei:titleStmt/tei:title/text()
 let $text := $issue//tei:body
 
@@ -1217,9 +1217,9 @@ return
 
 declare function app:guidelines($node as node(), $model as map(*)) {
 
-let $codingGuidelines := doc('/db/apps/baudiTexts/data/documentation/codingGuidelines.xml')
-let $editiorialGuidelines := doc('/db/apps/baudiTexts/data/documentation/editorialGuidelines.xml')
-let $sourceDescGuidelines := doc('/db/apps/baudiTexts/data/documentation/sourceDescGuidelines.xml')
+let $codingGuidelines := doc(concat($app:collStrTexts,'/documentation/codingGuidelines.xml'))
+let $editiorialGuidelines := doc(concat($app:collStrTexts,'/documentation/editorialGuidelines.xml'))
+let $sourceDescGuidelines := doc(concat($app:collStrTexts,'/documentation/sourceDescGuidelines.xml'))
 
 return
 (

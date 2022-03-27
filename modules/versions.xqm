@@ -22,8 +22,8 @@ declare namespace mei="http://www.music-encoding.org/ns/mei";
  
 declare variable $baudiVersions:versions := 
 
-let $historyDir := collection('/db/history/db/apps/baudiTexts/data/portal/aboutBaumann.xml'
-)
+let $historyDir := collection(concat($app:collStrTexts,'/portal/aboutBaumann.xml'
+))
 
 let $versions := $historyDir//tei:TEI (:tei:text/tei:body/tei:div[1]/tei:p[1]/tei:date[1]/string():)
 

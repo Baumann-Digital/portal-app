@@ -38,7 +38,7 @@ declare function baudiWork:getWorkTitle($work as node()*){
 };
 
 (:declare function baudiWork:getLyricist($work as node()) {
-  let $collectionPersons := collection('/db/apps/baudiPersons/data')//tei:person
+  let $collectionPersons := $app:collectionPersons
   let $lyricists := $work//mei:lyricist/mei:persName
   return
     for $lyricist in $lyricists
@@ -134,11 +134,11 @@ let $meiFile := <mei xmlns="http://www.music-encoding.org/ns/mei">
                     <meiHead><fileDesc><titleStmt><title/></titleStmt><pubStmt/></fileDesc></meiHead>
                     <music><body>{$incipit}</body></music>
                 </mei>
-let $meiFileStored := if(doc-available(concat('/db/apps/baudiWorks/data/', $workFileName)) = false())
+let $meiFileStored := if(doc-available(concat('/db/apps/baudiData/works/', $workFileName)) = false())
                       then(login:set-user("org.exist.login", (), true()),
-                           xmldb:store('/db/apps/baudiWorks/data/', $workFileName, $meiFile))
+                           xmldb:store('/db/apps/baudiData/works/', $workFileName, $meiFile))
                       else()
-let $meiFileCall := concat(substring-before($app:dbRootUrl,'baudiApp'), 'baudiWorks/data/', $workFileName )
+let $meiFileCall := concat(substring-before($app:dbRootUrl,'baudiApp'), 'baudiData/works/', $workFileName )
 let $script :=  <script type="module">
                     import 'https://www.verovio.org/javascript/app/verovio-app.js';
                     
