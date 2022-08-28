@@ -17,13 +17,13 @@
                 <tr>
                     <td>Signatur:</td>
                     <td>
-                        <xsl:value-of select="//mei:manifestationList/mei:manifestation/mei:physLoc/mei:identifier[@type='shelfmark']"/>
+                        <xsl:value-of select="//mei:manifestationList/mei:manifestation/mei:physLoc//mei:identifier[@type='shelfmark']"/>
                     </td>
                 </tr>
                 <tr>
                     <td>RISM-Nr.:</td>
                     <td>
-                        <xsl:value-of select="//mei:manifestationList/mei:manifestation/mei:identifier[@auth='RISM']"/>
+                        <xsl:value-of select="//mei:manifestationList/mei:manifestation/mei:identifier[@type='rism']"/>
                     </td>
                 </tr>
                 <tr>
@@ -50,10 +50,10 @@
                     <td>Papierausrichtung:</td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//mei:physDesc/mei:extent[@type='orientation']='portrait'">Hochformat</xsl:when>
-                            <xsl:when test="//mei:physDesc/mei:extent[@type='orientation']='landscape'">Querformat</xsl:when>
+                            <xsl:when test="//mei:physDesc/mei:extent[@label='orientation']='portrait'">Hochformat</xsl:when>
+                            <xsl:when test="//mei:physDesc/mei:extent[@label='orientation']='landscape'">Querformat</xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="//mei:physDesc/mei:extent[@type='orientation']"/>
+                                <xsl:value-of select="//mei:physDesc/mei:extent[@label='orientation']"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </td>
@@ -61,27 +61,27 @@
                 <tr>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//mei:physDesc/mei:extent[@type='folium']='1'">Folium</xsl:when>
+                            <xsl:when test="//mei:physDesc/mei:extent[@label='folium']='1'">Folium</xsl:when>
                             <xsl:otherwise>Folii</xsl:otherwise>
                         </xsl:choose>
                     </td>
                     <td>
-                        <xsl:value-of select="//mei:physDesc/mei:extent[@type='folium']"/>
+                        <xsl:value-of select="//mei:physDesc/mei:extent[@label='folium']"/>
                     </td>
                 </tr>
                 <tr>
-                    <td>Beschriebene Seiten</td>
+                    <td>Notentext (Seiten)</td>
                     <td>
-                        <xsl:value-of select="//mei:physDesc/mei:extent[@type='pages']"/>
+                        <xsl:value-of select="//mei:physDesc/mei:extent[@label='pages']"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Seitenzählung:</td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//mei:physDesc/mei:extent[@type='pagination']/data(.)='none'">keine</xsl:when>
+                            <xsl:when test="//mei:physDesc/mei:extent[@label='pagination']/data(.)='none'">keine</xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="//mei:physDesc/mei:extent[@type='pagination']"/>
+                                <xsl:value-of select="//mei:physDesc/mei:extent[@label='pagination']"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </td>
@@ -112,9 +112,11 @@
                         <xsl:value-of select="//mei:notesStmt/mei:annot[@plist and contains(@plist,'stamp')]/normalize-space()"/> (Position: <xsl:value-of select="//mei:notesStmt/mei:annot[@plist]/@plist/substring-before(substring-after(.,' '),'-')"/>)</td>
                 </tr>
                 <tr>
-                    <td>Weitere Anmerkungen:</td>
+                    <td>Sonst. Anmerkungen:</td>
                     <td>
-                        <xsl:value-of select="//mei:notesStmt/mei:annot[@n]/normalize-space()"/>
+                        <xsl:for-each select="//mei:notesStmt/mei:annot">
+                            <li><xsl:value-of select="./normalize-space()"/></li>
+                        </xsl:for-each>
                     </td>
                 </tr>
                 <tr>
@@ -133,7 +135,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Verwendete Sprache(n):</td>
+                    <td>Sprache(n):</td>
                     <td>
                         <xsl:choose>
                             <xsl:when test="//mei:langUsage/mei:language/@label/data(.)='dt'">deutsch</xsl:when>
@@ -179,19 +181,7 @@
                             </td>
                         </tr>
                     </xsl:if>
-                    <tr>
-                        <td>Besetzung</td>
-                        <td>
-                            <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes">
-<!--                             <xsl:sort select="." order="ascending" data-type="text"/>-->
-                                <li>
-                                    <xsl:value-of select="."/>
-                                    <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>)</xsl:if>
-                                </li>
-                            </xsl:for-each>
-                        </td>
-                    </tr>
-                </xsl:if>
+                    </xsl:if>
                 <xsl:if test="exists(//mei:term[@type='source' and @subtype='special' and contains(.,'Sammelquelle')])">
                     <tr>
                         <td colspan="2">Enthaltene Quellen:</td>
@@ -219,18 +209,6 @@
                         </td>
                     </tr>
                 </xsl:if>
-                <tr>
-                    <td>Textbezug:</td>
-                    <td>
-                        <ul>
-                            <xsl:for-each select="//mei:componentGrp/mei:item[@label='textbezug']/mei:notesStmt/mei:annot">
-                                <li>
-                                    <xsl:value-of select="."/>
-                                </li>
-                            </xsl:for-each>
-                        </ul>
-                    </td>
-                </tr>
             </table>
         </div>
     </xsl:template>

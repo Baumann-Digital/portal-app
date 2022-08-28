@@ -1,49 +1,30 @@
+/*function myIncipit() {
+    var input = this.data;
+    var vrvToolkit = new verovio.toolkit();
+              /\* Load the file using a HTTP GET *\/
+              $.get(input, function( data ) {
+                var svg = vrvToolkit.renderData(data.getElementsByTagName("score"), {});
+                $("#incipitVerovio").html(svg);
+              }, 'text');
+}*/
 
-var vrvToolkit = new verovio.toolkit();
+/* 
+* function myIncipit() {
+*    var vrvToolkit = new verovio.toolkit();
+*              $.ajax({
+*                url: data(this)
+*                , dataType: "text"
+*               , success: function(data) {  
+*                  var svg = vrvToolkit.renderData(data, {});
+*                 $("#output-verovio").html(svg);
+*            }
+*       });
+* }
+*/
 
-var voice = 1;
+function myIncipit() {
 
-function set_options() {
-    pageHeight = 100;
-    pageWidth = 100;
-    border = 50;
-    options = JSON.stringify({
-        inputFormat: 'mei',
-        pageHeight: pageHeight,
-        pageWidth: pageWidth,
-        border: border,
-        scale: zoom,
-        adjustPageHeight: 1,
-        ignoreLayout: 1
-    });
-    vrvToolkit.setOptions(options);
+    var input = "http://localhost:8080/exist/rest/db/apps/baudiWorks/data/baudi-02-40aa04e4_incip.xml" /* ?_query=//incip */
+/*    var input = "https://www.verovio.org/editor/brahms.mei"*/
+    return input;
 }
-
-function load_data(data) {
-    set_options();
-    vrvToolkit.loadData(data);
-    
-    page = 1;
-    load_page();
-}
-
-function load_page() {
-    svg = vrvToolkit.renderPage(page, "");
-    $("#svg_output").html(svg);
-};
-
-////////////////////////////////////////////////////////
-/* A function that applies the XSLT and load the data */
-////////////////////////////////////////////////////////
-function load_file() {
-    var file = "{$incipit}";
-    var xsl = Saxon.requestXML("xslt/stripStaff.xsl");
-    var xml = Saxon.requestXML(file);
-    var proc = Saxon.newXSLT20Processor(xsl);
-    proc.setParameter(null, "voice", voice);
-    load_data(Saxon.serializeXML(proc.transformToDocument(xml)));
-}
-
-var onSaxonLoad = function () {
-    load_file();
-};

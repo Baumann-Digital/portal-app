@@ -1,6 +1,7 @@
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0">
     <xsl:output method="xhtml" encoding="UTF-8" indent="yes"/>
     <xsl:include href="linking.xsl"/>
+    <xsl:variable name="workID" select="./@xml:id"/>
     <xsl:template match="/">
         <div>
             <table border="0" width="100%">
@@ -9,113 +10,91 @@
                     <th/>
                 </tr>
                 
-                <xsl:if test="exists(//mei:titleStmt/mei:title/mei:titlePart[@type = 'sub'])">
+                <xsl:if test="exists(//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate'])">
                     <tr>
                         <td>Untertitel:</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:title[@type ='uniform' and @xml:lang='de']/mei:titlePart[@type = 'sub']/text()"/>
+                            <xsl:value-of select="//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/text()"/>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(//mei:titleStmt/mei:title/mei:titlePart[@type = 'desc']/data(.) = '')">
+                <xsl:if test="not(//mei:title[@type='uniform']/mei:titlePart[@type = 'perfmedium']/data(.) = '')">
                     <tr>
-                        <td>Werkbeschreibung:</td>
+                        <td>Besetzung:</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:title/mei:titlePart[@type = 'desc' and @xml:lang = 'de']"/>
+                            <xsl:value-of select="//mei:title[@type='uniform']/mei:titlePart[@type = 'perfmedium']"/>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(//mei:workList/mei:work/mei:title/mei:titlePart[@type = 'mainAlt']/data(.) = '')">
+                <xsl:if test="//mei:titlePart[@type = 'mainAlt']/text() != ''">
                     <tr>
                         <td>Alternativer Titel:</td>
                         <td>
-                            <xsl:value-of select="//mei:workList/mei:work/mei:title/mei:titlePart[@type = 'mainAlt']"/>
+                            <xsl:value-of select="//mei:titlePart[@type = 'mainAlt']"/>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(//mei:workList/mei:work/mei:title/mei:titlePart[@type = 'subAlt']/data(.) = '')">
+                <xsl:if test="//mei:titlePart[@type = 'subAlt']/text() != ''">
                     <tr>
                         <td>Alternativer Untertitel:</td>
                         <td>
-                            <xsl:value-of select="//mei:titleStmt/mei:title/mei:titlePart[@type = 'subAlt']"/>
+                            <xsl:value-of select="//mei:title[@type='uniform']/mei:titlePart[@type = 'subAlt']"/>
                         </td>
                     </tr>
                 </xsl:if>
                 
-                <xsl:if test="not(exists(//mei:term[@type = 'source' and @subtype = 'special' and contains(., 'Sammelquelle')]))">
-                    <xsl:if test="not(//mei:titleStmt/mei:composer = '')">
+                    <xsl:if test="not(//mei:composer/text() = '')">
                         <tr>
-                            <td>Komponist:</td>
-                            <td><a href="{concat($registerRootPerson,//mei:workList/mei:work/mei:composer/@xml:id,'.xml')}" target="_blank"><xsl:value-of select="//mei:workList/mei:work/mei:composer"/></a></td>
+                            <td>Komponist</td>
+                            <td><xsl:value-of select="//mei:composer"/></td>
                         </tr>
                     </xsl:if>
-                    <xsl:if test="not(//mei:workList/mei:work/mei:lyricist = '')">
+                    <xsl:if test="//mei:lyricist/text() != ''">
                         <tr>
                             <td>Textdichter:</td>
                             <td>
-                                <xsl:value-of select="//mei:workList/mei:work/mei:lyricist"/>
+                                <xsl:value-of select="//mei:lyricist"/>
                             </td>
                         </tr>
                     </xsl:if>
-                </xsl:if>
-                <!--<xsl:if test="exists(//mei:term[@type = 'source' and @subtype = 'special' and contains(., 'Sammelquelle')])">
-                    <xsl:if test="not(//mei:titleStmt/mei:composer = '')">
+                    <xsl:if test="//mei:langUsage/mei:language/@auth">
                         <tr>
-                            <xsl:choose>
-                                <xsl:when test="count(//mei:titleStmt/mei:composer) > 1">
-                                    <td>Komponist(en):</td>
-                                    <td>
-                                        <xsl:for-each select="//mei:titleStmt/mei:composer">
-                                            <li>
-                                                <xsl:value-of select="."/>
-                                            </li>
-                                        </xsl:for-each>
-                                    </td>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <td>Komponist:</td>
-                                    <td>
-                                        <xsl:value-of select="//mei:titleStmt/mei:composer"/>
-                                    </td>
-                                </xsl:otherwise>
-                            </xsl:choose>
+                            <td>Sprache:</td>
+                            <td>
+                                <xsl:value-of select="//mei:langUsage/mei:language/@auth"/>
+                            </td>
                         </tr>
                     </xsl:if>
-                    <xsl:if test="not(//mei:titleStmt/mei:lyricist = '')">
+                    <xsl:if test="//mei:term[@type='workGroup' and @subtype]">
                         <tr>
-                            <td>Textdichter:</td>
-                            <xsl:choose>
-                                <xsl:when test="count(//mei:titleStmt/mei:lyricist) > 1">
-                                    <td>
-                                        <xsl:for-each select="//mei:titleStmt/mei:lyricist">
-                                            <li>
-                                                <xsl:value-of select="."/>
-                                            </li>
-                                        </xsl:for-each>
-                                    </td>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <td>
-                                        <xsl:value-of select="//mei:titleStmt/mei:lyricist"/>
-                                    </td>
-                                </xsl:otherwise>
-                            </xsl:choose>
+                            <td>Werkgruppe:</td>
+                            <td>
+                                <xsl:value-of select="//mei:term[@type='workGroup']/@subtype"/>
+                            </td>
                         </tr>
                     </xsl:if>
-                </xsl:if>-->
-                <xsl:if test="not(//mei:workList/mei:work/mei:key/@mode/data(.) = '')">
+                    <xsl:if test="//mei:term[@type='genre' and @subtype]">
+                        <tr>
+                            <td>Genre:</td>
+                            <td>
+                                <xsl:value-of select="//mei:term[@type='genre']/@subtype"/>
+                            </td>
+                        </tr>
+                    </xsl:if>
+                
+                <xsl:if test="not(//mei:key/@mode/data(.) = '')">
                     <tr>
                         <td>Tonart:</td>
                         <td>
                             <xsl:choose>
-                                <xsl:when test="//mei:workList/mei:work/mei:key/@mode/data(.) = 'minor'">
-                                    <xsl:value-of select="lower-case(//mei:workList/mei:work/mei:key/@pname)"/>-Moll
+                                <xsl:when test="//mei:key/@mode/data(.) = 'minor'">
+                                    <xsl:value-of select="concat(lower-case(//mei:key/@pname),'-Moll')"/>
                                 </xsl:when>
-                                <xsl:when test="//mei:workList/mei:work/mei:key/@mode/data(.) = 'major'">
-                                    <xsl:value-of select="upper-case(//mei:workList/mei:work/mei:key/@pname)"/>-Dur
+                                <xsl:when test="//mei:key/@mode/data(.) = 'major'">
+                                    <xsl:value-of select="concat(upper-case(//mei:key/@pname),'-Dur')"/>
                                 </xsl:when>
-                                <xsl:when test="not(//mei:workList/mei:work/mei:key/@mode/data(.) = 'major') and not(//mei:workList/mei:work/mei:key/@mode/data(.) = 'minor')">
-                                    <xsl:value-of select="lower-case(//mei:workList/mei:work/mei:key/@pname)"/>-<xsl:value-of select="//mei:workList/mei:work/mei:key/@mode"/>
+                                <xsl:when test="not(//mei:key/@mode/data(.) = 'major') and not(//mei:key/@mode/data(.) = 'minor')">
+                                    <xsl:value-of select="lower-case(//mei:key/@pname)"/>-<xsl:value-of select="//mei:key/@mode"/>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     [unbekannt]
@@ -128,59 +107,57 @@
                     <tr>
                         <td>Taktart:</td>
                         <td>
-                            <xsl:value-of select="//mei:workList/mei:work/mei:meter/@count"/>/<xsl:value-of select="//mei:workList/mei:work/mei:meter/@unit"/>
+                            <xsl:value-of select="//mei:meter/@count"/>/<xsl:value-of select="//mei:meter/@unit"/>
+                            <xsl:choose>
+                                <xsl:when test="//mei:meter/@sym = 'common'">&#160;<img src="https://baumann-digital.de/resources/img/timeSignature_common.png" width="20px"/></xsl:when>
+                                <xsl:when test="//mei:meter/@sym = 'cut'">&#160;<img src="https://baumann-digital.de/resources/img/timeSignature_cut.png" width="20px"/></xsl:when>
+                                <xsl:otherwise/>
+                            </xsl:choose>
                         </td>
                     </tr>
                 </xsl:if>
-                <xsl:if test="not(empty(mei:tempo))">
+                <xsl:if test="not(empty(//mei:tempo))">
                     <tr>
                         <td>Tempobezeichnung:</td>
                         <td>
-                            <xsl:value-of select="//mei:workList/mei:work/mei:tempo"/>
+                            <xsl:value-of select="//mei:tempo/text()"/>
                         </td>
                     </tr>
                 </xsl:if>
                 <xsl:if test="not(//mei:persResList/data(.) = '')">
                     <tr>
-                        <td valign="top">Besetzung:</td>
+                        <td valign="top">Beteiligte Instrumente:</td>
                         <td>
-                            <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes">
-                                <xsl:sort select="." order="ascending" data-type="text"/>
-                                <li>
+                            <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes/@auth">
+<!--                                <xsl:sort select="." order="ascending" data-type="text"/>-->
+                                <li style="list-style: square inside">
                                         <xsl:value-of select="."/>
-                                        <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>)</xsl:if>
+                                        <xsl:if test="number(./@count) &gt; 0">(<xsl:value-of select="parent::node()/@count"/>)</xsl:if>
                                     
                                 </li>
                             </xsl:for-each>
                         </td>
                     </tr>
                 </xsl:if>
+                <!--<xsl:if test="//mei:componentList/mei:manifestation/mei:title[@type='uniform']">
                 <tr>
                     <td colspan="2">Zugehörige Quellen:</td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <ul style="list-style-type:circle">
-                            <xsl:for-each select="//mei:componentList/mei:manifestation">
-                                <xsl:variable name="sourceTarget" select="@target"/>
-                                <xsl:choose>
-                                    <xsl:when test="doc-available(concat('../../../../contents/sources/music/', $sourceTarget, '.xml'))">
-                                        <li>
-                                            <xsl:value-of select="mei:titleStmt/mei:title"/> | <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@target,$sourceTarget)]/@rel"/> (<a href="{concat($registerRootManuskript,$sourceTarget)}" target="_blank">
-<xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@target,$sourceTarget)]/@target"/>
-                                            </a>)
+                        <ul style="list-style-type: square;">
+                            <xsl:for-each select="collection('../../../baudiSources/data/music')//mei:mei">
+                                <xsl:variable name="correspWork" select="//mei:relation/@target"/>
+                                <xsl:if test="$correspWork=$workID">        
+                                <li>
+                                            <xsl:value-of select="//mei:titlePart[@type='main']/string()"/>
                                         </li>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <li>
-                                            <xsl:value-of select="mei:contents/mei:contentItem"/> | <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@source,$sourceTarget)]/@rel"/> | <xsl:value-of select="ancestor::mei:work/mei:relationList/mei:relation[contains(@source,$sourceTarget)]/@source"/>
-                                        </li>
-                                    </xsl:otherwise>
-                                </xsl:choose>
+                                </xsl:if>
                             </xsl:for-each>
                         </ul>
                     </td>
                 </tr>
+                </xsl:if>-->
                 <xsl:if test="not(//mei:key/@mode/data(.) = '')"/>
             </table>
         </div>

@@ -4,8 +4,8 @@ xquery version "3.0";
  : A set of helper functions to access the application context from
  : within a module.
  :)
-module namespace config="http://localhost:8080/exist/apps/baudi/config";
-declare namespace templates="http://exist-db.org/xquery/templates";
+module namespace config="https://exist-db.org/xquery/config";
+declare namespace templates="http://exist-db.org/xquery/html-templating";
 
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
