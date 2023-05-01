@@ -581,13 +581,13 @@ let $facsimileTarget := if($sourceChiffre = '01')
                         else('no facsimile found')
 
 let $digilibFacPath := concat($digilibBasicPath, $facsimileTarget)
-let $BLBfacPath := concat($app:BLBfacPath, $facsimileTarget)
-let $BLBfacPathImage := concat($app:BLBfacPathImage, $facsimileTarget)
+let $BLBfacPath := concat($app:BLBfacPath, functx:substring-after-last($facsimileTarget,'/'))
+let $BLBfacPathImage := concat($app:BLBfacPathImage, functx:substring-after-last($facsimileTarget,'/'))
 
 let $graphicLocal := if(starts-with($facsimileTarget, 'baudi-'))
                      then(<img src="{concat($digilibFacPath, '?dw=500')}" class="img-thumbnail" width="400"/>)
                      else()
-let $graphicBLB := if($source//mei:graphic[@targettype="blb-vlid"])
+let $graphicBLB := if($source//mei:graphic[contains(@target,'digital.blb-karlsruhe.de')])
                    then(<a href="{$BLBfacPath}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat unter digital.blb-karlsruhe.de">
                             <img class="img-thumbnail" src="{$BLBfacPathImage}" width="400"/>
                         </a>)

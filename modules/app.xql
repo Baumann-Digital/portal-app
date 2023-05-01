@@ -31,7 +31,8 @@ declare variable $app:dbRootParam as node() := <parameters><param name="dbRootPa
 declare variable $app:digilibPath as xs:string := 'https://digilib.baumann-digital.de';
 declare variable $app:geonames as xs:string := 'https://www.geonames.org/';
 declare variable $app:BLBfacPath as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/content/pageview/';
-declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/image/view/';
+declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/download/webcache/2000/';
+
 
 declare variable $app:collectionWorks := collection('/db/apps/baudiData/works')//mei:work;
 declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiData/sources/music')//mei:mei;
