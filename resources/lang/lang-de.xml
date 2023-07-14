@@ -477,5 +477,5 @@
     <msg key="baudi.errorPage.sthWentWrong">Da ist wohl etwas schief gegangen!</msg>
     <msg key="baudi.errorPage.teamIsInformed">Unser Team wurde über diese Fehlfunktion automatisch und anonym informiert. Wir bemühen uns den Fehler schnellstmöglichst zu beheben!</msg>
     <msg key="baudi.errorPage.directConctact">In dringenden Fällen schreiben Sie uns bitte an info@baumann-digital.de</msg>
-	<msg key="baudi.noGraphic">Kein Vorschaubild verfügbar</msg>
+    <msg key="baudi.noGraphic">Kein Vorschaubild verfügbar</msg>
 </catalogue>
