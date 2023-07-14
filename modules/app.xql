@@ -31,8 +31,7 @@ declare variable $app:dbRootParam as node() := <parameters><param name="dbRootPa
 declare variable $app:digilibPath as xs:string := 'https://digilib.baumann-digital.de';
 declare variable $app:geonames as xs:string := 'https://www.geonames.org/';
 declare variable $app:BLBfacPath as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/content/pageview/';
-declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/download/webcache/2000/';
-
+declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/image/view/';
 
 declare variable $app:collectionWorks := collection('/db/apps/baudiData/works')//mei:work;
 declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiData/sources/music')//mei:mei;
@@ -1515,11 +1514,6 @@ return
        <li class="nav-item">
          <a class="nav-link active" id="pills-main-tab" data-toggle="pill" href="#pills-main" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
        </li>
-       {if(baudiWork:hasStemma($workID))
-        then(<li class="nav-item">
-         <a class="nav-link" id="pills-stemma-tab" data-toggle="pill" href="#pills-stemma" role="tab" aria-controls="pills-stemma" aria-selected="false">Stemma</a>
-       </li>)
-       else()}
        {if(baudiEditions:hasEditions($workID))
         then(<li class="nav-item">
          <a class="nav-link" id="pills-edition-tab" data-toggle="pill" href="#pills-edition" role="tab" aria-controls="pills-edition" aria-selected="false">Edition</a>
