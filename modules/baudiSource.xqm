@@ -121,10 +121,10 @@ declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as n
     let $perfResLists := $perfMedium//mei:perfResList
     
     let $perfResLabelString := for $list at $n in $perfResLists
-                                let $listName := $list/@auth
+                                let $listName := $list/@label
                                 let $listType := $list/@type
                                 let $perfResLabels := for $perfRes in $list/mei:perfRes
-                                                         let $perfResAuth := $perfRes/@auth
+                                                         let $perfResAuth := $perfRes/@label
                                                          let $perfResAuthShorted := if(contains($perfResAuth,'.i'))
                                                                                   then(substring-before($perfResAuth,'.i'))
                                                                                   else if(matches($perfResAuth,'.ii'))
@@ -195,7 +195,7 @@ let $msRepository := if($source//mei:physLoc/mei:repository/mei:corpName[@auth])
                      then(baudiShared:getCorpNameFullLinked($source//mei:physLoc/mei:repository/mei:corpName))
                      else($source//mei:physLoc/mei:repository/string())
 let $msRepositorySiglum := $source//mei:physLoc/mei:repository/mei:corpName/@label/string()
-let $msRepositoryShelfmark := $source//mei:physLoc/mei:repository/mei:identifier[@type="shelfmark"]
+let $msRepositoryShelfmark := $source//mei:physLoc/mei:repository/mei:identifier[@type="shelfmark"] | $source//mei:manifestation/mei:identifier[@type="shelfmark"]
 let $msRismNo := $source//mei:manifestation/mei:identifier[@type="rism"]/text()
 
 let $table := <table class="sourceView">
@@ -205,7 +205,7 @@ let $table := <table class="sourceView">
                   </tr>
                   <tr>
                      <td>{baudiShared:translate('baudi.registry.sources.msDesc.repository')}</td>
-                     <td>{$msRepository} {if($msRepositorySiglum)then(concat(' (', $msRepositorySiglum, ')'))else(baudiShared:translate('baudi.unknown'))}</td>
+                     <td>{$msRepository}</td>
                   </tr>
                   {if($msRepositoryShelfmark)
                   then(
@@ -231,15 +231,14 @@ declare function baudiSource:getManifestationPaperSpecs($sourceID  as xs:string)
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 let $sourceType := string-join($source//mei:term[@type='source']/string(),'_')
 
-let $msPaperDimensionsHeight := $source//mei:dimensions[@label="height"]/text()
-let $msPaperDimensionsHeightUnit := $source//mei:dimensions[@label="height"]/@unit/string()
-let $msPaperDimensionsWidth := $source//mei:dimensions[@label="width"]/text()
-let $msPaperDimensionsWidthUnit := $source//mei:dimensions[@label="width"]/@unit/string()
-let $height := if($msPaperDimensionsHeight) then(string-join(($msPaperDimensionsHeight, $msPaperDimensionsHeightUnit), ' ')) else()
+let $msPaperDimensionsHeight := $source//mei:dimensions[@label="height"]/text() | $source//mei:dimensions/mei:height/text()
+let $msPaperDimensionsHeightUnit := ($source//mei:dimensions[@label="height"]/@unit/string(), $source//mei:dimensions/mei:height/@unit/string())
+let $msPaperDimensionsWidth := $source//mei:dimensions[@label="width"]/text() | $source//mei:dimensions/mei:width/text()
+let $msPaperDimensionsWidthUnit := ($source//mei:dimensions[@label="width"]/@unit/string(), $source//mei:dimensions/mei:width/@unit/string())
+let $height := if($msPaperDimensionsHeight) then(string-join(($msPaperDimensionsHeight, $msPaperDimensionsHeightUnit), ' '))else()
 let $width := if($msPaperDimensionsWidth) then(string-join(($msPaperDimensionsWidth, $msPaperDimensionsWidthUnit), ' ')) else()
 let $msPaperDimensions := if($height or $width)
-                          then(concat('ca. ',
-                                      string-join(($height, $width), ' x '),
+                          then(concat(string-join(($height, $width), ' x '),
                                       ' (',
                                       string-join( (
                                       if($height)
@@ -256,8 +255,8 @@ let $prPaperFormat := if($msPaperOrientation and $msPaperDimensionsHeight and $m
                       then(baudiSource:getPrintPaperFormat($msPaperOrientation,$msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit))
                       else('Dimensions not recorded')
 
-let $msPaperFolii := $source//mei:extent[@label="folium"]/text()
-let $msPaperPages := $source//mei:extent[@label="pages"]/text()
+let $msPaperFolii := $source//mei:extent[@label="folium"]/text() | $source//mei:extent[@unit="folio"]/text()
+let $msPaperPages := $source//mei:extent[@label="pages"]/text() | $source//mei:extent[@unit="page"]/text()
 let $msPaperPagination := baudiShared:translate(concat('baudi.registry.sources.msDesc.paper.pagination.', $source//mei:extent[@label="pagination"]/text()))
 
 let $table := <table class="sourceView">
@@ -265,11 +264,13 @@ let $table := <table class="sourceView">
                       <th/>
                       <th/>
                   </tr>
-                  <tr>
+                  {if($msPaperOrientation)
+                  then(<tr>
                      <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.orientation')}</td>
                      <td>{baudiShared:translate(concat('baudi.registry.sources.msDesc.paper.orientation.', $msPaperOrientation))}</td>
-                  </tr>
-                  {if(contains($sourceType,'manuscript'))
+                  </tr>)
+                  else()}
+                  {if($msPaperDimensions)
                   then(<tr>
                          <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.dimensions')}</td>
                          <td>{$msPaperDimensions}</td>
@@ -280,18 +281,24 @@ let $table := <table class="sourceView">
                          <td>{$prPaperFormat}</td>
                        </tr>)
                   else('–')}
-                  <tr>
+                  {if($msPaperFolii)
+                  then(<tr>
                      <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.folii')}</td>
                      <td>{$msPaperFolii}</td>
-                  </tr>
-                  <tr>
+                  </tr>)
+                  else()}
+                  {if($msPaperPages)
+                  then(<tr>
                      <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.pages')}</td>
                      <td>{$msPaperPages}</td>
-                  </tr>
-                  <tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.pagination')}</td>
-                     <td>{$msPaperPagination}</td>
-                  </tr>
+                  </tr>)
+                  else()}
+                  {if($msPaperPagination)
+                  then(<tr>
+                         <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.pagination')}</td>
+                         <td>{$msPaperPagination}</td>
+                       </tr>)
+                  else()}
               </table>
 return
     $table
@@ -305,9 +312,9 @@ let $listOfHands := for $hand in $hands
                     
                     let $type := baudiShared:translate(concat('baudi.registry.sources.msDesc.hands.',$hand/@type))
                     let $medium := baudiShared:translate(concat('baudi.registry.sources.msDesc.hands.medium.',$hand/@medium))
-                    let $praeposition := baudiShared:translate('baudi.registry.praeposition.with')
+                    let $text := $hand//text() => string-join(' ')
                     return
-                        <li>{$type, $praeposition, $medium}</li>
+                        <li>{if($type) then($type || ', ') else(), $medium, if($text) then(' (' || $text || ')') else()}</li>
 let $table := <table class="sourceView">
                   <tr>
                       <th/>
@@ -388,7 +395,8 @@ let $listOfNotes := for $note in $notes
                         let $notePage := $source//mei:surface[@xml:id = $noteData]/@label/string()
                         let $resp := if($source//mei:hand[@xml:id = $noteResp]) then(functx:index-of-node($source//mei:hand, $source//mei:hand[@xml:id = $noteResp])) else()
                         return
-                            <li>{concat('[Hand ', $resp, ', ', $notePage, ' ', string-join($notePlaceTranslated, ' '), '] ')} <i>{$note/text()}</i></li>
+                            if($resp) then(<li>{concat('[Hand ', $resp, ', ', $notePage, ' ', string-join($notePlaceTranslated, ' '), '] ')} <i>{$note/text()}</i></li>)
+                            else(<li><i>{$note//text() => string-join('')}</i></li>)
 let $table := <table class="sourceView">
                   <tr>
                       <th/>
@@ -580,14 +588,16 @@ let $facsimileTarget := if($sourceChiffre = '01')
                         then($app:collectionDocuments[@xml:id= $id]//tei:div[@type='page' and @n='1']/@facs)
                         else('no facsimile found')
 
-let $digilibFacPath := concat($digilibBasicPath, $facsimileTarget)
-let $BLBfacPath := concat($app:BLBfacPath, functx:substring-after-last($facsimileTarget,'/'))
-let $BLBfacPathImage := concat($app:BLBfacPathImage, functx:substring-after-last($facsimileTarget,'/'))
+let $facsimileTargetPath := if(starts-with($facsimileTarget, 'https://digital.blb-karlsruhe.de')) then(functx:substring-after-last($facsimileTarget,'/')) else($facsimileTarget)
+let $digilibFacPath := concat($digilibBasicPath, $facsimileTargetPath)
 
-let $graphicLocal := if(starts-with($facsimileTarget, 'baudi-'))
+let $BLBfacPath := concat($app:BLBfacPath, $facsimileTargetPath)
+let $BLBfacPathImage := concat($app:BLBfacPathImage, $facsimileTargetPath)
+
+let $graphicLocal := if(starts-with($facsimileTargetPath, 'baudi-'))
                      then(<img src="{concat($digilibFacPath, '?dw=500')}" class="img-thumbnail" width="400"/>)
                      else()
-let $graphicBLB := if($source//mei:graphic[contains(@target,'digital.blb-karlsruhe.de')])
+let $graphicBLB := if($source//mei:graphic[@targettype="blb-vlid"] or starts-with($facsimileTarget, 'https://digital.blb-karlsruhe.de'))
                    then(<a href="{$BLBfacPath}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat unter digital.blb-karlsruhe.de">
                             <img class="img-thumbnail" src="{$BLBfacPathImage}" width="400"/>
                         </a>)
@@ -601,7 +611,7 @@ return
     <div class="col">
         {if($graphicLocal) then($graphicLocal)
          else if($graphicBLB) then($graphicBLB, $graphicBLBLabel)
-         else('noGraphic')}
+         else(baudiShared:translate('baudi.noGraphic'))}
         
     </div>
 };

@@ -189,16 +189,16 @@
     <msg key="baudi.registry.works.perfRes.bass.ii">Bass II</msg>
     <msg key="baudi.registry.works.perfRes.choir">Choir</msg>
     <msg key="baudi.registry.works.perfRes.choir.short">Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir.voices.4">Choir (4 voices)</msg>
-    <msg key="baudi.registry.works.perfRes.choir.voices.4.short">Ch. (4 voc.)</msg>
-    <msg key="baudi.registry.works.perfRes.choir.men">Mens choir</msg>
-    <msg key="baudi.registry.works.perfRes.choir.men.short">M.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir.women">Womens choir</msg>
-    <msg key="baudi.registry.works.perfRes.choir.women.short">W.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir.children">Childrens choir</msg>
-    <msg key="baudi.registry.works.perfRes.choir.children.short">C.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir.mixed">Mixed choir</msg>
-    <msg key="baudi.registry.works.perfRes.choir.mixed.short">Mxt. Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir4voices">Choir (4 voices)</msg>
+    <msg key="baudi.registry.works.perfRes.choir4voices.short">Ch. (4 voc.)</msg>
+    <msg key="baudi.registry.works.perfRes.choirMale">Mens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choirMale.short">M.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choirFemale">Womens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choirFemale.short">W.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choirChildren">Childrens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choirChildren.short">C.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choirMixed">Mixed choir</msg>
+    <msg key="baudi.registry.works.perfRes.choirMixed.short">Mxt. Ch.</msg>
     <msg key="baudi.registry.works.perfRes.piccolo">Piccolo</msg>
     <msg key="baudi.registry.works.perfRes.piccolo.short">Picc.</msg>
     <msg key="baudi.registry.works.perfRes.flute">Flute</msg>
@@ -217,12 +217,12 @@
     <msg key="baudi.registry.works.perfRes.bassoon.short">Bs.</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.i">Bassoon I</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.ii">Bassoon II</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french">French horn</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.short">F.-hrn.</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.i">French horn I</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.ii">French horn II</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.iii">French horn III</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.iv">French horn IV</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench">French horn</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.short">F.-hrn.</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.i">French horn I</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.ii">French horn II</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.iii">French horn III</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.iv">French horn IV</msg>
     <msg key="baudi.registry.works.perfRes.trumpet">Trumpet</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.short">Trp.</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.i">Trumpet I</msg>
@@ -252,10 +252,12 @@
     <msg key="baudi.registry.works.perfRes.organ.short">Org.</msg>
     <msg key="baudi.registry.works.perfRes.harmonium">Harmonium</msg>
     <msg key="baudi.registry.works.perfRes.harmonium.short">Harm.</msg>
-    <msg key="baudi.registry.works.perfRes.harpa">Harp</msg>
-    <msg key="baudi.registry.works.perfRes.harpa.short">Hrp.</msg>
+    <msg key="baudi.registry.works.perfRes.harp">Harp</msg>
+    <msg key="baudi.registry.works.perfRes.harp.short">Hrp.</msg>
     <msg key="baudi.registry.works.perfRes.timpani">Timpani</msg>
     <msg key="baudi.registry.works.perfRes.timpani.short">Tim.</msg>
+    <msg key="baudi.registry.works.perfRes.bells">(Small) Bells</msg>
+    <msg key="baudi.registry.works.perfRes.bells.short">Bl.</msg>
     <msg key="baudi.registry.works.perfRes.turbularBells">Turbular bells</msg>
     <msg key="baudi.registry.works.perfRes.turbularBells.short">Tur.-Bl.</msg>
     
@@ -267,10 +269,10 @@
     <msg key="baudi.registry.sources.titleSub">Subtitle</msg>
     <msg key="baudi.registry.sources.titleDipl">Title (diplomatic)</msg>
     <msg key="baudi.registry.sources.perfMedium">Performance specification</msg>
-    <msg key="baudi.registry.sources.composer">Composer</msg>
-    <msg key="baudi.registry.sources.arranger">Arranger</msg>
-    <msg key="baudi.registry.sources.editor">Editor</msg>
-    <msg key="baudi.registry.sources.lyricist">Lyricist</msg>
+    <msg key="baudi.registry.sources.composer">Music</msg>
+    <msg key="baudi.registry.sources.arranger">Arrangement</msg>
+    <msg key="baudi.registry.sources.editor">Edition</msg>
+    <msg key="baudi.registry.sources.lyricist">Text</msg>
     <msg key="baudi.registry.sources.perfRes">Performance Ressources</msg>
     
     <msg key="baudi.registry.sources.all">All sources</msg>
@@ -474,4 +476,5 @@
     <msg key="baudi.errorPage.sthWentWrong">Something must have gone wrong!</msg>
     <msg key="baudi.errorPage.teamIsInformed">Our team will be informed about this malfunction automatically and anonymously. We will try to find a solution as soon as possible!</msg>
     <msg key="baudi.errorPage.directConctact">In urgent cases, please write us a message to info@baumann-digital.de</msg>
+	<msg key="baudi.noGraphic">No preview available</msg>
 </catalogue>

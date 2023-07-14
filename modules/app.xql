@@ -915,7 +915,8 @@ return
              {if($sourceLyricist or $sourceWorkGroup = 'vocal')
              then(<tr>
                     <td>{baudiShared:translate('baudi.registry.sources.lyricist')}</td>
-                    <td>{if($sourceLyricist) then($sourceLyricist)else(baudiShared:translate('baudi.unknown'))}</td>
+                    <td>{if($sourceLyricist) then($sourceLyricist)
+                        else if ($source//mei:manifestation//mei:lyricist/text() != '') then($source//mei:manifestation//mei:lyricist/text()) else(baudiShared:translate('baudi.unknown'))}</td>
                   </tr>)
              else()}
              {if($sourceEditor)
