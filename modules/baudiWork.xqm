@@ -64,10 +64,10 @@ declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
     let $perfResLists := $perfMedium//mei:perfResList
     
     let $perfResLabelString := for $list at $n in $perfResLists
-                                let $listName := $list/@auth
+                                let $listName := $list/@label
                                 let $listType := $list/@type
                                 let $perfResLabels := for $perfRes in $list/mei:perfRes
-                                                         let $perfResAuth := $perfRes/@auth
+                                                         let $perfResAuth := $perfRes/@label
                                                          let $perfResAuthShorted := if(contains($perfResAuth,'.i'))
                                                                                   then(substring-before($perfResAuth,'.i'))
                                                                                   else if(matches($perfResAuth,'.ii'))
