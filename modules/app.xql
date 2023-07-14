@@ -1547,13 +1547,13 @@ return
              else()}
              {if($composerName != '')
              then(<tr>
-                    <td>{baudiShared:translate(concat('baudi.registry.works.composer',baudiShared:checkGenderforLangValues($composerID)))}</td>
+                    <td>Musik</td>
                     <td>{$composerName}</td>
                   </tr>)
              else()}
              {if($lyricistName != '')
              then(<tr>
-                    <td>{baudiShared:translate(concat('baudi.registry.works.lyricist',baudiShared:checkGenderforLangValues($lyricistID)))}</td>
+                    <td>Text</td>
                     <td>{$lyricistName}</td>
                   </tr>)
              else()}
@@ -1593,13 +1593,13 @@ return
              else()}
              {if($workgroup)
              then(<tr>
-                    <td>{baudiShared:translate('baudi.registry.works.category')}</td>
+                    <td>Werkklasse</td>
                     <td>{string-join(for $each in $workgroup return baudiShared:translate(concat('baudi.registry.works.',$each)),' | ')}</td>
                   </tr>)
              else()}
              {if($genre)
              then(<tr>
-                    <td>{baudiShared:translate('baudi.registry.works.genre')}</td>
+                    <td>Werkgruppe</td>
                     <td>{baudiShared:translate(concat('baudi.registry.works.',$genre))}</td>
                   </tr>)
              else()}
