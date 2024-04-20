@@ -94,6 +94,7 @@
         <zip destfile="${dist.dir}/${project.app.pkg.name}">
             <fileset dir="${build.dir}/">
                 <include name="**/*.*"/>
+                <exclude name="${dist.dir}/"/>
             </fileset>
         </zip>
         <delete file="expath-pkg.xml"/>
