@@ -19,8 +19,8 @@
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Welcome!</msg>
     <msg key="baudi.landing.modal.concerningContent">Attention!</msg>
-    <msg key="baudi.landing.modal.text.1">This portal is created as part of a still ongoing PhD project. Due to this, some functionalities had to be disabled for the time being. As soon as the applicable embargo periods have expired, this portal will be fully available.</msg>
-    <msg key="baudi.landing.modal.text.2">Despite the limitations, insights into the diversity of data are already to be given. For this purpose, reference data sets on works, persons, institutions and places that appear in the course of the project are available. You are welcome to use these as starting points!</msg>
+    <msg key="baudi.landing.modal.text.1">This portal was created as part of a doctoral project that was completed in December 2023. The publication of the dissertation is currently in preparation. As a result, the portal is not (yet) accessible via this page for the time being. With the publication of the dissertation, this portal will be fully available.</msg>
+    <msg key="baudi.landing.modal.text.2">The source code of the portal can be accessed on Github! (https://github.com/Baumann-Digital/portal-app)</msg>
     <msg key="baudi.landing.modal.start">Let’s go!</msg>
     <msg key="baudi.landing.cookies.notice">The Internet pages use so-called cookies in several places. They serve to make our offer more user-friendly, effective and secure. Cookies are small text files that are stored on your computer and saved by your browser. Most of the cookies we use are so-called “session cookies”. They are automatically deleted after the end of your visit. Cookies do not cause any damage to your computer and do not contain viruses. If you remain on this site, you agree to the use of cookies.</msg>
     <msg key="baudi.landing.overlay.inPreparation">In preparation</msg>

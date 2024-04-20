@@ -19,8 +19,8 @@
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Willkommen!</msg>
     <msg key="baudi.landing.modal.concerningContent">Zur Beachtung</msg>
-    <msg key="baudi.landing.modal.text.1">Dieses Portal entsteht als Teil eines noch andauernden Promotionsprojektes. Aufgrund dessen mussten einige Funktionalitäten vorerst deaktiviert werden. Sobald die geltenden Embargo-Fristen abgelaufen sind, wird dieses Portal in vollem Umfang zur Verfügung stehen.</msg>
-    <msg key="baudi.landing.modal.text.2">Trotz der Einschränkungen, sollen bereits jetzt Einblicke in die Datenvielfalt gegeben werden. Hierfür stehen Referenzdatensätze zu Werken, Personen, Institutionen und Orten, die im Laufe des Projektes in Erscheinung treten, bereit. Diese dürfen gerne als Anknüpfungspunkte genutzt werden!</msg>
+    <msg key="baudi.landing.modal.text.1">Dieses Portal entstand im Rahmen eines Promotionsprojektes, das im Dezember 2023 abgeschlossen werden konnte. Die Publikation der Dissertationsschrift befindet sich derzeit in Vorbereitung. Aufgrund dessen ist das Portal über diese Seite vorerst (noch) nicht zugänglich. Mit der Publikation der Dissertationsschrift, wird dieses Portal in vollem Umfang zur Verfügung stehen.</msg>
+    <msg key="baudi.landing.modal.text.2">Der Source-Code zum Portal ist bereits auf Github verfügbar! (https://github.com/Baumann-Digital/portal-app)</msg>
     <msg key="baudi.landing.modal.start">Los gehts!</msg>
     <msg key="baudi.landing.cookies.notice">Die Internetseiten verwenden an mehreren Stellen sogenannte Cookies. Sie dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen. Cookies sind kleine Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser speichert. Die meisten der von uns verwendeten Cookies sind sogenannte »Session-Cookies«. Sie werden nach Ende Ihres Besuchs automatisch gelöscht. Cookies richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren. Wenn Sie auf dieser Seite verbleiben, erklären Sie sich damit einverstanden, dass Cookies verwendet werden.</msg>
     <msg key="baudi.landing.overlay.inPreparation">In Vorbereitung</msg>
