@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="dist" name="baudiApp" basedir="." xmlns:unless="ant:unless">
+<project default="update-baudi-docker" name="baudiApp" basedir="." xmlns:unless="ant:unless">
     <dirname property="baudiApp.basedir" file="${ant.file.baudiApp}"/>
     
     <!-- import default properties from file -->
@@ -100,43 +100,16 @@
         <delete file="repo.xml"/>
     </target>
     
-    <!-- Deploy directly to localhost -->
-    <target name="deploy" depends="clean, dist">
-        <path id="classpath.eXist">
-            <fileset dir="${exist.libs}" erroronmissingdir="no">
-                <include name="*.jar"/>
+    <!-- Copy xar package to baudi-docker repo (autodeploy) -->
+    <target name="update-baudi-docker" depends="dist">
+        <echo>Delete old packages</echo>
+        <delete>
+            <fileset dir="./../baudi-docker/autodeploy">
+                <include name="${project.app}-*.xar"/>
             </fileset>
-        </path>
-        <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
-            <classpath refid="classpath.eXist"/>
-        </typedef>
-        
-        <!-- store xar-file in eXist-db -->
-        <xdb:store xmlns:xdb="http://exist-db.org/ant"
-            uri="${exist.db}/tmp"
-            createcollection="true"
-            createsubcollections="true"
-            user="${exist.user}"
-            password="${exist.pass}"
-            failonerror="true">
-            <fileset file="${build.dir}/${project.app.pkg.name}"/>
-        </xdb:store>
-        
-        <!-- Deploy the xar -->
-        <xdb:xquery  xmlns:xdb="http://exist-db.org/ant"
-            uri="${exist.db}"
-            user="${exist.user}"
-            password="${exist.pass}"
-            failonerror="true">
-            (
-            if("${project.url}" = repo:list()) then (
-            repo:undeploy("${project.url}"),
-            repo:remove("${project.url}")
-            )
-            else (),
-            repo:install-and-deploy-from-db("/db/tmp/${project.app.pkg.name}")
-            )
-        </xdb:xquery>
+        </delete>
+        <echo>Add new package</echo>
+        <copy file="${build.dir}/${project.app.pkg.name}" todir="./../baudi-docker/autodeploy" overwrite="yes"/>
     </target>
     
 </project>
