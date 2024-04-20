@@ -62,6 +62,10 @@
     <msg key="baudi.landing.about.portal.digitized.text">Im Dezember 2020 erreichte uns die Nachricht, dass die Badische Landesbibliothek Karlsruhe die Digitalisierung des dort beherbergten musikalischen Nachlasses Baumanns erfolgreich abgeschlossen hat. Herzlichen Dank an Annett-Kristin Oberhoff und Brigitte Knödler-Kagoshima für ihren unermüdlichen Einsatz.</msg>
     <msg key="baudi.landing.about.portal.launch">Endlich online!</msg>
     <msg key="baudi.landing.about.portal.launch.text">Nach mehreren Jahren grundlegender Arbeiten ist das Baumann-Portal nun online verfügbar – und das, obwohl das Promotionsprojekt zu Baumann noch läuft! Wir haben uns entschlossen, zunächst nur allgemeine Katalogdaten zur Verfügung zustellen. Sobald die Dissertation abgeschlossen ist und geltende Embargofristen ausgelaufen sind, werden hier alle aufbereiteten Forschungsdaten des Projektes zur Verfügung gestellt!</msg>
+    <msg key="baudi.landing.about.thesis.phd.finished">Promotion abgeschlossen</msg>
+    <msg key="baudi.landing.about.thesis.phd.finished.text">Am 18. Dezember 2023 – pünktlich zu seinem 34. Geburtstag – hat Dennis Ried seine Dissertationsschrift mit dem Titel »›halb und halb‹ – Hybride Edition als Kompromiss? Eine Studie zu Methodik, Möglichkeiten und Grenzen in der hybriden Musikedition am Beispiel der Edition von Ludwig Baumanns ›Kantate. Den Gefallenen zum Gedächtnis, den Trauernden zum Trost‹« an der Hochschule für Musik Karlsruhe verteidigt.</msg>
+    <msg key="baudi.landing.about.portal.launch.full">Öffnung des Portals</msg>
+    <msg key="baudi.landing.about.portal.launch.full.text">Die Druckvorbereitung der Dissertationsschrift von Dennis Ried ist in vollem Gange! Mit der Dissertationsschrift wird auch das Portal dann endlich in vollem Umfang zugänglich sein. Wir bitten hierbei noch um ein kleinwenig Geduld, da die finale Durchsicht der Inhalte doch recht aufweniger ist. Wir hoffen noch in der ersten Jahreshälfte das Portal online schalten zu können.</msg>
     <msg key="baudi.landing.about.be.part">Werde</msg>
     <msg key="baudi.landing.about.of.our">Teil Dieser</msg>
     <msg key="baudi.landing.about.story">Geschichte!</msg>
