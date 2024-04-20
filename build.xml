@@ -7,8 +7,8 @@
     <property file="${baudiApp.basedir}/build.properties"/>
     
     <target name="clean-all">
-        <delete dir="${build.dir}"/>
         <delete dir="${dist.dir}"/>
+        <delete dir="${build.dir}"/>
         <delete file="expath-pkg.xml"/>
         <delete file="repo.xml"/>
     </target>
@@ -18,9 +18,9 @@
         <antcall target="clean-dist"/>
     </target>
     
-    <target name="clean-build" if="${build.dir}">
+    <target name="clean-build" if="${dist.dir}">
         <delete includeemptydirs="true">
-            <fileset dir="${build.dir}" defaultexcludes="false">
+            <fileset dir="${dist.dir}" defaultexcludes="false">
                 <!--<include name="*.xml"/>
                 <include name="*.txt"/>-->
                 <include name="**/*"/>
@@ -30,17 +30,17 @@
         </delete>
     </target>
     
-    <target name="clean-dist" if="${dist.dir}">
+    <target name="clean-dist" if="${build.dir}">
         <delete includeemptydirs="true">
-            <fileset dir="${dist.dir}" defaultexcludes="false">
+            <fileset dir="${build.dir}" defaultexcludes="false">
                 <include name="**/*"/>
             </fileset>
         </delete>
     </target>
     
     <target name="init" depends="get-current-hash-of-HEAD">
-        <mkdir dir="${build.dir}"/>
         <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${build.dir}"/>
     </target>
     
     <target name="get-current-hash-of-HEAD">
@@ -55,7 +55,7 @@
     
     <target name="dist" depends="init">
         <property name="project.app.pkg.name" value="${project.app}-${project.version}-${local.revision}.xar"/>
-        <copy todir="dist/">
+        <copy todir="${build.dir}/">
             <fileset dir=".">
                 <include name="**/*.*"/>
                 <exclude name="build.xml"/>
@@ -65,14 +65,14 @@
                 <exclude name="*.xpr"/>
                 <exclude name="*.properties"/>
                 <exclude name="build/**"/>
-                <exclude name="dist/**"/>
+                <exclude name="${build.dir}/**"/>
                 <exclude name="scripts/**"/>
                 <exclude name="blob/"/>
                 <exclude name="**/__contents__.xml"/>
             </fileset>
         </copy>
         
-        <copy file="expath-pkg.xml.tmpl" tofile="dist/expath-pkg.xml" filtering="true" overwrite="true">
+        <copy file="expath-pkg.xml.tmpl" tofile="${build.dir}/expath-pkg.xml" filtering="true" overwrite="true">
             <filterset>
                 <filter token="project.app" value="${project.app}"/>
                 <filter token="project.name" value="${project.name}"/>
@@ -81,7 +81,7 @@
                 <filter token="project.url" value="${project.url}"/>
             </filterset>
         </copy>
-        <copy file="repo.xml.tmpl" tofile="dist/repo.xml" filtering="true" overwrite="true">
+        <copy file="repo.xml.tmpl" tofile="${build.dir}/repo.xml" filtering="true" overwrite="true">
             <filterset>
                 <filter token="data.target" value="${project.app}"/>
                 <filter token="project.name" value="${project.name}"/>
@@ -91,13 +91,14 @@
                 <filter token="db.user.permissions" value="${db.user.permissions}"/>
             </filterset>
         </copy>
-        <zip destfile="${build.dir}/${project.app.pkg.name}">
-            <fileset dir="dist/">
+        <zip destfile="${dist.dir}/${project.app.pkg.name}">
+            <fileset dir="${build.dir}/">
                 <include name="**/*.*"/>
             </fileset>
         </zip>
         <delete file="expath-pkg.xml"/>
         <delete file="repo.xml"/>
+        <delete dir="${build.dir}"/>
     </target>
     
     <!-- Copy xar package to baudi-docker repo (autodeploy) -->
@@ -109,7 +110,7 @@
             </fileset>
         </delete>
         <echo>Add new package</echo>
-        <copy file="${build.dir}/${project.app.pkg.name}" todir="./../baudi-docker/autodeploy" overwrite="yes"/>
+        <copy file="${dist.dir}/${project.app.pkg.name}" todir="./../baudi-docker/autodeploy" overwrite="yes"/>
     </target>
     
 </project>
