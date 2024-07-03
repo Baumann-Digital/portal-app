@@ -597,16 +597,16 @@ declare function baudiShared:getReferences($id) {
                                  $app:collectionPeriodicals[matches(.//@key,$id)],
                                  $app:collectionLoci[matches(.//@key,$id)],
                                  $app:collectionDocuments[matches(.//@key,$id)],
-                                 $app:collectionSourcesMusic[matches(.//@auth,$id)],
-                                 $app:collectionWorks[matches(.//@auth,$id)])
+                                 $app:collectionSourcesMusic[matches(.//@codedval,$id)],
+                                 $app:collectionWorks[matches(.//@codedval,$id)])
     
     let $entryGroups := for $doc in $collectionReference
                           let $docRoot := $doc/root()/node()
                           let $docID := $docRoot/@xml:id
                           let $docIDStart := substring($docID,1,8)
-                          let $docInfo := if(starts-with($docRoot/@xml:id,'baudi-07-'))
-                                          then(baudiShared:translate('baudi.registry.persons.references.sources.text'))
-                                          else if (starts-with($docRoot/@xml:id,'baudi-02-'))
+                          let $docInfo := if(starts-with($docRoot/@xml:id,'baudi-01-'))
+                                          then(baudiShared:translate('baudi.registry.persons.references.sources.music'))
+                                          else if (starts-with($docRoot/@xml:id,'baudi-02-') or starts-with($docRoot/@xml:id,'baudi-13-'))
                                           then (baudiShared:translate('baudi.registry.persons.references.works'))
                                           else if(starts-with($docRoot/@xml:id,'baudi-04-'))
                                           then(baudiShared:translate('baudi.registry.persons.references.persons'))
@@ -614,22 +614,22 @@ declare function baudiShared:getReferences($id) {
                                           then(baudiShared:translate('baudi.registry.persons.references.institutions'))
                                           else if(starts-with($docRoot/@xml:id,'baudi-06-'))
                                           then(baudiShared:translate('baudi.registry.persons.references.loci'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-07-'))
+                                          then(baudiShared:translate('baudi.registry.persons.references.sources.text'))
                                           else if(starts-with($docRoot/@xml:id,'baudi-09-'))
                                           then(baudiShared:translate('baudi.registry.persons.references.periodicals'))
-                                          else if(starts-with($docRoot/@xml:id,'baudi-01-'))
-                                          then(baudiShared:translate('baudi.registry.persons.references.sources.music'))
                                           else(baudiShared:translate('baudi.registry.persons.references.other'))
-                          let $entryOrder := if(starts-with($docRoot/@xml:id,'baudi-02-'))
+                          let $entryOrder := if(starts-with($docRoot/@xml:id,'baudi-02-') or starts-with($docRoot/@xml:id,'baudi-13-'))
                                           then('002')
-                                          else if (starts-with($docRoot/@xml:id,'baudi-01-'))
+                                          else if (starts-with($docRoot/@xml:id,'baudi-01'))
                                           then ('001')
-                                          else if(starts-with($docRoot/@xml:id,'baudi-07-'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-07'))
                                           then('003')
-                                          else if(starts-with($docRoot/@xml:id,'baudi-04-'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-04'))
                                           then('004')
-                                          else if(starts-with($docRoot/@xml:id,'baudi-05-'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-05'))
                                           then('005')
-                                          else if(starts-with($docRoot/@xml:id,'baudi-06-'))
+                                          else if(starts-with($docRoot/@xml:id,'baudi-06'))
                                           then('006')
                                           else('007')
                           let $correspActionSent := $docRoot//tei:correspAction[@type="sent"]
@@ -639,14 +639,22 @@ declare function baudiShared:getReferences($id) {
                           let $docDate := if($correspActionSent)
                                           then('DATUM')
                                           else(<br/>)
-                          let $workSortValue := 'sort'
                           let $docTitle := if($correspActionSent)
-                                           then($correspSentTurned,<br/>,'an ',$correspReceivedTurned)
-                                           else if(starts-with($docRoot/@xml:id,'baudi-02-')) 
-                                           then($docRoot//mei:workList/mei:work[1]/mei:title[1]/string())
+                                           then($correspSentTurned,' an ',$correspReceivedTurned)
+                                           else if(starts-with($docRoot/@xml:id,'baudi-02-') or starts-with($docRoot/@xml:id,'baudi-13-')) 
+                                           then($docRoot//(mei:work//mei:titlePart[@type="main"])[1]/text())
+                                           else if(starts-with($docRoot/@xml:id,'baudi-01-')) 
+                                           then($docRoot//(mei:manifestation//mei:titlePart[@type="main"])[1]/text())
+                                           else if(starts-with($docRoot/@xml:id,'baudi-04-')) 
+                                           then($docRoot//(tei:persName)[1]/text())
+                                           else if(starts-with($docRoot/@xml:id,'baudi-05-')) 
+                                           then($docRoot//(tei:orgName)[1]/text())
+                                           else if(starts-with($docRoot/@xml:id,'baudi-06-')) 
+                                           then($docRoot//(tei:placeName)[1]/text())
                                            else if($docRoot/name()='TEI')
                                            then($docRoot//tei:titleStmt/tei:title/string())
                                            else('noTitle')
+                          let $workSortValue := string-join($docTitle,' ') => replace('»','') => replace('«','')
                           let $entry := <div class="row RegisterEntry" xmlns="http://www.w3.org/1999/xhtml">
                                           <div class="col-3" dateToSort="{$docDate}" workSort="{$workSortValue}">
                                               {$docInfo}
@@ -655,11 +663,11 @@ declare function baudiShared:getReferences($id) {
                                               else()}
                                          </div>
                                          <div class="col" docTitle="{normalize-space($docTitle[1])}">{$docTitle}</div>
-                                         <div class="col-2"><a href="{$docID}">{string($docID)}</a></div>
+                                         <div class="col-3"><a href="{$docID}">{string($docID)}</a></div>
                                        </div>
                           group by $docIDStart
                           return
-                              (<div xmlns="http://www.w3.org/1999/xhtml" groupName="{$docIDStart}" order="{$entryOrder}">{for $each in $entry
+                              (<div xmlns="http://www.w3.org/1999/xhtml" groupName="{$docIDStart}" order="{distinct-values($entryOrder)}">{for $each in $entry
                                     order by if($each/div/@dateToSort !='')
                                              then($each/div/@dateToSort)
                                              else if($each/div/@workSort)
@@ -671,18 +679,18 @@ declare function baudiShared:getReferences($id) {
                               let $groupName := $groups/@groupName
                               let $order := $groups/@order
                               let $registerSortEntryLabel := switch ($groupName/string())
-                                                               case 'baudi-01-' return baudiShared:translate('baudi.registry.persons.references.sources.music')
-                                                               case 'baudi-02-' return baudiShared:translate('baudi.registry.persons.references.works')
-                                                               case 'baudi-04-' return baudiShared:translate('baudi.registry.persons.references.persons')
-                                                               case 'baudi-05-' return baudiShared:translate('baudi.registry.persons.references.institutions')
-                                                               case 'baudi-06-' return baudiShared:translate('baudi.registry.persons.references.loci')
-                                                               case 'baudi-07-' return baudiShared:translate('baudi.registry.persons.references.sources.text')
-                                                               case 'baudi-09-' return baudiShared:translate('baudi.registry.persons.references.periodicals')
+                                                               case 'baudi-01' return baudiShared:translate('baudi.registry.persons.references.sources.music')
+                                                               case 'baudi-02' return baudiShared:translate('baudi.registry.persons.references.works')
+                                                               case 'baudi-04' return baudiShared:translate('baudi.registry.persons.references.persons')
+                                                               case 'baudi-05' return baudiShared:translate('baudi.registry.persons.references.institutions')
+                                                               case 'baudi-06' return baudiShared:translate('baudi.registry.persons.references.loci')
+                                                               case 'baudi-07' return baudiShared:translate('baudi.registry.persons.references.sources.text')
+                                                               case 'baudi-09' return baudiShared:translate('baudi.registry.persons.references.periodicals')
                                                                default return baudiShared:translate('baudi.registry.persons.references.other')
                                 order by $order
                                 return
                                  <div class="RegisterSortBox" xmlns="http://www.w3.org/1999/xhtml">
-                                          <div class="RegisterSortEntry">{$registerSortEntryLabel}</div>
+                                          <div class="RegisterSortEntry">{(:$registerSortEntryLabel:)}</div>
                                           {for $group in $groups
                                               return
                                                   $group}
