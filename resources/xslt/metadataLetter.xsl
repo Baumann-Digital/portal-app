@@ -10,7 +10,7 @@
                 <td>
                     <xsl:choose>
                         <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', //correspAction[@type = 'sent']/persName/@key, '.xml'))">
-                            <a href="{concat($dbRootParam, //correspAction[@type = 'sent']/persName/@key)}" target="_blank">
+                            <a href="{//correspAction[@type = 'sent']/persName/@key}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'sent']/persName"/>
                             </a>
                         </xsl:when>
@@ -20,7 +20,7 @@
                     </xsl:choose>
                     <xsl:choose>
                         <xsl:when test="doc-available(concat('../../../../contents/baudi/institutions/', //correspAction[@type = 'sent']/orgName/@key, '.xml'))">
-                            <a href="{concat($dbRootParam, //correspAction[@type = 'sent']/persName/@key)}" target="_blank">
+                            <a href="{//correspAction[@type = 'sent']/persName/@key}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'sent']/orgName"/>
                             </a>
                         </xsl:when>
@@ -41,7 +41,7 @@
                 <td>
                     <xsl:choose>
                         <xsl:when test="doc-available(concat('../../../../contents/baudi/places/', //correspAction[@type = 'sent']/settlement/@key, '.xml'))">
-                            <a href="{concat($dbRootParam, //correspAction[@type = 'sent']/settlement/@key)}" target="_blank">
+                            <a href="{//correspAction[@type = 'sent']/settlement/@key}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'sent']/settlement"/>
                             </a>
                         </xsl:when>
@@ -62,7 +62,7 @@
                 <td>
                     <xsl:choose>
                         <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', //correspAction[@type = 'received']/persName/@key, '.xml'))">
-                            <a href="{concat($dbRootParam, //correspAction[@type = 'received']/persName/@key)}" target="_blank">
+                            <a href="{//correspAction[@type = 'received']/persName/@key}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'received']/persName"/>
                             </a>
                         </xsl:when>
@@ -72,7 +72,7 @@
                     </xsl:choose>
                     <xsl:choose>
                         <xsl:when test="doc-available(concat('../../../../contents/baudi/institutions/', //correspAction[@type = 'received']/persName/@key, '.xml'))">
-                            <a href="{concat($dbRootParam, //correspAction[@type = 'received']/orgName/@key)}" target="_blank">
+                            <a href="{//correspAction[@type = 'received']/orgName/@key}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'received']/orgName"/>
                             </a>
                         </xsl:when>

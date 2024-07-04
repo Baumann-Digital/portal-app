@@ -23,6 +23,13 @@ else
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <redirect url="index.html"/>
         </dispatch>
+    
+    else if(contains($exist:path, '/$resources/')) then
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{concat($exist:controller, '/resources/', substring-after($exist:path, '/$resources/'))}">
+                <set-header name="Cache-Control" value="max-age=3600,public"/>
+            </forward>
+        </dispatch>
         
         (: if it's a registry :)
     else
@@ -318,4 +325,3 @@ else
                                                         <cache-control
                                                             cache="yes"/>
                                                     </dispatch>
-

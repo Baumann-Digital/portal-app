@@ -19,14 +19,9 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare namespace mei = "http://www.music-encoding.org/ns/mei";
 declare namespace edirom = "http://www.edirom.de/ns/1.3";
 declare namespace pkg = "http://expath.org/ns/pkg";
-declare namespace baudiCR = "http://www.baumann-digital.de/ns/criticalReport";
+declare namespace crapp = "http://www.baumann-digital.de/ns/criticalReport";
 
 declare variable $app:dbRootUrl as xs:string := request:get-url();
-declare variable $app:dbRootLocalhost as xs:string := 'http://localhost:8080/exist/apps/baudiApp';
-declare variable $app:dbRootDev as xs:string := 'http://localhost:8088/exist/apps/baudiApp';
-declare variable $app:dbRootPortal as xs:string := 'http://localhost:8082/exist/apps/baudiApp';
-declare variable $app:dbRoot as xs:string := if(contains($app:dbRootUrl,$app:dbRootLocalhost))then('/exist/apps/baudiApp')else('');
-declare variable $app:dbRootParam as node() := <parameters><param name="dbRootParam" value="{$app:dbRoot}"/></parameters>;
 
 declare variable $app:digilibPath as xs:string := 'https://digilib.baumann-digital.de';
 declare variable $app:geonames as xs:string := 'https://www.geonames.org/';
@@ -71,10 +66,10 @@ let $content :=  <div class="container">
                                             let $datumSent := $document//tei:correspAction[@type="sent"]/tei:date/@when
                                             let $status := $document/@status/string()
                                             let $statusSymbol := if($status='checked')
-                                                                 then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                                                 then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                                                  else if($status='published')
-                                                                 then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                                                 else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                                                 then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                                                 else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                                                                   
                                             order by $titel
                                             return
@@ -93,7 +88,7 @@ let $content :=  <div class="container">
                                                             </div>
                                                        </div>
                                                        <p class="card-text"/>
-                                                       <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
+                                                       <a href="/{$id}" class="card-link">{$id}</a>
                                                        <hr/>
                                                        <p>Tags</p>
                                                      </div>
@@ -146,7 +141,7 @@ return
         {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/dokumentDatenblatt.xsl"), ())}
         </div>-->
         <div class="tab-pane fade show active" id="inhalt" >
-        {transform:transform($doc//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), $app:dbRootParam)}
+        {transform:transform($doc//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())}
         </div>
    </div>
 </div>
@@ -180,7 +175,7 @@ return
     <!-- Tab panels -->
     <div class="tab-content">
     <div class="tab-pane fade" id="datenblatt" role="tabpanel">
-        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudiApp/resources/xslt/metadataLetter.xsl"), $app:dbRootParam)}
+        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudiApp/resources/xslt/metadataLetter.xsl"), ())}
     </div>
     
     {if (count($pages)=1)
@@ -284,10 +279,10 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                             
                                             let $status := $person/@status/string()
                                             let $statusSymbol := if($status='checked')
-                                                                 then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                                                 then(<img src="/resources/img/ampel_gelb.png'" alt="{$status}" width="10px"/>)
                                                                  else if($status='published')
-                                                                 then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                                                 else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                                                 then(<img src="/resources/img/ampel_gruen.png'" alt="{$status}" width="10px"/>)
+                                                                 else(<img src="/resources/img/ampel_rot.png'" alt="{$status}" width="10px"/>)
                                                                   
                                             order by $name
                                              
@@ -454,10 +449,10 @@ let $content :=
                                 let $id := $locus/@xml:id/string()
                                 let $status := $locus/@status/string()
                                 let $statusSymbol := if($status='checked')
-                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                                     then(<img src="/resources/img/ampel_gelb.png'" alt="{$status}" width="10px"/>)
                                                      else if($status='published')
-                                                     then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                                     else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                                     then(<img src="/resources/img/ampel_gruen.png'" alt="{$status}" width="10px"/>)
+                                                     else(<img src="/resources/img/ampel_rot.png'" alt="{$status}" width="10px"/>)
                                 let $link :=  if($locus//tei:geo/text() !='') then(<a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>) else($id) 
                                 let $tags := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.registry.loci.tag.',$locus/@type))}</label>
                                 
@@ -521,10 +516,10 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                     
                     let $status := $org/@status/string()
                     let $statusSymbol := if($status='checked')
-                                         then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                         then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                          else if($status='published')
-                                         then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                         else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                         then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                         else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                                           
                     order by $name
                      
@@ -570,7 +565,7 @@ let $affiliates := for $person in $org//tei:listPerson/tei:person
                     let $persID := $person/tei:persName/@key
                     let $name := $person/tei:persName
                     return
-                        <li><a href="{concat($app:dbRoot,'/person/',$persID)}">{$name}</a></li>
+                        <li><a href="{concat('/person/',$persID)}">{$name}</a></li>
 return
 (
     <div class="container">
@@ -659,10 +654,10 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $source/ancestor::mei:mei/@status/string()
                          let $statusSymbol := if($status='checked')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                              then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                              else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                              then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                              else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                          order by $order
                          return
                              if ($isSourceCollection)
@@ -681,7 +676,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                     {if(count($componentSources)>=1)
                                      then(<p class="card-text"><i>{baudiShared:translate('baudi.registry.sources.components'), concat(' (', count($componentSources), ')')}</i></p>)
                                      else()}
-                                   <a href="{concat($app:dbRoot,'/source/', $id)}" class="card-link">{$id}</a>
+                                   <a href="{concat('/source/', $id)}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
@@ -827,9 +822,9 @@ let $meter := for $each in $source//mei:meter
                 let $meterUnit := $each/@unit
                 let $meterSym := $each/@sym
                 let $meterSymbol := if($meterSym = 'common')
-                                   then(<img src="{concat($app:dbRoot,'/resources/img/timeSignature_common.png')}" width="20px"/>)
+                                   then(<img src="/resources/img/timeSignature_common.png" width="20px"/>)
                                    else if($meterSym = 'cut')
-                                   then(<img src="{concat($app:dbRoot,'/resources/img/timeSignature_cut.png')}" width="20px"/>)
+                                   then(<img src="/resources/img/timeSignature_cut.png" width="20px"/>)
                                    else()
                 return
                     if($meterSymbol)
@@ -1082,7 +1077,7 @@ return
         <hr/>
         </div>
             {baudiShared:getI18nText($text)
-            (: transform:transform($text, doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), $app:dbRootParam) :)}
+            (: transform:transform($text, doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ()) :)}
     </div>
 };
 
@@ -1142,10 +1137,10 @@ let $cards := for $item in $collection
                 let $issue := $item//tei:sourceDesc//tei:biblScope[@unit="issue"]/text()
                 let $status := $item//tei:publicationStmt/tei:p
                 let $statusSymbol := if($status='checked')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                              then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                              else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                              then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                              else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
 
                 return
                     <div class="card bg-light mb-3">
@@ -1314,10 +1309,10 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
                          let $statusSymbol := if($status='checked')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                              then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                              else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                              then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                              else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                          order by $order
                          return
                              <div class="card bg-light mb-3" name="{$status}">
@@ -1432,9 +1427,9 @@ let $meter := for $each in $work//mei:meter
                 let $meterUnit := $each/@unit
                 let $meterSym := $each/@sym
                 let $meterSymbol := if($meterSym = 'common')
-                                   then(<img src="{concat($app:dbRoot,'/resources/img/timeSignature_common.png')}" width="20px"/>)
+                                   then(<img src="/resources/img/timeSignature_common.png" width="20px"/>)
                                    else if($meterSym = 'cut')
-                                   then(<img src="{concat($app:dbRoot,'/resources/img/timeSignature_cut.png')}" width="20px"/>)
+                                   then(<img src="/resources/img/timeSignature_cut.png" width="20px"/>)
                                    else()
                 return
                     if($meterSymbol)
@@ -1477,7 +1472,7 @@ let $relatedSourcesCards := for $source in $app:collectionSourcesMusic
 <!--                            <h5 class="card-title">{functx:substring-before-if-contains($ediromSourceWindow, ' (')}</h5>-->
                             <h6 class="card-subtitle text-muted mt-0">{substring-before(substring-after($ediromSourceWindow, ' ('), ')')}</h6>
                             <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-                            <a class="card-link" href="{concat($app:dbRoot,'/', $sourceId)}">{$sourceId}</a>
+                            <a class="card-link" href="/{$sourceId}">{$sourceId}</a>
                           </div>
                       </div>
                     </div>)
@@ -1495,7 +1490,7 @@ let $editionsContent :=
                     <h5 class="card-title">{baudiWork:getWorkTitle($work)}</h5>
                     <h6 class="card-subtitle text-muted mt-0">Neuedition</h6>
                     <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-                    <a class="card-link" href="{concat($app:dbRoot,'/', $editionId)}">{$editionId}</a>
+                    <a class="card-link" href="/{$editionId}">{$editionId}</a>
                   </div>
               </div>
             </div>)
@@ -1686,10 +1681,10 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
                          let $statusSymbol := if($status='checked')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gelb.png')}" alt="{$status}" width="10px"/>)
+                                              then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
                                               else if($status='published')
-                                              then(<img src="{concat($app:dbRoot,'/resources/img/ampel_gruen.png')}" alt="{$status}" width="10px"/>)
-                                              else(<img src="{concat($app:dbRoot,'/resources/img/ampel_rot.png')}" alt="{$status}" width="10px"/>)
+                                              then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                              else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
                          order by $order
                          return
                              <div class="card bg-light mb-3" name="{$status}">
@@ -1717,7 +1712,7 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
                                                          then(baudiShared:translate('baudi.registry.works.editor'),': ',$editor,<br/>)
                                                          else()}
                                    <hr/>
-                                   <a class="card-link" href="{concat($app:dbRoot,'/', $editionID)}">{$editionID}</a></p>
+                                   <a class="card-link" href="/{$editionID}">{$editionID}</a></p>
                                    
                                  </div>
                              </div>
@@ -1743,20 +1738,20 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
     let $edition := $app:collectionEditions[@xml:id=$editionID]
     let $fileURI := document-uri($edition/root())
     let $editionTitle := $edition//edirom:editionName//text()
-    let $criticalReports := $app:collectionEditionsPath//baudiCR:criticalReport
+    let $criticalReports := $app:collectionEditionsPath//crapp:criticalReport
     let $correspWorkID := $criticalReports[1]/string(@work)
     let $correspWorkLabel := baudiWork:getWorkTitle($app:collectionWorks[@xml:id=$correspWorkID])
     let $remarks := 
-        for $remark in $criticalReports//baudiCR:remark
+        for $remark in $criticalReports//crapp:remark
             let $remarkID := $remark/string(@xml:id)
             let $remarkCat := $remark/string(@type)
             let $remarkCatTranslated := baudiShared:translate(concat('baudi.registry.editions.remark.cat.',$remarkCat))
-            let $remarkNote := $remark/baudiCR:note//text()
-            let $measureStart := $remark/baudiCR:measureStart/text()
-            let $countTimeStart := $remark/baudiCR:countTimeStart/text()
-            let $measureEnd := $remark/baudiCR:measureEnd/text()
-            let $countTimeEnd := $remark/baudiCR:countTimeEnd/text()
-            let $mdiv := $remark/baudiCR:mdiv/text()
+            let $remarkNote := $remark/crapp:note//text()
+            let $measureStart := $remark/crapp:measureStart/text()
+            let $countTimeStart := $remark/crapp:countTimeStart/text()
+            let $measureEnd := $remark/crapp:measureEnd/text()
+            let $countTimeEnd := $remark/crapp:countTimeEnd/text()
+            let $mdiv := $remark/crapp:mdiv/text()
             let $timing := concat('Satz ', $mdiv, ', T. ',
             string-join((
                 concat($measureStart, '^', $countTimeStart),
