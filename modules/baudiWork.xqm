@@ -135,10 +135,12 @@ let $meiFile := <mei xmlns="http://www.music-encoding.org/ns/mei">
                     <music><body>{$incipit}</body></music>
                 </mei>
 let $meiFileStored := if(doc-available(concat('/db/apps/baudiData/works/', $workFileName)) = false())
-                      then(login:set-user("org.exist.login", (), true()),
-                           xmldb:store('/db/apps/baudiData/works/', $workFileName, $meiFile))
+                      then(
+                            xmldb:login($config:data-collection-path, 'admin', 'password'),
+                            xmldb:store('/db/apps/baudiData/works/', $workFileName, $meiFile)
+                          )
                       else()
-let $meiFileCall := concat(substring-before($app:dbRootUrl,'baudiApp'), 'baudiData/works/', $workFileName )
+let $meiFileCall := concat($config:data-collection-path, '/works/', $workFileName )
 let $script :=  <script type="module">
                     import 'https://www.verovio.org/javascript/app/verovio-app.js';
                     

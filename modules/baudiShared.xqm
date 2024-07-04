@@ -395,7 +395,7 @@ declare function baudiShared:stringJoinAll($node as node()) {
 
 declare function baudiShared:getPersName($personID, $param as xs:string, $linking as xs:string?) {
 let $person :=$app:collectionPersons/id($personID)
-let $linkToRecord := string-join(($app:dbRoot, $personID), '/')
+let $linkToRecord := '/' || $personID
 let $persName := if($person/tei:persName[@role='uniform'])
                   then($person/tei:persName[@role='uniform'])
                   else($person/tei:persName[1])
@@ -467,7 +467,7 @@ let $nameStrings := if($param = "full")
 declare function baudiShared:getPersonaLinked($id as xs:string) {
     
     let $personRecord := $app:collectionPersons[@xml:id = $id]
-    let $personLink := concat($app:dbRoot, '/person/', $id)
+    let $personLink := concat('/person/', $id)
     let $forename := $personRecord/tei:persName/tei:forename
     let $surname :=  $personRecord/tei:persName/tei:surname
     let $name := if($surname and $forename)
@@ -495,7 +495,7 @@ declare function baudiShared:getOrgNameFull($org as node()) {
 declare function baudiShared:getOrgNameFullLinked($org as node()) {
 
     let $orgID := $org/@xml:id
-    let $orgUri := concat($app:dbRoot, '/institution/', $orgID)
+    let $orgUri := concat('/institution/', $orgID)
     let $name := baudiShared:getOrgNameFull($org)
     
     return
@@ -505,7 +505,7 @@ declare function baudiShared:getOrgNameFullLinked($org as node()) {
 declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
 
     let $corpID := $corpName/@auth/string()
-    let $corpUri := concat($app:dbRoot, '/institution/', $corpID)
+    let $corpUri := concat('/institution/', $corpID)
     let $nameFound := $app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()
     let $name := if($nameFound) then($nameFound) else($corpName)
     

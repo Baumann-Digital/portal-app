@@ -8,18 +8,24 @@ module namespace config="https://exist-db.org/xquery/config";
 declare namespace templates="http://exist-db.org/xquery/html-templating";
 
 declare namespace repo="http://exist-db.org/xquery/repo";
+
 declare namespace expath="http://expath.org/ns/pkg";
+declare namespace xmldb="http://exist-db.org/xquery/xmldb";
+declare namespace map="http://www.w3.org/2005/xpath-functions/map";
+declare namespace request="http://exist-db.org/xquery/request";
 
 (: 
     Determine the application root collection from the current module load path.
 :)
-declare variable $config:app-root := 
-    let $rawPath := system:get-module-load-path()
+declare variable $config:app-root as xs:string := 
+    let $rawPath := replace(system:get-module-load-path(), '/null/', '//')
     let $modulePath :=
         (: strip the xmldb: part :)
         if (starts-with($rawPath, "xmldb:exist://")) then
             if (starts-with($rawPath, "xmldb:exist://embedded-eXist-server")) then
                 substring($rawPath, 36)
+            else if (contains($rawPath, "/xmlrpc/")) then
+                substring-after($rawPath, "/xmlrpc")
             else
                 substring($rawPath, 15)
         else
@@ -28,10 +34,15 @@ declare variable $config:app-root :=
         substring-before($modulePath, "/modules")
 ;
 
-declare variable $config:data-root := $config:app-root || "/data";
+declare variable $config:catalogues-collection-path as xs:string := $config:app-root || '/catalogues';
+declare variable $config:options-file-path as xs:string := $config:catalogues-collection-path || '/options.xml';
+declare variable $config:options-file as document-node() := doc($config:options-file-path);
+(: provide quick access to the options by pushing them to a map object :)
+declare variable $config:options as map(xs:string, xs:string*) := map:merge($config:options-file//entry ! map:entry(./string(@xml:id), normalize-space(.)));
+declare variable $config:data-collection-path as xs:string := config:get-option('dataCollectionPath');
+declare variable $config:isDevelopment as xs:boolean := $config:options-file/id('environment') eq 'development';
 
 declare variable $config:repo-descriptor := doc(concat($config:app-root, "/repo.xml"))/repo:meta;
-
 declare variable $config:expath-descriptor := doc(concat($config:app-root, "/expath-pkg.xml"))/expath:package;
 
 (:~
@@ -61,6 +72,21 @@ declare function config:expath-descriptor() as element(expath:package) {
 
 declare %templates:wrap function config:app-title($node as node(), $model as map(*)) as text() {
     $config:expath-descriptor/expath:title/text()
+};
+
+(:~
+ :  Returns the requested option value from an option file given by the variable $wega:optionsFile
+ :  This function is a simple wrapper for accessing the options map object   
+ :  
+ : @author Peter Stadler
+ : @param $key the key to look for in the options file
+ : @return xs:string the option value as string identified by the key otherwise the empty sequence
+ :)
+declare function config:get-option($key as xs:string?) as xs:string? {
+    let $result := $config:options?($key)
+    return
+        if($result) then $result
+        else ()
 };
 
 declare function config:app-meta($node as node(), $model as map(*)) as element()* {

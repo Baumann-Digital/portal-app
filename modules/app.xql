@@ -21,23 +21,21 @@ declare namespace edirom = "http://www.edirom.de/ns/1.3";
 declare namespace pkg = "http://expath.org/ns/pkg";
 declare namespace crapp = "http://www.baumann-digital.de/ns/criticalReport";
 
-declare variable $app:dbRootUrl as xs:string := request:get-url();
+declare variable $app:digilibPath as xs:string := config:get-option('digilibPath');
+declare variable $app:geonames as xs:string := config:get-option('geonames');
+declare variable $app:BLBfacPath as xs:string := config:get-option('BLBfacPath');
+declare variable $app:BLBfacPathImage as xs:string := config:get-option('BLBfacPathImage');
 
-declare variable $app:digilibPath as xs:string := 'https://digilib.baumann-digital.de';
-declare variable $app:geonames as xs:string := 'https://www.geonames.org/';
-declare variable $app:BLBfacPath as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/content/pageview/';
-declare variable $app:BLBfacPathImage as xs:string := 'https://digital.blb-karlsruhe.de/blbihd/image/view/';
-
-declare variable $app:collectionWorks := collection('/db/apps/baudiData/works')//mei:work;
-declare variable $app:collectionSourcesMusic := collection('/db/apps/baudiData/sources/music')//mei:mei;
-declare variable $app:collectionPersons := collection('/db/apps/baudiData/persons')//tei:person;
-declare variable $app:collectionInstitutions := collection('/db/apps/baudiData/institutions')//tei:org;
-declare variable $app:collectionPeriodicals := collection('/db/apps/baudiData/periodicals')//tei:TEI;
-declare variable $app:collectionLoci := collection('/db/apps/baudiData/loci')//tei:place;
-declare variable $app:collectionGalleryItems := 0 (:collection('/db/apps/baudiData/galleryItems/data')//tei:TEI:);
-declare variable $app:collectionDocuments := collection('/db/apps/baudiData/sources/documents')//tei:TEI;
-declare variable $app:collectionEditions := collection('/db/apps/baudiData/editions')//edirom:edition;
-declare variable $app:collectionEditionsPath := collection('/db/apps/baudiData/editions');
+declare variable $app:collectionWorks := collection($config:data-collection-path || '/works')//mei:work;
+declare variable $app:collectionSourcesMusic := collection($config:data-collection-path || '/sources/music')//mei:mei;
+declare variable $app:collectionPersons := collection($config:data-collection-path || '/persons')//tei:person;
+declare variable $app:collectionInstitutions := collection($config:data-collection-path || '/institutions')//tei:org;
+declare variable $app:collectionPeriodicals := collection($config:data-collection-path || '/periodicals')//tei:TEI;
+declare variable $app:collectionLoci := collection($config:data-collection-path || '/loci')//tei:place;
+declare variable $app:collectionGalleryItems := 0 (:collection($config:data-collection-path || '/galleryItems/data')//tei:TEI:);
+declare variable $app:collectionDocuments := collection($config:data-collection-path || '/sources/documents')//tei:TEI;
+declare variable $app:collectionEditions := collection($config:data-collection-path || '/editions')//edirom:edition;
+declare variable $app:collectionEditionsPath := collection($config:data-collection-path || '/editions');
 declare variable $app:collStrTexts := '/db/apps/baudiData/texts';
 
 
@@ -300,7 +298,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                                        </div>
                                                        <p class="card-text"/>
                                                        
-                                                       <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
+                                                       <a href="/{$id}" class="card-link">{$id}</a>
                                                        <hr/>
                                                        <p>Tags</p>
                                                      </div>
@@ -453,7 +451,7 @@ let $content :=
                                                      else if($status='published')
                                                      then(<img src="/resources/img/ampel_gruen.png'" alt="{$status}" width="10px"/>)
                                                      else(<img src="/resources/img/ampel_rot.png'" alt="{$status}" width="10px"/>)
-                                let $link :=  if($locus//tei:geo/text() !='') then(<a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>) else($id) 
+                                let $link :=  if($locus//tei:geo/text() !='') then(<a href="/{$id}" class="card-link">{$id}</a>) else($id) 
                                 let $tags := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.registry.loci.tag.',$locus/@type))}</label>
                                 
                                 order by $name
@@ -537,7 +535,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                                </div>
                                <p class="card-text"/>
                                
-                               <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
+                               <a href="/{$id}" class="card-link">{$id}</a>
                                <hr/>
                                <p>Tags</p>
                              </div>
@@ -712,7 +710,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                      then(<i>{baudiShared:translate('baudi.registry.sources.components'), concat(' (', count($componentSources), ')')}</i>)
                                      else()}
                                    </p>
-                                   <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
+                                   <a href="/{$id}" class="card-link">{$id}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
@@ -1160,7 +1158,7 @@ let $cards := for $item in $collection
                                 {concat('Jg. ', $volume, ' H. ', $issue)}
                             </p>
                             <hr/>
-                            <a href="{string-join(($app:dbRoot, $id), '/')}" class="card-link">{$id}</a>
+                            <a href="/{$id}" class="card-link">{$id}</a>
                         </div>
                     </div>
         
@@ -1347,7 +1345,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                                          then(concat(baudiShared:translate('baudi.registry.works.relSources'), ': ',
                                                                 $relatedItemsCount),<br/>)
                                                          else()}</p>
-                                   <a href="{string-join(($app:dbRoot, $workID), '/')}" class="card-link">{$workID}</a>
+                                   <a href="/{$workID}" class="card-link">{$workID}</a>
                                    <hr/>
                                    <p>{$tags}</p>
                                  </div>
@@ -1562,12 +1560,12 @@ return
                     <td>{string-join($usedLang,', ')}</td>
                   </tr>)
              else()}
-             {if($incipText != '')
+             <!-- {if($incipText != '')
              then(<tr>
                     <td>{baudiShared:translate('baudi.registry.works.incipit.text')}</td>
                     <td><em>{$incipText}</em></td>
                   </tr>)
-             else()}
+             else()} -->
              {if(exists($key))
              then(<tr>
                     <td>{baudiShared:translate('baudi.registry.works.key')}</td>
@@ -1605,12 +1603,12 @@ return
                   </tr>)
              else()}
              </table>
-        {if(baudiWork:hasIncipitMusic($workID))
+         <!--{if(baudiWork:hasIncipitMusic($workID))
          then(<br/>,
               <h4>{baudiShared:translate('baudi.registry.works.incipit')}</h4>,
               <br/>,
               baudiWork:getIncipitMusic($workID))
-         else()}
+         else()}-->
         {if($relatedSourcesCards)
         then(
         <div>
@@ -1787,7 +1785,7 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
             <h1>{$editionTitle}</h1>
             <h5>{$editionID}</h5>
             <hr/>
-            <h6><a href="{concat($app:dbRoot, '/', $correspWorkID)}">{$correspWorkLabel}</a></h6>
+            <h6><a href="/{$correspWorkID}">{$correspWorkLabel}</a></h6>
         </div>
         <br/>
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -1884,24 +1882,6 @@ return
     (<span class="badge badge-light">{$count}</span>)
 };
 
-declare function app:alert($node as node(), $model as map(*)){
-    if (contains($app:dbRootUrl,$app:dbRootLocalhost))
-    then (
-            <div class="alert alert-info" role="alert" style="padding-top: 67px;">
-               Baudi-Portal Entwicklung –  Sie befinden sich auf http://localhost:8080
-            </div>
-         )
-         
-    else if (contains($app:dbRootUrl,$app:dbRootDev))
-    then (
-            <div class="alert alert-warning" role="alert" style="padding-top: 67px;">
-               Baudi-Portal intern: Diese Umgebung kann sich in Inhalt und Erscheinung vom offiziellen Baudi-Portal unterscheiden! Sie befinden sich auf https://dev.baumann-digital.de
-            </div>
-         )
-    
-    else ()
-};
-
 declare function app:portalVersion($node as node(), $model as map(*)){
  let $package := doc('/db/apps/baudiApp/expath-pkg.xml')
  let $version := $package//pkg:package/@version/string()
@@ -1931,16 +1911,7 @@ declare function app:registryFilterBar($node as node(), $model as map(*)){
 };
 
 declare function app:errorReport($node as node(), $model as map(*)){
-
-let $errorMsg := templates:error-description($node, $model)
-let $errorReportDir := '/db/apps/baudiApp/errors/'
-let $url := request:get-url()
-let $dateTime := replace(substring-before(string(current-dateTime()), '+'),':','-')
-let $error := <file url="{$url}" timeStamp="{$dateTime}">{$errorMsg}</file>
-let $logIn := xmldb:login($errorReportDir,'admin', '')
-let $store := xmldb:store($errorReportDir, concat('error_', $dateTime, '.xml'), $error)
-let $errorReport := if(contains($app:dbRootUrl,$app:dbRootLocalhost)) then(<pre class="error">{$errorMsg}</pre>) else()
-return
-    $errorReport
+    if($config:isDevelopment)
+    then(<pre class="error">{templates:error-description($node, $model)}</pre>)
+    else()
 };
-

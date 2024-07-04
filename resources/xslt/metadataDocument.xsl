@@ -11,7 +11,7 @@
                     <xsl:value-of select="//sourceDesc/bibl/title"/>
                     <xsl:choose>
                         <xsl:when test="doc-available(concat('../../../../contents/baudi/persons/', //sourceDesc/bibl/title/@key, '.xml'))">
-                            <a href="{concat($dbRootParam, //sourceDesc/bibl/title/@key, '.html')}" target="_blank">
+                            <a href="{concat('/', //sourceDesc/bibl/title/@key, '.html')}" target="_blank">
                                 <xsl:value-of select="//sourceDesc/bibl/title"/>
                             </a>
                         </xsl:when>

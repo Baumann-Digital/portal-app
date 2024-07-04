@@ -93,7 +93,7 @@
                 <td>
                     <xsl:choose>
                         <xsl:when test="doc-available(concat('../../../../contents/baudi/places/', //correspAction[@type = 'received']/settlement/@key, '.xml'))">
-                            <a href="{concat($dbRootParam,//correspAction[@type = 'received']/settlement/@key)}" target="_blank">
+                            <a href="{concat('/',//correspAction[@type = 'received']/settlement/@key)}" target="_blank">
                                 <xsl:value-of select="//correspAction[@type = 'received']/settlement"/>
                             </a>
                         </xsl:when>
