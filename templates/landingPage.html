@@ -25,12 +25,17 @@
 		<nav data-template="templates:include" data-template-path="templates/baudiMainNav.html"/>
 		<div style="height: 37px;"/>
 		<main role="main" class="container mt-1" id="content"/>
-		<div class="alert text-center cookiealert" role="alert">
+		<div class="alert text-center cookiealert" role="alert" aria-label="cookieAlert">
 			<div data-template="i18n:translate" data-template-lang="en" data-template-catalogues="/db/apps/baudiApp/resources/lang">
-				<i18n:text key="baudi.landing.cookies.notice"/> <a href="https://cookiesandyou.com/" target="_blank">
-					<i18n:text key="baudi.landing.cookies.learnMore"/>
-				</a>
-				
+				<button type="button" class="btn btn-primary btn-sm close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true" style="color: white;">X</span>
+				</button>
+				<div style="width: 90%; margin-left: 50px; margin-right: 50px;">
+					<i18n:text key="baudi.landing.cookies.notice"/>&#160;<a href="https://cookiesandyou.com/" target="_blank">
+						<i18n:text key="baudi.landing.cookies.learnMore"/>
+					</a>
+				</div>
+				<br/>
 				<button type="button" class="btn btn-primary btn-sm acceptcookies">
 					<i18n:text key="baudi.landing.cookies.accept"/>
 				</button>
@@ -41,10 +46,6 @@
 				 ================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
 		<!-- Cookie Alert -->
-		<!--<script>
-    for (var i = 1; i <= 150; i++)
-        document.querySelector("#fillme").innerHTML += "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ";
-</script>-->
 		<script src="https://cdn.jsdelivr.net/gh/Wruczek/Bootstrap-Cookie-Alert@gh-pages/cookiealert.js"/>
 		<!-- Bootstrap core JS-->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"/>
@@ -60,5 +61,6 @@
 		<script src="/resources/js/landingPageScripts.js"/>
 		<!-- Font Awesome icons (free version)-->
 		<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"/>
+		<script src="$resources/js/cookieHandler.js"/>
 	</body>
 </html>
