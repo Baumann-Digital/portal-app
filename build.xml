@@ -85,10 +85,6 @@
             <filterset>
                 <filter token="data.target" value="${project.app}"/>
                 <filter token="project.name" value="${project.name}"/>
-                <filter token="db.user.name" value="${db.user.name}"/>
-                <filter token="db.user.password" value="${db.user.password}"/>
-                <filter token="db.user.group" value="${db.user.group}"/>
-                <filter token="db.user.permissions" value="${db.user.permissions}"/>
             </filterset>
         </copy>
         <zip destfile="${dist.dir}/${project.app.pkg.name}">
