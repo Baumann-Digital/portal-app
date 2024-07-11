@@ -66,7 +66,9 @@
     <msg key="baudi.landing.about.thesis.phd.finished.text">On December 18, 2023 - just in time for his 34th birthday - Dennis Ried defended his dissertation entitled »›halb und halb‹ – Hybride Edition als Kompromiss? Eine Studie zu Methodik, Möglichkeiten und Grenzen in der hybriden Musikedition am Beispiel der Edition von Ludwig Baumanns ›Kantate. Den Gefallenen zum Gedächtnis, den Trauernden zum Trost‹« at the Karlsruhe University of Music.</msg>
     <msg key="baudi.landing.about.portal.launch.full">Relaunch of the Portal</msg>
     <msg key="baudi.landing.about.portal.launch.full.text">Preparations for the printing of Dennis Ried's dissertation are fully in progress! With the dissertation, the portal will finally be fully accessible. We ask for a little patience, as the final review of the contents is quite time-consuming. We are hoping to be able to put the portal online in the first half of the year.</msg>
-    <msg key="baudi.landing.about.be.part">Be Part</msg>
+		<msg key="baudi.landing.about.portal.available">Unlocked!</msg>
+	<msg key="baudi.landing.about.portal.available.text">Good things take time! With the publication of Dennis Ried's dissertation by Logos-Verlag Berlin, we are also launching the online portal in all facets. Have fun!</msg>  
+		<msg key="baudi.landing.about.be.part">Be Part</msg>
     <msg key="baudi.landing.about.of.our">Of This</msg>
     <msg key="baudi.landing.about.story">Story!</msg>
     
