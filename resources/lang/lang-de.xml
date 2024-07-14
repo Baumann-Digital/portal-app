@@ -1,7 +1,7 @@
 <catalogue xml:lang="de">
 
     <!-- Main Nav -->
-    <msg key="baudi.mainNav.registry">Register</msg>
+    <msg key="baudi.mainNav.registry">Kataloge</msg>
     <msg key="baudi.mainNav.registry.works">Werke</msg>
     <msg key="baudi.mainNav.registry.sources">Quellen</msg>
     <msg key="baudi.mainNav.registry.editions">Editionen</msg>
