@@ -47,8 +47,8 @@ return
 declare function baudiSource:getManifestationPersona($sourceID as xs:string, $param as xs:string) {
     let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
     let $sourceManifestation := $source//mei:manifestation
-    let $sourceManifestationPersona := if ($sourceManifestation//node()[name() = $param]/mei:persName/@auth)
-                                       then (baudiShared:getPersonaLinked($sourceManifestation//node()[name() = $param]/mei:persName/@auth))
+    let $sourceManifestationPersona := if ($sourceManifestation//node()[name() = $param]/mei:persName/@codedval)
+                                       then (baudiShared:getPersonaLinked($sourceManifestation//node()[name() = $param]/mei:persName/@codedval))
                                        else if ($sourceManifestation//node()[name() = $param]/mei:persName)
                                        then ($sourceManifestation//node()[name() = $param]/mei:persName/text()[1])
                                        else ()
@@ -61,8 +61,8 @@ declare function baudiSource:getManifestationPersona($sourceID as xs:string, $pa
 declare function baudiSource:getManifestationPerfRes($sourceFile as node()*) {
     let $perfResLists := $sourceFile//mei:perfResList
     let $perfResList := for $list in $perfResLists
-                        let $perfResListName := $list/@auth
-                        let $perfRess := $list//mei:perfRes/@auth
+                        let $perfResListName := $list/@codedval
+                        let $perfRess := $list//mei:perfRes/@codedval
                         return
                             if($perfResListName)
                             then(baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName)))
@@ -165,14 +165,14 @@ declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as n
         string-join($perfResLabelString, ', ')
     
    (: let $perfResList := for $list in $perfResLists
-                        let $perfResListName := $list/@auth
+                        let $perfResListName := $list/@codedval
                         let $perfRess := $list//mei:perfRes
                         return
                             (
                                 <b>{baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName))}</b>,
                                 <ul style="list-style-type: square;">
                                     {for $perfRes in $perfRess
-                                        let $perfResVal := $perfRes/@auth
+                                        let $perfResVal := $perfRes/@codedval
                                         let $ambitus := if($perfRes/mei:ambitus) then(baudiSource:getAmbitus($perfRes/mei:ambitus)) else()
                                             return
                                                 <li>{if($ambitus)
@@ -191,7 +191,7 @@ declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as n
 declare function baudiSource:getManifestationIdentifiers($sourceID as xs:string) {
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 
-let $msRepository := if($source//mei:physLoc/mei:repository/mei:corpName[@auth])
+let $msRepository := if($source//mei:physLoc/mei:repository/mei:corpName[@codedval])
                      then(baudiShared:getCorpNameFullLinked($source//mei:physLoc/mei:repository/mei:corpName))
                      else($source//mei:physLoc/mei:repository/string())
 let $msRepositorySiglum := $source//mei:physLoc/mei:repository/mei:corpName/@label/string()
@@ -505,7 +505,7 @@ declare function baudiSource:getSourceEditionStmt($id, $lang) {
     let $source := $app:collectionSourcesMusic[@xml:id=$id]
     let $edition := $source//mei:editionStmt//mei:edition
     let $editionTitle := $edition/mei:title/text()
-    let $editionPublisher := if($edition//mei:publisher/mei:corpName/@auth)
+    let $editionPublisher := if($edition//mei:publisher/mei:corpName/@codedval)
                              then(baudiShared:getCorpNameFullLinked($edition//mei:publisher/mei:corpName))
                              else($edition//mei:publisher/mei:corpName)
     let $editionPubPlace := $edition//mei:pubPlace

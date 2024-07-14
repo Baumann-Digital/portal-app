@@ -28,7 +28,7 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baud
 declare function baudiWork:getWorkTitle($work as node()*){
     let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[range:field-eq("titlePart-main", 'main') and @class='sort']/text()
-                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
                                                    then(concat(' ',baudiShared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
@@ -43,7 +43,7 @@ declare function baudiWork:getWorkTitle($work as node()*){
   return
     for $lyricist in $lyricists
         
-        let $lyricistID := $lyricist/@auth
+        let $lyricistID := $lyricist/@codedval
         let $lyricistEntry := if($lyricistID)
                               then($collectionPersons[@xml:id=$lyricistID])
                               else($lyricist)

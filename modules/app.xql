@@ -624,7 +624,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                          let $titleSort := $title[1]
                          let $titleSub := baudiSource:getManifestationTitle($source,'sub')
                          let $titleSub2 := $source//mei:titlePart[@type='ediromSourceWindow']/normalize-space(text()[1])
-                         let $numberOpus := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='number' and @auth='opus']
+                         let $numberOpus := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
                                                    then(concat(' ',baudiShared:translate('baudi.registry.sources.opus.no'),' ',$numberOpusCount))
@@ -791,7 +791,7 @@ let $sourcePlateNum := if($source//mei:plateNum/text())
                             </tr>)
                         else()
 
-let $usedLang := for $lang in $source//mei:langUsage/mei:language/@auth
+let $usedLang := for $lang in $source//mei:langUsage/mei:language/@codedval
                     return
                         baudiShared:translate(concat('baudi.lang.',$lang))
 let $key := for $each in $source//mei:key
@@ -1264,25 +1264,25 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[range:field-eq("titlePart-main", 'main') and not(@class)]/normalize-space(text()[1])
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/text()
                          let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
-                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
                                                    then(concat(' ',baudiShared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $workID := $work/@xml:id/string()
-                         let $composerID := $work//mei:composer//@auth
-                         let $composer := if($work//mei:composer//@auth)
+                         let $composerID := $work//mei:composer//@codedval
+                         let $composer := if($work//mei:composer//@codedval)
                                           then(baudiShared:getPersName($composerID, 'short', 'yes'))
                                           else($work//mei:composer/string())
-                         let $arrangerID := $work//mei:arranger//@auth
-                         let $arranger := if($work//mei:arranger//@auth)
+                         let $arrangerID := $work//mei:arranger//@codedval
+                         let $arranger := if($work//mei:arranger//@codedval)
                                           then(baudiShared:getPersName($arrangerID, 'short', 'yes'))
                                           else($work//mei:arranger/string())
-                         let $lyricistID := $work//mei:lyricist//@auth
-                         let $lyricist := if($work//mei:lyricist//@auth)
+                         let $lyricistID := $work//mei:lyricist//@codedval
+                         let $lyricist := if($work//mei:lyricist//@codedval)
                                           then(baudiShared:getPersName($lyricistID, 'short', 'yes'))
                                           else($work//mei:lyricist/string())
-                         let $editorID := $work//mei:editor//@auth
+                         let $editorID := $work//mei:editor//@codedval
                          let $editor := if($editorID)
                                         then(baudiShared:getPersName($editorID, 'short', 'yes'))
                                         else($work//mei:editor/string())
@@ -1379,24 +1379,24 @@ let $work := $app:collectionWorks//mei:work[@xml:id=$workID]
 let $fileURI := document-uri($work/root())
 let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(.)
 let $subtitle := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/normalize-space(.)
-let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
 let $titlePerfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'perfmedium']
 let $titleMainAlt := $work//mei:titlePart[@type = 'mainAlt']
 let $titleSubAlt := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subAlt']
 let $composer := $work//mei:composer
-let $composerID := $composer/mei:persName/@auth
+let $composerID := $composer/mei:persName/@codedval
 let $composerEntry := $app:collectionPersons/id($composerID)
 let $composerName := baudiShared:getPersName($composerID, 'short', 'yes')
 let $composerGender := if($composerEntry[@sex="female"]) then('composer.female') else('composer')
 let $lyricist := $work//mei:lyricist
-let $lyricistID := $lyricist/mei:persName/@auth
+let $lyricistID := $lyricist/mei:persName/@codedval
 let $lyricistEntry := $app:collectionPersons/id($lyricistID)
 let $lyricistName := if($lyricistID)then(baudiShared:getPersName($lyricistID, 'short', 'yes'))else($lyricist//text()/normalize-space())
 let $lyricistGender := if($lyricistEntry)
                        then('lyricist.female')
                        else('lyricist')
 
-let $usedLang := for $lang in $work//mei:langUsage/mei:language/@auth
+let $usedLang := for $lang in $work//mei:langUsage/mei:language/@codedval
                     return
                         baudiShared:translate(concat('baudi.lang.',$lang))
 let $key := for $each in $work//mei:key
@@ -1659,22 +1659,22 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/text()
                          let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
-                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @auth='opus']
+                         let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
                                                    then(concat(' ',baudiShared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
-                         let $composer := if($work//mei:composer//@auth)
-                                          then(baudiShared:getPersName($work//mei:composer//@auth, 'short', 'yes'))
+                         let $composer := if($work//mei:composer//@codedval)
+                                          then(baudiShared:getPersName($work//mei:composer//@codedval, 'short', 'yes'))
                                           else($work//mei:composer/string())
-                         let $arranger := if($work//mei:arranger//@auth)
-                                          then(baudiShared:getPersName($work//mei:arranger//@auth, 'short', 'yes'))
+                         let $arranger := if($work//mei:arranger//@codedval)
+                                          then(baudiShared:getPersName($work//mei:arranger//@codedval, 'short', 'yes'))
                                           else($work//mei:arranger/string())
-                         let $lyricist := if($work//mei:lyricist//@auth)
-                                          then(baudiShared:getPersName($work//mei:lyricist//@auth, 'short', 'yes'))
+                         let $lyricist := if($work//mei:lyricist//@codedval)
+                                          then(baudiShared:getPersName($work//mei:lyricist//@codedval, 'short', 'yes'))
                                           else($work//mei:lyricist/string())
-                         let $editor := if($work//mei:editor//@auth)
-                                        then(baudiShared:getPersName($work//mei:editor//@auth, 'short', 'yes'))
+                         let $editor := if($work//mei:editor//@codedval)
+                                        then(baudiShared:getPersName($work//mei:editor//@codedval, 'short', 'yes'))
                                         else($work//mei:editor/string())
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
