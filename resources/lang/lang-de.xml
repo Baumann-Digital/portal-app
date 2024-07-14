@@ -101,6 +101,10 @@
     <msg key="baudi.registry.works.cantata">Kantaten</msg>
     <msg key="baudi.registry.works.chamber">Kammermusik</msg>
     <msg key="baudi.registry.works.ensemble">Ensemble</msg>
+    <msg key="baudi.registry.works.solo">Solo</msg>
+    <msg key="baudi.registry.works.duo">Duo</msg>
+    <msg key="baudi.registry.works.trio">Trio</msg>
+    <msg key="baudi.registry.works.quartet">Quartett</msg>
     <msg key="baudi.registry.works.vocal">Vokalmusik</msg>
     <msg key="baudi.registry.works.instrumental">Instrumentalmusik</msg>
     <msg key="baudi.registry.works.orchestra">Orchestermusik</msg>

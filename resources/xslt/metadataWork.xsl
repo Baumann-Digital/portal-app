@@ -109,8 +109,8 @@
                         <td>
                             <xsl:value-of select="//mei:meter/@count"/>/<xsl:value-of select="//mei:meter/@unit"/>
                             <xsl:choose>
-                                <xsl:when test="//mei:meter/@sym = 'common'">&#160;<img src="https://baumann-digital.de/resources/img/timeSignature_common.png" width="20px"/></xsl:when>
-                                <xsl:when test="//mei:meter/@sym = 'cut'">&#160;<img src="https://baumann-digital.de/resources/img/timeSignature_cut.png" width="20px"/></xsl:when>
+                                <xsl:when test="//mei:meter/@sym = 'common'">&#160;<img src="/resources/img/timeSignature_common.png" width="20px"/></xsl:when>
+                                <xsl:when test="//mei:meter/@sym = 'cut'">&#160;<img src="/resources/img/timeSignature_cut.png" width="20px"/></xsl:when>
                                 <xsl:otherwise/>
                             </xsl:choose>
                         </td>
