@@ -1753,46 +1753,7 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
     let $edition := $app:collectionEditions[@xml:id=$editionID]
     let $fileURI := document-uri($edition/root())
     let $editionTitle := $edition//edirom:editionName//text()
-    let $criticalReports := $app:collectionEditionsPath//crapp:criticalReport
-    let $correspWorkID := $criticalReports[1]/string(@work)
-    let $correspWorkLabel := baudiWork:getWorkTitle($app:collectionWorks[@xml:id=$correspWorkID])
-    let $remarks := 
-        for $remark in $criticalReports//crapp:remark
-            let $remarkID := $remark/string(@xml:id)
-            let $remarkCat := $remark/string(@type)
-            let $remarkCatTranslated := baudiShared:translate(concat('baudi.registry.editions.remark.cat.',$remarkCat))
-            let $remarkNote := $remark/crapp:note//text()
-            let $measureStart := $remark/crapp:measureStart/text()
-            let $countTimeStart := $remark/crapp:countTimeStart/text()
-            let $measureEnd := $remark/crapp:measureEnd/text()
-            let $countTimeEnd := $remark/crapp:countTimeEnd/text()
-            let $mdiv := $remark/crapp:mdiv/text()
-            let $timing := concat('Satz ', $mdiv, ', T. ',
-            string-join((
-                concat($measureStart, '^', $countTimeStart),
-                concat($measureEnd, '^', $countTimeEnd)
-                ), '–')
-            )
-            let $sortCat := switch ($remarkCat)
-                            case 'editorial' return '01'
-                            case 'reading' return '02'
-                            case 'annot' return '03'
-                            default return '99'
-            order by
-                number($mdiv) ascending,
-                $sortCat ascending,
-                number($measureStart) ascending,
-                number($countTimeStart) ascending
-            return
-                (<div class="row justify-content-md-center" style="padding-bottom: 25px;">
-                  <div class="card col-8">
-                      <div class="card-body">
-                        <h5 class="card-title">{$timing}</h5>
-                        <h6 class="card-subtitle text-muted mt-0">{$remarkCat}</h6>
-                        <p class="card-text">{$remarkNote}</p>
-                      </div>
-                  </div>
-                </div>)
+    let $editionWorks := $edition//edirom:work
     
     return
 (
@@ -1801,40 +1762,94 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
         <div class="page-header">
             <h1>{$editionTitle}</h1>
             <h5>{$editionID}</h5>
-            <hr/>
-            <h6><a href="/{$correspWorkID}">{$correspWorkLabel}</a></h6>
         </div>
         <br/>
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
        <li class="nav-item">
          <a class="nav-link active" id="pills-main-tab" data-toggle="pill" href="#pills-main" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
        </li>
+       <li class="nav-item">
+         <a class="nav-link" id="pills-xml-tab" data-toggle="pill" href="#pills-xml" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
+       </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-  <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
-        <table class="editionView">
-            <tr>
-                <th/>
-                <th/>
-            </tr>
-            
-            <tr>
-                 <td>Metadaten</td>
-                 <td>values...</td>
-            </tr>
-        </table>
-        {if($remarks)
-        then(
-        <div>
-           <br/>
-           <h4>{baudiShared:translate('baudi.registry.editions.remarks')}</h4>
-           <br/>
-           <div class="container overflow-auto" style="max-height: 500px;">
-            {$remarks}
+        <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
+            <div class="page-header">
+            <h3>{baudiShared:translate('baudi.registry.works.components')}</h3>
+            <hr/>
+        </div>
+            {
+                for $work in $editionWorks
+                    let $title := $work//edirom:name[@xml:lang=$lang]
+                    let $workID := $work/@xml:id/string()
+                (:  let $composer := if($work//mei:composer//@codedval)
+                                      then(baudiShared:getPersName($composerID, 'short', 'yes'))
+                                      else($work//mei:composer/string())
+                     let $arrangerID := $work//mei:arranger//@codedval
+                     let $arranger := if($work//mei:arranger//@codedval)
+                                      then(baudiShared:getPersName($arrangerID, 'short', 'yes'))
+                                      else($work//mei:arranger/string())
+                     let $lyricistID := $work//mei:lyricist//@codedval
+                     let $lyricist := if($work//mei:lyricist//@codedval)
+                                      then(baudiShared:getPersName($lyricistID, 'short', 'yes'))
+                                      else($work//mei:lyricist/string())
+                     let $editorID := $work//mei:editor//@codedval
+                     let $editor := if($editorID)
+                                    then(baudiShared:getPersName($editorID, 'short', 'yes'))
+                                    else($work//mei:editor/string())
+                :)
+                    let $status := $work/@status/string()
+                    let $statusSymbol := if($status='checked')
+                                         then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+                                         else if($status='published')
+                                         then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+                                         else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                        return
+                             <div class="card bg-light mb-3" name="{$status}">
+                                 <div class="card-body">
+                                    <div class="row justify-content-between">
+                                        <div class="col">
+                                            <h5 class="card-title">{$title}</h5>
+                                        </div>
+                                        <div class="col-2">
+                                            <p class="text-right">{$statusSymbol}</p>
+                                        </div>
+                                    </div>
+                                    <p class="card-text">
+                                      <!--
+                                        {if($composer)
+                                         then(baudiShared:translate(concat('baudi.registry.works.composer',baudiShared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
+                                         else()}
+                                         {if($arranger)
+                                         then(baudiShared:translate(concat('baudi.registry.works.arranger',baudiShared:checkGenderforLangValues($arrangerID))),': ',$arranger,<br/>)
+                                         else()}
+                                        {if($lyricist)
+                                         then(baudiShared:translate(concat('baudi.registry.works.lyricist',baudiShared:checkGenderforLangValues($lyricistID))),': ',$lyricist,<br/>)
+                                         else()}
+                                         {if($editor)
+                                         then(baudiShared:translate(concat('baudi.registry.works.editor',baudiShared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
+                                         else()}
+                                        {if($componentWorksCount >= 1)
+                                         then(concat(baudiShared:translate('baudi.registry.works.components'),': ',
+                                                $componentWorksCount),<br/>)
+                                         else()}
+                                         {if($relatedItemsCount >= 1)
+                                         then(concat(baudiShared:translate('baudi.registry.works.relSources'), ': ',
+                                                $relatedItemsCount),<br/>)
+                                         else()}
+                                        -->
+                                    </p>
+                                   <a href="/{$workID}" class="card-link">{$workID}</a>
+                                 </div>
+                             </div>
+            }
+        </div>
+        <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
+            <div class="card" style="background: aliceblue;">
+                <div class="card-body">
+                    <pre><code>{serialize(app:process-xml-for-display($edition), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
+                </div>
             </div>
-           <br/>
-        </div>)
-        else()}
         </div>
     </div>
 </div>
