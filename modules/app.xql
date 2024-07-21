@@ -1774,49 +1774,63 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
     </ul>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
+            <div class="container">
+                <div class="card-deck">
+                    <div class="card bg-light col-3 mb-3">
+                        <div class="mx-auto d-block" style="height: 150px; width: 150px;">
+                            <img class="card-img-top" src="/apps/Edirom-Online/icon.png" alt="Preview Edirom Online"/>
+                        </div>
+                            <hr/>
+                            <div class="card-body">
+                                <a href="/apps/Edirom-Online/index.html" target="_blank" class="card-link">Zur Edirom</a>
+                            </div>
+                    </div>
+                    <div class="card bg-light col-3 mb-3">
+                        <div class="mx-auto d-block" style="height: 150px; width: 150px;">
+                            <img class="card-img-top" src="/apps/crApp/icon.png" width="50px" alt="Preview crApp"/>
+                        </div>
+                            <hr/>
+                            <div class="card-body">
+                                <a href="/apps/crApp/index.html" target="_blank" class="card-link">Zum den kritischen Anmerkungen</a>
+                            </div>
+                    </div>
+                </div>
+            </div>
             <div class="page-header">
-            <h3>{baudiShared:translate('baudi.registry.works.components')}</h3>
-            <hr/>
-        </div>
-            {
+                <h3>{baudiShared:translate('baudi.registry.works.components')}</h3>
+                <hr/>
+            </div>
+            <div class="container">
+                {
                 for $work in $editionWorks
-                    let $title := $work//edirom:name[@xml:lang=$lang]
                     let $workID := $work/@xml:id/string()
-                (:  let $composer := if($work//mei:composer//@codedval)
+                    let $workFile := $app:collectionWorks//mei:work[@xml:id=$workID]
+                    let $title := baudiWork:getWorkTitle($workFile)
+                    let $composerID := $workFile//mei:composer//@codedval
+                    let $composer := if($workFile//mei:composer//@codedval)
                                       then(baudiShared:getPersName($composerID, 'short', 'yes'))
-                                      else($work//mei:composer/string())
-                     let $arrangerID := $work//mei:arranger//@codedval
-                     let $arranger := if($work//mei:arranger//@codedval)
+                                      else($workFile//mei:composer/string())
+                     let $arrangerID := $workFile//mei:arranger//@codedval
+                     let $arranger := if($workFile//mei:arranger//@codedval)
                                       then(baudiShared:getPersName($arrangerID, 'short', 'yes'))
-                                      else($work//mei:arranger/string())
-                     let $lyricistID := $work//mei:lyricist//@codedval
-                     let $lyricist := if($work//mei:lyricist//@codedval)
+                                      else($workFile//mei:arranger/string())
+                     let $lyricistID := $workFile//mei:lyricist//@codedval
+                     let $lyricist := if($workFile//mei:lyricist//@codedval)
                                       then(baudiShared:getPersName($lyricistID, 'short', 'yes'))
-                                      else($work//mei:lyricist/string())
-                     let $editorID := $work//mei:editor//@codedval
+                                      else($workFile//mei:lyricist/string())
+                     let $editorID := $workFile//mei:editor//@codedval
                      let $editor := if($editorID)
                                     then(baudiShared:getPersName($editorID, 'short', 'yes'))
-                                    else($work//mei:editor/string())
-                :)
-                    let $status := $work/@status/string()
-                    let $statusSymbol := if($status='checked')
-                                         then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
-                                         else if($status='published')
-                                         then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                         else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                    else($workFile//mei:editor/string())
                         return
-                             <div class="card bg-light mb-3" name="{$status}">
+                             <div class="card bg-light mb-3">
                                  <div class="card-body">
                                     <div class="row justify-content-between">
                                         <div class="col">
                                             <h5 class="card-title">{$title}</h5>
                                         </div>
-                                        <div class="col-2">
-                                            <p class="text-right">{$statusSymbol}</p>
-                                        </div>
                                     </div>
                                     <p class="card-text">
-                                      <!--
                                         {if($composer)
                                          then(baudiShared:translate(concat('baudi.registry.works.composer',baudiShared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
                                          else()}
@@ -1829,20 +1843,12 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
                                          {if($editor)
                                          then(baudiShared:translate(concat('baudi.registry.works.editor',baudiShared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
                                          else()}
-                                        {if($componentWorksCount >= 1)
-                                         then(concat(baudiShared:translate('baudi.registry.works.components'),': ',
-                                                $componentWorksCount),<br/>)
-                                         else()}
-                                         {if($relatedItemsCount >= 1)
-                                         then(concat(baudiShared:translate('baudi.registry.works.relSources'), ': ',
-                                                $relatedItemsCount),<br/>)
-                                         else()}
-                                        -->
                                     </p>
                                    <a href="/{$workID}" class="card-link">{$workID}</a>
                                  </div>
                              </div>
-            }
+                }
+            </div>
         </div>
         <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
             <div class="card" style="background: aliceblue;">
