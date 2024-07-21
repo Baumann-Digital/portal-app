@@ -1637,7 +1637,7 @@ return
         </div>)
         else()}
         <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
-            <div class="card">
+            <div class="card" style="background: aliceblue;">
                 <div class="card-body">
                     <pre><code>{serialize(app:process-xml-for-display($work), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
                 </div>
@@ -1651,17 +1651,23 @@ return
 declare function app:registryEditions($node as node(), $model as map(*)) {
     let $editions := $app:collectionEditions//edirom:work
     let $content := <div class="container">
+         <!--
          <ul class="nav nav-pills" role="tablist">
-                {let $editionsCount := count($editions)
-                 return
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.editions.all')} ({$editionsCount})</a></li>
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.works.all')} ({count($works)})</a></li>
+            {for $genre at $pos in $genres[. != 'main']
+                let $workCount := count($works//mei:term[@type='genre' and . = $genre])
+                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.registry.works.',$genre))} ({$workCount})</a></li>
+                order by baudiShared:translate(concat('baudi.registry.works.',$genre))
+                return
+                    $nav-itemGenre
              }
     </ul>
     <hr/>
+         -->
     <br/>
     <!-- Tab panels -->
-    <div class="container" >
-    <div class="container overflow-auto" style="max-height: 500px;">
+    <div class="container overflow-auto" style="max-height: 600px;">
+    <div class="tab-content">
     {
         let $cards := for $edition in $editions
                          let $workID := $edition/@xml:id

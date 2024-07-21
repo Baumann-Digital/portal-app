@@ -111,14 +111,14 @@
     <msg key="baudi.registry.works.violin">Violine</msg>
     <msg key="baudi.registry.works.piano">Klavier</msg>
     <msg key="baudi.registry.works.organ">Orgel</msg>
-    <msg key="baudi.registry.works.composer">Komponist</msg>
-    <msg key="baudi.registry.works.composer.female">Komponistin</msg>
-    <msg key="baudi.registry.works.arranger">Bearbeiter</msg>
-    <msg key="baudi.registry.works.arranger.female">Bearbeiterin</msg>
-    <msg key="baudi.registry.works.lyricist">Textdichter</msg>
-    <msg key="baudi.registry.works.lyricist.female">Textdichterin</msg>
-    <msg key="baudi.registry.works.editor">Herausgeber</msg>
-    <msg key="baudi.registry.works.editor.female">Herausgeberin</msg>
+    <msg key="baudi.registry.works.composer">Musik</msg>
+    <msg key="baudi.registry.works.composer.female">Musik</msg>
+    <msg key="baudi.registry.works.arranger">Bearbeitung</msg>
+    <msg key="baudi.registry.works.arranger.female">Bearbeitung</msg>
+    <msg key="baudi.registry.works.lyricist">Text</msg>
+    <msg key="baudi.registry.works.lyricist.female">Text</msg>
+    <msg key="baudi.registry.works.editor">Herausgabe</msg>
+    <msg key="baudi.registry.works.editor.female">Herausgabe</msg>
     <msg key="baudi.registry.works.opus.no">Nr.</msg>
     <msg key="baudi.registry.works.components">Enthaltene Werke</msg>
     <msg key="baudi.registry.works.relSources">Zugehörige Quellen</msg>
@@ -439,6 +439,7 @@
     <msg key="baudi.registry.periodicals">Register der Zeitschriften</msg>
     
     <!-- Editions -->
+    <msg key="baudi.registry.editions">Editionen</msg>
     <msg key="baudi.registry.editions.remarks">Kritische Anmerkungen</msg>
     
     <!-- Tags -->

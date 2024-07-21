@@ -438,6 +438,7 @@
     <msg key="baudi.registry.periodicals">Periodicals</msg>
     
     <!-- Editions -->
+    <msg key="baudi.registry.editions">Editions</msg>
     <msg key="baudi.registry.editions.remarks">Critical Remarks</msg>
     
     <!-- Tags -->
