@@ -20,6 +20,7 @@ declare namespace mei = "http://www.music-encoding.org/ns/mei";
 declare namespace edirom = "http://www.edirom.de/ns/1.3";
 declare namespace pkg = "http://expath.org/ns/pkg";
 declare namespace crapp = "http://www.baumann-digital.de/ns/criticalReport";
+declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare variable $app:digilibPath as xs:string := config:get-option('digilibPath');
 declare variable $app:geonames as xs:string := config:get-option('geonames');
@@ -1512,6 +1513,9 @@ return
          <a class="nav-link" id="pills-edition-tab" data-toggle="pill" href="#pills-edition" role="tab" aria-controls="pills-edition" aria-selected="false">Edition</a>
        </li>)
        else()}
+       <li class="nav-item">
+         <a class="nav-link" id="pills-edition-tab" data-toggle="pill" href="#pills-xml" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
+       </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
@@ -1632,6 +1636,13 @@ return
             {$editionsContent}
         </div>)
         else()}
+        <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
+            <div class="card">
+                <div class="card-body">
+                    <pre><code>{serialize(app:process-xml-for-display($work), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 )
@@ -1914,4 +1925,27 @@ declare function app:errorReport($node as node(), $model as map(*)){
     if($config:isDevelopment)
     then(<pre class="error">{templates:error-description($node, $model)}</pre>)
     else()
+};
+
+(:~
+ : Processing XML files for display (and download)
+ : Comments and not-greenlisted facsimile information will be removed
+ :
+ : @author Peter Stadler 
+ : @param $nodes the nodes to transform
+ : @return transformed nodes
+~:)
+declare function app:process-xml-for-display($nodes as node()*) as node()* {
+    for $node in $nodes
+    return
+        typeswitch($node)
+        case comment() return $node
+        case element() return 
+            element {node-name($node)} {
+                $node/@*,
+                app:process-xml-for-display($node/node())
+            }
+        case document-node() return document { app:process-xml-for-display($node/node()) }
+        
+        default return $node
 };
