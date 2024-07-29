@@ -88,7 +88,7 @@ declare %private function baudiWork:processPerfResList($perfResList as node(), $
             if($listName != '')
             then(baudiShared:translate('baudi.registry.works.perfRes.' || $listName || $param2) ||
                  (if(string-join($perfResLabelsDistCount,'') != '')
-                  then('[' || string-join($perfResLabelsDistCount, ', ') || ']')
+                  then(' [' || string-join($perfResLabelsDistCount, ', ') || ']')
                   else()
                  )
                 )

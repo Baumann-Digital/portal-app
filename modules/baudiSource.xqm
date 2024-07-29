@@ -117,75 +117,10 @@ declare function baudiSource:getAmbitus($ambitus as node()*) as xs:string{
 declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as node()*, $param as xs:string) {
     let $param2 := switch ($param) case 'short' return '.short' default return ''
     let $sourceWork := $sourceFile//mei:work
-    let $perfMedium := $sourceWork//mei:perfMedium
-    let $perfResLists := $perfMedium//mei:perfResList
+    let $perfResLabelString := baudiWork:getPerfRes($sourceWork,$param2)
     
-    let $perfResLabelString := for $list at $n in $perfResLists
-                                let $listName := $list/@codedval
-                                let $listType := $list/@type
-                                let $perfResLabels := for $perfRes in $list/mei:perfRes
-                                                         let $perfResAuth := $perfRes/@codedval
-                                                         let $perfResAuthShorted := if(contains($perfResAuth,'.i'))
-                                                                                  then(substring-before($perfResAuth,'.i'))
-                                                                                  else if(matches($perfResAuth,'.ii'))
-                                                                                  then(substring-before($perfResAuth,'.ii'))
-                                                                                  else if(matches($perfResAuth,'.iii'))
-                                                                                  then(substring-before($perfResAuth,'.iii'))
-                                                                                  else if(matches($perfResAuth,'.iv'))
-                                                                                  then(substring-before($perfResAuth,'.iv'))
-                                                                                  else($perfResAuth)
-                                                          let $ambitus := if($perfRes/mei:ambitus) then(baudiSource:getAmbitus($perfRes/mei:ambitus)) else()
-                                                          let $perfResAuth := if($ambitus and $param != 'short')
-                                                                              then(concat(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)), ' ', $ambitus))
-                                                                              else(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)))
-                                                          let $perfResAuthShort := baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuthShorted, '.short'))
-                                                          let $perfResSolo := if($perfRes/@solo) then(baudiShared:translate('baudi.registry.works.perfRes.solo')) else()
-                                                          let $perfResAdLib := if($perfRes/@adLib) then(baudiShared:translate('baudi.registry.works.perfRes.adLib')) else()
-                                                          let $perfResOption := if($perfResSolo or $perfResAdLib) then(concat('(',string-join(($perfResSolo, $perfResAdLib), ', '),')')) else()
-                                                          
-                                                          return
-                                                            if($listName)
-                                                            then(string-join(($perfResAuthShort, $perfResOption), ' '))
-                                                            else(string-join(($perfResAuth, $perfResOption), ' '))
-                                
-                                let $perfResLabelsDistCount := for $each in distinct-values($perfResLabels)
-                                                                let $count := count($perfResLabels[.=$each])
-                                                                let $countLabel := if($count > 1) then($count) else()
-                                                                let $label := string-join(($countLabel,$each), ' ')
-                                                                return
-                                                                    $label
-                                return
-                                    
-                                    if($listName)
-                                    then(concat(baudiShared:translate(concat('baudi.registry.works.perfRes.', $listName, $param2)), ' (', string-join($perfResLabelsDistCount, ', '), ')'))
-                                    else if ($list/@type = 'choose')
-                                    then(string-join($perfResLabels, concat(' ', baudiShared:translate(concat('baudi.conjunction.or', $param2)), ' ')))
-                                    else(string-join($perfResLabels, ', '))
     return
         string-join($perfResLabelString, ', ')
-    
-   (: let $perfResList := for $list in $perfResLists
-                        let $perfResListName := $list/@codedval
-                        let $perfRess := $list//mei:perfRes
-                        return
-                            (
-                                <b>{baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName))}</b>,
-                                <ul style="list-style-type: square;">
-                                    {for $perfRes in $perfRess
-                                        let $perfResVal := $perfRes/@codedval
-                                        let $ambitus := if($perfRes/mei:ambitus) then(baudiSource:getAmbitus($perfRes/mei:ambitus)) else()
-                                            return
-                                                <li>{if($ambitus)
-                                                     then (baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResVal)), ' | ', $ambitus)
-                                                     else(baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResVal)))}
-                                                </li>}
-                                </ul>
-                            )
-    return
-        $perfResList :)
-    
-    
-
 };
 
 declare function baudiSource:getManifestationIdentifiers($sourceID as xs:string) {
