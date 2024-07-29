@@ -506,7 +506,7 @@ declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
 
     let $corpID := $corpName/@auth/string()
     let $corpUri := concat('/institution/', $corpID)
-    let $nameFound := $app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()
+    let $nameFound := if($corpID) then($app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()) else()
     let $name := if($nameFound) then($nameFound) else($corpName)
     
     return
