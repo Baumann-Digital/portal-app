@@ -28,20 +28,20 @@ declare function baudiSource:getManifestationTitle($manifestation as node()*, $p
   let $source := $manifestation
   let $sourceTitleFull := string-join(($source//mei:titlePart[@type='main'], $source//mei:titlePart[@type='subordinate'], $source//mei:titlePart[@type='perf']), ' ')
   let $sourceTitleShort := $source//mei:titlePart[@type='main']
-  let $sourceTitleUniform := $source/ancestor::mei:mei//mei:fileDesc//mei:title[@type="uniform"]
+  let $sourceTitleUniform := ($source/ancestor::mei:mei//mei:fileDesc//mei:title[@type="uniform"])[1]
   let $sourceTitleUniformParts := ($sourceTitleUniform/mei:titlePart[@type='main'][. != ''], $sourceTitleUniform/mei:titlePart[@type='subordinate'][. != ''], $sourceTitleUniform/mei:titlePart[@type='perf'][. != ''])
-  let $sourceTitleUniformJoined := string-join($sourceTitleUniformParts,' ')
+  let $sourceTitleUniformJoined := if($sourceTitleUniform/mei:titlePart) then(string-join($sourceTitleUniformParts,' ')) else(string-join($sourceTitleUniform//text(),' '))
   let $param := if($param= 'sub') then('subordinate') else($param)
   let $sourceTitlePartParam := $source//mei:titlePart[@type=$param]
 
 return
-    if ($param = 'full')
+    (if ($param = 'full')
     then ($sourceTitleFull)
     else if ($param = 'short')
     then ($sourceTitleShort)
     else if ($param = 'uniform')
     then ($sourceTitleUniformJoined)
-    else ($sourceTitlePartParam)
+    else ($sourceTitlePartParam))[1]
 };
 
 declare function baudiSource:getManifestationPersona($sourceID as xs:string, $param as xs:string) {
@@ -121,10 +121,10 @@ declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as n
     let $perfResLists := $perfMedium//mei:perfResList
     
     let $perfResLabelString := for $list at $n in $perfResLists
-                                let $listName := $list/@label
+                                let $listName := $list/@codedval
                                 let $listType := $list/@type
                                 let $perfResLabels := for $perfRes in $list/mei:perfRes
-                                                         let $perfResAuth := $perfRes/@label
+                                                         let $perfResAuth := $perfRes/@codedval
                                                          let $perfResAuthShorted := if(contains($perfResAuth,'.i'))
                                                                                   then(substring-before($perfResAuth,'.i'))
                                                                                   else if(matches($perfResAuth,'.ii'))

@@ -170,6 +170,8 @@
     <msg key="baudi.registry.works.perfRes.quartett.string.short">Str.-quart.</msg>
     <msg key="baudi.registry.works.perfRes.voice">Singstimme</msg>
     <msg key="baudi.registry.works.perfRes.voice.short">St.</msg>
+    <msg key="baudi.registry.works.perfRes.speaker">Sprecher</msg>
+    <msg key="baudi.registry.works.perfRes.speaker.short">Spr.</msg>
     <msg key="baudi.registry.works.perfRes.voice.high">Hohe Stimme</msg>
     <msg key="baudi.registry.works.perfRes.voice.high.short">H. St.</msg>
     <msg key="baudi.registry.works.perfRes.voice.middle">Mittlere Stimme</msg>
