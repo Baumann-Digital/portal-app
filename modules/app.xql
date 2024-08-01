@@ -64,11 +64,7 @@ let $content :=  <div class="container">
                                             let $titel := $document//tei:fileDesc/tei:titleStmt/tei:title/data()
                                             let $datumSent := $document//tei:correspAction[@type="sent"]/tei:date/@when
                                             let $status := $document/@status/string()
-                                            let $statusSymbol := if($status='checked')
-                                                                 then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
-                                                                 else if($status='published')
-                                                                 then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                                                 else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                                            let $statusSymbol := baudiShared:get-status-symbol($status)
                                                                   
                                             order by $titel
                                             return
@@ -277,11 +273,7 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                             let $name := baudiShared:getPersName($id, 'short', 'no')
                                             
                                             let $status := $person/@status/string()
-                                            let $statusSymbol := if($status='checked')
-                                                                 then(<img src="/resources/img/ampel_gelb.png'" alt="{$status}" width="10px"/>)
-                                                                 else if($status='published')
-                                                                 then(<img src="/resources/img/ampel_gruen.png'" alt="{$status}" width="10px"/>)
-                                                                 else(<img src="/resources/img/ampel_rot.png'" alt="{$status}" width="10px"/>)
+                                            let $statusSymbol := baudiShared:get-status-symbol($status)
                                                                   
                                             order by $name
                                              
@@ -447,11 +439,7 @@ let $content :=
                                 let $name := $locus/tei:placeName[1]
                                 let $id := $locus/@xml:id/string()
                                 let $status := $locus/@status/string()
-                                let $statusSymbol := if($status='checked')
-                                                     then(<img src="/resources/img/ampel_gelb.png'" alt="{$status}" width="10px"/>)
-                                                     else if($status='published')
-                                                     then(<img src="/resources/img/ampel_gruen.png'" alt="{$status}" width="10px"/>)
-                                                     else(<img src="/resources/img/ampel_rot.png'" alt="{$status}" width="10px"/>)
+                                let $statusSymbol := baudiShared:get-status-symbol($status)
                                 let $link :=  if($locus//tei:geo/text() !='') then(<a href="/{$id}" class="card-link">{$id}</a>) else($id) 
                                 let $tags := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.registry.loci.tag.',$locus/@type))}</label>
                                 
@@ -514,11 +502,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                     let $id := $org/@xml:id/string()
                     
                     let $status := $org/@status/string()
-                    let $statusSymbol := if($status='checked')
-                                         then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
-                                         else if($status='published')
-                                         then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                         else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                    let $statusSymbol := baudiShared:get-status-symbol($status)
                                           
                     order by $name
                      
@@ -652,11 +636,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                         return ($each,'&#160;')
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $source/ancestor::mei:mei/@status/string()
-                         let $statusSymbol := if($status='checked')
-                                              then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
-                                              else if($status='published')
-                                              then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                              else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                         let $statusSymbol := baudiShared:get-status-symbol($status)
                          order by $order
                          return
                              if ($isSourceCollection)
@@ -1148,11 +1128,7 @@ let $cards := for $item in $collection
                 let $volume := $item//tei:sourceDesc//tei:biblScope[@unit="volume"]/text()
                 let $issue := $item//tei:sourceDesc//tei:biblScope[@unit="issue"]/text()
                 let $status := $item//tei:publicationStmt/tei:p
-                let $statusSymbol := if($status='checked')
-                                              then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
-                                              else if($status='published')
-                                              then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                              else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                let $statusSymbol := baudiShared:get-status-symbol($status)
 
                 return
                     <div class="card bg-light mb-3">
@@ -1320,11 +1296,7 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
                                         return ($each,'&#160;')
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
-                         let $statusSymbol := if($status='checked')
-                                              then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
-                                              else if($status='published')
-                                              then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                              else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                         let $statusSymbol := baudiShared:get-status-symbol($status)
                          order by $order
                          return
                              <div class="card bg-light mb-3" name="{$status}">
@@ -1708,11 +1680,7 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
                                         else($work//mei:editor/string())
                          let $order := lower-case(normalize-space(if($titleSort)then($titleSort)else($title)))
                          let $status := $work/@status/string()
-                         let $statusSymbol := if($status='checked')
-                                              then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
-                                              else if($status='published')
-                                              then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-                                              else(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+                         let $statusSymbol := baudiShared:get-status-symbol($status)
                          order by $order
                          return
                              <div class="card bg-light mb-3" name="{$status}">
@@ -1947,15 +1915,15 @@ declare function app:registryFilterBar($node as node(), $model as map(*)){
        <div class="row">
            <div class="custom-control custom-switch" >
                <input class="custom-control-input" type="checkbox" id="ampel_rot" oninput="ampel_rot()"/>
-               <label class="custom-control-label" style="padding-right:20px;" for="ampel_rot">erfasst</label>
+               <label class="custom-control-label" style="padding-right:20px;" for="ampel_rot">{baudiShared:translate('created')}</label>
            </div>
            <div class="custom-control custom-switch">
                <input class="custom-control-input" type="checkbox" id="ampel_gelb" oninput="ampel_gelb()"/>
-               <label class="custom-control-label" style="padding-right:20px;" for="ampel_gelb">überprüft</label>
+               <label class="custom-control-label" style="padding-right:20px;" for="ampel_gelb">{baudiShared:translate('proposed')}</label>
            </div>
            <div class="custom-control custom-switch">
                <input class="custom-control-input" type="checkbox" id="ampel_gruen" oninput="ampel_gruen()"/>
-               <label class="custom-control-label" style="padding-right:20px;" for="ampel_gruen">öffentlich</label>
+               <label class="custom-control-label" style="padding-right:20px;" for="ampel_gruen">{baudiShared:translate('approved')}</label>
            </div>
        </div>
    </div>

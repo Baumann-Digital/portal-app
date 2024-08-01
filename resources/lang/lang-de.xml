@@ -527,4 +527,9 @@
     <msg key="baudi.errorPage.teamIsInformed">Unser Team wurde über diese Fehlfunktion automatisch und anonym informiert. Wir bemühen uns den Fehler schnellstmöglichst zu beheben!</msg>
     <msg key="baudi.errorPage.directConctact">In dringenden Fällen schreiben Sie uns bitte an info@baumann-digital.de</msg>
     <msg key="baudi.noGraphic">Kein Vorschaubild verfügbar</msg>
+    
+    <!-- status -->
+    <msg key="created">Erfasst</msg>
+    <msg key="proposed">In Bearbeitung</msg>
+    <msg key="approved">Überprüft</msg>
 </catalogue>

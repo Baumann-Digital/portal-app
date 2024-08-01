@@ -526,4 +526,9 @@
     <msg key="baudi.errorPage.teamIsInformed">Our team will be informed about this malfunction automatically and anonymously. We will try to find a solution as soon as possible!</msg>
     <msg key="baudi.errorPage.directConctact">In urgent cases, please write us a message to info@baumann-digital.de</msg>
 	<msg key="baudi.noGraphic">No preview available</msg>
+	
+	<!-- status -->
+    <msg key="created">Created</msg>
+    <msg key="proposed">Proposed</msg>
+    <msg key="approved">Approved</msg>
 </catalogue>
