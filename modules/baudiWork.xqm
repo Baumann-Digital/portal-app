@@ -147,8 +147,8 @@ declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
     let $perfMedium := $work//mei:perfMedium
     let $perfResList := $perfMedium/mei:perfResList
     return
-        baudiWork:processPerfResList($perfResList, $param, $param2)
-};
+        if($perfResList)
+        then(baudiWork:processPerfResList($perfResList, $param, $param2))else()};
 
 declare function baudiWork:hasStemma($workID as xs:string){
     let $stemmaImg := $app:collectionWorks[@xml:id=$workID]//mei:annot[@type="stemma"]
