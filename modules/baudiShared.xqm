@@ -690,7 +690,7 @@ declare function baudiShared:getReferences($id) {
                                 order by $order
                                 return
                                  <div class="RegisterSortBox" xmlns="http://www.w3.org/1999/xhtml">
-                                          <div class="RegisterSortEntry">{(:$registerSortEntryLabel:)}</div>
+                                          <div class="RegisterSortEntry">{$registerSortEntryLabel}</div>
                                           {for $group in $groups
                                               return
                                                   $group}

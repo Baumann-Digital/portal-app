@@ -21,6 +21,7 @@ declare namespace edirom = "http://www.edirom.de/ns/1.3";
 declare namespace pkg = "http://expath.org/ns/pkg";
 declare namespace crapp = "http://www.baumann-digital.de/ns/criticalReport";
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
+declare namespace xhtml="http://www.w3.org/1999/xhtml";
 
 declare variable $app:digilibPath as xs:string := config:get-option('digilibPath');
 declare variable $app:geonames as xs:string := config:get-option('geonames');
@@ -271,29 +272,28 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                             {let $cards := for $person in $app:collectionPersons
                                             let $id := $person/@xml:id/string()
                                             let $name := baudiShared:getPersName($id, 'short', 'no')
-                                            
+                                            let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
                                             let $status := $person/@status/string()
                                             let $statusSymbol := baudiShared:get-status-symbol($status)
-                                                                  
+                                            
+                                            where $referencesCount gt 0
                                             order by $name
                                              
                                             return
                                                  <div class="card bg-light mb-3" name="{$status}">
                                                      <div class="card-body">
                                                        <div class="row justify-content-between">
-                                                            <div class="col">
+                                                            <div class="col-6">
                                                                 <h5 class="card-title">{$name}</h5>
-                                                                <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <p class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</p>
                                                             </div>
                                                             <div class="col-2">
                                                                 <p class="text-right">{$statusSymbol}</p>
                                                             </div>
                                                        </div>
-                                                       <p class="card-text"/>
-                                                       
                                                        <a href="/{$id}" class="card-link">{$id}</a>
-                                                       <hr/>
-                                                       <p>Tags</p>
                                                      </div>
                                                  </div>
                                 return
@@ -326,102 +326,96 @@ return
         <h5>{$id}</h5>
     </div>
     <hr/>
-
-    <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">{baudiShared:translate('baudi.registry.persons.general')}</a></li>  
-        {if($references) then(<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">{baudiShared:translate('baudi.registry.persons.references')}</a></li>) else()}
-    </ul>
-  <div class="tab-content">
-    <div class="tab-pane fade show active" id="tab1">
-    <br/>
-        <div class="container">
-            {if(baudiPersons:getTitle($id))
-            then(<div class="row">
-                   <div class="col">Titel</div>
-                   <div class="col">{baudiPersons:getTitle($id)}</div>
-                 </div>)
-            else()}
-            <div class="row">
-              <div class="col">Vorname(n)</div>
-              <div class="col">{if(baudiPersons:getFornames($id))
-                                then(baudiPersons:getFornames($id))
-                                else(baudiShared:translate('baudi.notKnown'))}</div>
+    <div class="row">
+        <div class="col">
+        <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
+        <hr/>
+                {if(baudiPersons:getTitle($id))
+                then(<div class="row">
+                       <div class="col-5">Titel</div>
+                       <div class="col">{baudiPersons:getTitle($id)}</div>
+                     </div>)
+                else()}
+                <div class="row">
+                  <div class="col-5">Vorname(n)</div>
+                  <div class="col">{if(baudiPersons:getFornames($id))
+                                    then(baudiPersons:getFornames($id))
+                                    else(baudiShared:translate('baudi.notKnown'))}</div>
+                </div>
+                {if(baudiPersons:getEpithet($id))
+                then(<div class="row">
+                  <div class="col-5">Beiname</div>
+                  <div class="col">{baudiPersons:getEpithet($id)}</div>
+                </div>)
+                else()}
+                {if(baudiPersons:getNameLink($id))
+                then(<div class="row">
+                  <div class="col-5">Adelsprädikat</div>
+                  <div class="col">{baudiPersons:getNameLink($id)}</div>
+                </div>)
+                else()}
+                <div class="row">
+                  <div class="col-5">Nachname(n)</div>
+                  <div class="col">{if(baudiPersons:getSurnames($id))
+                                    then(baudiPersons:getSurnames($id))
+                                    else(baudiShared:translate('baudi.notKnown'))}</div>
+                </div>
+                <!--<div class="row">
+                  <div class="col">Pseudonym</div>
+                  <div class="col">Spalte 2</div>
+                </div>-->
+                {if(baudiPersons:getNickName($id))
+                then(<div class="row">
+                  <div class="col-5">Spitzname</div>
+                  <div class="col">{baudiPersons:getNickName($id)}</div>
+                </div>)
+                else()}
+                {if(baudiPersons:getNameUnspec($id))
+                then(<div class="row">
+                  <div class="col-5">Namensbezeichnung</div>
+                  <div class="col">{baudiPersons:getNameUnspec($id)}</div>
+                </div>)
+                else()}
+                <!--<div class="row">
+                  <div class="col">Funktion</div>
+                  <div class="col">Spalte 2</div>
+                </div>
+                <div class="row">
+                  <div class="col">Tätigkeit</div>
+                  <div class="col">Spalte 2</div>
+                </div>
+                 <div class="row">
+                  <div class="col">Lebensdaten</div>
+                  <div class="col">Spalte 2</div>
+                </div>-->
+                {if(baudiPersons:getAffiliations($id))
+                 then(<div class="row">
+                  <div class="col-5">Affiliation</div>
+                  <div class="col">{baudiPersons:getAffiliations($id)}</div>
+                </div>)
+                else()}
+                <!--<div class="row">
+                  <div class="col">Normdaten</div>
+                  <div class="col">Spalte 2</div>
+                </div>
+                <div class="row">
+                  <div class="col">Besonderes Ereignis</div>
+                  <div class="col">Spalte 2</div>
+                </div>
+                <div class="row">
+                  <div class="col">Wirkungsorte</div>
+                  <div class="col">Spalte 2</div>
+                </div>
+                <div class="row">
+                  <div class="col">Notizen</div>
+                  <div class="col">Spalte 2</div>
+                </div>-->
             </div>
-            {if(baudiPersons:getEpithet($id))
-            then(<div class="row">
-              <div class="col">Beiname</div>
-              <div class="col">{baudiPersons:getEpithet($id)}</div>
-            </div>)
-            else()}
-            {if(baudiPersons:getNameLink($id))
-            then(<div class="row">
-              <div class="col">Adelsprädikat</div>
-              <div class="col">{baudiPersons:getNameLink($id)}</div>
-            </div>)
-            else()}
-            <div class="row">
-              <div class="col">Nachname(n)</div>
-              <div class="col">{if(baudiPersons:getSurnames($id))
-                                then(baudiPersons:getSurnames($id))
-                                else(baudiShared:translate('baudi.notKnown'))}</div>
-            </div>
-            <div class="row">
-              <div class="col">Pseudonym</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            {if(baudiPersons:getNickName($id))
-            then(<div class="row">
-              <div class="col">Spitzname</div>
-              <div class="col">{baudiPersons:getNickName($id)}</div>
-            </div>)
-            else()}
-            {if(baudiPersons:getNameUnspec($id))
-            then(<div class="row">
-              <div class="col">Namensbezeichnung</div>
-              <div class="col">{baudiPersons:getNameUnspec($id)}</div>
-            </div>)
-            else()}
-            <div class="row">
-              <div class="col">Funktion</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            <div class="row">
-              <div class="col">Tätigkeit</div>
-              <div class="col">Spalte 2</div>
-            </div>
-             <div class="row">
-              <div class="col">Lebensdaten</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            {if(baudiPersons:getAffiliations($id))
-             then(<div class="row">
-              <div class="col">Affiliation</div>
-              <div class="col">{baudiPersons:getAffiliations($id)}</div>
-            </div>)
-            else()}
-            <div class="row">
-              <div class="col">Normdaten</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            <div class="row">
-              <div class="col">Besonderes Ereignis</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            <div class="row">
-              <div class="col">Wirkungsorte</div>
-              <div class="col">Spalte 2</div>
-            </div>
-            <div class="row">
-              <div class="col">Notizen</div>
-              <div class="col">Spalte 2</div>
-            </div>
+        <div class="col-7">
+            <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
+            <hr/>
+            <div class=" overflow-auto" style="max-height: 500px;">{$references}</div></div>
         </div>
-    </div>
-    <br/>
-    {if($references)
-    then(<div class="tab-pane fade" id="tab2" ><br/><div class="container  overflow-auto" style="max-height: 500px;">{$references}</div></div>)
-    else()}
-    </div>
 </div>
 )
 };
