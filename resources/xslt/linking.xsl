@@ -3,7 +3,7 @@
     <!-- Linking persons -->
     <xsl:template match="tei:persName">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('/db/apps/baudiPersons/data/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('/db/apps/baudiData/persons/', ./@key, '.xml'))">
                 <a href="/{./@key}">
                     <xsl:apply-templates/>
                 </a>
@@ -15,8 +15,8 @@
     </xsl:template>
     <xsl:template match="mei:persName">
         <xsl:choose>
-        	<xsl:when test="doc-available(concat('/db/apps/baudiPersons/data/', ./@codedval, '.xml'))">
-            	<a href="/{./@codedval}">
+            <xsl:when test="doc-available(concat('/db/apps/baudiData/persons/', ./@codedval, '.xml'))">
+                <a href="/{./@codedval}">
                     <xsl:apply-templates/>
                 </a>
             </xsl:when>
@@ -28,7 +28,7 @@
     <!-- Linking institutions -->
     <xsl:template match="tei:orgName">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('/db/apps/baudiInstitutions/data/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('/db/apps/baudiData/institutions/', ./@key, '.xml'))">
                 <a href="/{./@key}">
                     <xsl:apply-templates/>
                 </a>
@@ -40,7 +40,7 @@
     </xsl:template>
     <xsl:template match="mei:corpName">
         <xsl:choose>
-        	<xsl:when test="doc-available(concat('/db/apps/baudiInstitutions/data/', ./@codedval, '.xml'))">
+            <xsl:when test="doc-available(concat('/db/apps/baudiData/institutions/', ./@codedval, '.xml'))">
                 <a href="/{./@codedval}">
                     <xsl:apply-templates/>
                 </a>
@@ -54,7 +54,7 @@
     <!-- Linking works -->
     <xsl:template match="tei:title">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('/db/apps/baudiWorks/data/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('/db/apps/baudiData/works/', ./@key, '.xml'))">
                 <a href="/{./@key}">
                     <xsl:apply-templates/>
                 </a>
@@ -68,7 +68,7 @@
     <!-- Linking settlements -->
     <xsl:template match="tei:settlement">
         <xsl:choose>
-            <xsl:when test="doc-available(concat('/db/apps/baudiLoci/data/', ./@key, '.xml'))">
+            <xsl:when test="doc-available(concat('/db/apps/baudiData/loci/', ./@key, '.xml'))">
                 <a href="/{./@key}">
                     <xsl:apply-templates/>
                 </a>
