@@ -346,34 +346,56 @@ return
         <h3>{$nameHead}</h3>
         <h5>{$id}</h5>
     </div>
+    <br/>
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+       <li class="nav-item">
+         <a class="nav-link active" data-toggle="pill" href="#pills-main-tab" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
+       </li>
+       <li class="nav-item">
+         <a class="nav-link" data-toggle="pill" href="#pills-xml-tab" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
+       </li>
+    </ul>
     <hr/>
-    <div class="row" style="margin-bottom: 3em;">
-        <div class="col">
-        <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
-        <hr/>
-        <div style="max-height: 500px;">
-                {app:viewPersonDetail($persTitle, 'title', $persTitle, ()),
-                app:viewPersonDetail($persForenames, (if(count(tokenize($persForenames,' ')) gt 1) then('forenames') else('forename')), $persForenames, $unknown),
-                app:viewPersonDetail($persEpithet, ('epithet'), $persEpithet, ()),
-                app:viewPersonDetail($persNameLink, ('nameLink'), $persNameLink, ()),
-                app:viewPersonDetail($persSurname, ('surname'), $persSurname, ()),
-                app:viewPersonDetail($persGenName, ('genName'), $persGenName, ()),
-                app:viewPersonDetail($persPseudonym, ('pseudonym'), $persPseudonym, ()),
-                app:viewPersonDetail($persNickName, ('nickName'), $persNickName, ()),
-                app:viewPersonDetail($persUnSpec, ('unSpec'), $persUnSpec, ()),
-                app:viewPersonDetail($persRoleName, ('roleName'), $persRoleName, ()),
-                app:viewPersonDetail($persOccupation, ('occupation'), $persOccupation, ()),
-                app:viewPersonDetail($persLifeData, ('lifeData'), $persLifeData, ()),
-                app:viewPersonDetail($persAffiliation, ('affiliation'), $persAffiliation, ()),
-                app:viewPersonDetail($persResidences, ('residences'), $persResidences, ()),
-                app:viewPersonDetail($persAnnotation, ('annotation'), $persAnnotation, ())}
+    <!-- Tab panels -->
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="pills-main-tab" role="tabpanel" aria-labelledby="pills-main-tab">
+            <div class="row" style="margin-bottom: 3em;">
+                <div class="col">
+                <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
+                <hr/>
+                <div style="max-height: 500px;">
+                        {app:viewPersonDetail($persTitle, 'title', $persTitle, ()),
+                        app:viewPersonDetail($persForenames, (if(count(tokenize($persForenames,' ')) gt 1) then('forenames') else('forename')), $persForenames, $unknown),
+                        app:viewPersonDetail($persEpithet, ('epithet'), $persEpithet, ()),
+                        app:viewPersonDetail($persNameLink, ('nameLink'), $persNameLink, ()),
+                        app:viewPersonDetail($persSurname, ('surname'), $persSurname, ()),
+                        app:viewPersonDetail($persGenName, ('genName'), $persGenName, ()),
+                        app:viewPersonDetail($persPseudonym, ('pseudonym'), $persPseudonym, ()),
+                        app:viewPersonDetail($persNickName, ('nickName'), $persNickName, ()),
+                        app:viewPersonDetail($persUnSpec, ('unSpec'), $persUnSpec, ()),
+                        app:viewPersonDetail($persRoleName, ('roleName'), $persRoleName, ()),
+                        app:viewPersonDetail($persOccupation, ('occupation'), $persOccupation, ()),
+                        app:viewPersonDetail($persLifeData, ('lifeData'), $persLifeData, ()),
+                        app:viewPersonDetail($persAffiliation, ('affiliation'), $persAffiliation, ()),
+                        app:viewPersonDetail($persResidences, ('residences'), $persResidences, ()),
+                        app:viewPersonDetail($persAnnotation, ('annotation'), $persAnnotation, ())}
+                    </div>
+                </div>
+                <div class="col-7">
+                    <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
+                    <hr/>
+                    <div class=" overflow-auto" style="max-height: 500px;">{$references}</div>
+                </div>
             </div>
         </div>
-        <div class="col-7">
-            <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
-            <hr/>
-            <div class=" overflow-auto" style="max-height: 500px;">{$references}</div></div>
+        <div class="tab-pane fade" id="pills-xml-tab" role="tabpanel" aria-labelledby="pills-xml-tab">
+            <div class="card" style="background: aliceblue;">
+                <div class="card-body">
+                    <pre><code>{serialize(app:process-xml-for-display($person), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
+                </div>
+            </div>
         </div>
+    </div>
 </div>
 )
 };
