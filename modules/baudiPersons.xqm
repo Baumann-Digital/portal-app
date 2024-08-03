@@ -7,6 +7,7 @@ declare namespace mei="http://www.music-encoding.org/ns/mei";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
 
+import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.";
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace request="http://exist-db.org/xquery/request";
 
@@ -137,7 +138,7 @@ declare function baudiPersons:getAnnotation($persId as xs:string) {
         if(if($person//tei:note[. != '']) then(true()) else(false()))
         then(<ul>{for $note in $person//tei:note[. != '']
                                 return
-                                    <li>{$note/text()}</li>
+                                    <li>{transform:transform($note,doc("/db/apps/baudiApp/resources/xslt/linking.xsl"), ())}</li>
                               }</ul>)
         else()
 };
@@ -170,11 +171,12 @@ if(starts-with($lifedata,'-')) then(concat(substring(string(number($lifedata)),2
 };
 
 declare function baudiPersons:getLifeData($persId as xs:string) {
+    let $lang := baudiShared:get-lang()
     let $person := $app:collectionPersons/id($persId)
-    let $birth := if(baudiPersons:getBirth($person)='noBirth') then() else(baudiPersons:getBirth($person))
+    let $birth := if(baudiPersons:getBirth($person)='noBirth') then() else(baudiShared:formatDate($person/tei:birth, 'full', $lang))
     let $birthFormatted := baudiPersons:formatLifedata($birth)
 
-    let $death := if(baudiPersons:getDeath($person)='noDeath')then()else(baudiPersons:getDeath($person))
+    let $death := if(baudiPersons:getDeath($person)='noDeath') then() else(baudiShared:formatDate($person/tei:death, 'full', $lang))
     let $deathFormatted := if (contains($birthFormatted, ' v. Chr.') and not(contains(baudiPersons:formatLifedata($death), 'v. Chr.')))
                            then(concat(number(baudiPersons:formatLifedata($death)), ' n. Chr.'))
                            else (baudiPersons:formatLifedata($death))
