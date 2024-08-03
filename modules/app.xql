@@ -414,23 +414,26 @@ let $content :=
                                 let $id := $locus/@xml:id/string()
                                 let $status := $locus/@status/string()
                                 let $statusSymbol := baudiShared:get-status-symbol($status)
-                                let $link :=  if($locus//tei:geo/text() !='') then(<a href="/{$id}" class="card-link">{$id}</a>) else($id) 
+                                let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
                                 let $tags := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.registry.loci.tag.',$locus/@type))}</label>
                                 
+                                where $referencesCount gt 0
                                 order by $name
                                 return
                                      <div class="card bg-light mb-3" name="{$status}">
                                          <div class="card-body">
-                                           <div class="row justify-content-between">
-                                                <div class="col">
+                                           <div class="row">
+                                                <div class="col-6">
                                                     <h5 class="card-title">{$name}</h5>
+                                                </div>
+                                                <div class="col-4">
+                                                    <span class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
                                                 </div>
                                                 <div class="col-2">
                                                     <p class="text-right">{$statusSymbol}</p>
                                                 </div>
                                            </div>
-                                           <p class="card-text"/>
-                                           {$link}
+                                           <a href="/{$id}" class="card-link">{$id}</a>
                                            <hr/>
                                            {$tags}
                                          </div>
@@ -450,17 +453,56 @@ return
 declare function app:viewLocus($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("locus-id", "error")
-let $name := baudiLocus:getLocusName($id)
+let $locus := $app:collectionLoci/id($id)
+let $nameHead := baudiLocus:getLocusName($id)
+
+let $references := baudiShared:getReferences($id)
 
 return
 (
-    <div class="container">
-        <div class="page-header">
-            <h1>{$name}</h1>
-            <h5>{$id}</h5>
-        </div>
-        {baudiLocus:getOpenStreetMap($id)}
+<div class="container">
+    <br/>
+    <div class="page-header">
+        <h3>{$nameHead}</h3>
+        <h5>{$id}</h5>
     </div>
+    <br/>
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+       <li class="nav-item">
+         <a class="nav-link active" data-toggle="pill" href="#pills-main-tab" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
+       </li>
+       <li class="nav-item">
+         <a class="nav-link" data-toggle="pill" href="#pills-xml-tab" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
+       </li>
+    </ul>
+    <hr/>
+    <!-- Tab panels -->
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="pills-main-tab" role="tabpanel" aria-labelledby="pills-main-tab">
+            <div class="row" style="margin-bottom: 3em;">
+                <div class="col">
+                <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
+                <hr/>
+                <div style="max-height: 500px;">
+                        {baudiLocus:getOpenStreetMap($id)}
+                    </div>
+                </div>
+                <div class="col-7">
+                    <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
+                    <hr/>
+                    <div class=" overflow-auto" style="max-height: 500px;">{$references}</div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-xml-tab" role="tabpanel" aria-labelledby="pills-xml-tab">
+            <div class="card" style="background: aliceblue;">
+                <div class="card-body">
+                    <pre><code>{serialize(app:process-xml-for-display($locus), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 )
 };
 
