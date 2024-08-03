@@ -222,10 +222,10 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
 :
 :)
 
-declare function baudiShared:formatDate($date, $form as xs:string, $lang as xs:string) as xs:string {
+declare function baudiShared:formatDate($date, $form as xs:string, $lang as xs:string) as xs:string? {
     let $date := if (functx:atomic-type($date) = 'xs:date')
                     then ($date)
-                    else ($date/@when/string())
+                    else ($date/(@when|@when-iso)/string())
     return
         if ($form = 'full')
         then (format-date($date, "[D1o]&#160;[MNn]&#160;[Y]", $lang, (), ()))
@@ -282,12 +282,12 @@ declare function baudiShared:shortenAndFormatDates($dateFrom, $dateTo, $form as 
 };
 
 
-declare function baudiShared:getBirthDeathDates($dates, $lang) {
-    let $date := if ($dates/tei:date)
-                        then (baudiShared:formatDate($dates/tei:date, 'full', $lang))
+declare function baudiShared:getBirthDeathDates($birthDeath, $lang) {
+    let $date := if ($birthDeath/(@when|@when-iso|@when-custom))
+                        then (baudiShared:formatDate($birthDeath, 'full', $lang))
                         else ()
-    let $datePlace := if ($dates/tei:placeName/text())
-                        then (normalize-space($dates/tei:placeName/text()))
+    let $datePlace := if ($birthDeath/tei:placeName/text())
+                        then (normalize-space($birthDeath/tei:placeName/text()))
                         else ()
     return
         if ($date and $datePlace)
@@ -513,67 +513,6 @@ declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
         <a href="{$corpUri}">{$name}</a>
 };
 
-(:declare function baudiShared:getName($key as xs:string, $param as xs:string){
-
-    let $person :=$app:collectionPersons[range:field-eq("person-id", $key)]
-    let $institution := $app:collectionInstitutions[range:field-eq("institution-id", $key)]
-    let $nameForename := $person//tei:forename[matches(@type,"^used")][1]/text()[1]
-    let $nameNameLink := $person//tei:nameLink[1]/text()[1]
-    let $nameSurname := $person//tei:surname[matches(@type,"^used")][1]/text()[1]
-    let $nameGenName := $person//tei:genName/text()
-    let $nameAddNameTitle := $person//tei:addName[matches(@type,"^title")][1]/text()[1]
-    let $nameAddNameEpitet := $person//tei:addName[matches(@type,"^epithet")][1]/text()[1]
-    let $pseudonym := if ($person//tei:forename[matches(@type,'^pseudonym')] or $person//tei:surname[matches(@type,'^pseudonym')])
-                      then (concat($person//tei:forename[matches(@type,'^pseudonym')], ' ', $person//tei:surname[matches(@type,'^pseudonym')]))
-                      else ()
-    let $nameRoleName := $person//tei:roleName[1]/text()[1]
-    let $nameAddNameNick := $person//tei:addName[matches(@type,"^nick")][1]/text()[1]
-    let $affiliation := $person//tei:affiliation[1]/text()
-    let $nameUnspecified := $person//tei:name[matches(@type,'^unspecified')][1]/text()[1]
-    let $nameUnspec := if($affiliation and $nameUnspecified)
-                       then(concat($nameUnspecified, ' (',$affiliation,')'))
-                       else($nameUnspecified)
-    let $institutionName := $institution//tei:org/tei:orgName/text()
-    
-    let $name := if ($person)
-                 then(
-                      if($person and $param = 'full')
-                      then(
-                            if(not($nameForename) and not($nameNameLink) and not($nameUnspec))
-                            then($nameRoleName)
-                            else(string-join(($nameAddNameTitle, $nameForename, $nameAddNameEpitet, $nameNameLink, $nameSurname, $nameUnspec, $nameGenName), ' '))
-                          )
-                          
-                      else if($person and $param = 'short')
-                      then(
-                           string-join(($nameForename, $nameNameLink, $nameSurname, $nameUnspec, $nameGenName), ' ')
-                          )
-                          
-                      else if($person and $param = 'reversed')
-                      then(
-                            if($nameSurname)
-                            then(
-                                concat($nameSurname, ', ',string-join(($nameForename, $nameNameLink), ' '),
-                                if($nameGenName) then(concat(' (',$nameGenName,')')) else())
-                                )
-                            else (
-                                    if(not($nameForename) and not($nameNameLink) and not($nameUnspec))
-                                    then($nameRoleName)
-                                    else(
-                                           string-join(($nameForename, $nameNameLink, $nameUnspec), ' '),
-                                           if($nameGenName) then(concat(' (',$nameGenName,')')) else()
-                                        )
-                            )
-                           )
-                           
-                      else ('[NoPersonFound]')
-                     )
-                 else if($institution)
-                 then($institutionName)
-                 else('[NoInstitutionFound]')
-    return
-       $name
-};:)
 
 declare function baudiShared:linkAll($node as node()){
     transform:transform($node,doc('/db/apps/baudiApp/resources/xslt/linking.xsl'),())
