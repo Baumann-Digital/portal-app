@@ -305,15 +305,39 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
 
 };
 
+declare %private function app:viewPersonDetail($when, $label, $value, $otherwise as xs:string?) {
+    if($when)
+    then(<div class="row">
+            <div class="col-5">{baudiShared:translate('baudi.person.' || $label)}</div>
+            <div class="col">{$value}</div>
+         </div>)
+    else($otherwise)
+};
+
 declare function app:viewPerson($node as node(), $model as map(*)) {
  
 let $id := request:get-parameter("person-id", "error")
 let $person := $app:collectionPersons/id($id)
 
-let $nameHead := baudiShared:getPersName($id, 'short', 'no')
-
+let $nameHead := baudiShared:getPersName($id, 'reversed', 'no')
 let $references := baudiShared:getReferences($id)
 
+let $unknown := baudiShared:translate('baudi.notKnown')
+let $persTitle := baudiPersons:getTitle($id)
+let $persForenames := baudiPersons:getFornames($id)
+let $persEpithet := baudiPersons:getEpithet($id)
+let $persNameLink := baudiPersons:getNameLink($id)
+let $persSurname := baudiPersons:getSurnames($id)
+let $persGenName := baudiPersons:getGenName($id)
+let $persNickName := baudiPersons:getNickName($id)
+let $persUnSpec := baudiPersons:getNameUnspec($id)
+let $persPseudonym := baudiPersons:getPseudonym($id)
+let $persRoleName := baudiPersons:getRoleName($id)
+let $persOccupation := baudiPersons:getOccupation($id)
+let $persAffiliation := baudiPersons:getAffiliations($id)
+let $persResidences := baudiPersons:getResidences($id)
+let $persAnnotation := baudiPersons:getAnnotation($id)
+let $persLifeData := baudiPersons:getLifeData($id)
 return
 (
 <div class="container">
@@ -328,86 +352,21 @@ return
         <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
         <hr/>
         <div style="max-height: 500px;">
-                {if(baudiPersons:getTitle($id))
-                then(<div class="row">
-                       <div class="col-5">Titel</div>
-                       <div class="col">{baudiPersons:getTitle($id)}</div>
-                     </div>)
-                else()}
-                <div class="row">
-                  <div class="col-5">Vorname(n)</div>
-                  <div class="col">{if(baudiPersons:getFornames($id))
-                                    then(baudiPersons:getFornames($id))
-                                    else(baudiShared:translate('baudi.notKnown'))}</div>
-                </div>
-                {if(baudiPersons:getEpithet($id))
-                then(<div class="row">
-                  <div class="col-5">Beiname</div>
-                  <div class="col">{baudiPersons:getEpithet($id)}</div>
-                </div>)
-                else()}
-                {if(baudiPersons:getNameLink($id))
-                then(<div class="row">
-                  <div class="col-5">Adelsprädikat</div>
-                  <div class="col">{baudiPersons:getNameLink($id)}</div>
-                </div>)
-                else()}
-                <div class="row">
-                  <div class="col-5">Nachname(n)</div>
-                  <div class="col">{if(baudiPersons:getSurnames($id))
-                                    then(baudiPersons:getSurnames($id))
-                                    else(baudiShared:translate('baudi.notKnown'))}</div>
-                </div>
-                <!--<div class="row">
-                  <div class="col">Pseudonym</div>
-                  <div class="col">Spalte 2</div>
-                </div>-->
-                {if(baudiPersons:getNickName($id))
-                then(<div class="row">
-                  <div class="col-5">Spitzname</div>
-                  <div class="col">{baudiPersons:getNickName($id)}</div>
-                </div>)
-                else()}
-                {if(baudiPersons:getNameUnspec($id))
-                then(<div class="row">
-                  <div class="col-5">Namensbezeichnung</div>
-                  <div class="col">{baudiPersons:getNameUnspec($id)}</div>
-                </div>)
-                else()}
-                <!--<div class="row">
-                  <div class="col">Funktion</div>
-                  <div class="col">Spalte 2</div>
-                </div>
-                <div class="row">
-                  <div class="col">Tätigkeit</div>
-                  <div class="col">Spalte 2</div>
-                </div>
-                 <div class="row">
-                  <div class="col">Lebensdaten</div>
-                  <div class="col">Spalte 2</div>
-                </div>-->
-                {if(baudiPersons:getAffiliations($id))
-                 then(<div class="row">
-                  <div class="col-5">Affiliation</div>
-                  <div class="col">{baudiPersons:getAffiliations($id)}</div>
-                </div>)
-                else()}
-                <!--<div class="row">
-                  <div class="col">Normdaten</div>
-                  <div class="col">Spalte 2</div>
-                </div>
-                <div class="row">
-                  <div class="col">Besonderes Ereignis</div>
-                  <div class="col">Spalte 2</div>
-                </div>
-                <div class="row">
-                  <div class="col">Wirkungsorte</div>
-                  <div class="col">Spalte 2</div>
-                </div>
-                <div class="row">
-                  <div class="col">Notizen</div>
-                  <div class="col">Spalte 2</div>
-                </div>-->
+                {app:viewPersonDetail($persTitle, 'title', $persTitle, ()),
+                app:viewPersonDetail($persForenames, (if(count(tokenize($persForenames,' ')) gt 1) then('forenames') else('forename')), $persForenames, $unknown),
+                app:viewPersonDetail($persEpithet, ('epithet'), $persEpithet, ()),
+                app:viewPersonDetail($persNameLink, ('nameLink'), $persNameLink, ()),
+                app:viewPersonDetail($persSurname, ('surname'), $persSurname, ()),
+                app:viewPersonDetail($persGenName, ('genName'), $persGenName, ()),
+                app:viewPersonDetail($persPseudonym, ('pseudonym'), $persPseudonym, ()),
+                app:viewPersonDetail($persNickName, ('nickName'), $persNickName, ()),
+                app:viewPersonDetail($persUnSpec, ('unSpec'), $persUnSpec, ()),
+                app:viewPersonDetail($persRoleName, ('roleName'), $persRoleName, ()),
+                app:viewPersonDetail($persOccupation, ('occupation'), $persOccupation, ()),
+                app:viewPersonDetail($persLifeData, ('lifeData'), $persLifeData, ()),
+                app:viewPersonDetail($persAffiliation, ('affiliation'), $persAffiliation, ()),
+                app:viewPersonDetail($persResidences, ('residences'), $persResidences, ()),
+                app:viewPersonDetail($persAnnotation, ('annotation'), $persAnnotation, ())}
             </div>
         </div>
         <div class="col-7">

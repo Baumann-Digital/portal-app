@@ -532,4 +532,22 @@
     <msg key="created">Erfasst</msg>
     <msg key="proposed">In Bearbeitung</msg>
     <msg key="approved">Überprüft</msg>
+    
+    <!-- view person -->
+    <msg key="baudi.person.title">Titel</msg>
+    <msg key="baudi.person.forename">Vorname</msg>
+    <msg key="baudi.person.forenames">Vornamen</msg>
+    <msg key="baudi.person.surname">Nachname</msg>
+    <msg key="baudi.person.genName">Generation</msg>
+    <msg key="baudi.person.epithet">Beiname</msg>
+    <msg key="baudi.person.nameLink">Adelsprädikat</msg>
+    <msg key="baudi.person.pseudonym">Pseudonym</msg>
+    <msg key="baudi.person.nickName">Spitz-/Kosename</msg>
+    <msg key="baudi.person.unSpec">Namensbezeichnung</msg>
+    <msg key="baudi.person.roleName">Funktion</msg>
+    <msg key="baudi.person.occupation">Tätigkeit</msg>
+    <msg key="baudi.person.lifeData">Lebensdaten</msg>
+    <msg key="baudi.person.affiliation">Affiliation</msg>
+    <msg key="baudi.person.residences">Wirkungsorte</msg>
+    <msg key="baudi.person.annotation">Anmerkung</msg>
 </catalogue>

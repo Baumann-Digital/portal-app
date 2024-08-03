@@ -82,6 +82,13 @@ declare function baudiPersons:getNickName($persId as xs:string) {
         $nickName
 };
 
+declare function baudiPersons:getPseudonym($persId as xs:string) {
+(:    let $person := $app:collectionPersons/id($persId):)
+(:    let $nickName := $person//tei:addName[matches(@type,"^nick")] => string-join(' '):)
+(:    return:)
+(:        $nickName:)
+};
+
 declare function baudiPersons:getNameUnspec($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
     let $nameUnspec := $person//tei:name[matches(@type,'^unspecified')]/text()
@@ -100,4 +107,83 @@ declare function baudiPersons:getAffiliations($persId as xs:string) {
         if($hasAffiliation)
         then($affiliations)
         else()
+};
+
+declare function baudiPersons:getOccupation($persId as xs:string) {
+    let $person := $app:collectionPersons/id($persId)
+    return
+        if(if($person//tei:occupation[. != '']) then(true()) else(false()))
+        then(<ul>{for $occupation in $person//tei:occupation[. != '']
+                                return
+                                    <li>{$occupation/text()}</li>
+                              }</ul>)
+        else()
+};
+
+declare function baudiPersons:getResidences($persId as xs:string) {
+    let $person := $app:collectionPersons/id($persId)
+    return
+        if(if($person//tei:recidence[. != '']) then(true()) else(false()))
+        then(<ul>{for $recidence in $person//tei:recidence[. != '']
+                                return
+                                    <li>{$recidence/text()}</li>
+                              }</ul>)
+        else()
+};
+
+declare function baudiPersons:getAnnotation($persId as xs:string) {
+    let $person := $app:collectionPersons/id($persId)
+    return
+        if(if($person//tei:note[. != '']) then(true()) else(false()))
+        then(<ul>{for $note in $person//tei:note[. != '']
+                                return
+                                    <li>{$note/text()}</li>
+                              }</ul>)
+        else()
+};
+
+declare %private function baudiPersons:getBirth($person){
+    if ($person//tei:birth[1][@when-iso])
+    then ($person//tei:birth[1]/@when-iso)
+    else if ($person//tei:birth[1][@notBefore] and $person//tei:birth[1][@notAfter])
+    then (concat($person//tei:birth[1]/@notBefore, '/', $person//tei:birth[1]/@notAfter))
+    else if ($person//tei:birth[1][@notBefore])
+    then ($person//tei:birth[1]/@notBefore)
+    else if ($person//tei:birth[1][@notAfter])
+    then ($person//tei:birth[1]/@notAfter)
+    else ('noBirth')
+};
+declare %private function baudiPersons:getDeath($person){
+    if ($person//tei:death[1][@when-iso])
+    then ($person//tei:death[1]/@when-iso)
+    else if ($person//tei:death[1][@notBefore] and $person//tei:death[1][@notAfter])
+    then (concat($person//tei:death[1]/@notBefore, '/', $person//tei:death[1]/@notAfter))
+    else if ($person//tei:death[1][@notBefore])
+    then ($person//tei:death[1]/@notBefore)
+    else if ($person//tei:death[1][@notAfter])
+    then ($person//tei:death[1]/@notAfter)
+    else ('noDeath')
+};
+
+declare %private function baudiPersons:formatLifedata($lifedata){
+if(starts-with($lifedata,'-')) then(concat(substring(string(number($lifedata)),2),' v. Chr.')) else($lifedata)
+};
+
+declare function baudiPersons:getLifeData($persId as xs:string) {
+    let $person := $app:collectionPersons/id($persId)
+    let $birth := if(baudiPersons:getBirth($person)='noBirth') then() else(baudiPersons:getBirth($person))
+    let $birthFormatted := baudiPersons:formatLifedata($birth)
+
+    let $death := if(baudiPersons:getDeath($person)='noDeath')then()else(baudiPersons:getDeath($person))
+    let $deathFormatted := if (contains($birthFormatted, ' v. Chr.') and not(contains(baudiPersons:formatLifedata($death), 'v. Chr.')))
+                           then(concat(number(baudiPersons:formatLifedata($death)), ' n. Chr.'))
+                           else (baudiPersons:formatLifedata($death))
+    return
+        if ($birthFormatted[. != ''] and $deathFormatted[. != ''])
+        then (concat(' (', $birthFormatted, '–', $deathFormatted, ')'))
+        else if ($birthFormatted and not($deathFormatted))
+        then (concat(' (*', $birthFormatted, ')'))
+        else if ($deathFormatted and not($birthFormatted))
+        then (concat(' (†', $deathFormatted, ')'))
+        else ()
 };
