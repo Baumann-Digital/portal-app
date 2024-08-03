@@ -662,8 +662,7 @@ declare function baudiShared:getReferences($id) {
                                               then(' vom ','DATUM')
                                               else()}
                                          </div>
-                                         <div class="col" docTitle="{normalize-space($docTitle[1])}">{$docTitle}</div>
-                                         <div class="col-3"><a href="{$docID}">{string($docID)}</a></div>
+                                         <div class="col" docTitle="{normalize-space($docTitle[1])}"><a href="{$docID}">{$docTitle}</a></div>
                                        </div>
                           group by $docIDStart
                           return
@@ -706,5 +705,5 @@ declare function baudiShared:get-status-symbol($status as xs:string?) as node()?
     then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
     else if($status='approved')
     then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
-    else()
+    else(<span>no status</span>)
 };

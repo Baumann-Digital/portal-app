@@ -267,11 +267,10 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
     
     let $lang := baudiShared:get-lang()
       
-    let $content := <div class="container">
-                        <div class="container  overflow-auto" style="max-height: 500px;">
+    let $content := <div class="container  overflow-auto" style="max-height: 500px;">
                             {let $cards := for $person in $app:collectionPersons
                                             let $id := $person/@xml:id/string()
-                                            let $name := baudiShared:getPersName($id, 'short', 'no')
+                                            let $name := baudiShared:getPersName($id, 'reversed', 'no')
                                             let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
                                             let $status := $person/@status/string()
                                             let $statusSymbol := baudiShared:get-status-symbol($status)
@@ -282,12 +281,12 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                             return
                                                  <div class="card bg-light mb-3" name="{$status}">
                                                      <div class="card-body">
-                                                       <div class="row justify-content-between">
+                                                       <div class="row">
                                                             <div class="col-6">
                                                                 <h5 class="card-title">{$name}</h5>
                                                             </div>
                                                             <div class="col-4">
-                                                                <p class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</p>
+                                                                <span class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
                                                             </div>
                                                             <div class="col-2">
                                                                 <p class="text-right">{$statusSymbol}</p>
@@ -300,8 +299,6 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
                                     $cards
                             }
                         </div>
-                        <br/>
-                   </div>
        
        return
         $content
@@ -326,10 +323,11 @@ return
         <h5>{$id}</h5>
     </div>
     <hr/>
-    <div class="row">
+    <div class="row" style="margin-bottom: 3em;">
         <div class="col">
         <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
         <hr/>
+        <div style="max-height: 500px;">
                 {if(baudiPersons:getTitle($id))
                 then(<div class="row">
                        <div class="col-5">Titel</div>
@@ -411,6 +409,7 @@ return
                   <div class="col">Spalte 2</div>
                 </div>-->
             </div>
+        </div>
         <div class="col-7">
             <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
             <hr/>
