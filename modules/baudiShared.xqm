@@ -222,10 +222,10 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
 :
 :)
 
-declare function baudiShared:formatDate($date, $form as xs:string, $lang as xs:string) as xs:string? {
+declare function baudiShared:formatDate($date, $form as xs:string, $lang as xs:string) as xs:string {
     let $date := if (functx:atomic-type($date) = 'xs:date')
                     then ($date)
-                    else ($date/(@when|@when-iso)/string())
+                    else ($date/@when/string())
     return
         if ($form = 'full')
         then (format-date($date, "[D1o]&#160;[MNn]&#160;[Y]", $lang, (), ()))
@@ -282,12 +282,12 @@ declare function baudiShared:shortenAndFormatDates($dateFrom, $dateTo, $form as 
 };
 
 
-declare function baudiShared:getBirthDeathDates($birthDeath, $lang) {
-    let $date := if ($birthDeath/(@when|@when-iso|@when-custom))
-                        then (baudiShared:formatDate($birthDeath, 'full', $lang))
+declare function baudiShared:getBirthDeathDates($dates, $lang) {
+    let $date := if ($dates/tei:date)
+                        then (baudiShared:formatDate($dates/tei:date, 'full', $lang))
                         else ()
-    let $datePlace := if ($birthDeath/tei:placeName/text())
-                        then (normalize-space($birthDeath/tei:placeName/text()))
+    let $datePlace := if ($dates/tei:placeName/text())
+                        then (normalize-space($dates/tei:placeName/text()))
                         else ()
     return
         if ($date and $datePlace)
