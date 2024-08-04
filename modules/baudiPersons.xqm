@@ -102,7 +102,7 @@ declare function baudiPersons:getAffiliations($persId as xs:string) {
     let $hasAffiliation := if($person//tei:affiliation[. != '']) then(true()) else(false())
     let $affiliations := <ul>{for $affiliation in $person//tei:affiliation[. != '']
                                 return
-                                    <li>{$affiliation/text()}</li>
+                                    <li class="baudiListItem">{$affiliation/text()}</li>
                               }</ul>
     return
         if($hasAffiliation)
@@ -116,7 +116,7 @@ declare function baudiPersons:getOccupation($persId as xs:string) {
         if(if($person//tei:occupation[. != '']) then(true()) else(false()))
         then(<ul>{for $occupation in $person//tei:occupation[. != '']
                                 return
-                                    <li>{$occupation/text()}</li>
+                                    <li class="baudiListItem">{$occupation/text()}</li>
                               }</ul>)
         else()
 };
@@ -127,7 +127,7 @@ declare function baudiPersons:getResidences($persId as xs:string) {
         if(if($person//tei:recidence[. != '']) then(true()) else(false()))
         then(<ul>{for $recidence in $person//tei:recidence[. != '']
                                 return
-                                    <li>{$recidence/text()}</li>
+                                    <li class="baudiListItem">{$recidence/text()}</li>
                               }</ul>)
         else()
 };
@@ -138,7 +138,7 @@ declare function baudiPersons:getAnnotation($persId as xs:string) {
         if(if($person//tei:note[. != '']) then(true()) else(false()))
         then(<ul>{for $note in $person//tei:note[. != '']
                                 return
-                                    <li>{transform:transform($note,doc("/db/apps/baudiApp/resources/xslt/linking.xsl"), ())}</li>
+                                    <li class="baudiListItem">{transform:transform($note,doc("/db/apps/baudiApp/resources/xslt/linking.xsl"), ())}</li>
                               }</ul>)
         else()
 };

@@ -364,7 +364,7 @@ return
                 <div class="col">
                 <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
                 <hr/>
-                <div style="max-height: 500px;">
+                <div class="overflow-auto baudi-container">
                         {app:viewPersonDetail($persTitle, 'title', $persTitle, ()),
                         app:viewPersonDetail($persForenames, (if(count(tokenize($persForenames,' ')) gt 1) then('forenames') else('forename')), $persForenames, $unknown),
                         app:viewPersonDetail($persEpithet, ('epithet'), $persEpithet, ()),
@@ -385,7 +385,7 @@ return
                 <div class="col-7">
                     <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
                     <hr/>
-                    <div class=" overflow-auto" style="max-height: 500px;">{$references}</div>
+                    <div class="overflow-auto baudi-container">{$references}</div>
                 </div>
             </div>
         </div>
@@ -484,14 +484,14 @@ return
                 <div class="col">
                 <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
                 <hr/>
-                <div style="max-height: 500px;">
+                <div class="overflow-auto baudi-container">
                         {baudiLocus:getOpenStreetMap($id)}
                     </div>
                 </div>
                 <div class="col-7">
                     <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
                     <hr/>
-                    <div class=" overflow-auto" style="max-height: 500px;">{$references}</div>
+                    <div class="overflow-auto baudi-container">{$references}</div>
                 </div>
             </div>
         </div>
@@ -608,7 +608,7 @@ return
                 <div class="col-7">
                     <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
                     <hr/>
-                    <div class=" overflow-auto" style="max-height: 500px;">{$references}</div>
+                    <div class="overflow-auto baudi-container">{$references}</div>
                 </div>
             </div>
         </div>
