@@ -38,7 +38,8 @@ declare variable $app:collectionGalleryItems := 0 (:collection($config:data-coll
 declare variable $app:collectionDocuments := collection($config:data-collection-path || '/sources/documents')//tei:TEI;
 declare variable $app:collectionEditions := collection($config:data-collection-path || '/editions')//edirom:edition;
 declare variable $app:collectionEditionsPath := collection($config:data-collection-path || '/editions');
-declare variable $app:collStrTexts := '/db/apps/baudiData/texts';
+declare variable $app:collectionTexts := collection($config:data-collection-path || '/texts')//tei:TEI;
+declare variable $app:collStrTexts := $config:data-collection-path || '/texts';
 
 
 declare function app:langSwitch($node as node(), $model as map(*)) {

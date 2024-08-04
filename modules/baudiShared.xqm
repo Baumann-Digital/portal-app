@@ -550,7 +550,9 @@ declare function baudiShared:getReferences($id) {
                                  $app:collectionLoci[matches(.//@key,$id)],
                                  $app:collectionDocuments[matches(.//@key,$id)],
                                  $app:collectionSourcesMusic[matches(.//@codedval,$id)],
-                                 $app:collectionWorks[matches(.//@codedval,$id)])
+                                 $app:collectionWorks[matches(.//@codedval,$id)],
+                                 $app:collectionEditions[matches(.//@key,$id)],
+                                 $app:collectionTexts[matches(.//@key,$id)])
     
     let $entryGroups := for $doc in $collectionReference
                           let $docID := $doc/@xml:id
@@ -614,6 +616,7 @@ declare function baudiShared:getReferences($id) {
                                               else()}
                                          </div>
                                          <div class="col" docTitle="{normalize-space($docTitle[1])}"><a href="{$docID}">{$docTitle}</a></div>
+                                         <div class="col-3" docID="{$docID}"><a href="/{$docID}">{$docID/string()}</a></div>
                                        </div>
                           group by $docIDStart
                           return
