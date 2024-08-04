@@ -516,29 +516,27 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
     {let $cards := for $org in $orgs
                     let $name := baudiShared:getOrgNameFull($org)
                     let $id := $org/@xml:id/string()
-                    
+                    let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
                     let $status := $org/@status/string()
                     let $statusSymbol := baudiShared:get-status-symbol($status)
                                           
                     order by $name
                      
                     return
-                         <div class="card bg-light mb-3" name="{$status}">
-                             <div class="card-body">
-                               <div class="row justify-content-between">
-                                    <div class="col">
+                        <div class="card bg-light mb-3" name="{$status}">
+                            <div class="card-body">
+                               <div class="row">
+                                    <div class="col-6">
                                         <h5 class="card-title">{$name}</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                    </div>
+                                    <div class="col-4">
+                                        <span class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
                                     </div>
                                     <div class="col-2">
                                         <p class="text-right">{$statusSymbol}</p>
                                     </div>
                                </div>
-                               <p class="card-text"/>
-                               
                                <a href="/{$id}" class="card-link">{$id}</a>
-                               <hr/>
-                               <p>Tags</p>
                              </div>
                          </div>
    
@@ -558,39 +556,60 @@ declare function app:viewInstitution($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("institution-id", "error")
 let $org := $app:collectionInstitutions[@xml:id=$id]
-let $name := if($org) then(baudiShared:getOrgNameFull($org)) else('N.N.')
+let $nameHead := if($org) then(baudiShared:getOrgNameFull($org)) else('N.N.')
 let $place := $org/tei:location/string()
 let $affiliates := for $person in $org//tei:listPerson/tei:person
                     let $persID := $person/tei:persName/@key
                     let $name := $person/tei:persName
                     return
                         <li><a href="{concat('/person/',$persID)}">{$name}</a></li>
+let $references := baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')]
+
 return
 (
     <div class="container">
-        <br/>
-        <div class="page-header">
-            <h1>{$name}</h1>
-            <h5>{$id}</h5>
+    <br/>
+    <div class="page-header">
+        <h3>{$nameHead}</h3>
+        <h5>{$id}</h5>
+    </div>
+    <br/>
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+       <li class="nav-item">
+         <a class="nav-link active" data-toggle="pill" href="#pills-main-tab" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
+       </li>
+       <li class="nav-item">
+         <a class="nav-link" data-toggle="pill" href="#pills-xml-tab" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
+       </li>
+    </ul>
+    <hr/>
+    <!-- Tab panels -->
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="pills-main-tab" role="tabpanel" aria-labelledby="pills-main-tab">
+            <div class="row" style="margin-bottom: 3em;">
+                <div class="col">
+                <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
+                <hr/>
+                <div style="max-height: 500px;">
+                        <!--{app:viewOrgDetail($orgName, 'name', $orgName, ())}-->
+                    </div>
+                </div>
+                <div class="col-7">
+                    <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
+                    <hr/>
+                    <div class=" overflow-auto" style="max-height: 500px;">{$references}</div>
+                </div>
+            </div>
         </div>
-        <br/>
-        <div class="col">
-            <table class="workView">
-                <tr>
-                    <th/>
-                    <th/>
-                </tr>
-                <tr>
-                    <td>Ort</td>
-                    <td>{$place}</td>
-                </tr>
-                <tr>
-                    <td>Personen</td>
-                    <td>{$affiliates}</td>
-                </tr>
-            </table>
+        <div class="tab-pane fade" id="pills-xml-tab" role="tabpanel" aria-labelledby="pills-xml-tab">
+            <div class="card" style="background: aliceblue;">
+                <div class="card-body">
+                    <pre><code>{serialize(app:process-xml-for-display($org), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 )
 };
 
