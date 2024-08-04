@@ -557,5 +557,7 @@
     <msg key="baudi.institution.affiliates">Assoziiert</msg>
     <msg key="baudi.institution.place">Standort</msg>
     <msg key="baudi.institution.normData">Normdaten</msg>
+    <msg key="baudi.institution.normDataGND">Normdaten (GND)</msg>
+    <msg key="baudi.institution.normDataVIAF">Normdaten (VIAF)</msg>
     
 </catalogue>

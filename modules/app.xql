@@ -339,6 +339,10 @@ let $persAffiliation := baudiPersons:getAffiliations($id)
 let $persResidences := baudiPersons:getResidences($id)
 let $persAnnotation := baudiPersons:getAnnotation($id)
 let $persLifeData := baudiPersons:getLifeData($id)
+
+let $gnd := baudiShared:getNormDataIdentifier($person,'gnd',true())
+let $viaf := baudiShared:getNormDataIdentifier($person,'viaf',true())
+
 return
 (
 <div class="container">
@@ -379,7 +383,9 @@ return
                         app:viewPersonDetail($persLifeData, ('lifeData'), $persLifeData, ()),
                         app:viewPersonDetail($persAffiliation, ('affiliation'), $persAffiliation, ()),
                         app:viewPersonDetail($persResidences, ('residences'), $persResidences, ()),
-                        app:viewPersonDetail($persAnnotation, ('annotation'), $persAnnotation, ())}
+                        app:viewPersonDetail($persAnnotation, ('annotation'), $persAnnotation, ()),
+                        app:viewPersonDetail($gnd != '', 'normDataGND', $gnd, ()),
+                        app:viewPersonDetail($viaf  != '', 'normDataVIAF', $viaf, ())}
                     </div>
                 </div>
                 <div class="col-7">
