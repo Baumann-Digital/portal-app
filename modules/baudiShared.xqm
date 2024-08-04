@@ -417,11 +417,11 @@ let $nameForename := if($persName//tei:forename[@type='used'])
                      else($persName//tei:forename[1])
 let $nameForenames := $persName//tei:forename[not(@type='altWriting')]
                       => string-join(' ')
-let $nameForenameAlt := concat('(auch ',$persName//tei:forename[@type='altWriting'], ')')
+let $nameForenameAlt := if($persName//tei:forename[@type='altWriting']) then(concat('(auch ',$persName//tei:forename[@type='altWriting'], ')')) else()
 let $nameNameLink := $persName//tei:nameLink/text()
 let $nameSurname := $persName//tei:surname[not(@type='altWriting')]
                      => string-join(' ')
-let $nameSurnameAlt := concat('(auch ',$persName//tei:surname[@type='altWriting'], ')')
+let $nameSurnameAlt := if($persName//tei:surname[@type='altWriting']) then(concat('(auch ',$persName//tei:surname[@type='altWriting'], ')')) else()
 let $nameGenName := $persName//tei:genName/text()
 let $nameAddNameTitle := $persName//tei:addName[matches(@type,"title")]/text()
 let $nameAddNameEpitet := $persName//tei:addName[matches(@type,"^epithet")]/text()
@@ -499,7 +499,7 @@ declare function baudiShared:getPersonaLinked($id as xs:string) {
 
 declare function baudiShared:getOrgNameFull($org as node()) {
 
-    let $name := string-join($org/tei:orgName[1]/text(), ' ')
+    let $name := string-join($org/tei:orgName[1]//text(), ' ')
     
     return
         $name
