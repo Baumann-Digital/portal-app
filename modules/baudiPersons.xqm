@@ -110,6 +110,26 @@ declare function baudiPersons:getAffiliations($persId as xs:string) {
         else()
 };
 
+declare function baudiPersons:getAffiliates($orgID as xs:string) {
+    let $person := $app:collectionInstitutions/id($orgID)
+    let $affiliatesColl := ($app:collectionPersons[matches(.//@key,$orgID)], $app:collectionInstitutions[matches(.//@key,$orgID)])
+    let $hasAffiliates := if($affiliatesColl) then(true()) else(false())
+    let $affiliates := <ul>{for $affiliate in $affiliatesColl
+                                let $persName := if($affiliate/self::tei:person) then(baudiShared:getPersName($affiliate/@xml:id,'full','yes')) else()
+                                let $orgName := if($affiliate/self::tei:org) then(baudiShared:getOrgNameFullLinked($affiliate/tei:org)) else()
+                                return
+                                    if($persName)
+                                    then(<li class="baudiListItem">{$persName}</li>)
+                                    else if ($orgName)
+                                    then(<li class="baudiListItem">{$orgName}</li>) 
+                                    else()
+                              }</ul>
+    return
+        if($hasAffiliates)
+        then($affiliates)
+        else()
+};
+
 declare function baudiPersons:getOccupation($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
     return

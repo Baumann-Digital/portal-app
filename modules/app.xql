@@ -556,7 +556,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
 declare %private function app:viewInstitutionDetail($when, $label, $value, $otherwise as xs:string?) {
     if($when)
     then(<div class="row">
-            <div class="col-5">{baudiShared:translate('baudi.person.' || $label)}</div>
+            <div class="col-5">{baudiShared:translate('baudi.institution.' || $label)}</div>
             <div class="col">{$value}</div>
          </div>)
     else($otherwise)
@@ -568,13 +568,13 @@ let $id := request:get-parameter("institution-id", "error")
 let $org := $app:collectionInstitutions[@xml:id=$id]
 let $orgName := if($org) then(baudiShared:getOrgNameFull($org)) else('N.N.')
 let $nameHead := $orgName
-let $place := $org/tei:location/string()
-let $affiliates := for $person in $org//tei:listPerson/tei:person
-                    let $persID := $person/tei:persName/@key
-                    let $name := $person/tei:persName
-                    return
-                        <li><a href="{concat('/person/',$persID)}">{$name}</a></li>
+let $place := if($org/tei:location/tei:settlement/@key)
+              then(<a href="/{$org/tei:location/tei:settlement/@key/string()}">{$org/tei:location/tei:settlement/text()}</a>)
+              else($org/tei:location/tei:settlement/text())
+let $affiliates := baudiPersons:getAffiliates($id)
 let $references := baudiShared:getReferences($id)
+let $gnd := baudiShared:getNormDataIdentifier($org,'gnd',true())
+let $viaf := baudiShared:getNormDataIdentifier($org,'viaf',true())
 
 return
 (
@@ -601,8 +601,12 @@ return
                 <div class="col">
                 <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
                 <hr/>
-                <div style="max-height: 500px;">
-                        {app:viewInstitutionDetail($orgName, 'name', $orgName, ())}
+                <div class="overflow-auto baudi-container">
+                        {app:viewInstitutionDetail($orgName, 'name', $orgName, ()),
+                         app:viewInstitutionDetail($affiliates, 'affiliates', $affiliates, ()),
+                         app:viewInstitutionDetail($place, 'place', $place, ()),
+                         app:viewInstitutionDetail($gnd != '', 'normDataGND', $gnd, ()),
+                         app:viewInstitutionDetail($viaf  != '', 'normDataVIAF', $viaf, ())}
                     </div>
                 </div>
                 <div class="col-7">
