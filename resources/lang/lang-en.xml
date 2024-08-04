@@ -550,4 +550,11 @@
     <msg key="baudi.person.affiliation">Affiliation</msg>
     <msg key="baudi.person.residences">Recidences</msg>
     <msg key="baudi.person.annotation">Annotation</msg>
+    
+    <!-- view institution -->
+    <msg key="baudi.institution.name">Name</msg>
+    <msg key="baudi.institution.affiliates">Associates</msg>
+    <msg key="baudi.institution.place">Place</msg>
+    <msg key="baudi.institution.normData">Norm data</msg>
+    
 </catalogue>

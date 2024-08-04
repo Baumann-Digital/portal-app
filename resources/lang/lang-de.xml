@@ -551,4 +551,11 @@
     <msg key="baudi.person.affiliation">Affiliation</msg>
     <msg key="baudi.person.residences">Wirkungsorte</msg>
     <msg key="baudi.person.annotation">Anmerkung</msg>
+    
+    <!-- view institution -->
+    <msg key="baudi.institution.name">Name</msg>
+    <msg key="baudi.institution.affiliates">Assoziiert</msg>
+    <msg key="baudi.institution.place">Standort</msg>
+    <msg key="baudi.institution.normData">Normdaten</msg>
+    
 </catalogue>
