@@ -661,3 +661,17 @@ declare function baudiShared:get-status-symbol($status as xs:string?) as node()?
     then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
     else(<span>no status</span>)
 };
+
+declare function baudiShared:getNormDataIdentifier($object as node(), $identifierType as xs:string, $linking as xs:boolean) {
+    
+    let $idno := $object//tei:idno[@type=$identifierType]/text()
+    let $idnoLinked := if($identifierType = 'gnd')
+        then(<a href="https://d-nb.info/gnd/{$idno}" target="_blank">{$idno}</a>)
+        else if($identifierType = 'viaf')
+        then(<a href="http://viaf.org/viaf/{$idno}" target="_blank">{$idno}</a>)
+        else()
+    return
+    if($linking = true())
+    then($idnoLinked)
+    else($idno)
+};
