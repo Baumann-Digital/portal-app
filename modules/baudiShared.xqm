@@ -222,14 +222,27 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
 :
 :)
 
-declare function baudiShared:formatDate($date, $form as xs:string, $lang as xs:string) as xs:string {
-    let $date := if (functx:atomic-type($date) = 'xs:date')
-                    then ($date)
-                    else ($date/@when/string())
+declare function baudiShared:formatDate($dateRaw, $formation as xs:string, $lang as xs:string) as xs:string {
+    let $form := if ($formation = 'full')
+                 then ('[D].&#160;[MNn,*-3].&#160;[Y]')
+                 else if ($formation = 'short')
+                 then()
+                 else ('[D].[M].[Y]')
+    let $date :=  if(string-length($dateRaw)=10 and not(contains($dateRaw,'-00')) and not(contains($dateRaw,'0000-')))
+                  then(format-date(xs:date($dateRaw),$form,$lang,(),()))
+                  else if($dateRaw =('0000','0000-00','0000-00-00'))
+                  then('[' || baudiShared:translate('undated') || ']')
+                  else if(string-length($dateRaw)=7 and not(contains($dateRaw,'00')))
+                  then (concat(upper-case(substring(format-date(xs:date(concat($dateRaw,'-01')),'[Mn,*-3]. [Y]',$lang,(),()),1,1)),substring(format-date(xs:date(concat($dateRaw,'-01')),'[Mn,*-3]. [Y]',$lang,(),()),2)))
+                  else if(contains($dateRaw,'0000-') and contains($dateRaw,'-00'))
+                  then (concat(upper-case(substring(format-date(xs:date(replace(replace($dateRaw,'0000-','9999-'),'-00','-01')),'[Mn,*-3].',$lang,(),()),1,1)),substring(format-date(xs:date(replace(replace($dateRaw,'0000-','9999-'),'-00','-01')),'[Mn,*-3].',$lang,(),()),2)))
+                  else if(starts-with($dateRaw,'0000-'))
+                  then(concat(format-date(xs:date(replace($dateRaw,'0000-','9999-')),'[D]. ',$lang,(),()),upper-case(substring(format-date(xs:date(replace($dateRaw,'0000-','9999-')),'[Mn,*-3]. ',$lang,(),()),1,1)),substring(format-date(xs:date(replace($dateRaw,'0000-','9999-')),'[Mn,*-3].',$lang,(),()),2)))
+                  else($dateRaw)
+    
+    let $replaceMay := $date => replace('Mai.','Mai') => replace('May.','May')
     return
-        if ($form = 'full')
-        then (format-date($date, "[D1o]&#160;[MNn]&#160;[Y]", $lang, (), ()))
-        else (format-date($date, "[D].[M].[Y]", $lang, (), ()))
+        $replaceMay
 };
 
 

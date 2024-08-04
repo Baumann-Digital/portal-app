@@ -521,6 +521,7 @@
     <msg key="baudi.conjunction.or.short">o.</msg>
     <msg key="baudi.unknown">N.N.</msg>
     <msg key="baudi.notKnown">[Nicht bekannt]</msg>
+    <msg key="baudi.undated">undatiert</msg>
     
     <msg key="baudi.errorPage.heading">Upps, ...</msg>
     <msg key="baudi.errorPage.sthWentWrong">Da ist wohl etwas schief gegangen!</msg>

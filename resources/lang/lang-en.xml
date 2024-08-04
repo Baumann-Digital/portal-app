@@ -520,6 +520,7 @@
     <msg key="baudi.conjunction.or.short">or</msg>
     <msg key="baudi.unknown">N.N.</msg>
     <msg key="baudi.notKnown">[Not known]</msg>
+    <msg key="baudi.undated">not dated</msg>
     
     <msg key="baudi.errorPage.heading">Oops, ...</msg>
     <msg key="baudi.errorPage.sthWentWrong">Something must have gone wrong!</msg>
