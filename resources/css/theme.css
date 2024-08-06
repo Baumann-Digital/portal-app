@@ -110,9 +110,14 @@ table.sourceView{
     width:100%;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
+    vertical-align:top;
 }
 table.sourceView tr td:first-of-type{
     width:30%;
+    vertical-align:top;
+}
+
+table.sourceView tr td{
     vertical-align:top;
 }
 
