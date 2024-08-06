@@ -642,10 +642,9 @@ declare function app:registrySources($node as node(), $model as map(*)) {
     let $genres := distinct-values($app:collectionSourcesMusic//mei:term[@type="source"])
     
     let $content :=<div class="container">
-    <br/>
          <ul class="nav nav-pills" role="tablist">
          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.sources.all')} ({count($sources)})</a></li>
-            {for $genre in $genres
+            {for $genre in $genres[not(. = 'part') and not(. = 'collection') and not(. = 'reprint')]
                 let $genreCount := count($sources[.//mei:term[@type='source'][. = $genre]])
                 let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.registry.sources.',$genre))} ({$genreCount})</a></li>
                 order by baudiShared:translate(concat('baudi.registry.sources.',$genre))
@@ -653,6 +652,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                     $nav-itemGenre
              }
     </ul>
+    <hr/>
     <!-- Tab panels -->
     <div class="container  overflow-auto" style="max-height: 500px;">
     <div class="tab-content">
@@ -907,19 +907,13 @@ return
                        <td>{baudiShared:translate('baudi.registry.sources.sourceType')}</td>
                        <td>{baudiShared:translate(concat('baudi.registry.sources.',$sourceType))}</td>
                     </tr>
-                    {if($sourceTitleUniform)
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.sources.titleUniform')}</td>
-                            <td>{$sourceTitleUniform}</td>
-                          </tr>)
-                     else()}
-                     {if($sourceTitleMain)
+                     {if($sourceTitleMain != '')
                      then(<tr>
                             <td>{baudiShared:translate('baudi.registry.sources.titleMain')}</td>
                             <td>{$sourceTitleMain}</td>
                           </tr>)
                      else()}
-                     {if($sourceTitleSub)
+                     {if($sourceTitleSub != '')
                      then(<tr>
                             <td>{baudiShared:translate('baudi.registry.sources.titleSub')}</td>
                             <td>{$sourceTitleSub}</td>
@@ -1025,22 +1019,8 @@ return
                  {if ($msStamps)
                  then ($msStamps)
                  else ()}
-                 {if ($msNotes)
+                 {if ($msNotes != '')
                  then ($msNotes)
-                 else ()}
-                 {if ($msScoreFormat)
-                 then (<table class="sourceView">
-                           <tr>
-                             <th/>
-                             <th/>
-                           </tr>
-                           <tr>
-                             <td>{baudiShared:translate('baudi.registry.sources.msDesc.scoreFormat')}</td>
-                             <td>
-                               {$msScoreFormat}
-                             </td>
-                           </tr>
-                       </table>)
                  else ()}
                  {if ($msCondition)
                  then (<table class="sourceView">
