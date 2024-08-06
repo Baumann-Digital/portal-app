@@ -265,7 +265,7 @@ let $table := <table class="sourceView">
                   </tr>
               </table>
 return
-    $table
+    if($source//mei:handList/mei:hand) then($table) else()
 };
 
 declare function  baudiSource:getManifestationPaperNotes($sourceID as xs:string) {
@@ -326,11 +326,11 @@ let $listOfNotes := for $note in $notes
                                                           return
                                                             $i18n
                         let $noteData := substring-after($note/@data, '#')
-                        let $noteResp := substring-after($note/@resp, '#')
+                        let $noteCorresp := substring-after($note/@corresp, '#')
                         let $notePage := $source//mei:surface[@xml:id = $noteData]/@label/string()
-                        let $resp := if($source//mei:hand[@xml:id = $noteResp]) then(functx:index-of-node($source//mei:hand, $source//mei:hand[@xml:id = $noteResp])) else()
+                        let $correspHand := if($source//mei:hand[@xml:id = $noteCorresp]) then(functx:index-of-node($source//mei:hand, $source//mei:hand[@xml:id = $noteCorresp])) else()
                         return
-                            if($resp) then(<li>{concat('[Hand ', $resp, ', ', $notePage, ' ', string-join($notePlaceTranslated, ' '), '] ')} <i>{$note/text()}</i></li>)
+                            if($correspHand) then(<li><i>{$note/text()}</i>{concat(' [Hand ', $correspHand, ', ', $notePage, ' ', string-join($notePlaceTranslated, ' '), '] ')}</li>)
                             else(<li><i>{$note//text() => string-join('')}</i></li>)
 let $table := <table class="sourceView">
                   <tr>
