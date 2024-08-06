@@ -551,6 +551,9 @@
     <msg key="baudi.person.affiliation">Affiliation</msg>
     <msg key="baudi.person.residences">Wirkungsorte</msg>
     <msg key="baudi.person.annotation">Anmerkung</msg>
+    <msg key="baudi.person.normData">Normdaten</msg>
+    <msg key="baudi.person.normDataGND">Normdaten (GND)</msg>
+    <msg key="baudi.person.normDataVIAF">Normdaten (VIAF)</msg>
     
     <!-- view institution -->
     <msg key="baudi.institution.name">Name</msg>
