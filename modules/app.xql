@@ -1946,7 +1946,7 @@ declare function app:portalVersion($node as node(), $model as map(*)){
 
 declare function app:registryFilterBar($node as node(), $model as map(*)){
    <div class="alert alert-dark" role="alert">
-       <div class="row">
+       <div class="row flex-row-reverse">
            <div class="custom-control custom-switch" >
                <input class="custom-control-input" type="checkbox" id="ampel_rot" oninput="ampel_rot()"/>
                <label class="custom-control-label" style="padding-right:20px;" for="ampel_rot">{baudiShared:translate('created')}</label>
