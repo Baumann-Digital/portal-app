@@ -374,8 +374,8 @@
     <msg key="baudi.registry.sources.msDesc.paper.pagination.none">Keine Seitenzählung</msg>
     <msg key="baudi.registry.sources.msDesc.paper.pagination.arabic">Arabisch</msg>
     <msg key="baudi.registry.sources.msDesc.paper.pagination.roman">Römisch</msg>
-    <msg key="baudi.registry.sources.msDesc.hands">Handschriftliche Einträge</msg>
-    <msg key="baudi.registry.sources.msDesc.hands.composer">Vermerke des Komponisten</msg>
+    <msg key="baudi.registry.sources.msDesc.hands">Hände/Schreibende</msg>
+    <msg key="baudi.registry.sources.msDesc.hands.composer">Autographe Vermerke</msg>
     <msg key="baudi.registry.sources.msDesc.hands.biblNote">Bibliothekarische Vermerke</msg>
     <msg key="baudi.registry.sources.msDesc.hands.publNote">Verlegerische Vermerke</msg>
     <msg key="baudi.registry.sources.msDesc.hands.medium">Medium</msg>
@@ -563,4 +563,5 @@
     <msg key="baudi.institution.normDataGND">Normdaten (GND)</msg>
     <msg key="baudi.institution.normDataVIAF">Normdaten (VIAF)</msg>
     
+    <msg key="noWorkRelation">Noch keinem Werk zugewiesen</msg>
 </catalogue>

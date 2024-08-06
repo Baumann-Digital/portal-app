@@ -722,11 +722,9 @@ declare function app:registrySources($node as node(), $model as map(*)) {
                                  <div class="card-body">
                                    <div class="row justify-content-between">
                                         <div class="col">
-                                        <h6 class="text-muted">Werk zugewiesen:
-                                        {if(contains($sourceRelationID, '-02-'))
-                                        then(<i>{baudiWork:getWorkTitle($app:collectionWorks[range:field-eq("work-id", $sourceRelationID)])}</i>,
-                                        '&#160;', $sourceRelationID/string())
-                                        else('noch nicht erfolgt!')}</h6>
+                                        {if(not(contains($sourceRelationID, '-02-')))
+                                        then(<h6 class="text-muted">{baudiShared:translate('noWorkRelation')}</h6>)
+                                        else()}
                                             <h5 class="card-title">{baudiSource:getManifestationTitle($source, 'main')}</h5>
                                             {if($titleSub != '')then(<h6 class="card-subtitle mb-2">{baudiSource:getManifestationTitle($source, 'sub')}</h6>)else()}
                                             {if($titleSub2 != '')then(<h6 class="card-subtitle mb-2">{$titleSub2}</h6>)else()}

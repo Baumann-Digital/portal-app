@@ -374,8 +374,8 @@
     <msg key="baudi.registry.sources.msDesc.paper.pagination.none">No Pagination</msg>
     <msg key="baudi.registry.sources.msDesc.paper.pagination.arabic">Arabic</msg>
     <msg key="baudi.registry.sources.msDesc.paper.pagination.roman">Roman</msg>
-    <msg key="baudi.registry.sources.msDesc.hands">Handwritten annotations</msg>
-    <msg key="baudi.registry.sources.msDesc.hands.composer">Composer annotations</msg>
+    <msg key="baudi.registry.sources.msDesc.hands">Hands/Scribe</msg>
+    <msg key="baudi.registry.sources.msDesc.hands.composer">Autograph annotations</msg>
     <msg key="baudi.registry.sources.msDesc.hands.biblNote">Librarian annotations</msg>
     <msg key="baudi.registry.sources.msDesc.hands.publNote">Publisher annotations</msg>
     <msg key="baudi.registry.sources.msDesc.hands.medium">Medium</msg>
@@ -562,4 +562,5 @@
     <msg key="baudi.institution.normDataGND">Norm data (GND)</msg>
     <msg key="baudi.institution.normDataVIAF">Norm data (VIAF)</msg>
     
+    <msg key="noWorkRelation">No related work defined</msg>
 </catalogue>
