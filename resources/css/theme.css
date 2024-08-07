@@ -1,6 +1,7 @@
 
 :root {
   --darkgreen: #2B8E00;
+  --primary: #007bff;
 }
 
 .navbar-text > a {
@@ -211,7 +212,7 @@ table.sourceView tr td{
 
 .RegisterSortEntry {
     font-size: 1.1em;
-    color: var(--darkgreen);
+    color: var(--primary);
     text-align: center;
     font-weight: bold;
     margin-left: 0px;
@@ -221,14 +222,14 @@ table.sourceView tr td{
     padding-top: 0.25em;
     padding-bottom: 0.25em;
     background-color: #f0f0f0;
-    border-bottom: 2px solid var(--darkgreen);
+    border-bottom: 2px solid var(--primary);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
 
 .RegisterSortEntry2 {
     font-size: 1.1em;
-    color: var(--darkgreen);
+    color: var(--primary);
     text-align: center;
     font-weight: bold;
     margin-left: 90px;
@@ -238,7 +239,7 @@ table.sourceView tr td{
     padding-top: 0.25em;
     padding-bottom: 0.25em;
     background-color: #f0f0f0;
-    border-bottom: 2px solid var(--darkgreen);
+    border-bottom: 2px solid var(--primary);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
