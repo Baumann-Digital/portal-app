@@ -564,4 +564,5 @@
     <msg key="baudi.institution.normDataVIAF">Normdaten (VIAF)</msg>
     
     <msg key="noWorkRelation">Noch keinem Werk zugewiesen</msg>
+    <msg key="hasSeveralManifestations">weitere Manifestationen codiert. Siehe XML!</msg>
 </catalogue>

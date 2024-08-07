@@ -563,4 +563,5 @@
     <msg key="baudi.institution.normDataVIAF">Norm data (VIAF)</msg>
     
     <msg key="noWorkRelation">No related work defined</msg>
+    <msg key="hasSeveralManifestations">more manifestations encoded. See the XML!</msg>
 </catalogue>

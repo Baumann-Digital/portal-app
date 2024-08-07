@@ -879,6 +879,7 @@ return
                 <br/>
                 <div class="page-header">
                     <h1>{$sourceTitleUniform}</h1>
+                    {if(count($source//mei:manifestation) gt 1) then(<h3>{count($source//mei:manifestation) - 1 || ' ' || baudiShared:translate('hasSeveralManifestations')}</h3>) else()}
                     <h5>ID: {$id}</h5>
                 </div>
                 <br/>
