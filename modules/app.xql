@@ -779,301 +779,305 @@ declare function app:viewSource($node as node(), $model as map(*)) {
 let $id := request:get-parameter("source-id", "error")
 let $lang := baudiShared:get-lang()
 let $source := $app:collectionSourcesMusic[@xml:id=$id]
-let $manifestation := $source//mei:manifestation
-let $fileURI := document-uri($source/root())
-let $sourceType := $source//mei:term[@type='source'][1]/string()
-let $sourceWorkGroup := $source//mei:term[@type='workGroup'][1]/string()
-let $sourceOrig := concat($app:digilibPath,$source/@xml:id)
-let $sourceTitleUniform := baudiSource:getManifestationTitle($manifestation,'uniform')
-let $sourceTitleMain := baudiSource:getManifestationTitle($manifestation,'main')
-let $sourceTitleSub := baudiSource:getManifestationTitle($manifestation,'sub')
-let $sourceTitlePerf := baudiSource:getManifestationTitle($manifestation,'perf')
-
-let $sourceComposer := baudiSource:getManifestationPersona($id,'composer')
-let $sourceArranger := baudiSource:getManifestationPersona($id,'arranger')
-let $sourceEditor := baudiSource:getManifestationPersona($id,'editor')
-let $sourceLyricist := baudiSource:getManifestationPersona($id,'lyricist')
-
-let $relatedWorks := $source//mei:relation[@rel="isEmbodimentOf"]
-let $relatedWorkID := $source//mei:relation[@rel="isEmbodimentOf"]/string(@corresp)
-let $relatedWorkTitle := baudiWork:getWorkTitle($app:collectionWorks/id($relatedWorkID))
-
-let $sourceEditionStmt := baudiSource:getSourceEditionStmt($id, $lang)
-
-let $sourceTitlePage := if($source//mei:titlePage/mei:p/text())
-                        then(baudiSource:renderTitlePage($source))
-                        else()
-
-let $sourcePerfRes := baudiSource:getManifestationPerfResWithAmbitus($source, 'full')
-
-let $msIdentifiers := baudiSource:getManifestationIdentifiers($id)
-
-let $msCondition := $source//mei:condition/mei:p/text()
-
-let $msPaperSpecs := baudiSource:getManifestationPaperSpecs($id)
-
-let $msHands := baudiSource:getManifestationHands($id)
-let $msPaperNotes := baudiSource:getManifestationPaperNotes($id)
-let $msStamps := if($source//mei:annot[@type="stamp"])
-                 then(baudiSource:getManifestationStamps($source//mei:annot[@type="stamp"]))
-                 else()
-let $msNotes := if($source//mei:annot[not(@type)]/text())
-                then(baudiSource:getManifestationNotes($id))
-                else()
-
-let $msScoreFormat := $source//mei:scoreFormat/text()
-let $sourcePlateNum := if($source//mei:plateNum/text())
-                       then(<tr>
-                                <td>{baudiShared:translate('baudi.registry.sources.msDesc.plateNum')}</td>
-                                <td>{$source//mei:plateNum/text()}</td>
-                            </tr>)
-                        else()
-
-let $usedLang := for $lang in $source//mei:langUsage/mei:language/@codedval
-                    return
-                        baudiShared:translate(concat('baudi.lang.',$lang))
-let $key := for $each in $source//mei:key
-              let $keyPname := $each/@pname
-              let $keyMode := $each/@mode
-              let $keyAccid := $each/@accid
-              let $keyPnameFull := concat($keyPname,$keyAccid)
-              return
-                  if($keyMode = 'major')
-                  then(concat(
-                                functx:capitalize-first(baudiShared:translate(concat('baudi.registry.works.pname.',$keyPnameFull))),
-                                baudiShared:translate('baudi.registry.delimiter.key'),
-                                baudiShared:translate(concat('baudi.registry.works.',$keyMode))
-                             )
-                        )
-                  else if($keyMode = 'minor')
-                  then(concat(
-                                baudiShared:translate(concat('baudi.registry.works.pname.',$keyPnameFull)),
-                                baudiShared:translate('baudi.registry.delimiter.key'),
-                                baudiShared:translate(concat('baudi.registry.works.',$keyMode))
-                             )
-                      )
-                  else()
-let $meter := for $each in $source//mei:meter
-                let $meterCount := $each/@count
-                let $meterUnit := $each/@unit
-                let $meterSym := $each/@sym
-                let $meterSymbol := if($meterSym = 'common')
-                                   then(<img src="/resources/img/timeSignature_common.png" width="20px"/>)
-                                   else if($meterSym = 'cut')
-                                   then(<img src="/resources/img/timeSignature_cut.png" width="20px"/>)
-                                   else()
-                return
-                    if($meterSymbol)
-                    then($meterSymbol)
-                    else(concat($meterCount, '/', $meterUnit))
-let $tempo := $source//mei:work/mei:tempo/text()
-
-let $sourceHasLyrics := if($source//mei:div[@type="songtext"])then(true())else(false())
-
+let $manifestations := $source//mei:manifestation[not(parent::mei:componentList)]
+for $manifestation in $manifestations
 return
-(
-    <div class="container">
-        <br/>
-        <div class="page-header">
-            <h1>{$sourceTitleUniform}</h1>
-            <h5>ID: {$id}</h5>
-        </div>
-        <br/>
-        <div class="row">
-       {if(exists($source//mei:facsimile/mei:surface))
-       then(baudiSource:getFacsimilePreview($id))
-        else()}
-    <div class="col">
-      <ul class="nav nav-pills" role="tablist">
-          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.sources.tab.main')}</a></li>  
-          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">{baudiShared:translate('baudi.registry.sources.tab.detail')}</a></li>
-          {if($sourceHasLyrics)then(<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">{baudiShared:translate('baudi.registry.sources.tab.lyrics')}</a></li>)else()}
-          <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>-->
-          <li class="nav-item">
-         <a class="nav-link" id="pills-edition-tab" data-toggle="pill" href="#pills-xml" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
-       </li>
-      </ul>
-      <!-- Tab panels -->
-      <div class="tab-content">
-          <div class="tab-pane fade show active" id="main">
-              <div class="container">
+    <div class="container">{
+        let $fileURI := document-uri($source/root())
+        let $sourceType := $source//mei:term[@type='source'][1]/string()
+        let $sourceWorkGroup := $source//mei:term[@type='workGroup'][1]/string()
+        let $sourceOrig := concat($app:digilibPath,$source/@xml:id)
+        let $sourceTitleUniform := baudiSource:getManifestationTitle($manifestation,'uniform')
+        let $sourceTitleMain := baudiSource:getManifestationTitle($manifestation,'main')
+        let $sourceTitleSub := baudiSource:getManifestationTitle($manifestation,'sub')
+        let $sourceTitlePerf := baudiSource:getManifestationTitle($manifestation,'perf')
+        
+        let $sourceComposer := baudiSource:getManifestationPersona($id,'composer')
+        let $sourceArranger := baudiSource:getManifestationPersona($id,'arranger')
+        let $sourceEditor := baudiSource:getManifestationPersona($id,'editor')
+        let $sourceLyricist := baudiSource:getManifestationPersona($id,'lyricist')
+        
+        let $relatedWorks := $source//mei:relation[@rel="isEmbodimentOf"]
+        let $relatedWorkID := $source//mei:relation[@rel="isEmbodimentOf"]/string(@corresp)
+        let $relatedWorkTitle := baudiWork:getWorkTitle($app:collectionWorks/id($relatedWorkID))
+        
+        let $sourceEditionStmt := baudiSource:getSourceEditionStmt($id, $lang)
+        
+        let $sourceTitlePage := if($source//mei:titlePage/mei:p/text())
+                                then(baudiSource:renderTitlePage($source))
+                                else()
+        
+        let $sourcePerfRes := baudiSource:getManifestationPerfResWithAmbitus($source, 'full')
+        
+        let $msIdentifiers := baudiSource:getManifestationIdentifiers($id)
+        
+        let $msCondition := $source//mei:condition/mei:p/text()
+        
+        let $msPaperSpecs := baudiSource:getManifestationPaperSpecs($id)
+        
+        let $msHands := baudiSource:getManifestationHands($id)
+        let $msPaperNotes := baudiSource:getManifestationPaperNotes($id)
+        let $msStamps := if($source//mei:annot[@type="stamp"])
+                         then(baudiSource:getManifestationStamps($source//mei:annot[@type="stamp"]))
+                         else()
+        let $msNotes := if($source//mei:annot[not(@type)]/text())
+                        then(baudiSource:getManifestationNotes($id))
+                        else()
+        
+        let $msScoreFormat := $source//mei:scoreFormat/text()
+        let $sourcePlateNum := if($source//mei:plateNum/text())
+                               then(<tr>
+                                        <td>{baudiShared:translate('baudi.registry.sources.msDesc.plateNum')}</td>
+                                        <td>{$source//mei:plateNum/text()}</td>
+                                    </tr>)
+                                else()
+        
+        let $usedLang := for $lang in $source//mei:langUsage/mei:language/@codedval
+                            return
+                                baudiShared:translate(concat('baudi.lang.',$lang))
+        let $key := for $each in $source//mei:key
+                      let $keyPname := $each/@pname
+                      let $keyMode := $each/@mode
+                      let $keyAccid := $each/@accid
+                      let $keyPnameFull := concat($keyPname,$keyAccid)
+                      return
+                          if($keyMode = 'major')
+                          then(concat(
+                                        functx:capitalize-first(baudiShared:translate(concat('baudi.registry.works.pname.',$keyPnameFull))),
+                                        baudiShared:translate('baudi.registry.delimiter.key'),
+                                        baudiShared:translate(concat('baudi.registry.works.',$keyMode))
+                                     )
+                                )
+                          else if($keyMode = 'minor')
+                          then(concat(
+                                        baudiShared:translate(concat('baudi.registry.works.pname.',$keyPnameFull)),
+                                        baudiShared:translate('baudi.registry.delimiter.key'),
+                                        baudiShared:translate(concat('baudi.registry.works.',$keyMode))
+                                     )
+                              )
+                          else()
+        let $meter := for $each in $source//mei:meter
+                        let $meterCount := $each/@count
+                        let $meterUnit := $each/@unit
+                        let $meterSym := $each/@sym
+                        let $meterSymbol := if($meterSym = 'common')
+                                           then(<img src="/resources/img/timeSignature_common.png" width="20px"/>)
+                                           else if($meterSym = 'cut')
+                                           then(<img src="/resources/img/timeSignature_cut.png" width="20px"/>)
+                                           else()
+                        return
+                            if($meterSymbol)
+                            then($meterSymbol)
+                            else(concat($meterCount, '/', $meterUnit))
+        let $tempo := $source//mei:work/mei:tempo/text()
+        
+        let $sourceHasLyrics := if($source//mei:div[@type="songtext"])then(true())else(false())
+        
+        return
+        (
+            <div class="container">
                 <br/>
-                <table class="sourceView">
-                    <tr>
-                        <th/>
-                        <th/>
-                    </tr>
-                    <tr>
-                       <td>{baudiShared:translate('baudi.registry.sources.sourceType')}</td>
-                       <td>{baudiShared:translate(concat('baudi.registry.sources.',$sourceType))}</td>
-                    </tr>
-                     {if($sourceTitleMain != '')
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.sources.titleMain')}</td>
-                            <td>{$sourceTitleMain}</td>
-                          </tr>)
-                     else()}
-                     {if($sourceTitleSub != '')
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.sources.titleSub')}</td>
-                            <td>{$sourceTitleSub}</td>
-                          </tr>)
-                     else()}
-                     </table>
-                     <table class="sourceView">
-                        {if(exists($relatedWorkID))
-                        then(<tr>
-                               <td>{baudiShared:translate('baudi.registry.sources.relation')}</td>
-                               <td>{if(exists($relatedWorkID))then(<a href="{$relatedWorkID}">{$relatedWorkTitle}</a>)else(baudiShared:translate('baudi.unknown'))}</td>
-                             </tr>)
-                        else()}
-                     {if($sourceComposer)
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.sources.composer')}</td>
-                            <td>{$sourceComposer}</td>
-                          </tr>)
-                     else()}
-                     {if($sourceArranger)
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.sources.arranger')}</td>
-                            <td>{$sourceArranger}</td>
-                          </tr>)
-                     else()}
-                     {if($sourceLyricist or $sourceWorkGroup = 'vocal')
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.sources.lyricist')}</td>
-                            <td>{if($sourceLyricist) then($sourceLyricist)
-                                else if ($source//mei:manifestation//mei:lyricist/text() != '') then($source//mei:manifestation//mei:lyricist/text()) else(baudiShared:translate('baudi.unknown'))}</td>
-                          </tr>)
-                     else()}
-                     {if($sourceEditor)
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.sources.editor')}</td>
-                            <td>{$sourceEditor}</td>
-                          </tr>)
-                     else()}
-                 </table>
-                 <table class="sourceView">
-                     {if(not($usedLang/data(.) = ''))
-                     then(<tr>
-                            <td>{if(count($usedLang) = 1)
-                                 then(baudiShared:translate('baudi.registry.works.langUsed'))
-                                 else if(count($usedLang) > 1)
-                                 then(baudiShared:translate('baudi.registry.works.langsUsed'))
-                                 else()}</td>
-                            <td>{string-join($usedLang,', ')}</td>
-                          </tr>)
-                     else()}
-                     
-                     {if(count($key) > 0)
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.works.key')}</td>
-                            <td>{normalize-space(string-join($key, ' | '))}</td>
-                          </tr>)
-                     else()}
-                     {if(count($meter) > 0)
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.works.meter')}</td>
-                            <td>{$meter}</td>
-                          </tr>)
-                     else()}
-                     {if($tempo)
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.works.tempo')}</td>
-                            <td><i>{normalize-space($tempo)}</i></td>
-                          </tr>)
-                     else()}
-                     {if($sourcePerfRes)
-                     then(<tr>
-                            <td>{baudiShared:translate('baudi.registry.sources.perfRes')}</td>
-                            <td>{$sourcePerfRes}</td>
-                          </tr>)
-                     else()}
-                 </table>
-              </div>
-          </div>
-          <div class="tab-pane fade" id="detail">
-              <div class="container">
-                <br/>
-                {$msIdentifiers}
-                {if($sourceEditionStmt)
-                 then($sourceEditionStmt)
-                 else()}
-                {if ($msPaperSpecs)
-                 then ($msPaperSpecs)
-                 else ()}
-                 {if ($msHands)
-                 then ($msHands)
-                 else ()}
-                 {if ($msPaperNotes or $sourcePlateNum)
-                 then (
-                 <table class="sourceView">
-                  <tr>
-                      <th/>
-                      <th/>
-                  </tr>
-                  {$msPaperNotes}
-                  {$sourcePlateNum}
-                  </table>)
-                 else ()}
-                 {if ($msStamps)
-                 then ($msStamps)
-                 else ()}
-                 {if ($msNotes != '')
-                 then ($msNotes)
-                 else ()}
-                 {if ($msCondition)
-                 then (<table class="sourceView">
-                           <tr>
-                             <th/>
-                             <th/>
-                           </tr>
-                           <tr>
-                             <td>{baudiShared:translate('baudi.registry.sources.msDesc.condition')}</td>
-                             <td>
-                               {$msCondition}
-                             </td>
-                           </tr>
-                       </table>)
-                 else ()}
-                 {if($sourceTitlePage)
-                  then(<br/>, $sourceTitlePage, <br/>)
-                  else()}
-              </div>
-          </div>
-          {if($sourceHasLyrics)
-          then(
-          <div class="tab-pane fade" id="lyrics">
-             <div class="container">
-                <table class="sourceView">
-                     <tr>
-                       <th/>
-                       <th/>
-                     </tr>
-                     <tr>
-                         {baudiSource:getLyrics($id)}
-                     </tr>
-                 </table>
-             </div>
-          </div>)
-          else()}
-          <!--<div class="tab-pane fade" id="verovio">
-              <div class="panel-body">
-                  <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
-              </div>
-          </div>-->
-          <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
-            <div class="card" style="background: aliceblue;">
-                <div class="card-body">
-                    <pre><code>{serialize(app:process-xml-for-display($source), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
+                <div class="page-header">
+                    <h1>{$sourceTitleUniform}</h1>
+                    <h5>ID: {$id}</h5>
                 </div>
+                <br/>
+                <div class="row">
+               {if(exists($source//mei:facsimile/mei:surface))
+               then(baudiSource:getFacsimilePreview($id))
+                else()}
+            <div class="col">
+              <ul class="nav nav-pills" role="tablist">
+                  <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.sources.tab.main')}</a></li>  
+                  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">{baudiShared:translate('baudi.registry.sources.tab.detail')}</a></li>
+                  {if($sourceHasLyrics)then(<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">{baudiShared:translate('baudi.registry.sources.tab.lyrics')}</a></li>)else()}
+                  <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>-->
+                  <li class="nav-item">
+                 <a class="nav-link" id="pills-edition-tab" data-toggle="pill" href="#pills-xml" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
+               </li>
+              </ul>
+              <!-- Tab panels -->
+              <div class="tab-content">
+                  <div class="tab-pane fade show active" id="main">
+                      <div class="container">
+                        <br/>
+                        <table class="sourceView">
+                            <tr>
+                                <th/>
+                                <th/>
+                            </tr>
+                            <tr>
+                               <td>{baudiShared:translate('baudi.registry.sources.sourceType')}</td>
+                               <td>{baudiShared:translate(concat('baudi.registry.sources.',$sourceType))}</td>
+                            </tr>
+                             {if($sourceTitleMain != '')
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.sources.titleMain')}</td>
+                                    <td>{$sourceTitleMain}</td>
+                                  </tr>)
+                             else()}
+                             {if($sourceTitleSub != '')
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.sources.titleSub')}</td>
+                                    <td>{$sourceTitleSub}</td>
+                                  </tr>)
+                             else()}
+                             </table>
+                             <table class="sourceView">
+                                {if(exists($relatedWorkID))
+                                then(<tr>
+                                       <td>{baudiShared:translate('baudi.registry.sources.relation')}</td>
+                                       <td>{if(exists($relatedWorkID))then(<a href="{$relatedWorkID}">{$relatedWorkTitle}</a>)else(baudiShared:translate('baudi.unknown'))}</td>
+                                     </tr>)
+                                else()}
+                             {if($sourceComposer)
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.sources.composer')}</td>
+                                    <td>{$sourceComposer}</td>
+                                  </tr>)
+                             else()}
+                             {if($sourceArranger)
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.sources.arranger')}</td>
+                                    <td>{$sourceArranger}</td>
+                                  </tr>)
+                             else()}
+                             {if($sourceLyricist or $sourceWorkGroup = 'vocal')
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.sources.lyricist')}</td>
+                                    <td>{if($sourceLyricist) then($sourceLyricist)
+                                        else if ($source//mei:manifestation//mei:lyricist/text() != '') then($source//mei:manifestation//mei:lyricist/text()) else(baudiShared:translate('baudi.unknown'))}</td>
+                                  </tr>)
+                             else()}
+                             {if($sourceEditor)
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.sources.editor')}</td>
+                                    <td>{$sourceEditor}</td>
+                                  </tr>)
+                             else()}
+                         </table>
+                         <table class="sourceView">
+                             {if(not($usedLang/data(.) = ''))
+                             then(<tr>
+                                    <td>{if(count($usedLang) = 1)
+                                         then(baudiShared:translate('baudi.registry.works.langUsed'))
+                                         else if(count($usedLang) > 1)
+                                         then(baudiShared:translate('baudi.registry.works.langsUsed'))
+                                         else()}</td>
+                                    <td>{string-join($usedLang,', ')}</td>
+                                  </tr>)
+                             else()}
+                             
+                             {if(count($key) > 0)
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.works.key')}</td>
+                                    <td>{normalize-space(string-join($key, ' | '))}</td>
+                                  </tr>)
+                             else()}
+                             {if(count($meter) > 0)
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.works.meter')}</td>
+                                    <td>{$meter}</td>
+                                  </tr>)
+                             else()}
+                             {if($tempo)
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.works.tempo')}</td>
+                                    <td><i>{normalize-space($tempo)}</i></td>
+                                  </tr>)
+                             else()}
+                             {if($sourcePerfRes)
+                             then(<tr>
+                                    <td>{baudiShared:translate('baudi.registry.sources.perfRes')}</td>
+                                    <td>{$sourcePerfRes}</td>
+                                  </tr>)
+                             else()}
+                         </table>
+                      </div>
+                  </div>
+                  <div class="tab-pane fade" id="detail">
+                      <div class="container">
+                        <br/>
+                        {$msIdentifiers}
+                        {if($sourceEditionStmt)
+                         then($sourceEditionStmt)
+                         else()}
+                        {if ($msPaperSpecs)
+                         then ($msPaperSpecs)
+                         else ()}
+                         {if ($msHands)
+                         then ($msHands)
+                         else ()}
+                         {if ($msPaperNotes or $sourcePlateNum)
+                         then (
+                         <table class="sourceView">
+                          <tr>
+                              <th/>
+                              <th/>
+                          </tr>
+                          {$msPaperNotes}
+                          {$sourcePlateNum}
+                          </table>)
+                         else ()}
+                         {if ($msStamps)
+                         then ($msStamps)
+                         else ()}
+                         {if ($msNotes != '')
+                         then ($msNotes)
+                         else ()}
+                         {if ($msCondition)
+                         then (<table class="sourceView">
+                                   <tr>
+                                     <th/>
+                                     <th/>
+                                   </tr>
+                                   <tr>
+                                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.condition')}</td>
+                                     <td>
+                                       {$msCondition}
+                                     </td>
+                                   </tr>
+                               </table>)
+                         else ()}
+                         {if($sourceTitlePage)
+                          then(<br/>, $sourceTitlePage, <br/>)
+                          else()}
+                      </div>
+                  </div>
+                  {if($sourceHasLyrics)
+                  then(
+                  <div class="tab-pane fade" id="lyrics">
+                     <div class="container">
+                        <table class="sourceView">
+                             <tr>
+                               <th/>
+                               <th/>
+                             </tr>
+                             <tr>
+                                 {baudiSource:getLyrics($id)}
+                             </tr>
+                         </table>
+                     </div>
+                  </div>)
+                  else()}
+                  <!--<div class="tab-pane fade" id="verovio">
+                      <div class="panel-body">
+                          <div id="app" class="panel" style="border: 1px solid lightgray; min-height: 800px;"/>
+                      </div>
+                  </div>-->
+                  <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
+                    <div class="card" style="background: aliceblue;">
+                        <div class="card-body">
+                            <pre><code>{serialize(app:process-xml-for-display($source), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
             </div>
         </div>
-      </div>
-    </div>
-    </div>
-</div>
-)
+    )
+    }</div>
 };
 
 
