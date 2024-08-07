@@ -480,7 +480,7 @@ let $nameStrings := if($param = "full")
 declare function baudiShared:getPersonaLinked($id as xs:string) {
     
     let $personRecord := $app:collectionPersons[@xml:id = $id]
-    let $personLink := concat('/person/', $id)
+    let $personLink := concat('/', $id)
     let $forename := $personRecord/tei:persName/tei:forename
     let $surname :=  $personRecord/tei:persName/tei:surname
     let $name := if($surname and $forename)
@@ -508,7 +508,7 @@ declare function baudiShared:getOrgNameFull($org as node()) {
 declare function baudiShared:getOrgNameFullLinked($org as node()) {
 
     let $orgID := $org/@xml:id
-    let $orgUri := concat('/institution/', $orgID)
+    let $orgUri := concat('/', $orgID)
     let $name := baudiShared:getOrgNameFull($org)
     
     return
@@ -517,8 +517,8 @@ declare function baudiShared:getOrgNameFullLinked($org as node()) {
 
 declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
 
-    let $corpID := $corpName/@auth/string()
-    let $corpUri := concat('/institution/', $corpID)
+    let $corpID := $corpName/@codedval/string()
+    let $corpUri := concat('/', $corpID)
     let $nameFound := if($corpID) then($app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()) else()
     let $name := if($nameFound) then($nameFound) else($corpName)
     
