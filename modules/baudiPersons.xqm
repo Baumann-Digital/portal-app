@@ -164,7 +164,9 @@ declare function baudiPersons:getAnnotation($persId as xs:string) {
 };
 
 declare %private function baudiPersons:getBirth($person){
-    if ($person//tei:birth[1][@when-iso])
+    if ($person//tei:birth[1][@when])
+    then ($person//tei:birth[1]/@when)
+    else if ($person//tei:birth[1][@when-iso])
     then ($person//tei:birth[1]/@when-iso)
     else if ($person//tei:birth[1][@notBefore] and $person//tei:birth[1][@notAfter])
     then (concat($person//tei:birth[1]/@notBefore, '/', $person//tei:birth[1]/@notAfter))
@@ -175,7 +177,9 @@ declare %private function baudiPersons:getBirth($person){
     else ('noBirth')
 };
 declare %private function baudiPersons:getDeath($person){
-    if ($person//tei:death[1][@when-iso])
+    if ($person//tei:death[1][@when])
+    then ($person//tei:death[1]/@when)
+    else if ($person//tei:death[1][@when-iso])
     then ($person//tei:death[1]/@when-iso)
     else if ($person//tei:death[1][@notBefore] and $person//tei:death[1][@notAfter])
     then (concat($person//tei:death[1]/@notBefore, '/', $person//tei:death[1]/@notAfter))
@@ -193,19 +197,20 @@ if(starts-with($lifedata,'-')) then(concat(substring(string(number($lifedata)),2
 declare function baudiPersons:getLifeData($persId as xs:string) {
     let $lang := baudiShared:get-lang()
     let $person := $app:collectionPersons/id($persId)
-    let $birth := if(baudiPersons:getBirth($person)='noBirth') then() else(baudiShared:formatDate($person/tei:birth, 'full', $lang))
+    let $birth := if(baudiPersons:getBirth($person)='noBirth') then() else(baudiShared:formatDate(baudiPersons:getBirth($person), 'full', $lang))
     let $birthFormatted := baudiPersons:formatLifedata($birth)
-
-    let $death := if(baudiPersons:getDeath($person)='noDeath') then() else(baudiShared:formatDate($person/tei:death, 'full', $lang))
+    let $birthPlace := $person/tei:birth/tei:placeName//text() => string-join(' ') => normalize-space()
+    let $death := if(baudiPersons:getDeath($person)='noDeath') then() else(baudiShared:formatDate(baudiPersons:getDeath($person), 'full', $lang))
     let $deathFormatted := if (contains($birthFormatted, ' v. Chr.') and not(contains(baudiPersons:formatLifedata($death), 'v. Chr.')))
                            then(concat(number(baudiPersons:formatLifedata($death)), ' n. Chr.'))
                            else (baudiPersons:formatLifedata($death))
+    let $deathPlace := $person/tei:death/tei:placeName//text() => string-join(' ') => normalize-space()
     return
         if ($birthFormatted[. != ''] and $deathFormatted[. != ''])
-        then (concat(' (', $birthFormatted, '–', $deathFormatted, ')'))
+        then (concat(' ', $birthFormatted, (if($birthPlace ) then(' (' || $birthPlace || ')') else()), '–', $deathFormatted, (if($deathPlace) then(' (' || $deathPlace || ')') else())))
         else if ($birthFormatted and not($deathFormatted))
-        then (concat(' (*', $birthFormatted, ')'))
+        then (concat(' *', $birthFormatted, (if($birthPlace) then(' (' || $birthPlace || ')') else())))
         else if ($deathFormatted and not($birthFormatted))
-        then (concat(' (†', $deathFormatted, ')'))
+        then (concat(' †', $deathFormatted, (if($deathPlace) then(' (' || $deathPlace || ')') else())))
         else ()
 };
