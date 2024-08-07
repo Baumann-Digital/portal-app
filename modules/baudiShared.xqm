@@ -615,7 +615,7 @@ declare function baudiShared:getReferences($id) {
                                               then(' vom ','DATUM')
                                               else()}
                                          </div>
-                                         <div class="col" docTitle="{normalize-space($docTitle[1])}"><a href="{$docID}">{$docTitle}</a></div>
+                                         <div class="col" docTitle="{normalize-space($docTitle[1])}">{$docTitle}</div>
                                          <div class="col-3" docID="{$docID}"><a href="/{$docID}">{$docID/string()}</a></div>
                                        </div>
                           group by $docIDStart
