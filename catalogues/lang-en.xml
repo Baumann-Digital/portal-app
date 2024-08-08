@@ -529,8 +529,8 @@
 	<msg key="baudi.noGraphic">No preview available</msg>
 	
 	<!-- status -->
-    <msg key="created">Created</msg>
     <msg key="proposed">Proposed</msg>
+    <msg key="candidate">Candidate</msg>
     <msg key="approved">Approved</msg>
     
     <!-- view person -->

@@ -1953,11 +1953,11 @@ declare function app:registryFilterBar($node as node(), $model as map(*)){
        <div class="row flex-row-reverse">
            <div class="custom-control custom-switch" >
                <input class="custom-control-input" type="checkbox" id="ampel_rot" oninput="ampel_rot()"/>
-               <label class="custom-control-label" style="padding-right:20px;" for="ampel_rot">{baudiShared:translate('created')}</label>
+               <label class="custom-control-label" style="padding-right:20px;" for="ampel_rot">{baudiShared:translate('proposed')}</label>
            </div>
            <div class="custom-control custom-switch">
                <input class="custom-control-input" type="checkbox" id="ampel_gelb" oninput="ampel_gelb()"/>
-               <label class="custom-control-label" style="padding-right:20px;" for="ampel_gelb">{baudiShared:translate('proposed')}</label>
+               <label class="custom-control-label" style="padding-right:20px;" for="ampel_gelb">{baudiShared:translate('candidate')}</label>
            </div>
            <div class="custom-control custom-switch">
                <input class="custom-control-input" type="checkbox" id="ampel_gruen" oninput="ampel_gruen()"/>

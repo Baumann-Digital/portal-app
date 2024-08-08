@@ -530,8 +530,8 @@
     <msg key="baudi.noGraphic">Kein Vorschaubild verfügbar</msg>
     
     <!-- status -->
-    <msg key="created">Erfasst</msg>
-    <msg key="proposed">In Bearbeitung</msg>
+    <msg key="proposed">Erfasst</msg>
+    <msg key="candidate">In Bearbeitung</msg>
     <msg key="approved">Überprüft</msg>
     
     <!-- view person -->

@@ -643,9 +643,9 @@ declare function baudiShared:getReferences($id) {
 };
 
 declare function baudiShared:get-status-symbol($status as xs:string?) as node()? {
-    if($status='created')
+    if($status='proposed')
     then(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
-    else if($status='proposed')
+    else if($status='candidate')
     then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
     else if($status='approved')
     then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
