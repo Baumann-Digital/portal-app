@@ -56,27 +56,17 @@ declare function baudiShared:get-lang() as xs:string? {
 : @return html
 :)
 
-declare function baudiShared:getI18nText($doc) {
+declare function baudiShared:getI18nText($doc as node()) {
     let $lang := baudiShared:get-lang()
     let $log := console:log(concat('lang: ', $lang))
     return
-            if(exists($doc//tei:text[@xml:lang]))
-            then(
-                if($doc//tei:text[@xml:lang = $lang])
-                then(transform:transform($doc//tei:text[@xml:lang = $lang], $baudiShared:xsltFormattingTextWithoutLinks, ()))
-                else(transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
-                )
-            
-            (: Is there tei:div[@xml:lang] ?:)
-            else if (exists($doc//tei:text/tei:body/tei:div[@xml:lang]))
+            if (exists($doc//tei:text/tei:body/tei:div[@xml:lang]))
             then(
                 if($doc//tei:text/tei:body/tei:div[@xml:lang = $lang])
-                then(transform:transform($doc//tei:text/tei:body/tei:div[@xml:lang = $lang], $baudiShared:xsltFormattingTextWithoutLinks, ()))
-                else(transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
+                then($doc//tei:text/tei:body/tei:div[@xml:lang = $lang])
+                else($doc//tei:text/tei:body/tei:div)
                 )
-                
-                (: There is no other tei:div than 'de' :)
-            else (transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
+            else($doc//tei:text/tei:body/tei:div)
 };
 
 

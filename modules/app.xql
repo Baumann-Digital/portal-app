@@ -1084,21 +1084,21 @@ return
 
 declare function app:aboutProject($node as node(), $model as map(*)) {
 
-let $text := doc(concat($app:collStrTexts,'/portal/aboutProject.xml'))/tei:TEI
+let $doc := doc(concat($app:collStrTexts,'/portal/aboutProject.xml'))/tei:TEI
 
 
 return
 (
     <div class="container">
     <br/>
-        {baudiShared:getI18nText($text)}
+        {transform:transform(baudiShared:getI18nText($doc), doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
     </div>
 )
 };
 
 declare function app:aboutBaumann($node as node(), $model as map(*)) {
 
-let $text := doc(concat($app:collStrTexts, "/portal/aboutBaumann.xml"))/tei:TEI
+let $doc := doc(concat($app:collStrTexts, "/portal/aboutBaumann.xml"))/tei:TEI
 
 return
     <div class="container">
@@ -1107,8 +1107,7 @@ return
             <h1>Ludwig Baumann <span class="text-muted" style="font-size: x-large;">(1866–1944)</span></h1>
         <hr/>
         </div>
-            {baudiShared:getI18nText($text)
-            (: transform:transform($text, doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ()) :)}
+            {transform:transform(baudiShared:getI18nText($doc), doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
     </div>
 };
 
