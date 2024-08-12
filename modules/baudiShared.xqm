@@ -445,11 +445,11 @@ let $nameStrings := if($param = "full")
                         if($nameSurname)
                         then(concat($nameSurname,
                                    if($nameGenName) then(concat(' (',$nameGenName,')')) else(),
-                                   if($nameAddNameTitle or $nameForename or $nameNameLink)
-                                   then(concat(', ', string-join(($nameAddNameTitle, $nameForename, $nameNameLink), ' ')))
+                                   if($nameAddNameTitle or $nameForenames or $nameForename or $nameNameLink)
+                                   then(concat(', ', string-join(($nameAddNameTitle, (if($nameForenames) then($nameForenames)else($nameForename)), $nameNameLink), ' ')))
                                    else()))
                         else if($nameForename)
-                        then(string-join(($nameForename, $nameNameLink, $nameUnspec), ' '),
+                        then(string-join(((if($nameForenames) then($nameForenames)else($nameForename)), $nameNameLink, $nameUnspec), ' '),
                              if($nameGenName) then(concat(' (',$nameGenName,')')) else())
                         else if($nameRoleName)
                         then($nameRoleName)

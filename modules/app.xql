@@ -325,10 +325,13 @@ let $references := baudiShared:getReferences($id)
 
 let $unknown := baudiShared:translate('baudi.notKnown')
 let $persTitle := baudiPersons:getTitle($id)
+let $persNameFull := baudiPersons:getName($id,'full')
 let $persForenames := baudiPersons:getFornames($id)
 let $persEpithet := baudiPersons:getEpithet($id)
 let $persNameLink := baudiPersons:getNameLink($id)
-let $persSurname := baudiPersons:getSurnames($id)
+let $persSurnameBirth := baudiPersons:getSurnames($id, 'birth')
+let $persSurnameMarried := baudiPersons:getSurnames($id, 'married')
+let $persSurname := baudiPersons:getSurnames($id, '')
 let $persGenName := baudiPersons:getGenName($id)
 let $persNickName := baudiPersons:getNickName($id)
 let $persUnSpec := baudiPersons:getNameUnspec($id)
@@ -370,10 +373,13 @@ return
                 <hr/>
                 <div class="overflow-auto baudi-container">
                         {app:viewPersonDetail($persTitle, 'title', $persTitle, ()),
-                        app:viewPersonDetail($persForenames, (if(count(tokenize($persForenames,' ')) gt 1) then('forenames') else('forename')), $persForenames, $unknown),
+                        app:viewPersonDetail($persNameFull, ('name.full'), $persNameFull, ()),
+                        if($persNameFull) then() else(app:viewPersonDetail($persForenames, (if(count(tokenize($persForenames,' ')) gt 1) then('forenames') else('forename')), $persForenames, $unknown)),
                         app:viewPersonDetail($persEpithet, ('epithet'), $persEpithet, ()),
                         app:viewPersonDetail($persNameLink, ('nameLink'), $persNameLink, ()),
-                        app:viewPersonDetail($persSurname, ('surname'), $persSurname, ()),
+                        if($persNameFull) then() else(app:viewPersonDetail($persSurname, ('surname'), $persSurname, ())),
+                        app:viewPersonDetail($persSurnameBirth, ('surname.birth'), $persSurnameBirth, ()),
+                        app:viewPersonDetail($persSurnameMarried, ('surname.marriage'), $persSurnameMarried, ()),
                         app:viewPersonDetail($persGenName, ('genName'), $persGenName, ()),
                         app:viewPersonDetail($persPseudonym, ('pseudonym'), $persPseudonym, ()),
                         app:viewPersonDetail($persNickName, ('nickName'), $persNickName, ()),

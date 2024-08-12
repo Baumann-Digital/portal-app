@@ -18,10 +18,20 @@ import module namespace jsonp="http://www.jsonp.org";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
 
 
+declare function baudiPersons:getName($persId as xs:string, $type as xs:string) {
+    let $person := $app:collectionPersons/id($persId)
+    return
+        if ($type = 'uniform' or $type = 'reg')
+        then (baudiPersons:getNameUniform($persId))
+        else if ($type = 'full')
+        then($person/tei:persName[@type = $type]//text() => string-join(' ' => normalize-space()))
+        else()
+};
+
 declare function baudiPersons:getNameUniform($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
-    let $personName := if($person/tei:persName[@role='uniform'])
-                       then($person/tei:persName[@role='uniform']//text() => string-join(' '))
+    let $personName := if($person/tei:persName[@role='uniform' or @type='reg'])
+                       then($person/tei:persName[@role='uniform' or @type='reg']//text() => string-join(' '))
                        else($person/tei:persName[1]//text() => string-join(' '))
     return
         $personName
@@ -36,7 +46,7 @@ declare function baudiPersons:getTitle($persId as xs:string) {
 
 declare function baudiPersons:getFornames($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
-    let $forenames := $person//tei:forename => string-join(' ')
+        let $forenames := $person//tei:forename => distinct-values() => string-join(' ')
     return
         $forenames
 };
@@ -48,9 +58,10 @@ declare function baudiPersons:getNameLink($persId as xs:string) {
         $nameLink
 };
 
-declare function baudiPersons:getSurnames($persId as xs:string) {
+declare function baudiPersons:getSurnames($persId as xs:string, $type as xs:string?) {
     let $person := $app:collectionPersons/id($persId)
-    let $surnames := $person//tei:surname => string-join(' ')
+    let $persName := $person/tei:persName[(if($type != '') then(@type=$type) else(1))]
+    let $surnames := $persName/tei:surname => string-join(' ')
     return
         $surnames
 };

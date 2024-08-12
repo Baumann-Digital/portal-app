@@ -536,9 +536,12 @@
     
     <!-- view person -->
     <msg key="baudi.person.title">Titel</msg>
+    <msg key="baudi.person.name.full">Voller Name</msg>
     <msg key="baudi.person.forename">Vorname</msg>
     <msg key="baudi.person.forenames">Vornamen</msg>
     <msg key="baudi.person.surname">Nachname</msg>
+    <msg key="baudi.person.surname.birth">Nachname (geb.)</msg>
+    <msg key="baudi.person.surname.marriage">Nachname (verh.)</msg>
     <msg key="baudi.person.genName">Generation</msg>
     <msg key="baudi.person.epithet">Beiname</msg>
     <msg key="baudi.person.nameLink">Adelsprädikat</msg>
