@@ -534,7 +534,7 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                     let $statusSymbol := baudiShared:get-status-symbol($status)
                                           
                     order by $name
-                     
+                    where $referencesCount gt 0
                     return
                         <div class="card bg-light mb-3" name="{$status}">
                             <div class="card-body">
