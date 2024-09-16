@@ -1803,20 +1803,20 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
                 <div class="card-deck">
                     <div class="card bg-light col-3 mb-3">
                         <div class="mx-auto d-block" style="height: 150px; width: 150px;">
-                            <img class="card-img-top" src="/apps/Edirom-Online/icon.png" alt="Preview Edirom Online"/>
+                            <img class="card-img-top" src="/$resources/img/logo_edirom.png" alt="Preview Edirom Online"/>
                         </div>
                             <hr/>
                             <div class="card-body">
-                                <a href="/apps/Edirom-Online/index.html" target="_blank" class="card-link">Zur Edirom</a>
+                                <a href="/Edirom-Online/index.html" target="_blank" class="card-link">Zur Edirom</a>
                             </div>
                     </div>
                     <div class="card bg-light col-3 mb-3">
                         <div class="mx-auto d-block" style="height: 150px; width: 150px;">
-                            <img class="card-img-top" src="/apps/crApp/icon.png" width="50px" alt="Preview crApp"/>
+                            <img class="card-img-top" src="/$resources/img/logo_crapp.png" width="50px" alt="Preview crApp"/>
                         </div>
                             <hr/>
                             <div class="card-body">
-                                <a href="/apps/crApp/index.html" target="_blank" class="card-link">Zum den kritischen Anmerkungen</a>
+                                <a href="/crApp/index.html" target="_blank" class="card-link">Zum den kritischen Anmerkungen</a>
                             </div>
                     </div>
                 </div>

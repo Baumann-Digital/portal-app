@@ -36,6 +36,23 @@ else if (contains($exist:path, "/$shared/")) then
         </forward>
     </dispatch>
 
+(: Opening Edirom-Online :)
+else if (contains($exist:path, "/Edirom-Online/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <redirect url="https://edirom.baumann-digital.de">
+            <set-header name="Cache-Control" value="max-age=3600,public"/>
+        </redirect>
+    </dispatch>
+
+(: Opening crApp :)
+else if (contains($exist:path, "/crApp/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <redirect url="https://crapp.baumann-digital.de">
+            <set-header name="Cache-Control" value="max-age=3600,public"/>
+        </redirect>
+    </dispatch>
+
+    
 (: if it's a registry or general page :)
 else if (matches($exist:path, "registry") or matches($exist:path, "about") or matches($exist:path, "view") or matches($exist:path, "imprint")) then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
