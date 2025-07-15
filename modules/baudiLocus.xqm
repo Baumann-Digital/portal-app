@@ -19,6 +19,14 @@ import module namespace jsonp="http://www.jsonp.org";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
 
 
+(:~
+ : Returns an OpenStreetMap map for a given locus ID.
+ :
+ : @param $id The locus ID as xs:string.
+ : @return An HTML div element with an embedded OpenStreetMap, or the empty sequence if coordinates are missing.
+ : @author Dennis Ried
+ : @see http://openlayers.org/
+ :)
 declare function baudiLocus:getOpenStreetMap($id as xs:string) {
     let $locus := $app:collectionLoci/id($id)
     let $geonamesID := $locus//tei:idno[@type="geonames"]/text()
@@ -57,6 +65,13 @@ declare function baudiLocus:getOpenStreetMap($id as xs:string) {
         else()
 };
 
+(:~
+ : Returns the name of a locus for a given locus ID.
+ :
+ : @param $locusID The locus ID as xs:string.
+ : @return The name of the locus as xs:string.
+ : @author Dennis Ried
+ :)
 declare function baudiLocus:getLocusName($locusID as xs:string) {
     let $locus := $app:collectionLoci/id($locusID)
     let $locusName := $locus/tei:placeName[1]/text()
