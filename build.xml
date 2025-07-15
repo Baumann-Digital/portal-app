@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="update-baudi-docker" name="baudiApp" basedir="." xmlns:unless="ant:unless">
+<project default="dist" name="baudiApp" basedir="." xmlns:unless="ant:unless">
     <dirname property="baudiApp.basedir" file="${ant.file.baudiApp}"/>
     
     <!-- import default properties from file -->
@@ -38,12 +38,12 @@
         </delete>
     </target>
     
-    <target name="init" depends="get-current-hash-of-HEAD">
+    <target name="init" depends="get-current-hash-of-HEAD-short, get-current-hash-of-HEAD">
         <mkdir dir="${dist.dir}"/>
         <mkdir dir="${build.dir}"/>
     </target>
     
-    <target name="get-current-hash-of-HEAD">
+    <target name="get-current-hash-of-HEAD-short">
         <description>Get the hash of the current git HEAD</description>
         <exec executable="${bash.command}" outputproperty="local.revision">
             <arg value="-c"/>
@@ -51,6 +51,16 @@
             <env key="LANG" value="C"/>
         </exec>
         <echo>Current HEAD: ${local.revision}</echo>
+    </target>
+    
+    <target name="get-current-hash-of-HEAD">
+        <description>Get the hash of the current git HEAD</description>
+        <exec executable="${bash.command}" outputproperty="local.revision.full">
+            <arg value="-c"/>
+            <arg value="${git.command} rev-parse HEAD"/>
+            <env key="LANG" value="C"/>
+        </exec>
+        <echo>Current HEAD: ${local.revision.full}</echo>
     </target>
     
     <target name="dist" depends="init">
@@ -87,6 +97,15 @@
                 <filter token="project.name" value="${project.name}"/>
             </filterset>
         </copy>
+        <copy file="CITATION.cff.tmpl" tofile="${build.dir}/CITATION.cff" filtering="true" overwrite="true">
+            <filterset>
+                <filter token="project.app" value="${project.app}"/>
+                <filter token="project.version" value="${project.version}"/>
+                <filter token="project.version.hash" value="${local.revision.full}"/>
+                <filter token="project.url" value="${project.url}"/>
+                <filter token="release.date" value="${release.date}"/>
+            </filterset>
+        </copy>
         <zip destfile="${dist.dir}/${project.app.pkg.name}">
             <fileset dir="${build.dir}/">
                 <include name="**/*.*"/>
@@ -95,6 +114,7 @@
         </zip>
         <delete file="expath-pkg.xml"/>
         <delete file="repo.xml"/>
+        <delete file="CITATION.cff"/>
         <delete dir="${build.dir}"/>
     </target>
     
