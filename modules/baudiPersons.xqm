@@ -21,7 +21,7 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baud
  : Returns the name of a person in a specified format.
  : @param $persId The person's unique identifier.
  : @param $type The type of name to return ('uniform', 'reg', or 'full').
- : @return The requested name as a string, or an empty sequence if not found.
+ : @return The requested name as a string. If the value of $type is different from those specified here, an empty sequence is returned.
  :)
 declare function baudiPersons:getName($persId as xs:string, $type as xs:string) {
     let $person := $app:collectionPersons/id($persId)
@@ -72,9 +72,9 @@ declare function baudiPersons:getFornames($persId as xs:string) {
 };
 
 (:~
- : Returns the name link of a person.
+ : Returns the connecting phrase contained within a person's name.
  : @param $persId The person's unique identifier.
- : @return The name link as a string.
+ : @return The phrase as a string, or an empty sequence if none is found.
  :)
 declare function baudiPersons:getNameLink($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
@@ -86,7 +86,7 @@ declare function baudiPersons:getNameLink($persId as xs:string) {
 (:~
  : Returns the surname(s) of a person, optionally filtered by type.
  : @param $persId The person's unique identifier.
- : @param $type (optional) The type of name to filter by.
+ : @param $type (optional) The type of name to filter by, as indicated by the tei:persName/@type attribute.
  : @return The surname(s) as a space-separated string.
  :)
 declare function baudiPersons:getSurnames($persId as xs:string, $type as xs:string?) {
@@ -148,7 +148,7 @@ declare function baudiPersons:getNickName($persId as xs:string) {
 (:~
  : Returns the pseudonym(s) of a person.
  : @param $persId The person's unique identifier.
- : @return The pseudonym(s) as a string (currently not implemented).
+ : @return The pseudonym(s) as a space-separated string (currently not implemented).
  :)
  (: ToDo: Implement pseudonym retrieval logic if needed :)
 declare function baudiPersons:getPseudonym($persId as xs:string) {
@@ -159,7 +159,7 @@ declare function baudiPersons:getPseudonym($persId as xs:string) {
 };
 
 (:~
- : Returns the unspecified name(s) of a person.
+ : Returns the unspecified name(s) of a person (as indicated by a tei:name/@type value starting with 'unspecified').
  : @param $persId The person's unique identifier.
  : @return The unspecified name(s) as a string sequence.
  :)
@@ -173,7 +173,7 @@ declare function baudiPersons:getNameUnspec($persId as xs:string) {
 (:~
  : Returns the affiliations of a person as an HTML unordered list.
  : @param $persId The person's unique identifier.
- : @return An HTML <ul> element with affiliations, or empty if none.
+ : @return An HTML <ul> element listing affiliations, or an empty sequence if none are found.
  :)
 declare function baudiPersons:getAffiliations($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
@@ -189,9 +189,9 @@ declare function baudiPersons:getAffiliations($persId as xs:string) {
 };
 
 (:~
- : Returns the affiliates of an organization as an HTML unordered list.
- : @param $orgID The organization's unique identifier.
- : @return An HTML <ul> element with affiliates, or empty if none.
+ : Returns the affiliates of an institution as an HTML unordered list, retrieved from the collections of persons and institutions alike.
+ : @param $orgID The institution's unique identifier.
+ : @return An HTML <ul> element listing affiliates, or an empty sequence if none are found.
  :)
 declare function baudiPersons:getAffiliates($orgID as xs:string) {
     let $person := $app:collectionInstitutions/id($orgID)
@@ -216,7 +216,7 @@ declare function baudiPersons:getAffiliates($orgID as xs:string) {
 (:~
  : Returns the occupation(s) of a person as an HTML unordered list.
  : @param $persId The person's unique identifier.
- : @return An HTML <ul> element with occupations, or empty if none.
+ : @return An HTML <ul> element listing occupations, or an empty sequence if none are found.
  :)
 declare function baudiPersons:getOccupation($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
@@ -232,7 +232,7 @@ declare function baudiPersons:getOccupation($persId as xs:string) {
 (:~
  : Returns the residence(s) of a person as an HTML unordered list.
  : @param $persId The person's unique identifier.
- : @return An HTML <ul> element with residences, or empty if none.
+ : @return An HTML <ul> element listing residences, or an empty sequence if none are found.
  :)
 declare function baudiPersons:getResidences($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
@@ -246,9 +246,9 @@ declare function baudiPersons:getResidences($persId as xs:string) {
 };
 
 (:~
- : Returns the annotation(s) (notes) of a person as an HTML unordered list.
+ : Returns the annotation(s) (encoded as <tei:note> elements) stored in a person's record as an HTML unordered list.
  : @param $persId The person's unique identifier.
- : @return An HTML <ul> element with notes, or empty if none.
+ : @return An HTML <ul> element containing HTML-formatted notes, or an empty sequence if the record does not contain any annotations.
  :)
 declare function baudiPersons:getAnnotation($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
@@ -262,9 +262,9 @@ declare function baudiPersons:getAnnotation($persId as xs:string) {
 };
 
 (:~
- : Retrieves the birth date information for a person node.
+ : Retrieves the birth date information from a <tei:person> node.
  : @param $person The <tei:person> node.
- : @return The birth date as a string, or 'noBirth' if not available.
+ : @return The birth date as a string in a normalized date format, or 'noBirth' if the node does not contain any processable attributes from the att.datable TEI class. Only the first encoded <tei:birth> element is regarded, and if a pair of @notBefore and @notAfter values is found, the output will contain both, separated by a '/' character.
  :)
 declare %private function baudiPersons:getBirth($person){
     if ($person//tei:birth[1][@when])
@@ -281,9 +281,9 @@ declare %private function baudiPersons:getBirth($person){
 };
 
 (:~
- : Retrieves the death date information for a person node.
+ : Retrieves the death date information from a <tei:person> node.
  : @param $person The <tei:person> node.
- : @return The death date as a string, or 'noDeath' if not available.
+ : @return The death date as a string in a normalized date format, or 'noDeath' if the node does not contain any processable attributes from the att.datable TEI class. Only the first encoded <tei:death> element is regarded, and if a pair of @notBefore and @notAfter values is found, the output will contain both, separated by a '/' character.
  :)
 declare %private function baudiPersons:getDeath($person){
     if ($person//tei:death[1][@when])
@@ -300,9 +300,9 @@ declare %private function baudiPersons:getDeath($person){
 };
 
 (:~
- : Formats life data (birth or death) for display, handling BCE dates.
- : @param $lifedata The life data string (date).
- : @return The formatted life data string, with 'v. Chr.' for BCE if needed.
+ : Formats strings containing life data (birth or death) for human-readable display, handling BCE dates.
+ : @param $lifedata A normalized date string, with a leading '-' sign indicating a BCE date.
+ : @return The formatted life data string, with the substring 'v. Chr.' indicating a BCE date.
  :)
 declare %private function baudiPersons:formatLifedata($lifedata){
     if(starts-with($lifedata,'-')) 
@@ -310,9 +310,9 @@ declare %private function baudiPersons:formatLifedata($lifedata){
 };
 
 (:~
- : Returns the formatted life data (birth and death) of a person.
+ : Returns life data (dates and places of birth and death) of a person as a human-readable string.
  : @param $persId The person's unique identifier.
- : @return A string with formatted birth and death data, including places if available.
+ : @return A string containing formatted birth and death data, including places if available, or an empty sequence if no information about either birth and death has been encoded.
  :)
 declare function baudiPersons:getLifeData($persId as xs:string) {
     let $lang := baudiShared:get-lang()
