@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    branches: [ develop, main ]
+
+permissions:
+  contents: read
+
+jobs:
+
+  build:
+    name: Build portal-app
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+      
+    - name: Get short sha
+      uses: benjlevesque/short-sha@v3.0
+      id: short-sha
+      with:
+        length: 7       
+
+    - name: Build portal-app from ${{ github.ref }} at ${{ github.sha }}
+      run: docker run --rm -it -v $(pwd):/opt -w /opt registry.git.uni-paderborn.de/vife/henze-digital/hendi-ci-docker-image:v1-2-0
+
+    - name: Upload Artifacts to action run
+      if: github.repository == 'Edirom/Edirom-Online'
+      uses: actions/upload-artifact@v4
+      with:
+        # The name that the artifact will be made available under
+        name: portal-app_${{ steps.short-sha.outputs.sha }}.zip
+        # The path to retrieve the artifact
+        path: ${{ github.workspace }}/dist/portal-app-*.xar
+        if-no-files-found: warn # 'warn' or 'ignore' are also available, defaults to `warn` 
+        #optional retention-days: 1 to 90
+
+    outputs:
+      # saving this as output for following jobs to pick up
+      artifact_name: portal-app_${{ steps.short-sha.outputs.sha }}.zip
