@@ -5,6 +5,11 @@
 [![](https://img.shields.io/badge/license-BSD2-green.svg)](https://github.com/Baumann-Digital/portal-app/blob/develop/LICENSE)
 [![](https://img.shields.io/badge/license-CC--BY--4.0-green.svg)](https://raw.githubusercontent.com/Baumann-Digital/portal-app/develop/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/Baumann-Digital/portal-app.svg)](https://github.com/Baumann-Digital/portal-app/releases)
+[![Build](https://github.com/Baumann-Digital/portal-app/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/Baumann-Digital/portal-app/actions/workflows/build.yml)
+[![GitHub release](https://img.shields.io/github/v/release/Baumann-Digital/portal-app.svg)](https://github.com/Baumann-Digital/portal-app/releases) 
+[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
+
+</div>
 
 This web application is written in XQuery on top of an [eXist-db](http://exist-db.org) and powers [baumann-digital.de](https://baumann-digital.de).
 
