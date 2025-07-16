@@ -237,10 +237,10 @@ declare function baudiPersons:getOccupation($persId as xs:string) {
 declare function baudiPersons:getResidences($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
     return
-        if(if($person//tei:recidence[. != '']) then(true()) else(false()))
-        then(<ul>{for $recidence in $person//tei:recidence[. != '']
+        if(if($person//tei:residence[. != '']) then(true()) else(false()))
+        then(<ul>{for $residence in $person//tei:residence[. != '']
                                 return
-                                    <li class="baudiListItem">{$recidence/text()}</li>
+                                    <li class="baudiListItem">{$residence/text()}</li>
                               }</ul>)
         else()
 };
