@@ -30,7 +30,7 @@ jobs:
         length: 7
         
     - name: Build with ant dist from ${{ github.ref }} at ${{ github.sha }}
-      run: docker run --rm -v $(pwd):/opt -w /opt registry.git.uni-paderborn.de/vife/henze-digital/hendi-ci-docker-image:v1-2-0 ant dist
+      run: docker run --rm -v $(pwd):/opt -w /opt registry.git.uni-paderborn.de/vife/henze-digital/hendi-ci-docker-image:v1-2-0 ant dist && exit
     
     - name: List build artifacts
       run: |
@@ -43,7 +43,6 @@ jobs:
         name: build-artifacts_${{ steps.short-sha.outputs.sha }}
         path: |
           dist/*.xar
-          **/*.xar
         if-no-files-found: warn
         retention-days: 30
     
