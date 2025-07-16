@@ -194,7 +194,6 @@ declare function baudiPersons:getAffiliations($persId as xs:string) {
  : @return An HTML <ul> element with affiliates, or empty if none.
  :)
 declare function baudiPersons:getAffiliates($orgID as xs:string) {
-    let $person := $app:collectionInstitutions/id($orgID)
     let $affiliatesColl := ($app:collectionPersons[matches(.//@key,$orgID)], $app:collectionInstitutions[matches(.//@key,$orgID)])
     let $hasAffiliates := exists($affiliatesColl)
     let $affiliates := <ul>{for $affiliate in $affiliatesColl
