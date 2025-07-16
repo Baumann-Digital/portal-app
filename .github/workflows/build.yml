@@ -31,7 +31,7 @@ jobs:
         length: 7       
 
     - name: Build portal-app from ${{ github.ref }} at ${{ github.sha }}
-      run: docker run --rm -it -v $(pwd):/opt -w /opt registry.git.uni-paderborn.de/vife/henze-digital/hendi-ci-docker-image:v1-2-0
+      run: docker run --rm -v $(pwd):/opt -w /opt registry.git.uni-paderborn.de/vife/henze-digital/hendi-ci-docker-image:v1-2-0
 
     - name: Upload Artifacts to action run
       if: github.repository == 'Edirom/Edirom-Online'
