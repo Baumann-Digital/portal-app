@@ -1,5 +1,4 @@
-name: Build
-
+name: Build and Publish
 on:
   push:
     branches: [ develop ]
@@ -9,15 +8,15 @@ on:
 
 permissions:
   contents: read
+  packages: write  # Nur für GitHub Packages nötig
 
 jobs:
-
   build:
-    name: Build portal-app
+    name: Build with Ant
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
+      packages: write  # Nur für GitHub Packages nötig
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -28,22 +27,95 @@ jobs:
       uses: benjlevesque/short-sha@v3.0
       id: short-sha
       with:
-        length: 7       
-
-    - name: Build portal-app from ${{ github.ref }} at ${{ github.sha }}
-      run: docker run --rm -v $(pwd):/opt -w /opt registry.git.uni-paderborn.de/vife/henze-digital/hendi-ci-docker-image:v1-2-0
-
+        length: 7
+        
+    - name: Build with ant dist from ${{ github.ref }} at ${{ github.sha }}
+      run: docker run --rm -v $(pwd):/opt -w /opt registry.git.uni-paderborn.de/vife/henze-digital/hendi-ci-docker-image:v1-2-0 ant dist
+    
+    - name: List build artifacts
+      run: |
+        echo "Build artifacts:"
+        find dist/ -name "*.xar" 2>/dev/null || find . -name "*.xar"
+    
     - name: Upload Artifacts to action run
-      if: github.repository == 'Edirom/Edirom-Online'
       uses: actions/upload-artifact@v4
       with:
-        # The name that the artifact will be made available under
-        name: portal-app_${{ steps.short-sha.outputs.sha }}.zip
-        # The path to retrieve the artifact
-        path: ${{ github.workspace }}/dist/portal-app-*.xar
-        if-no-files-found: warn # 'warn' or 'ignore' are also available, defaults to `warn` 
-        #optional retention-days: 1 to 90
-
+        name: build-artifacts_${{ steps.short-sha.outputs.sha }}
+        path: |
+          dist/*.xar
+          **/*.xar
+        if-no-files-found: warn
+        retention-days: 30
+    
+    - name: Set up package info for GitHub Packages
+      id: package_info
+      run: |
+        XAR_FILE=$(find . -name "*.xar" | head -1)
+        if [ -z "$XAR_FILE" ]; then
+          echo "Keine XAR-Datei gefunden!"
+          exit 1
+        fi
+        echo "XAR_FILE=$XAR_FILE" >> $GITHUB_OUTPUT
+        echo "PACKAGE_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> $GITHUB_OUTPUT
+        echo "VERSION=$(date +%Y%m%d-%H%M%S)-${{ steps.short-sha.outputs.sha }}" >> $GITHUB_OUTPUT
+    
+    - name: Configure Maven for GitHub Packages
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.m2/settings.xml << EOF
+        <settings>
+          <servers>
+            <server>
+              <id>github</id>
+              <username>${{ github.actor }}</username>
+              <password>${{ secrets.GITHUB_TOKEN }}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
+    
+    - name: Create POM for publishing
+      run: |
+        cat > pom.xml << EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+          <modelVersion>4.0.0</modelVersion>
+          
+          <groupId>com.github.${{ github.repository_owner }}</groupId>
+          <artifactId>${{ steps.package_info.outputs.PACKAGE_NAME }}</artifactId>
+          <version>${{ steps.package_info.outputs.VERSION }}</version>
+          <packaging>xar</packaging>
+          
+          <name>${{ steps.package_info.outputs.PACKAGE_NAME }}</name>
+          <description>Built with Ant and published to GitHub Packages</description>
+          
+          <distributionManagement>
+            <repository>
+              <id>github</id>
+              <url>https://maven.pkg.github.com/${{ github.repository }}</url>
+            </repository>
+          </distributionManagement>
+        </project>
+        EOF
+    
+    - name: Publish to GitHub Packages
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+      run: |
+        echo "Publishing ${{ steps.package_info.outputs.XAR_FILE }} to GitHub Packages..."
+        
+        mvn deploy:deploy-file \
+          -DgroupId=com.github.${{ github.repository_owner }} \
+          -DartifactId=${{ steps.package_info.outputs.PACKAGE_NAME }} \
+          -Dversion=${{ steps.package_info.outputs.VERSION }} \
+          -Dpackaging=xar \
+          -Dfile=${{ steps.package_info.outputs.XAR_FILE }} \
+          -DrepositoryId=github \
+          -Durl=https://maven.pkg.github.com/${{ github.repository }}
+    
     outputs:
-      # saving this as output for following jobs to pick up
-      artifact_name: portal-app_${{ steps.short-sha.outputs.sha }}.zip
+      artifact_name: build-artifacts_${{ steps.short-sha.outputs.sha }}
+      xar_file: ${{ steps.package_info.outputs.XAR_FILE }}  # Nur für GitHub Packages nötig
+      version: ${{ steps.package_info.outputs.VERSION }}   # Nur für GitHub Packages nötig
