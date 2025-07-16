@@ -10,6 +10,8 @@ import module namespace xdb = "http://exist-db.org/xquery/xmldb";
 
 (:~
  : Creates the forwarding, the parameters and the error handler for given objects
+ :
+ : @author Peter Stadler
  : @param $controller pass the $exist:controller variable here
  : @param $resource pass the $exist:resource variable here
  : @param $objectType pass the object type here as string() (e.g., 'document','work') 
