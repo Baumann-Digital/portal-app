@@ -1,0 +1,25 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: baudiApp
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Dennis
+    family-names: Ried
+    email: forschung@dennisried.de
+    affiliation: Martin-Luther-Universität Halle-Wittenberg
+    orcid: '0000-0001-5545-2088'
+repository-code: 'https://github.com/Baumann-Digital/baudiApp'
+url: 'https://baumann-digital.de'
+keywords:
+  - digital edition
+  - research software
+  - digital humanities
+license: CC-BY-4.0
+commit: 836ee26c3b29af7d47f634f32d99c4b3b42ff14f
+version: '1.0.0'
+date-released: '2025-07-15'

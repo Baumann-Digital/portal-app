@@ -114,6 +114,7 @@
                 <filter token="release.date" value="${release.date}"/>
             </filterset>
         </copy>
+        <copy file="${build.dir}/CITATION.cff" tofile="CITATION.cff"></copy>
 
         <!-- Create .xar package by zipping the date in ${build.dir} -->
         <zip destfile="${dist.dir}/${project.app.pkg.name}">
