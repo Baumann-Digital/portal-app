@@ -35,7 +35,7 @@ declare function baudiPersons:getName($persId as xs:string, $type as xs:string) 
 
 (:~
  : Returns the uniform name of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The uniform name as a string.
  :)
 declare function baudiPersons:getNameUniform($persId as xs:string) {
@@ -49,7 +49,7 @@ declare function baudiPersons:getNameUniform($persId as xs:string) {
 
 (:~
  : Returns the title(s) of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The title(s) as a string.
  :)
 declare function baudiPersons:getTitle($persId as xs:string) {
@@ -61,7 +61,7 @@ declare function baudiPersons:getTitle($persId as xs:string) {
 
 (:~
  : Returns the forenames of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The forenames as a space-separated string.
  :)
 declare function baudiPersons:getFornames($persId as xs:string) {
@@ -73,7 +73,7 @@ declare function baudiPersons:getFornames($persId as xs:string) {
 
 (:~
  : Returns the name link of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The name link as a string.
  :)
 declare function baudiPersons:getNameLink($persId as xs:string) {
@@ -85,8 +85,8 @@ declare function baudiPersons:getNameLink($persId as xs:string) {
 
 (:~
  : Returns the surname(s) of a person, optionally filtered by type.
- : @param $persId The person's unique identifier as xs:string.
- : @param $type (optional) The type of name to filter by as xs:string.
+ : @param $persId The person's unique identifier.
+ : @param $type (optional) The type of name to filter by.
  : @return The surname(s) as a space-separated string.
  :)
 declare function baudiPersons:getSurnames($persId as xs:string, $type as xs:string?) {
@@ -99,7 +99,7 @@ declare function baudiPersons:getSurnames($persId as xs:string, $type as xs:stri
 
 (:~
  : Returns the generational name component (genName) of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The generational name component as a string.
  :)
 declare function baudiPersons:getGenName($persId as xs:string) {
@@ -111,7 +111,7 @@ declare function baudiPersons:getGenName($persId as xs:string) {
 
 (:~
  : Returns the epithet(s) of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The epithet(s) as a string.
  :)
 declare function baudiPersons:getEpithet($persId as xs:string) {
@@ -123,7 +123,7 @@ declare function baudiPersons:getEpithet($persId as xs:string) {
 
 (:~
  : Returns the role name(s) of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The role name(s) as a pipe-separated string.
  :)
 declare function baudiPersons:getRoleName($persId as xs:string) {
@@ -135,7 +135,7 @@ declare function baudiPersons:getRoleName($persId as xs:string) {
 
 (:~
  : Returns the nickname(s) of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The nickname(s) as a space-separated string.
  :)
 declare function baudiPersons:getNickName($persId as xs:string) {
@@ -147,7 +147,7 @@ declare function baudiPersons:getNickName($persId as xs:string) {
 
 (:~
  : Returns the pseudonym(s) of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The pseudonym(s) as a string (currently not implemented).
  :)
  (: ToDo: Implement pseudonym retrieval logic if needed :)
@@ -160,7 +160,7 @@ declare function baudiPersons:getPseudonym($persId as xs:string) {
 
 (:~
  : Returns the unspecified name(s) of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return The unspecified name(s) as a string sequence.
  :)
 declare function baudiPersons:getNameUnspec($persId as xs:string) {
@@ -172,7 +172,7 @@ declare function baudiPersons:getNameUnspec($persId as xs:string) {
 
 (:~
  : Returns the affiliations of a person as an HTML unordered list.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return An HTML <ul> element with affiliations, or empty if none.
  :)
 declare function baudiPersons:getAffiliations($persId as xs:string) {
@@ -190,7 +190,7 @@ declare function baudiPersons:getAffiliations($persId as xs:string) {
 
 (:~
  : Returns the affiliates of an organization as an HTML unordered list.
- : @param $orgID The organization's unique identifier as xs:string.
+ : @param $orgID The organization's unique identifier.
  : @return An HTML <ul> element with affiliates, or empty if none.
  :)
 declare function baudiPersons:getAffiliates($orgID as xs:string) {
@@ -215,7 +215,7 @@ declare function baudiPersons:getAffiliates($orgID as xs:string) {
 
 (:~
  : Returns the occupation(s) of a person as an HTML unordered list.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return An HTML <ul> element with occupations, or empty if none.
  :)
 declare function baudiPersons:getOccupation($persId as xs:string) {
@@ -231,7 +231,7 @@ declare function baudiPersons:getOccupation($persId as xs:string) {
 
 (:~
  : Returns the residence(s) of a person as an HTML unordered list.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return An HTML <ul> element with residences, or empty if none.
  :)
 declare function baudiPersons:getResidences($persId as xs:string) {
@@ -247,7 +247,7 @@ declare function baudiPersons:getResidences($persId as xs:string) {
 
 (:~
  : Returns the annotation(s) (notes) of a person as an HTML unordered list.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return An HTML <ul> element with notes, or empty if none.
  :)
 declare function baudiPersons:getAnnotation($persId as xs:string) {
@@ -311,7 +311,7 @@ declare %private function baudiPersons:formatLifedata($lifedata){
 
 (:~
  : Returns the formatted life data (birth and death) of a person.
- : @param $persId The person's unique identifier as xs:string.
+ : @param $persId The person's unique identifier.
  : @return A string with formatted birth and death data, including places if available.
  :)
 declare function baudiPersons:getLifeData($persId as xs:string) {

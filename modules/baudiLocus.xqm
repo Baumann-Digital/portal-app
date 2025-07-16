@@ -22,7 +22,7 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baud
 (:~
  : Returns an OpenStreetMap map for a given locus ID.
  :
- : @param $id The locus ID as xs:string.
+ : @param $id The locus ID.
  : @return An HTML div element with an embedded OpenStreetMap, or the empty sequence if coordinates are missing.
  : @author Dennis Ried
  : @see http://openlayers.org/
@@ -68,8 +68,8 @@ declare function baudiLocus:getOpenStreetMap($id as xs:string) {
 (:~
  : Returns the name of a locus for a given locus ID.
  :
- : @param $locusID The locus ID as xs:string.
- : @return The name of the locus as xs:string.
+ : @param $locusID The locus ID.
+ : @return The name of the locus.
  : @author Dennis Ried
  :)
 declare function baudiLocus:getLocusName($locusID as xs:string) {
