@@ -64,7 +64,7 @@ declare function baudiPersons:getTitle($persId as xs:string) {
  : @param $persId The person's unique identifier as xs:string.
  : @return The forenames as a space-separated string.
  :)
-declare function baudiPersons:getFornames($persId as xs:string) {
+declare function baudiPersons:getForenames($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
         let $forenames := $person//tei:forename => distinct-values() => string-join(' ')
     return
