@@ -30,7 +30,7 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baud
 declare function baudiEditions:hasEditions($workID as xs:string){
     let $editions := $app:collectionEditions//edirom:work[@xml:id=$workID]
     return
-        if(count($editions) > 0) then(true()) else(false())
+        exists($editions)
 };
 
 (:~

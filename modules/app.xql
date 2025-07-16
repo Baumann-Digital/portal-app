@@ -666,7 +666,7 @@ declare function app:registrySources($node as node(), $model as map(*)) {
         let $cards := for $source in $sources[if($genre='main')then(.)else(.//mei:term[@type='source' and . = $genre])]
                          
                          let $id := $source/ancestor::mei:mei/@xml:id/normalize-space(data(.))
-                         let $isSourceCollection := if($source//mei:term[@type='source' and .='collection']) then(true()) else(false())
+                         let $isSourceCollection := exists($source//mei:term[@type='source' and .='collection'])
                          let $title := baudiSource:getManifestationTitle($source,'uniform')
                          let $titleSort := $title[1]
                          let $titleSub := baudiSource:getManifestationTitle($source,'sub')
@@ -877,7 +877,7 @@ return
                             else(concat($meterCount, '/', $meterUnit))
         let $tempo := $source//mei:work/mei:tempo/text()
         
-        let $sourceHasLyrics := if($source//mei:div[@type="songtext"])then(true())else(false())
+        let $sourceHasLyrics := exists($source//mei:div[@type="songtext"])
         
         return
         (
