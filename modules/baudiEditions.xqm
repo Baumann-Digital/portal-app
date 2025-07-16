@@ -33,7 +33,7 @@ declare function baudiEditions:hasEditions($workID as xs:string){
 };
 
 (:~
- : Checks if a work has remarks.
+ : Checks if any edition of a work contains remarks.
  :
  : @param $workID The xml:id of the work to check.
  : @return -- not developed --
@@ -42,9 +42,9 @@ declare function baudiEditions:hasEditions($workID as xs:string){
 declare function baudiEditions:hasRemarks($workID as xs:string){};
 
 (:~
- : Gets the remarks of a work.
+ : Returns the remarks from an edition.
  :
- : @param $workID The xml:id of the work to check.
+ : @param $editionID The xml:id of the edition.
  : @return -- not developed --
  : @author Dennis Ried
  :)
