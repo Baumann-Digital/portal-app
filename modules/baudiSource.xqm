@@ -23,6 +23,12 @@ import module namespace jsonp="http://www.jsonp.org";
 
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
+(:~
+ : Retrieves the title of a manifestation node in a specified format.
+ : @param $manifestation The MEI manifestation node.
+ : @param $param The specified format. Values are 'full', 'short', 'uniform' or self-defined
+ : @return The first match of 1. the title in a specified format, or 2. the title from an element called by an self-defined type, or 3. an empty sequence if not available.
+ :)
 declare function baudiSource:getManifestationTitle($manifestation as node()*, $param as xs:string) {
   
   let $source := $manifestation
@@ -44,6 +50,12 @@ return
     else ($sourceTitlePartParam))[1]
 };
 
+(:~
+ : Retrieves the persona of a manifestation.
+ : @param $sourceID The xml:id of an MEI file.
+ : @param $param The name of the container element the persona is named (e.g., 'composer').
+ : @return The name of a persona entity 1. as HTML-fragments (output of baudiShared:getPersonaLinked) if @codededval is present, or 2. the name (text node) if @codededval is not present, or 3. an empty sequence if no element is found.
+ :)
 declare function baudiSource:getManifestationPersona($sourceID as xs:string, $param as xs:string) {
     let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
     let $sourceManifestation := $source//mei:manifestation
