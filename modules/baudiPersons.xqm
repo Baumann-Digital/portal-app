@@ -7,7 +7,7 @@ declare namespace mei="http://www.music-encoding.org/ns/mei";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
 
-import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.";
+import module namespace baudiShared="http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.xqm";
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace request="http://exist-db.org/xquery/request";
 
@@ -64,7 +64,7 @@ declare function baudiPersons:getTitle($persId as xs:string) {
  : @param $persId The person's unique identifier.
  : @return The forenames as a space-separated string.
  :)
-declare function baudiPersons:getFornames($persId as xs:string) {
+declare function baudiPersons:getForenames($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
         let $forenames := $person//tei:forename => distinct-values() => string-join(' ')
     return
@@ -177,7 +177,7 @@ declare function baudiPersons:getNameUnspec($persId as xs:string) {
  :)
 declare function baudiPersons:getAffiliations($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
-    let $hasAffiliation := if($person//tei:affiliation[. != '']) then(true()) else(false())
+    let $hasAffiliation := exists($person//tei:affiliation[. != ''])
     let $affiliations := <ul>{for $affiliation in $person//tei:affiliation[. != '']
                                 return
                                     <li class="baudiListItem">{$affiliation/text()}</li>
@@ -194,9 +194,8 @@ declare function baudiPersons:getAffiliations($persId as xs:string) {
  : @return An HTML <ul> element listing affiliates, or an empty sequence if none are found.
  :)
 declare function baudiPersons:getAffiliates($orgID as xs:string) {
-    let $person := $app:collectionInstitutions/id($orgID)
     let $affiliatesColl := ($app:collectionPersons[matches(.//@key,$orgID)], $app:collectionInstitutions[matches(.//@key,$orgID)])
-    let $hasAffiliates := if($affiliatesColl) then(true()) else(false())
+    let $hasAffiliates := exists($affiliatesColl)
     let $affiliates := <ul>{for $affiliate in $affiliatesColl
                                 let $persName := if($affiliate/self::tei:person) then(baudiShared:getPersName($affiliate/@xml:id,'full','yes')) else()
                                 let $orgName := if($affiliate/self::tei:org) then(baudiShared:getOrgNameFullLinked($affiliate/tei:org)) else()
@@ -221,7 +220,7 @@ declare function baudiPersons:getAffiliates($orgID as xs:string) {
 declare function baudiPersons:getOccupation($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
     return
-        if(if($person//tei:occupation[. != '']) then(true()) else(false()))
+        if(exists($person//tei:occupation[. != '']))
         then(<ul>{for $occupation in $person//tei:occupation[. != '']
                                 return
                                     <li class="baudiListItem">{$occupation/text()}</li>
@@ -237,10 +236,10 @@ declare function baudiPersons:getOccupation($persId as xs:string) {
 declare function baudiPersons:getResidences($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
     return
-        if(if($person//tei:recidence[. != '']) then(true()) else(false()))
-        then(<ul>{for $recidence in $person//tei:recidence[. != '']
+        if(exists($person//tei:residence[. != '']))
+        then(<ul>{for $residence in $person//tei:residence[. != '']
                                 return
-                                    <li class="baudiListItem">{$recidence/text()}</li>
+                                    <li class="baudiListItem">{$residence/text()}</li>
                               }</ul>)
         else()
 };
@@ -253,7 +252,7 @@ declare function baudiPersons:getResidences($persId as xs:string) {
 declare function baudiPersons:getAnnotation($persId as xs:string) {
     let $person := $app:collectionPersons/id($persId)
     return
-        if(if($person//tei:note[. != '']) then(true()) else(false()))
+        if(exists($person//tei:note[. != '']))
         then(<ul>{for $note in $person//tei:note[. != '']
                                 return
                                     <li class="baudiListItem">{transform:transform($note,doc("/db/apps/baudiApp/resources/xslt/linking.xsl"), ())}</li>

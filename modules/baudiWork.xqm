@@ -153,7 +153,7 @@ declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
 declare function baudiWork:hasStemma($workID as xs:string){
     let $stemmaImg := $app:collectionWorks[@xml:id=$workID]//mei:annot[@type="stemma"]
     return
-        if($stemmaImg) then(true()) else(false())
+        exists($stemmaImg)
 };
 
 declare function baudiWork:getStemma($workID as xs:string, $height as xs:string?, $width as xs:string?) {
@@ -165,7 +165,7 @@ declare function baudiWork:hasIncipitMusic($workID as xs:string){
 let $workFile := $app:collectionWorks[@xml:id=$workID]
 let $incipit := $workFile//mei:incip[.//mei:score]/node()
 return
-    if($incipit) then(true()) else(false())
+    exists($incipit)
 };
 
 declare function baudiWork:getIncipitMusic($workID as xs:string){
