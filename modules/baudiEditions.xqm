@@ -22,10 +22,9 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baud
 (:~
  : Checks if a work has any associated editions.
  :
- : @param $workID The xml:id of the work to check as xs:string.
+ : @param $workID The xml:id of the work to check.
  : @return true() if editions exist for the work, otherwise false().
  : @author Dennis Ried
- : @since 2025-07-15
  :)
 declare function baudiEditions:hasEditions($workID as xs:string){
     let $editions := $app:collectionEditions//edirom:work[@xml:id=$workID]
@@ -34,21 +33,19 @@ declare function baudiEditions:hasEditions($workID as xs:string){
 };
 
 (:~
- : Checks if a work has remarks.
+ : Checks if any edition of a work contains remarks.
  :
- : @param $workID The xml:id of the work to check as xs:string.
+ : @param $workID The xml:id of the work to check.
  : @return -- not developed --
  : @author Dennis Ried
- : @since 2025-07-15
  :)
 declare function baudiEditions:hasRemarks($workID as xs:string){};
 
 (:~
- : Gets the remarks of a work.
+ : Returns the remarks from an edition.
  :
- : @param $workID The xml:id of the work to check as xs:string.
+ : @param $editionID The xml:id of the edition.
  : @return -- not developed --
  : @author Dennis Ried
- : @since 2025-07-15
  :)
 declare function baudiEditions:getRemarks($editionID as xs:string){};
