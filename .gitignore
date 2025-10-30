@@ -13,3 +13,5 @@ repo.xml
 expath-pkg.xml
 local.build.properties
 dist
+CITATION.cff
+*.code-workspace

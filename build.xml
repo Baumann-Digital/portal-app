@@ -5,6 +5,12 @@
     <!-- import default properties from file -->
     <property file="${baudiApp.basedir}/local.build.properties"/>
     <property file="${baudiApp.basedir}/build.properties"/>
+    <tstamp>
+        <format property="release.date" pattern="yyyy-MM-dd"/>
+    </tstamp>
+    <tstamp>
+        <format property="release.year" pattern="yyyy"/>
+    </tstamp>
     
     <target name="clean-all">
     <description>Delete build and dist directories</description>
