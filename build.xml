@@ -80,8 +80,11 @@
                 <exclude name="build.xml"/>
                 <exclude name=".existdb.json"/>
                 <exclude name=".git*"/>
+                <exclude name=".github/"/>
                 <exclude name="*.tmpl"/>
                 <exclude name="*.xpr"/>
+                <exclude name="*.code-workspace"/>
+                <exclude name="**/.DS_Store"/>
                 <exclude name="*.properties"/>
                 <exclude name="build/**"/>
                 <exclude name="${build.dir}/**"/>
