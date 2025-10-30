@@ -57,11 +57,11 @@
                             </td>
                         </tr>
                     </xsl:if>
-                    <xsl:if test="//mei:langUsage/mei:language/@auth">
+            	<xsl:if test="//mei:langUsage/mei:language/@codedval">
                         <tr>
                             <td>Sprache:</td>
                             <td>
-                                <xsl:value-of select="//mei:langUsage/mei:language/@auth"/>
+                            	<xsl:value-of select="//mei:langUsage/mei:language/@codedval"/>
                             </td>
                         </tr>
                     </xsl:if>
@@ -109,8 +109,8 @@
                         <td>
                             <xsl:value-of select="//mei:meter/@count"/>/<xsl:value-of select="//mei:meter/@unit"/>
                             <xsl:choose>
-                                <xsl:when test="//mei:meter/@sym = 'common'">&#160;<img src="https://baumann-digital.de/resources/img/timeSignature_common.png" width="20px"/></xsl:when>
-                                <xsl:when test="//mei:meter/@sym = 'cut'">&#160;<img src="https://baumann-digital.de/resources/img/timeSignature_cut.png" width="20px"/></xsl:when>
+                                <xsl:when test="//mei:meter/@sym = 'common'">&#160;<img src="/resources/img/timeSignature_common.png" width="20px"/></xsl:when>
+                                <xsl:when test="//mei:meter/@sym = 'cut'">&#160;<img src="/resources/img/timeSignature_cut.png" width="20px"/></xsl:when>
                                 <xsl:otherwise/>
                             </xsl:choose>
                         </td>
@@ -128,7 +128,7 @@
                     <tr>
                         <td valign="top">Beteiligte Instrumente:</td>
                         <td>
-                            <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes/@auth">
+                        	<xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes/@codedval">
 <!--                                <xsl:sort select="." order="ascending" data-type="text"/>-->
                                 <li style="list-style: square inside">
                                         <xsl:value-of select="."/>

@@ -1,0 +1,15 @@
+<dictionary xml:id="baudiOptions">
+	
+	<div xml:id="dbPaths">
+		<entry xml:id="dataCollectionPath" type="xs:string">/db/apps/baudiData</entry>
+	</div>
+	<div xml:id="various">
+		<entry xml:id="environment">development</entry>
+	</div>
+	<div xml:id="externalImageResources">
+		<entry xml:id="digilibPath">https://digilib.baumann-digital.de</entry>
+		<entry xml:id="geonames">https://www.geonames.org/</entry>
+		<entry xml:id="BLBfacPath">https://digital.blb-karlsruhe.de/blbihd/content/pageview/</entry>
+		<entry xml:id="BLBfacPathImage">https://digital.blb-karlsruhe.de/blbihd/image/view/</entry>
+	</div>
+</dictionary>

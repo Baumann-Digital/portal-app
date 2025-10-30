@@ -1,7 +1,7 @@
 <catalogue xml:lang="en">
 
     <!-- Main Nav -->
-    <msg key="baudi.mainNav.registry">Registries</msg>
+    <msg key="baudi.mainNav.registry">Catalogs</msg>
     <msg key="baudi.mainNav.registry.works">Works</msg>
     <msg key="baudi.mainNav.registry.sources">Sources</msg>
     <msg key="baudi.mainNav.registry.editions">Editions</msg>
@@ -19,14 +19,14 @@
     <!-- Landing page -->
     <msg key="baudi.landing.welcome">Welcome!</msg>
     <msg key="baudi.landing.modal.concerningContent">Attention!</msg>
-    <msg key="baudi.landing.modal.text.1">This portal is created as part of a still ongoing PhD project. Due to this, some functionalities had to be disabled for the time being. As soon as the applicable embargo periods have expired, this portal will be fully available.</msg>
-    <msg key="baudi.landing.modal.text.2">Despite the limitations, insights into the diversity of data are already to be given. For this purpose, reference data sets on works, persons, institutions and places that appear in the course of the project are available. You are welcome to use these as starting points!</msg>
+    <msg key="baudi.landing.modal.text.1">This portal was created as part of a doctoral project that was completed in December 2023. The publication of the dissertation is currently in preparation. As a result, the portal is not (yet) accessible via this page for the time being. With the publication of the dissertation, this portal will be fully available.</msg>
+    <msg key="baudi.landing.modal.text.2">The source code of the portal can be accessed on Github! (https://github.com/Baumann-Digital/portal-app)</msg>
     <msg key="baudi.landing.modal.start">Let’s go!</msg>
-    <msg key="baudi.landing.cookies.notice">The Internet pages use so-called cookies in several places. They serve to make our offer more user-friendly, effective and secure. Cookies are small text files that are stored on your computer and saved by your browser. Most of the cookies we use are so-called “session cookies”. They are automatically deleted after the end of your visit. Cookies do not cause any damage to your computer and do not contain viruses. If you remain on this site, you agree to the use of cookies.</msg>
     <msg key="baudi.landing.overlay.inPreparation">In preparation</msg>
     <msg key="baudi.landing.overlay.comingSoon">coming soon!</msg>
+    <msg key="baudi.landing.cookies.notice">This site uses cookies to save the selected language setting. This only serves to make our offer more user-friendly and effective. Changing the interface language generates a cookie. By using this function, you agree to the use of cookies. Cookies are small text files that are stored on your computer and saved by your browser. Cookies do not cause any damage to your computer and do not contain viruses.</msg>
     <msg key="baudi.landing.cookies.learnMore">Learn more</msg>
-    <msg key="baudi.landing.cookies.accept">Got it!</msg>
+    <msg key="baudi.landing.cookies.accept">accept!</msg>
     <msg key="baudi.landing.registries">Registries</msg>
     <msg key="baudi.landing.registries.sub">Here you can research the life, work and activities of Ludwig Baumann.</msg>
     <msg key="baudi.landing.registries.works">Works</msg>
@@ -62,7 +62,13 @@
     <msg key="baudi.landing.about.portal.digitized.text">In December 2020, we received the news that the Badische Landesbibliothek Karlsruhe had successfully completed the digitisation of Baumann’s musical estate housed there. Many thanks to Annett-Kristin Oberhoff and Brigitte Knödler-Kagoshima for their tireless efforts.</msg>
     <msg key="baudi.landing.about.portal.launch">Finally online!</msg>
     <msg key="baudi.landing.about.portal.launch.text">After several years of fundamental work, the Baumann Portal is now available online - even though the doctoral project on Baumann is still ongoing! We have decided to make only general catalogue data available for the time being. As soon as the dissertation has been completed and the embargo periods have expired, all processed research data of the project will be made available here!</msg>
-    <msg key="baudi.landing.about.be.part">Be Part</msg>
+    <msg key="baudi.landing.about.thesis.phd.finished">PhD project finished</msg>
+    <msg key="baudi.landing.about.thesis.phd.finished.text">On December 18, 2023 - just in time for his 34th birthday - Dennis Ried defended his dissertation entitled »›halb und halb‹ – Hybride Edition als Kompromiss? Eine Studie zu Methodik, Möglichkeiten und Grenzen in der hybriden Musikedition am Beispiel der Edition von Ludwig Baumanns ›Kantate. Den Gefallenen zum Gedächtnis, den Trauernden zum Trost‹« at the Karlsruhe University of Music.</msg>
+    <msg key="baudi.landing.about.portal.launch.full">Relaunch of the Portal</msg>
+    <msg key="baudi.landing.about.portal.launch.full.text">Preparations for the printing of Dennis Ried's dissertation are fully in progress! With the dissertation, the portal will finally be fully accessible. We ask for a little patience, as the final review of the contents is quite time-consuming. We are hoping to be able to put the portal online in the first half of the year.</msg>
+		<msg key="baudi.landing.about.portal.available">Unlocked!</msg>
+    <msg key="baudi.landing.about.portal.available.text">Good things take time! With the publication of Dennis Ried's dissertation by Logos-Verlag Berlin, we are also launching the online portal in all facets. Have fun! Hint: Not every function has been finally developed, so it might be useful to also have a look into the XML-code!</msg>  
+		<msg key="baudi.landing.about.be.part">Be Part</msg>
     <msg key="baudi.landing.about.of.our">Of This</msg>
     <msg key="baudi.landing.about.story">Story!</msg>
     
@@ -95,6 +101,10 @@
     <msg key="baudi.registry.works.cantata">Cantatas</msg>
     <msg key="baudi.registry.works.chamber">Chamber</msg>
     <msg key="baudi.registry.works.ensemble">Ensemble</msg>
+    <msg key="baudi.registry.works.solo">Solo</msg>
+    <msg key="baudi.registry.works.duo">Duo</msg>
+    <msg key="baudi.registry.works.trio">Trio</msg>
+    <msg key="baudi.registry.works.quartet">Quartet</msg>
     <msg key="baudi.registry.works.vocal">Vocal</msg>
     <msg key="baudi.registry.works.instrumental">Instrumental</msg>
     <msg key="baudi.registry.works.orchestra">Orchestral</msg>
@@ -150,6 +160,7 @@
     
     <msg key="baudi.registry.works.perfRes">Performance resources</msg>
     <msg key="baudi.registry.works.perfRes.solo">Solo</msg>
+    <msg key="baudi.registry.works.perfRes.solo.short">Solo</msg>
     <msg key="baudi.registry.works.perfRes.adLib">ad lib.</msg>
     <msg key="baudi.registry.works.perfRes.orchestra">Orchestra</msg>
     <msg key="baudi.registry.works.perfRes.orchestra.short">Orch.</msg>
@@ -159,6 +170,8 @@
     <msg key="baudi.registry.works.perfRes.quartett.string.short">Str. quart.</msg>
     <msg key="baudi.registry.works.perfRes.voice">Singing voice</msg>
     <msg key="baudi.registry.works.perfRes.voice.short">Voc.</msg>
+    <msg key="baudi.registry.works.perfRes.speaker">Speaker</msg>
+    <msg key="baudi.registry.works.perfRes.speaker.short">Spk.</msg>
     <msg key="baudi.registry.works.perfRes.voice.high">High Voice</msg>
     <msg key="baudi.registry.works.perfRes.voice.high.short">H. voc.</msg>
     <msg key="baudi.registry.works.perfRes.voice.middle">Middle Voc.</msg>
@@ -168,17 +181,23 @@
     <msg key="baudi.registry.works.perfRes.soprano">Soprano</msg>
     <msg key="baudi.registry.works.perfRes.soprano.short">S.</msg>
     <msg key="baudi.registry.works.perfRes.soprano.i">Soprano I</msg>
+    <msg key="baudi.registry.works.perfRes.soprano.i.short">S. I</msg>
     <msg key="baudi.registry.works.perfRes.soprano.ii">Soprano II</msg>
+    <msg key="baudi.registry.works.perfRes.soprano.ii.short">S. II</msg>
     <msg key="baudi.registry.works.perfRes.mezzosoprano">Mezzosoprano</msg>
     <msg key="baudi.registry.works.perfRes.mezzosoprano.short">Mezz.</msg>
     <msg key="baudi.registry.works.perfRes.alto">Alto</msg>
     <msg key="baudi.registry.works.perfRes.alto.short">A.</msg>
     <msg key="baudi.registry.works.perfRes.alto.i">Alto I</msg>
+    <msg key="baudi.registry.works.perfRes.alto.i.short">A. I</msg>
     <msg key="baudi.registry.works.perfRes.alto.ii">Alto II</msg>
+    <msg key="baudi.registry.works.perfRes.alto.ii.short">A. II</msg>
     <msg key="baudi.registry.works.perfRes.tenor">Tenor</msg>
     <msg key="baudi.registry.works.perfRes.tenor.short">T.</msg>
     <msg key="baudi.registry.works.perfRes.tenor.i">Tenor I</msg>
+    <msg key="baudi.registry.works.perfRes.tenor.i.short">T. I</msg>
     <msg key="baudi.registry.works.perfRes.tenor.ii">Tenor II</msg>
+    <msg key="baudi.registry.works.perfRes.tenor.ii.short">T. II</msg>
     <msg key="baudi.registry.works.perfRes.baritone">Baritone</msg>
     <msg key="baudi.registry.works.perfRes.baritone.short">Bar.</msg>
     <msg key="baudi.registry.works.perfRes.bassBaritone">Bass baritone</msg>
@@ -186,60 +205,87 @@
     <msg key="baudi.registry.works.perfRes.bass">Bass</msg>
     <msg key="baudi.registry.works.perfRes.bass.short">B.</msg>
     <msg key="baudi.registry.works.perfRes.bass.i">Bass I</msg>
+    <msg key="baudi.registry.works.perfRes.bass.i.short">B. I</msg>
     <msg key="baudi.registry.works.perfRes.bass.ii">Bass II</msg>
+    <msg key="baudi.registry.works.perfRes.bass.ii.short">B. II</msg>
     <msg key="baudi.registry.works.perfRes.choir">Choir</msg>
     <msg key="baudi.registry.works.perfRes.choir.short">Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir.voices.4">Choir (4 voices)</msg>
-    <msg key="baudi.registry.works.perfRes.choir.voices.4.short">Ch. (4 voc.)</msg>
-    <msg key="baudi.registry.works.perfRes.choir.men">Mens choir</msg>
-    <msg key="baudi.registry.works.perfRes.choir.men.short">M.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir.women">Womens choir</msg>
-    <msg key="baudi.registry.works.perfRes.choir.women.short">W.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir.children">Childrens choir</msg>
-    <msg key="baudi.registry.works.perfRes.choir.children.short">C.-Ch.</msg>
-    <msg key="baudi.registry.works.perfRes.choir.mixed">Mixed choir</msg>
-    <msg key="baudi.registry.works.perfRes.choir.mixed.short">Mxt. Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choir4voices">Choir (4 voices)</msg>
+    <msg key="baudi.registry.works.perfRes.choir4voices.short">Ch. (4 voc.)</msg>
+    <msg key="baudi.registry.works.perfRes.choirMale">Mens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choirMale.short">M.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choirFemale">Womens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choirFemale.short">W.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choirChildren">Childrens choir</msg>
+    <msg key="baudi.registry.works.perfRes.choirChildren.short">C.-Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.choirMixed">Mixed choir</msg>
+    <msg key="baudi.registry.works.perfRes.choirMixed.short">Mxt. Ch.</msg>
+    <msg key="baudi.registry.works.perfRes.wood">Woodwinds</msg>
+    <msg key="baudi.registry.works.perfRes.wood.short">Woods</msg>
     <msg key="baudi.registry.works.perfRes.piccolo">Piccolo</msg>
     <msg key="baudi.registry.works.perfRes.piccolo.short">Picc.</msg>
     <msg key="baudi.registry.works.perfRes.flute">Flute</msg>
     <msg key="baudi.registry.works.perfRes.flute.short">Fl.</msg>
     <msg key="baudi.registry.works.perfRes.flute.i">Flute I</msg>
+    <msg key="baudi.registry.works.perfRes.flute.i.short">Fl. I</msg>
     <msg key="baudi.registry.works.perfRes.flute.ii">Flute II</msg>
+    <msg key="baudi.registry.works.perfRes.flute.ii.short">Fl. II</msg>
     <msg key="baudi.registry.works.perfRes.oboe">Oboe</msg>
     <msg key="baudi.registry.works.perfRes.oboe.short">Ob.</msg>
     <msg key="baudi.registry.works.perfRes.oboe.i">Oboe I</msg>
+    <msg key="baudi.registry.works.perfRes.oboe.i.short">Ob. I</msg>
     <msg key="baudi.registry.works.perfRes.oboe.ii">Oboe II</msg>
+    <msg key="baudi.registry.works.perfRes.oboe.ii.short">Ob. II</msg>
     <msg key="baudi.registry.works.perfRes.clarinet">Clarinet</msg>
     <msg key="baudi.registry.works.perfRes.clarinet.short">Clar.</msg>
     <msg key="baudi.registry.works.perfRes.clarinet.i">Clarinet I</msg>
+    <msg key="baudi.registry.works.perfRes.clarinet.i.short">Clar. I</msg>
     <msg key="baudi.registry.works.perfRes.clarinet.ii">Clarinet II</msg>
+    <msg key="baudi.registry.works.perfRes.clarinet.ii.short">Clar. II</msg>
     <msg key="baudi.registry.works.perfRes.bassoon">Bassoon</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.short">Bs.</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.i">Bassoon I</msg>
+    <msg key="baudi.registry.works.perfRes.bassoon.i.short">Bs. I</msg>
     <msg key="baudi.registry.works.perfRes.bassoon.ii">Bassoon II</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french">French horn</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.short">F.-hrn.</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.i">French horn I</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.ii">French horn II</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.iii">French horn III</msg>
-    <msg key="baudi.registry.works.perfRes.horn.french.iv">French horn IV</msg>
+    <msg key="baudi.registry.works.perfRes.bassoon.ii.short">Bs. II</msg>
+    <msg key="baudi.registry.works.perfRes.brass">Blechbläser</msg>
+    <msg key="baudi.registry.works.perfRes.brass.short">Blech</msg>
+	<msg key="baudi.registry.works.perfRes.hornFrench">French horn</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.short">F.-hrn.</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.i">French horn I</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.i.short">Fr. hrn. I</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.ii">French horn II</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.ii.short">Fr. hrn. II</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.iii">French horn III</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.iii.short">Fr. hrn. III</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.iv">French horn IV</msg>
+    <msg key="baudi.registry.works.perfRes.hornFrench.iv.short">Fr. hrn. IV</msg>
     <msg key="baudi.registry.works.perfRes.trumpet">Trumpet</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.short">Trp.</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.i">Trumpet I</msg>
+    <msg key="baudi.registry.works.perfRes.trumpet.i.short">Trp. I</msg>
     <msg key="baudi.registry.works.perfRes.trumpet.ii">Trumpet II</msg>
+    <msg key="baudi.registry.works.perfRes.trumpet.ii.short">Trp. II</msg>
     <msg key="baudi.registry.works.perfRes.trombone">Trombone</msg>
     <msg key="baudi.registry.works.perfRes.trombone.short">Trb.</msg>
     <msg key="baudi.registry.works.perfRes.trombone.i">Trombone I</msg>
+    <msg key="baudi.registry.works.perfRes.trombone.i.short">Trb. I</msg>
     <msg key="baudi.registry.works.perfRes.trombone.ii">Trombone II</msg>
+    <msg key="baudi.registry.works.perfRes.trombone.ii.short">Trb. II</msg>
     <msg key="baudi.registry.works.perfRes.trombone.iii">Trombone III</msg>
+    <msg key="baudi.registry.works.perfRes.trombone.iii.short">Trb. III</msg>
     <msg key="baudi.registry.works.perfRes.tuba">Tuba</msg>
     <msg key="baudi.registry.works.perfRes.tuba.short">Tb.</msg>
+    <msg key="baudi.registry.works.perfRes.strings">Strings</msg>
+    <msg key="baudi.registry.works.perfRes.strings.short">Str.</msg>
     <msg key="baudi.registry.works.perfRes.violin">Violin</msg>
     <msg key="baudi.registry.works.perfRes.violin.short">Vl.</msg>
     <msg key="baudi.registry.works.perfRes.violinChoir">Violin-Choir</msg>
     <msg key="baudi.registry.works.perfRes.violinChoir.short">Vl.-Ch.</msg>
     <msg key="baudi.registry.works.perfRes.violin.i">Violin I</msg>
+    <msg key="baudi.registry.works.perfRes.violin.i.short">Vl. I</msg>
     <msg key="baudi.registry.works.perfRes.violin.ii">Violin II</msg>
+    <msg key="baudi.registry.works.perfRes.violin.ii.short">Vl. II</msg>
     <msg key="baudi.registry.works.perfRes.viola">Viola</msg>
     <msg key="baudi.registry.works.perfRes.viola.short">Vla.</msg>
     <msg key="baudi.registry.works.perfRes.violoncello">Violoncello</msg>
@@ -252,10 +298,14 @@
     <msg key="baudi.registry.works.perfRes.organ.short">Org.</msg>
     <msg key="baudi.registry.works.perfRes.harmonium">Harmonium</msg>
     <msg key="baudi.registry.works.perfRes.harmonium.short">Harm.</msg>
-    <msg key="baudi.registry.works.perfRes.harpa">Harp</msg>
-    <msg key="baudi.registry.works.perfRes.harpa.short">Hrp.</msg>
+    <msg key="baudi.registry.works.perfRes.harp">Harp</msg>
+    <msg key="baudi.registry.works.perfRes.harp.short">Hrp.</msg>
+    <msg key="baudi.registry.works.perfRes.percussion">Percussion</msg>
+    <msg key="baudi.registry.works.perfRes.percussion.short">Perc.</msg>
     <msg key="baudi.registry.works.perfRes.timpani">Timpani</msg>
     <msg key="baudi.registry.works.perfRes.timpani.short">Tim.</msg>
+    <msg key="baudi.registry.works.perfRes.bells">(Small) Bells</msg>
+    <msg key="baudi.registry.works.perfRes.bells.short">(sm.) Bl.</msg>
     <msg key="baudi.registry.works.perfRes.turbularBells">Turbular bells</msg>
     <msg key="baudi.registry.works.perfRes.turbularBells.short">Tur.-Bl.</msg>
     
@@ -267,10 +317,10 @@
     <msg key="baudi.registry.sources.titleSub">Subtitle</msg>
     <msg key="baudi.registry.sources.titleDipl">Title (diplomatic)</msg>
     <msg key="baudi.registry.sources.perfMedium">Performance specification</msg>
-    <msg key="baudi.registry.sources.composer">Composer</msg>
-    <msg key="baudi.registry.sources.arranger">Arranger</msg>
-    <msg key="baudi.registry.sources.editor">Editor</msg>
-    <msg key="baudi.registry.sources.lyricist">Lyricist</msg>
+    <msg key="baudi.registry.sources.composer">Music</msg>
+    <msg key="baudi.registry.sources.arranger">Arrangement</msg>
+    <msg key="baudi.registry.sources.editor">Edition</msg>
+    <msg key="baudi.registry.sources.lyricist">Text</msg>
     <msg key="baudi.registry.sources.perfRes">Performance Ressources</msg>
     
     <msg key="baudi.registry.sources.all">All sources</msg>
@@ -324,8 +374,8 @@
     <msg key="baudi.registry.sources.msDesc.paper.pagination.none">No Pagination</msg>
     <msg key="baudi.registry.sources.msDesc.paper.pagination.arabic">Arabic</msg>
     <msg key="baudi.registry.sources.msDesc.paper.pagination.roman">Roman</msg>
-    <msg key="baudi.registry.sources.msDesc.hands">Handwritten annotations</msg>
-    <msg key="baudi.registry.sources.msDesc.hands.composer">Composer annotations</msg>
+    <msg key="baudi.registry.sources.msDesc.hands">Hands/Scribe</msg>
+    <msg key="baudi.registry.sources.msDesc.hands.composer">Autograph annotations</msg>
     <msg key="baudi.registry.sources.msDesc.hands.biblNote">Librarian annotations</msg>
     <msg key="baudi.registry.sources.msDesc.hands.publNote">Publisher annotations</msg>
     <msg key="baudi.registry.sources.msDesc.hands.medium">Medium</msg>
@@ -390,6 +440,7 @@
     <msg key="baudi.registry.periodicals">Periodicals</msg>
     
     <!-- Editions -->
+    <msg key="baudi.registry.editions">Editions</msg>
     <msg key="baudi.registry.editions.remarks">Critical Remarks</msg>
     
     <!-- Tags -->
@@ -469,9 +520,51 @@
     <msg key="baudi.conjunction.or.short">or</msg>
     <msg key="baudi.unknown">N.N.</msg>
     <msg key="baudi.notKnown">[Not known]</msg>
+    <msg key="baudi.undated">not dated</msg>
     
     <msg key="baudi.errorPage.heading">Oops, ...</msg>
     <msg key="baudi.errorPage.sthWentWrong">Something must have gone wrong!</msg>
     <msg key="baudi.errorPage.teamIsInformed">Our team will be informed about this malfunction automatically and anonymously. We will try to find a solution as soon as possible!</msg>
     <msg key="baudi.errorPage.directConctact">In urgent cases, please write us a message to info@baumann-digital.de</msg>
+	<msg key="baudi.noGraphic">No preview available</msg>
+	
+	<!-- status -->
+    <msg key="proposed">Proposed</msg>
+    <msg key="candidate">Candidate</msg>
+    <msg key="approved">Approved</msg>
+    
+    <!-- view person -->
+    <msg key="baudi.person.title">Title</msg>
+    <msg key="baudi.person.name.full">Full name</msg>
+    <msg key="baudi.person.forename">Forename</msg>
+    <msg key="baudi.person.forenames">Forenames</msg>
+    <msg key="baudi.person.surname">Surname</msg>
+    <msg key="baudi.person.surname.birth">Surname (birth)</msg>
+    <msg key="baudi.person.surname.marriage">Surname (marr.)</msg>
+    <msg key="baudi.person.genName">Generation</msg>
+    <msg key="baudi.person.epithet">Epithet</msg>
+    <msg key="baudi.person.nameLink">Name link</msg>
+    <msg key="baudi.person.pseudonym">Pseudonyme</msg>
+    <msg key="baudi.person.nickName">Nickname</msg>
+    <msg key="baudi.person.unSpec">Name (unspecified)</msg>
+    <msg key="baudi.person.roleName">Role name</msg>
+    <msg key="baudi.person.occupation">Occupation</msg>
+    <msg key="baudi.person.lifeData">Life data</msg>
+    <msg key="baudi.person.affiliation">Affiliation</msg>
+    <msg key="baudi.person.residences">Recidences</msg>
+    <msg key="baudi.person.annotation">Annotation</msg>
+    <msg key="baudi.person.normData">Norm data</msg>
+    <msg key="baudi.person.normDataGND">Norm data (GND)</msg>
+    <msg key="baudi.person.normDataVIAF">Norm data (VIAF)</msg>
+    
+    <!-- view institution -->
+    <msg key="baudi.institution.name">Name</msg>
+    <msg key="baudi.institution.affiliates">Associates</msg>
+    <msg key="baudi.institution.place">Place</msg>
+    <msg key="baudi.institution.normData">Norm data</msg>
+    <msg key="baudi.institution.normDataGND">Norm data (GND)</msg>
+    <msg key="baudi.institution.normDataVIAF">Norm data (VIAF)</msg>
+    
+    <msg key="noWorkRelation">No related work defined</msg>
+    <msg key="hasSeveralManifestations">more manifestations encoded. See the XML!</msg>
 </catalogue>

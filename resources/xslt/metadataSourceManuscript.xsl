@@ -63,8 +63,8 @@
                             <xsl:for-each select="//mei:perfMedium/mei:perfResList/mei:perfRes">
                                 <xsl:sort select="." order="ascending" data-type="text"/>
                                 <li>
-                                    <xsl:variable name="auth" select="./@auth/string()"/>
-                                    <xsl:value-of select="$auth"/>
+                                	<xsl:variable name="codedval" select="./@codedval/string()"/>
+                                	<xsl:value-of select="$codedval"/>
                                     <xsl:if test="./@count &gt; 0">(<xsl:value-of select="./@count"/>) </xsl:if> 
                                 </li>
                             </xsl:for-each>

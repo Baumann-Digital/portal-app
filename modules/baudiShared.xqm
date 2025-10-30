@@ -56,27 +56,17 @@ declare function baudiShared:get-lang() as xs:string? {
 : @return html
 :)
 
-declare function baudiShared:getI18nText($doc) {
+declare function baudiShared:getI18nText($doc as node()) {
     let $lang := baudiShared:get-lang()
     let $log := console:log(concat('lang: ', $lang))
     return
-            if(exists($doc//tei:text[@xml:lang]))
-            then(
-                if($doc//tei:text[@xml:lang = $lang])
-                then(transform:transform($doc//tei:text[@xml:lang = $lang], $baudiShared:xsltFormattingTextWithoutLinks, ()))
-                else(transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
-                )
-            
-            (: Is there tei:div[@xml:lang] ?:)
-            else if (exists($doc//tei:text/tei:body/tei:div[@xml:lang]))
+            if (exists($doc//tei:text/tei:body/tei:div[@xml:lang]))
             then(
                 if($doc//tei:text/tei:body/tei:div[@xml:lang = $lang])
-                then(transform:transform($doc//tei:text/tei:body/tei:div[@xml:lang = $lang], $baudiShared:xsltFormattingTextWithoutLinks, ()))
-                else(transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
+                then($doc//tei:text/tei:body/tei:div[@xml:lang = $lang])
+                else($doc//tei:text/tei:body/tei:div)
                 )
-                
-                (: There is no other tei:div than 'de' :)
-            else (transform:transform($doc//tei:text[1], $baudiShared:xsltFormattingTextWithoutLinks, ()))
+            else($doc//tei:text/tei:body/tei:div)
 };
 
 
@@ -85,7 +75,7 @@ declare function baudiShared:translate($content) {
                         attribute key {$content}
                     }
     return
-        i18n:process($content, '', '/db/apps/baudiApp/resources/lang', 'en')
+        i18n:process($content, '', '/db/apps/baudiApp/catalogues', 'en')
 };
 
 
@@ -222,14 +212,27 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
 :
 :)
 
-declare function baudiShared:formatDate($date, $form as xs:string, $lang as xs:string) as xs:string {
-    let $date := if (functx:atomic-type($date) = 'xs:date')
-                    then ($date)
-                    else ($date/@when/string())
+declare function baudiShared:formatDate($dateRaw, $formation as xs:string, $lang as xs:string) as xs:string {
+    let $form := if ($formation = 'full')
+                 then ('[D].&#160;[MNn,*-3].&#160;[Y]')
+                 else if ($formation = 'short')
+                 then()
+                 else ('[D].[M].[Y]')
+    let $date :=  if(string-length($dateRaw)=10 and not(contains($dateRaw,'-00')) and not(contains($dateRaw,'0000-')))
+                  then(format-date(xs:date($dateRaw),$form,$lang,(),()))
+                  else if($dateRaw =('0000','0000-00','0000-00-00'))
+                  then('[' || baudiShared:translate('undated') || ']')
+                  else if(string-length($dateRaw)=7 and not(contains($dateRaw,'00')))
+                  then (concat(upper-case(substring(format-date(xs:date(concat($dateRaw,'-01')),'[Mn,*-3]. [Y]',$lang,(),()),1,1)),substring(format-date(xs:date(concat($dateRaw,'-01')),'[Mn,*-3]. [Y]',$lang,(),()),2)))
+                  else if(contains($dateRaw,'0000-') and contains($dateRaw,'-00'))
+                  then (concat(upper-case(substring(format-date(xs:date(replace(replace($dateRaw,'0000-','9999-'),'-00','-01')),'[Mn,*-3].',$lang,(),()),1,1)),substring(format-date(xs:date(replace(replace($dateRaw,'0000-','9999-'),'-00','-01')),'[Mn,*-3].',$lang,(),()),2)))
+                  else if(starts-with($dateRaw,'0000-'))
+                  then(concat(format-date(xs:date(replace($dateRaw,'0000-','9999-')),'[D]. ',$lang,(),()),upper-case(substring(format-date(xs:date(replace($dateRaw,'0000-','9999-')),'[Mn,*-3]. ',$lang,(),()),1,1)),substring(format-date(xs:date(replace($dateRaw,'0000-','9999-')),'[Mn,*-3].',$lang,(),()),2)))
+                  else($dateRaw)
+    
+    let $replaceMay := $date => replace('Mai.','Mai') => replace('May.','May')
     return
-        if ($form = 'full')
-        then (format-date($date, "[D1o]&#160;[MNn]&#160;[Y]", $lang, (), ()))
-        else (format-date($date, "[D].[M].[Y]", $lang, (), ()))
+        $replaceMay
 };
 
 
@@ -395,7 +398,7 @@ declare function baudiShared:stringJoinAll($node as node()) {
 
 declare function baudiShared:getPersName($personID, $param as xs:string, $linking as xs:string?) {
 let $person :=$app:collectionPersons/id($personID)
-let $linkToRecord := string-join(($app:dbRoot, $personID), '/')
+let $linkToRecord := '/' || $personID
 let $persName := if($person/tei:persName[@role='uniform'])
                   then($person/tei:persName[@role='uniform'])
                   else($person/tei:persName[1])
@@ -404,11 +407,11 @@ let $nameForename := if($persName//tei:forename[@type='used'])
                      else($persName//tei:forename[1])
 let $nameForenames := $persName//tei:forename[not(@type='altWriting')]
                       => string-join(' ')
-let $nameForenameAlt := concat('(auch ',$persName//tei:forename[@type='altWriting'], ')')
+let $nameForenameAlt := if($persName//tei:forename[@type='altWriting']) then(concat('(auch ',$persName//tei:forename[@type='altWriting'], ')')) else()
 let $nameNameLink := $persName//tei:nameLink/text()
 let $nameSurname := $persName//tei:surname[not(@type='altWriting')]
                      => string-join(' ')
-let $nameSurnameAlt := concat('(auch ',$persName//tei:surname[@type='altWriting'], ')')
+let $nameSurnameAlt := if($persName//tei:surname[@type='altWriting']) then(concat('(auch ',$persName//tei:surname[@type='altWriting'], ')')) else()
 let $nameGenName := $persName//tei:genName/text()
 let $nameAddNameTitle := $persName//tei:addName[matches(@type,"title")]/text()
 let $nameAddNameEpitet := $persName//tei:addName[matches(@type,"^epithet")]/text()
@@ -442,11 +445,11 @@ let $nameStrings := if($param = "full")
                         if($nameSurname)
                         then(concat($nameSurname,
                                    if($nameGenName) then(concat(' (',$nameGenName,')')) else(),
-                                   if($nameAddNameTitle or $nameForename or $nameNameLink)
-                                   then(concat(', ', string-join(($nameAddNameTitle, $nameForename, $nameNameLink), ' ')))
+                                   if($nameAddNameTitle or $nameForenames or $nameForename or $nameNameLink)
+                                   then(concat(', ', string-join(($nameAddNameTitle, (if($nameForenames) then($nameForenames)else($nameForename)), $nameNameLink), ' ')))
                                    else()))
                         else if($nameForename)
-                        then(string-join(($nameForename, $nameNameLink, $nameUnspec), ' '),
+                        then(string-join(((if($nameForenames) then($nameForenames)else($nameForename)), $nameNameLink, $nameUnspec), ' '),
                              if($nameGenName) then(concat(' (',$nameGenName,')')) else())
                         else if($nameRoleName)
                         then($nameRoleName)
@@ -467,7 +470,7 @@ let $nameStrings := if($param = "full")
 declare function baudiShared:getPersonaLinked($id as xs:string) {
     
     let $personRecord := $app:collectionPersons[@xml:id = $id]
-    let $personLink := concat($app:dbRoot, '/person/', $id)
+    let $personLink := concat('/', $id)
     let $forename := $personRecord/tei:persName/tei:forename
     let $surname :=  $personRecord/tei:persName/tei:surname
     let $name := if($surname and $forename)
@@ -486,7 +489,7 @@ declare function baudiShared:getPersonaLinked($id as xs:string) {
 
 declare function baudiShared:getOrgNameFull($org as node()) {
 
-    let $name := string-join($org/tei:orgName[1]/text(), ' ')
+    let $name := string-join($org/tei:orgName[1]//text(), ' ')
     
     return
         $name
@@ -495,7 +498,7 @@ declare function baudiShared:getOrgNameFull($org as node()) {
 declare function baudiShared:getOrgNameFullLinked($org as node()) {
 
     let $orgID := $org/@xml:id
-    let $orgUri := concat($app:dbRoot, '/institution/', $orgID)
+    let $orgUri := concat('/', $orgID)
     let $name := baudiShared:getOrgNameFull($org)
     
     return
@@ -504,76 +507,15 @@ declare function baudiShared:getOrgNameFullLinked($org as node()) {
 
 declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
 
-    let $corpID := $corpName/@auth/string()
-    let $corpUri := concat($app:dbRoot, '/institution/', $corpID)
-    let $nameFound := $app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()
+    let $corpID := $corpName/@codedval/string()
+    let $corpUri := concat('/', $corpID)
+    let $nameFound := if($corpID) then($app:collectionInstitutions[matches(@xml:id, $corpID)]//tei:orgName[1]/text()) else()
     let $name := if($nameFound) then($nameFound) else($corpName)
     
     return
         <a href="{$corpUri}">{$name}</a>
 };
 
-(:declare function baudiShared:getName($key as xs:string, $param as xs:string){
-
-    let $person :=$app:collectionPersons[range:field-eq("person-id", $key)]
-    let $institution := $app:collectionInstitutions[range:field-eq("institution-id", $key)]
-    let $nameForename := $person//tei:forename[matches(@type,"^used")][1]/text()[1]
-    let $nameNameLink := $person//tei:nameLink[1]/text()[1]
-    let $nameSurname := $person//tei:surname[matches(@type,"^used")][1]/text()[1]
-    let $nameGenName := $person//tei:genName/text()
-    let $nameAddNameTitle := $person//tei:addName[matches(@type,"^title")][1]/text()[1]
-    let $nameAddNameEpitet := $person//tei:addName[matches(@type,"^epithet")][1]/text()[1]
-    let $pseudonym := if ($person//tei:forename[matches(@type,'^pseudonym')] or $person//tei:surname[matches(@type,'^pseudonym')])
-                      then (concat($person//tei:forename[matches(@type,'^pseudonym')], ' ', $person//tei:surname[matches(@type,'^pseudonym')]))
-                      else ()
-    let $nameRoleName := $person//tei:roleName[1]/text()[1]
-    let $nameAddNameNick := $person//tei:addName[matches(@type,"^nick")][1]/text()[1]
-    let $affiliation := $person//tei:affiliation[1]/text()
-    let $nameUnspecified := $person//tei:name[matches(@type,'^unspecified')][1]/text()[1]
-    let $nameUnspec := if($affiliation and $nameUnspecified)
-                       then(concat($nameUnspecified, ' (',$affiliation,')'))
-                       else($nameUnspecified)
-    let $institutionName := $institution//tei:org/tei:orgName/text()
-    
-    let $name := if ($person)
-                 then(
-                      if($person and $param = 'full')
-                      then(
-                            if(not($nameForename) and not($nameNameLink) and not($nameUnspec))
-                            then($nameRoleName)
-                            else(string-join(($nameAddNameTitle, $nameForename, $nameAddNameEpitet, $nameNameLink, $nameSurname, $nameUnspec, $nameGenName), ' '))
-                          )
-                          
-                      else if($person and $param = 'short')
-                      then(
-                           string-join(($nameForename, $nameNameLink, $nameSurname, $nameUnspec, $nameGenName), ' ')
-                          )
-                          
-                      else if($person and $param = 'reversed')
-                      then(
-                            if($nameSurname)
-                            then(
-                                concat($nameSurname, ', ',string-join(($nameForename, $nameNameLink), ' '),
-                                if($nameGenName) then(concat(' (',$nameGenName,')')) else())
-                                )
-                            else (
-                                    if(not($nameForename) and not($nameNameLink) and not($nameUnspec))
-                                    then($nameRoleName)
-                                    else(
-                                           string-join(($nameForename, $nameNameLink, $nameUnspec), ' '),
-                                           if($nameGenName) then(concat(' (',$nameGenName,')')) else()
-                                        )
-                            )
-                           )
-                           
-                      else ('[NoPersonFound]')
-                     )
-                 else if($institution)
-                 then($institutionName)
-                 else('[NoInstitutionFound]')
-    return
-       $name
-};:)
 
 declare function baudiShared:linkAll($node as node()){
     transform:transform($node,doc('/db/apps/baudiApp/resources/xslt/linking.xsl'),())
@@ -597,69 +539,79 @@ declare function baudiShared:getReferences($id) {
                                  $app:collectionPeriodicals[matches(.//@key,$id)],
                                  $app:collectionLoci[matches(.//@key,$id)],
                                  $app:collectionDocuments[matches(.//@key,$id)],
-                                 $app:collectionSourcesMusic[matches(.//@auth,$id)],
-                                 $app:collectionWorks[matches(.//@auth,$id)])
+                                 $app:collectionSourcesMusic[matches(.//@codedval,$id)],
+                                 $app:collectionWorks[matches(.//@codedval,$id)],
+                                 $app:collectionEditions[matches(.//@key,$id)],
+                                 $app:collectionTexts[matches(.//@key,$id)])
     
     let $entryGroups := for $doc in $collectionReference
-                          let $docRoot := $doc/root()/node()
-                          let $docID := $docRoot/@xml:id
+                          let $docID := $doc/@xml:id
                           let $docIDStart := substring($docID,1,8)
-                          let $docInfo := if(starts-with($docRoot/@xml:id,'baudi-07-'))
-                                          then(baudiShared:translate('baudi.registry.persons.references.sources.text'))
-                                          else if (starts-with($docRoot/@xml:id,'baudi-02-'))
-                                          then (baudiShared:translate('baudi.registry.persons.references.works'))
-                                          else if(starts-with($docRoot/@xml:id,'baudi-04-'))
-                                          then(baudiShared:translate('baudi.registry.persons.references.persons'))
-                                          else if(starts-with($docRoot/@xml:id,'baudi-05-'))
-                                          then(baudiShared:translate('baudi.registry.persons.references.institutions'))
-                                          else if(starts-with($docRoot/@xml:id,'baudi-06-'))
-                                          then(baudiShared:translate('baudi.registry.persons.references.loci'))
-                                          else if(starts-with($docRoot/@xml:id,'baudi-09-'))
-                                          then(baudiShared:translate('baudi.registry.persons.references.periodicals'))
-                                          else if(starts-with($docRoot/@xml:id,'baudi-01-'))
+                          let $docInfo := if($docIDStart = 'baudi-01')
                                           then(baudiShared:translate('baudi.registry.persons.references.sources.music'))
+                                          else if ($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
+                                          then (baudiShared:translate('baudi.registry.persons.references.works'))
+                                          else if($docIDStart = 'baudi-04')
+                                          then(baudiShared:translate('baudi.registry.persons.references.persons'))
+                                          else if($docIDStart = 'baudi-05')
+                                          then(baudiShared:translate('baudi.registry.persons.references.institutions'))
+                                          else if($docIDStart = 'baudi-06')
+                                          then(baudiShared:translate('baudi.registry.persons.references.loci'))
+                                          else if($docIDStart = 'baudi-07')
+                                          then(baudiShared:translate('baudi.registry.persons.references.sources.text'))
+                                          else if($docIDStart = 'baudi-09')
+                                          then(baudiShared:translate('baudi.registry.persons.references.periodicals'))
                                           else(baudiShared:translate('baudi.registry.persons.references.other'))
-                          let $entryOrder := if(starts-with($docRoot/@xml:id,'baudi-02-'))
+                          let $entryOrder := if($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
                                           then('002')
-                                          else if (starts-with($docRoot/@xml:id,'baudi-01-'))
+                                          else if ($docIDStart = 'baudi-01')
                                           then ('001')
-                                          else if(starts-with($docRoot/@xml:id,'baudi-07-'))
+                                          else if($docIDStart = 'baudi-07')
                                           then('003')
-                                          else if(starts-with($docRoot/@xml:id,'baudi-04-'))
+                                          else if($docIDStart = 'baudi-04')
                                           then('004')
-                                          else if(starts-with($docRoot/@xml:id,'baudi-05-'))
+                                          else if($docIDStart = 'baudi-05')
                                           then('005')
-                                          else if(starts-with($docRoot/@xml:id,'baudi-06-'))
+                                          else if($docIDStart = 'baudi-06')
                                           then('006')
                                           else('007')
-                          let $correspActionSent := $docRoot//tei:correspAction[@type="sent"]
-                          let $correspActionReceived := $docRoot//tei:correspAction[@type="received"]
+                          let $correspActionSent := $doc//tei:correspAction[@type="sent"]
+                          let $correspActionReceived := $doc//tei:correspAction[@type="received"]
                           let $correspSentTurned := baudiShared:getPersName($correspActionSent/tei:persName/@key, 'short','yes')
                           let $correspReceivedTurned := baudiShared:getPersName($correspActionReceived/tei:persName/@key, 'short','yes')
                           let $docDate := if($correspActionSent)
                                           then('DATUM')
                                           else(<br/>)
-                          let $workSortValue := 'sort'
                           let $docTitle := if($correspActionSent)
-                                           then($correspSentTurned,<br/>,'an ',$correspReceivedTurned)
-                                           else if(starts-with($docRoot/@xml:id,'baudi-02-')) 
-                                           then($docRoot//mei:workList/mei:work[1]/mei:title[1]/string())
-                                           else if($docRoot/name()='TEI')
-                                           then($docRoot//tei:titleStmt/tei:title/string())
+                                           then($correspSentTurned,' an ',$correspReceivedTurned)
+                                           else if($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
+                                           then($doc//(mei:work//mei:titlePart[@type="main"])[1]/text())
+                                           else if($docIDStart = 'baudi-01') 
+                                           then($doc//(mei:manifestation//mei:titlePart[@type="main"])[1]/text())
+                                           else if($docIDStart = 'baudi-04') 
+                                           then($doc/tei:persName[1]//text())
+                                           else if($docIDStart = 'baudi-05') 
+                                           then($doc/tei:orgName[1]//text())
+                                           else if($docIDStart = 'baudi-06')
+                                           then($doc/tei:placeName[1]//text())
+                                           else if($doc/name()='TEI')
+                                           then($doc//tei:titleStmt/tei:title/string())
                                            else('noTitle')
+                          let $docTitle := $docTitle => string-join('') => normalize-space()
+                          let $workSortValue := string-join($docTitle,' ') => replace('»','') => replace('«','')
                           let $entry := <div class="row RegisterEntry" xmlns="http://www.w3.org/1999/xhtml">
                                           <div class="col-3" dateToSort="{$docDate}" workSort="{$workSortValue}">
                                               {$docInfo}
-                                              {if($docDate and starts-with($docRoot/@xml:id,'A'))
+                                              {if($docDate and starts-with($docID,'A'))
                                               then(' vom ','DATUM')
                                               else()}
                                          </div>
-                                         <div class="col" docTitle="{normalize-space($docTitle[1])}">{$docTitle}</div>
-                                         <div class="col-2"><a href="{$docID}">{string($docID)}</a></div>
+                                         <div class="col" docTitle="{$docTitle}">{$docTitle}</div>
+                                         <div class="col-3" docID="{$docID}"><a href="/{$docID}">{$docID/string()}</a></div>
                                        </div>
                           group by $docIDStart
                           return
-                              (<div xmlns="http://www.w3.org/1999/xhtml" groupName="{$docIDStart}" order="{$entryOrder}">{for $each in $entry
+                              (<div xmlns="http://www.w3.org/1999/xhtml" groupName="{$docIDStart}" order="{distinct-values($entryOrder)}">{for $each in $entry
                                     order by if($each/div/@dateToSort !='')
                                              then($each/div/@dateToSort)
                                              else if($each/div/@workSort)
@@ -671,13 +623,13 @@ declare function baudiShared:getReferences($id) {
                               let $groupName := $groups/@groupName
                               let $order := $groups/@order
                               let $registerSortEntryLabel := switch ($groupName/string())
-                                                               case 'baudi-01-' return baudiShared:translate('baudi.registry.persons.references.sources.music')
-                                                               case 'baudi-02-' return baudiShared:translate('baudi.registry.persons.references.works')
-                                                               case 'baudi-04-' return baudiShared:translate('baudi.registry.persons.references.persons')
-                                                               case 'baudi-05-' return baudiShared:translate('baudi.registry.persons.references.institutions')
-                                                               case 'baudi-06-' return baudiShared:translate('baudi.registry.persons.references.loci')
-                                                               case 'baudi-07-' return baudiShared:translate('baudi.registry.persons.references.sources.text')
-                                                               case 'baudi-09-' return baudiShared:translate('baudi.registry.persons.references.periodicals')
+                                                               case 'baudi-01' return baudiShared:translate('baudi.registry.persons.references.sources.music')
+                                                               case 'baudi-02' return baudiShared:translate('baudi.registry.persons.references.works')
+                                                               case 'baudi-04' return baudiShared:translate('baudi.registry.persons.references.persons')
+                                                               case 'baudi-05' return baudiShared:translate('baudi.registry.persons.references.institutions')
+                                                               case 'baudi-06' return baudiShared:translate('baudi.registry.persons.references.loci')
+                                                               case 'baudi-07' return baudiShared:translate('baudi.registry.persons.references.sources.text')
+                                                               case 'baudi-09' return baudiShared:translate('baudi.registry.persons.references.periodicals')
                                                                default return baudiShared:translate('baudi.registry.persons.references.other')
                                 order by $order
                                 return
@@ -689,4 +641,28 @@ declare function baudiShared:getReferences($id) {
                                  </div>
    return
     $entryGroupsShow
+};
+
+declare function baudiShared:get-status-symbol($status as xs:string?) as node()? {
+    if($status='proposed')
+    then(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+    else if($status='candidate')
+    then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+    else if($status='approved')
+    then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+    else(<span>no status</span>)
+};
+
+declare function baudiShared:getNormDataIdentifier($object as node(), $identifierType as xs:string, $linking as xs:boolean) {
+    
+    let $idno := $object//tei:idno[@type=$identifierType]/text()
+    let $idnoLinked := if($identifierType = 'gnd')
+        then(<a href="https://d-nb.info/gnd/{$idno}" target="_blank">{$idno}</a>)
+        else if($identifierType = 'viaf')
+        then(<a href="http://viaf.org/viaf/{$idno}" target="_blank">{$idno}</a>)
+        else()
+    return
+    if($linking = true())
+    then($idnoLinked)
+    else($idno)
 };

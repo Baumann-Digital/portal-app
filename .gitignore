@@ -11,4 +11,7 @@ resources/js/assets/img
 resources/js/assets/mail
 repo.xml
 expath-pkg.xml
+local.build.properties
 dist
+CITATION.cff
+*.code-workspace

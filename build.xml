@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="deploy" name="baudiApp" basedir="." xmlns:unless="ant:unless">
+<project default="dist" name="baudiApp" basedir="." xmlns:unless="ant:unless">
     <dirname property="baudiApp.basedir" file="${ant.file.baudiApp}"/>
     
     <!-- import default properties from file -->
     <property file="${baudiApp.basedir}/local.build.properties"/>
     <property file="${baudiApp.basedir}/build.properties"/>
+    <tstamp>
+        <format property="release.date" pattern="yyyy-MM-dd"/>
+    </tstamp>
+    <tstamp>
+        <format property="release.year" pattern="yyyy"/>
+    </tstamp>
     
     <target name="clean-all">
-        <delete dir="${build.dir}"/>
+    <description>Delete build and dist directories</description>
         <delete dir="${dist.dir}"/>
-        <delete file="expath-pkg.xml"/>
-        <delete file="repo.xml"/>
+        <delete dir="${build.dir}"/>
     </target>
     
     <target name="clean">
+    <description>Start cleaning tasks</description>
         <antcall target="clean-build"/>
         <antcall target="clean-dist"/>
     </target>
     
-    <target name="clean-build" if="${build.dir}">
+    <target name="clean-dist" if="${dist.dir}">
+        <description>Delete all files in the dist directory</description>
         <delete includeemptydirs="true">
-            <fileset dir="${build.dir}" defaultexcludes="false">
-                <!--<include name="*.xml"/>
-                <include name="*.txt"/>-->
+            <fileset dir="${dist.dir}" defaultexcludes="false">
                 <include name="**/*"/>
                 <exclude name="*.xar"/>
                 <exclude name="*.tar.gz"/>
@@ -30,21 +35,23 @@
         </delete>
     </target>
     
-    <target name="clean-dist" if="${dist.dir}">
+    <target name="clean-build" if="${build.dir}">
+        <description>Delete all files in the build directory</description>
         <delete includeemptydirs="true">
-            <fileset dir="${dist.dir}" defaultexcludes="false">
+            <fileset dir="${build.dir}" defaultexcludes="false">
                 <include name="**/*"/>
             </fileset>
         </delete>
     </target>
     
-    <target name="init" depends="get-current-hash-of-HEAD">
-        <mkdir dir="${build.dir}"/>
+    <target name="init" depends="get-current-hash-of-HEAD-short, get-current-hash-of-HEAD">
+        <description>Initialize build and dist directories</description>
         <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${build.dir}"/>
     </target>
     
-    <target name="get-current-hash-of-HEAD">
-        <description>Get the hash of the current git HEAD</description>
+    <target name="get-current-hash-of-HEAD-short">
+        <description>Get the shortend hash of the current git HEAD</description>
         <exec executable="${bash.command}" outputproperty="local.revision">
             <arg value="-c"/>
             <arg value="${git.command} rev-parse --short HEAD"/>
@@ -53,9 +60,21 @@
         <echo>Current HEAD: ${local.revision}</echo>
     </target>
     
+    <target name="get-current-hash-of-HEAD">
+        <description>Get the hash of the current git HEAD</description>
+        <exec executable="${bash.command}" outputproperty="local.revision.full">
+            <arg value="-c"/>
+            <arg value="${git.command} rev-parse HEAD"/>
+            <env key="LANG" value="C"/>
+        </exec>
+        <echo>Current HEAD: ${local.revision.full}</echo>
+    </target>
+    
     <target name="dist" depends="init">
+        <description>Build the distribution package</description>
         <property name="project.app.pkg.name" value="${project.app}-${project.version}-${local.revision}.xar"/>
-        <copy todir="dist/">
+        <!-- Copy files to build directory-->
+        <copy todir="${build.dir}/">
             <fileset dir=".">
                 <include name="**/*.*"/>
                 <exclude name="build.xml"/>
@@ -65,14 +84,15 @@
                 <exclude name="*.xpr"/>
                 <exclude name="*.properties"/>
                 <exclude name="build/**"/>
-                <exclude name="dist/**"/>
+                <exclude name="${build.dir}/**"/>
                 <exclude name="scripts/**"/>
                 <exclude name="blob/"/>
                 <exclude name="**/__contents__.xml"/>
             </fileset>
         </copy>
         
-        <copy file="expath-pkg.xml.tmpl" tofile="dist/expath-pkg.xml" filtering="true" overwrite="true">
+        <copy file="expath-pkg.xml.tmpl" tofile="${build.dir}/expath-pkg.xml" filtering="true" overwrite="true">
+        <!-- Create expath-pkg.xml -->
             <filterset>
                 <filter token="project.app" value="${project.app}"/>
                 <filter token="project.name" value="${project.name}"/>
@@ -81,62 +101,50 @@
                 <filter token="project.url" value="${project.url}"/>
             </filterset>
         </copy>
-        <copy file="repo.xml.tmpl" tofile="dist/repo.xml" filtering="true" overwrite="true">
+
+        <copy file="repo.xml.tmpl" tofile="${build.dir}/repo.xml" filtering="true" overwrite="true">
+        <!-- Create repo.xml -->
             <filterset>
                 <filter token="data.target" value="${project.app}"/>
                 <filter token="project.name" value="${project.name}"/>
-                <filter token="db.user.name" value="${db.user.name}"/>
-                <filter token="db.user.password" value="${db.user.password}"/>
-                <filter token="db.user.group" value="${db.user.group}"/>
-                <filter token="db.user.permissions" value="${db.user.permissions}"/>
             </filterset>
         </copy>
-        <zip destfile="${build.dir}/${project.app.pkg.name}">
-            <fileset dir="dist/">
+        
+        <copy file="CITATION.cff.tmpl" tofile="${build.dir}/CITATION.cff" filtering="true" overwrite="true">
+        <!-- Create CITATION.cff -->
+            <filterset>
+                <filter token="project.app" value="${project.app}"/>
+                <filter token="project.version" value="${project.version}"/>
+                <filter token="project.version.hash" value="${local.revision.full}"/>
+                <filter token="project.url" value="${project.url}"/>
+                <filter token="release.date" value="${release.date}"/>
+            </filterset>
+        </copy>
+        <copy file="${build.dir}/CITATION.cff" tofile="CITATION.cff"></copy>
+
+        <!-- Create .xar package by zipping the date in ${build.dir} -->
+        <zip destfile="${dist.dir}/${project.app.pkg.name}">
+            <fileset dir="${build.dir}/">
                 <include name="**/*.*"/>
+                <exclude name="${dist.dir}/"/>
             </fileset>
         </zip>
-        <delete file="expath-pkg.xml"/>
-        <delete file="repo.xml"/>
+
+        <!-- Cleaning -->
+        <delete dir="${build.dir}"/>
     </target>
     
-    <!-- Deploy directly to localhost -->
-    <target name="deploy" depends="clean, dist">
-        <path id="classpath.eXist">
-            <fileset dir="${exist.libs}" erroronmissingdir="no">
-                <include name="*.jar"/>
+    <!-- Copy xar package to baudi-docker repo (autodeploy) -->
+    <target name="update-baudi-docker" depends="dist">
+    <description>Copy the .xar package to the baudi-docker repo (locally)</description>
+        <echo>Delete old packages</echo>
+        <delete>
+            <fileset dir="./../baudi-docker/autodeploy">
+                <include name="${project.app}-*.xar"/>
             </fileset>
-        </path>
-        <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
-            <classpath refid="classpath.eXist"/>
-        </typedef>
-        
-        <!-- store xar-file in eXist-db -->
-        <xdb:store xmlns:xdb="http://exist-db.org/ant"
-            uri="${exist.db}/tmp"
-            createcollection="true"
-            createsubcollections="true"
-            user="${exist.user}"
-            password="${exist.pass}"
-            failonerror="true">
-            <fileset file="${build.dir}/${project.app.pkg.name}"/>
-        </xdb:store>
-        
-        <!-- Deploy the xar -->
-        <xdb:xquery  xmlns:xdb="http://exist-db.org/ant"
-            uri="${exist.db}"
-            user="${exist.user}"
-            password="${exist.pass}"
-            failonerror="true">
-            (
-            if("${project.url}" = repo:list()) then (
-            repo:undeploy("${project.url}"),
-            repo:remove("${project.url}")
-            )
-            else (),
-            repo:install-and-deploy-from-db("/db/tmp/${project.app.pkg.name}")
-            )
-        </xdb:xquery>
+        </delete>
+        <echo>Add new package</echo>
+        <copy file="${dist.dir}/${project.app.pkg.name}" todir="./../baudi-docker/autodeploy" overwrite="yes"/>
     </target>
     
 </project>

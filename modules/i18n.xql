@@ -1,10 +1,13 @@
 module namespace i18n = 'http://exist-db.org/xquery/i18n';
+
 (:~
     : I18N Internationalization Module
 
     : @author Lars Windauer <lars.windauer@betterform.de>
     : @author Tobias Krebs <tobi.krebs@betterform.de>
 :)
+
+import module namespace baudiShared = "http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.xqm";
 
 (:~
  : Start processing the provided content using the modules defined by $modules. $modules should
@@ -192,60 +195,6 @@ declare function i18n:getPathToCatalogues($node as node()*,$pathToCatalogues as 
     else 'ERROR: no path to language catalogues given'
 };
 
-(: Patrick integrates https://jaketrent.com/post/xquery-browser-language-detection/ :)
-
-declare function local:get-browser-lang() as xs:string? {
-  let $header := request:get-header("Accept-Language")
-  return if (fn:exists($header)) then
-    local:get-top-supported-lang(local:get-browser-langs($header), ("de", "en"))
-  else
-    ()
-};
-
-declare function local:get-top-supported-lang($ordered-langs as xs:string*, $translations as xs:string*) as xs:string? {
-  if (fn:empty($ordered-langs)) then
-    ()
-  else
-    let $lang := $ordered-langs[1]
-    return if ($lang = $translations) then
-      $lang
-    else
-      local:get-top-supported-lang(fn:subsequence($ordered-langs, 2), $translations)
-};
-
-declare function local:get-browser-langs($header as xs:string) as xs:string* {
-  let $langs :=
-    for $entry in fn:tokenize(local:parse-header($header), ",")
-    let $data := fn:tokenize($entry, "q=")
-    let $quality := $data[2]
-    order by
-      if (fn:exists($quality) and fn:string-length($quality) gt 0) then
-  xs:float($quality)
-      else
-  xs:float(1.0)
-      descending
-    return $data[1]
-  return $langs
-};
-
-declare function local:parse-header($header as xs:string) as xs:string {
-  let $regex := "(([a-z]{1,8})(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?"
-  let $flags := "i"
-  let $format := "$2q=$5"
-  return fn:replace(fn:lower-case($header), $regex, $format)
-};
-
-
 declare function i18n:getSelectedLanguage($node as node()*,$selectedLang as xs:string) {
-    if(string-length(request:get-parameter("lang", "")) gt 0) then
-        (: use http parameter lang as selected language :)
-        request:get-parameter("lang", "")
-    (:
-    else if(exists($node/@xml:lang)) then
-        $node/@xml:lang
-    else if(string-length($selectedLang) gt 0) then
-        $selectedLang
-    :)
-    else
-        local:get-browser-lang() (: Patrick did it! :)
+    baudiShared:get-lang()
 };

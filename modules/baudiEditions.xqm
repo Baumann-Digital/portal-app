@@ -19,15 +19,33 @@ import module namespace jsonp="http://www.jsonp.org";
 
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
 
+(:~
+ : Checks if a work has any associated editions.
+ :
+ : @param $workID The xml:id of the work to check.
+ : @return true() if editions exist for the work, otherwise false().
+ : @author Dennis Ried
+ :)
 declare function baudiEditions:hasEditions($workID as xs:string){
     let $editions := $app:collectionEditions//edirom:work[@xml:id=$workID]
     return
-        if(count($editions) > 0) then(true()) else(false())
+        exists($editions)
 };
 
+(:~
+ : Checks if any edition of a work contains remarks.
+ :
+ : @param $workID The xml:id of the work to check.
+ : @return -- not developed --
+ : @author Dennis Ried
+ :)
 declare function baudiEditions:hasRemarks($workID as xs:string){};
 
+(:~
+ : Returns the remarks from an edition.
+ :
+ : @param $editionID The xml:id of the edition.
+ : @return -- not developed --
+ : @author Dennis Ried
+ :)
 declare function baudiEditions:getRemarks($editionID as xs:string){};
-
-(:declare function baudiEditions:hasEditions($workID as xs:string){};:)
-
