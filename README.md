@@ -2,7 +2,7 @@
 
 # BauDi portal-app
 
-[![Build](https://github.com/Baumann-Digital/portal-app/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/Baumann-Digital/portal-app/actions/workflows/build.yml)
+[![Build](https://github.com/Baumann-Digital/portal-app/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/Baumann-Digital/portal-app/actions/workflows/build.yml)
 [![GitHub release](https://img.shields.io/github/release/Baumann-Digital/portal-app.svg)](https://github.com/Baumann-Digital/portal-app/releases)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8B%20%20%E2%97%8B-orange)](https://fair-software.eu)
 [![](https://img.shields.io/badge/license-BSD2-green.svg)](https://github.com/Baumann-Digital/portal-app/blob/develop/LICENSE)
