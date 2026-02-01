@@ -71,3 +71,11 @@ jobs:
             --prerelease \
             --target develop \
             ${{ steps.find.outputs.artifact }}
+
+      - name: Trigger baudi-docker build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api repos/Baumann-Digital/baudi-docker/dispatches \
+            -X POST \
+            -f event_type=portal_app_dev_latest
