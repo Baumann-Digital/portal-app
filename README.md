@@ -2,11 +2,21 @@
 
 # BauDi portal-app
 
-[![Build](https://github.com/Baumann-Digital/portal-app/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/Baumann-Digital/portal-app/actions/workflows/build.yml)
-[![GitHub release](https://img.shields.io/github/release/Baumann-Digital/portal-app.svg)](https://github.com/Baumann-Digital/portal-app/releases)
+![dev build](https://github.com/Baumann-Digital/portal-app/actions/workflows/dev-build.yml/badge.svg)
+
+![prod build](https://github.com/Baumann-Digital/portal-app/actions/workflows/prod-build.yml/badge.svg)
+
+[![GitHub Release](https://img.shields.io/github/release/Baumann-Digital/portal-app.svg?style=flat)]()
+
+---
+
+[![deepwiki](https://deepwiki.com/badge-maker?url=https%3A%2F%2Fdeepwiki.com%2FBaumann-Digital%2Fportal-app)](https://deepwiki.com/badge-maker?url=https%3A%2F%2Fdeepwiki.com%2FBaumann-Digital%2Fportal-app)
+
+---
+
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8B%20%20%E2%97%8B-orange)](https://fair-software.eu)
-[![](https://img.shields.io/badge/license-BSD2-green.svg)](https://github.com/Baumann-Digital/portal-app/blob/develop/LICENSE)
-[![](https://img.shields.io/badge/license-CC--BY--4.0-green.svg)](https://raw.githubusercontent.com/Baumann-Digital/portal-app/develop/LICENSE)
+[![License BSD2](https://img.shields.io/badge/license-BSD2-green.svg)](https://github.com/Baumann-Digital/portal-app/blob/develop/LICENSE)
+[![License CCBY](https://img.shields.io/badge/license-CC--BY--4.0-green.svg)](https://raw.githubusercontent.com/Baumann-Digital/portal-app/develop/LICENSE)
 
 </div>
 
