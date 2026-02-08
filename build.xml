@@ -44,7 +44,7 @@
         </delete>
     </target>
     
-    <target name="init" depends="get-current-hash-of-HEAD-short, get-current-hash-of-HEAD">
+    <target name="init" depends="get-current-hash-of-HEAD-short, get-current-hash-of-HEAD, -check-project-status">
         <description>Initialize build and dist directories</description>
         <mkdir dir="${dist.dir}"/>
         <mkdir dir="${build.dir}"/>
@@ -68,6 +68,10 @@
             <env key="LANG" value="C"/>
         </exec>
         <echo>Current HEAD: ${local.revision.full}</echo>
+    </target>
+    
+    <target name="-check-project-status" unless="${project.status}">
+        <property name="project.status" value="development"/>
     </target>
     
     <target name="dist" depends="init">
@@ -113,6 +117,7 @@
             <filterset>
                 <filter token="data.target" value="${project.app}"/>
                 <filter token="project.name" value="${project.name}"/>
+                <filter token="project.status" value="${project.status}"/>
             </filterset>
         </copy>
         
