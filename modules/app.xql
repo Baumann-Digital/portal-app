@@ -148,7 +148,7 @@ return
 declare function app:viewLetter($node as node(), $model as map(*)) {
 
 let $id := request:get-parameter("document-id", "error")
-let $letter := collection("/db/apps/baudiData/sources/documents/letters")//tei:TEI[@xml:id=$id]
+let $letter := collection(concat(config:get-option('dataCollectionPath'),"/sources/documents/letters"))//tei:TEI[@xml:id=$id]
 let $pages := $letter/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
 
 return
@@ -1733,7 +1733,7 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
                                         <div class="col">
                                             <h5 class="card-title">{baudiWork:getWorkTitle($work)}</h5>
                                             {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
-                                            <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiWork:getPerfRes($work, 'short')}</h6>
+                                          <h6 class="card-subtitle-baudi text-muted">{baudiShared:translate('baudi.conjunction.for'), ' ', baudiWork:getPerfRes($work, 'short')}</h6>
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
@@ -1807,7 +1807,7 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
                         </div>
                             <hr/>
                             <div class="card-body">
-                                <a href="/Edirom-Online/index.html" target="_blank" class="card-link">Zur Edirom</a>
+                                <a href="Edirom-Online/index.html" target="_blank" class="card-link">Zur Edirom</a>
                             </div>
                     </div>
                     <div class="card bg-light col-3 mb-3">
@@ -1816,7 +1816,7 @@ declare function app:viewEdition($node as node(), $model as map(*)) {
                         </div>
                             <hr/>
                             <div class="card-body">
-                                <a href="/crApp/index.html" target="_blank" class="card-link">Zum den kritischen Anmerkungen</a>
+                                <a href="crApp/index.html" target="_blank" class="card-link">Zum den kritischen Anmerkungen</a>
                             </div>
                     </div>
                 </div>
