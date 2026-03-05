@@ -216,8 +216,8 @@ return
     )
     else(
         for $page at $pos in $pages
-        let $letterOrigFacs := concat('https://digilib.baumann-digital.de/BauDi/07/',$letter//tei:div[@type='page' and @n=$page]/@facs)
-        let $letterOrigLink := concat('https://digilib.baumann-digital.de/BauDi/07/',$id,'-',$page,'?dw=500')
+        let $letterOrigFacs := concat(config:get-option('digilibPath'),'/BauDi/07/',$letter//tei:div[@type='page' and @n=$page]/@facs)
+        let $letterOrigLink := concat(config:get-option('digilibPath'),'/BauDi/07/',$id,'-',$page,'?dw=500')
      
         return
         
