@@ -177,10 +177,10 @@ let $meiFile := <mei xmlns="http://www.music-encoding.org/ns/mei">
                     <meiHead><fileDesc><titleStmt><title/></titleStmt><pubStmt/></fileDesc></meiHead>
                     <music><body>{$incipit}</body></music>
                 </mei>
-let $meiFileStored := if(doc-available(concat('/db/apps/baudiData/works/', $workFileName)) = false())
+let $meiFileStored := if(doc-available(concat(config:get-option('dataCollectionPath'),'/works/', $workFileName)) = false())
                       then(
                             xmldb:login($config:data-collection-path, 'admin', 'password'),
-                            xmldb:store('/db/apps/baudiData/works/', $workFileName, $meiFile)
+                            xmldb:store(concat(config:get-option('dataCollectionPath'),'/works/'), $workFileName, $meiFile)
                           )
                       else()
 let $meiFileCall := concat($config:data-collection-path, '/works/', $workFileName )

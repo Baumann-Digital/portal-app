@@ -60,7 +60,7 @@ jobs:
           VERSION=$(grep '^project.version=' build.properties | cut -d'=' -f2)
           gh release create v$VERSION \
             --title "v$VERSION" \
-            --notes "Automatischer Build vom main Branch." \
+            --generate-notes \
             --target main \
             ${{ steps.find.outputs.artifact }}
 
@@ -77,7 +77,7 @@ jobs:
     steps:
       - name: Trigger baudi-docker (Dev) build
         env:
-          PAT: ${{ secrets.BAUDI_WORKFLOW_PAT }}
+          PAT: ${{ secrets.BAUDI_ACCESS_TOKEN }}
         run: |
           curl -X POST \
             -H "Authorization: token $PAT" \

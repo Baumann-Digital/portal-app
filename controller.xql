@@ -39,17 +39,13 @@ else if (contains($exist:path, "/$shared/")) then
 (: Opening Edirom-Online :)
 else if (contains($exist:path, "/Edirom-Online/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <redirect url="https://edirom.baumann-digital.de">
-            <set-header name="Cache-Control" value="max-age=3600,public"/>
-        </redirect>
+        <redirect url="{concat('/apps/Edirom-Online/', substring-after($exist:path, '/Edirom-Online/'))}" absolute="yes"/>
     </dispatch>
 
 (: Opening crApp :)
 else if (contains($exist:path, "/crApp/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <redirect url="https://crapp.baumann-digital.de">
-            <set-header name="Cache-Control" value="max-age=3600,public"/>
-        </redirect>
+        <redirect url="{concat('/apps/crApp/', substring-after($exist:path, '/crApp/'))}" absolute="yes"/>
     </dispatch>
 
     
