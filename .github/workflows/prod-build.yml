@@ -60,7 +60,7 @@ jobs:
           VERSION=$(grep '^project.version=' build.properties | cut -d'=' -f2)
           gh release create v$VERSION \
             --title "v$VERSION" \
-            --notes "Automatischer Build vom main Branch." \
+            --generate-notes \
             --target main \
             ${{ steps.find.outputs.artifact }}
 
