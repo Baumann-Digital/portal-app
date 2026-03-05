@@ -527,7 +527,7 @@ let $source := if($sourceChiffre = '01')
                then($app:collectionDocuments[@xml:id= $id])
                else('no source found')
 
-let $digilibBasicPath := concat('https://digilib.baumann-digital.de/BauDi/', $sourceChiffre, '/')
+let $digilibBasicPath := concat(config:get-option('digilibPath'), '/BauDi/', $sourceChiffre, '/')
 
 let $facsimileTarget := if($sourceChiffre = '01')
                         then($app:collectionSourcesMusic[@xml:id= $id]//mei:facsimile[1]/mei:surface[if(@n='1')then(@n='1')else(1)][1]/mei:graphic/@target)
