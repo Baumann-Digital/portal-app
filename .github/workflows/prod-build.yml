@@ -58,11 +58,18 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION=$(grep '^project.version=' build.properties | cut -d'=' -f2)
-          gh release create prod-latest \
+          gh release create v$VERSION \
             --title "v$VERSION" \
             --notes "Automatischer Build vom main Branch." \
             --target main \
             ${{ steps.find.outputs.artifact }}
+
+      - name: Update prod-latest tag
+        continue-on-error: true
+        run: |
+          git push --delete origin prod-latest || echo "Tag prod-latest does not exist yet"
+          git tag -f prod-latest
+          git push origin prod-latest
 
   dispatch:
     runs-on: ubuntu-latest
