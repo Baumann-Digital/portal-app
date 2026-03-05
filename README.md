@@ -6,7 +6,7 @@
 
 ![prod build](https://github.com/Baumann-Digital/portal-app/actions/workflows/prod-build.yml/badge.svg)
 
-[![GitHub Release](https://img.shields.io/github/release/Baumann-Digital/portal-app.svg?style=flat)]()
+[![GitHub Release](https://img.shields.io/github/release/Baumann-Digital/portal-app.svg)](https://github.com/Baumann-Digital/portal-app/releases)
 
 ---
 
