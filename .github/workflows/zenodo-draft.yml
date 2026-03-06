@@ -1,0 +1,201 @@
+name: Create Zenodo Draft
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  zenodo-draft:
+    name: Create Zenodo Draft (Manual Publish Required)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Get release information
+        id: release
+        run: |
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "name=${{ github.event.release.name }}" >> $GITHUB_OUTPUT
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo "${{ github.event.release.body }}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Download release assets
+        run: |
+          mkdir -p release-assets
+          gh release download ${{ steps.release.outputs.tag }} -D release-assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+      
+      - name: Read CITATION.cff
+        id: citation
+        run: |
+          if [ -f "CITATION.cff" ]; then
+            # Extrahiere relevante Informationen aus CITATION.cff
+            TITLE=$(grep "^title:" CITATION.cff | sed 's/title: *//' | tr -d "'\"")
+            VERSION=$(grep "^version:" CITATION.cff | sed 's/version: *//' | tr -d "'\"")
+            echo "title=${TITLE}" >> $GITHUB_OUTPUT
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          else
+            echo "title=${{ github.event.repository.name }}" >> $GITHUB_OUTPUT
+            echo "version=${{ steps.release.outputs.tag }}" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create Zenodo Draft via API
+        id: zenodo
+        run: |
+          # Erstelle neuen Draft auf Zenodo
+          RESPONSE=$(curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.ZENODO_ACCESS_TOKEN }}" \
+            -d '{
+              "metadata": {
+                "title": "${{ steps.citation.outputs.title }} - Version ${{ steps.citation.outputs.version }}",
+                "upload_type": "software",
+                "description": "'"${{ steps.release.outputs.body }}"'",
+                "creators": [
+                  {
+                    "name": "Ried, Dennis",
+                    "affiliation": "Martin-Luther-Universität Halle-Wittenberg",
+                    "orcid": "0000-0001-5545-2088"
+                  }
+                ],
+                "keywords": [
+                  "digital edition",
+                  "research software",
+                  "digital humanities",
+                  "XQuery",
+                  "eXist-DB",
+                  "TEI"
+                ],
+                "license": "cc-by-4.0",
+                "related_identifiers": [
+                  {
+                    "scheme": "url",
+                    "identifier": "https://github.com/${{ github.repository }}",
+                    "relation": "isSupplementTo"
+                  }
+                ],
+                "version": "${{ steps.citation.outputs.version }}",
+                "language": "deu"
+              }
+            }' \
+            "https://zenodo.org/api/deposit/depositions")
+          
+          # Extrahiere Deposition ID und Bucket URL
+          DEPOSITION_ID=$(echo $RESPONSE | jq -r '.id')
+          BUCKET_URL=$(echo $RESPONSE | jq -r '.links.bucket')
+          
+          echo "deposition_id=${DEPOSITION_ID}" >> $GITHUB_OUTPUT
+          echo "bucket_url=${BUCKET_URL}" >> $GITHUB_OUTPUT
+          
+          echo "✅ Zenodo Draft erstellt: ID ${DEPOSITION_ID}"
+      
+      - name: Upload release assets to Zenodo
+        run: |
+          # Lade alle XAR-Dateien zu Zenodo hoch
+          for file in release-assets/*.xar; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file")
+              echo "Uploading $filename to Zenodo..."
+              curl -X PUT \
+                -H "Authorization: Bearer ${{ secrets.ZENODO_ACCESS_TOKEN }}" \
+                --data-binary @"$file" \
+                "${{ steps.zenodo.outputs.bucket_url }}/$filename"
+            fi
+          done
+      
+      - name: Generate publication instructions
+        run: |
+          cat << EOF > zenodo-instructions.md
+          # 📦 Zenodo Draft erstellt
+          
+          Ein neuer Draft wurde auf Zenodo angelegt für Release **${{ steps.release.outputs.tag }}**
+          
+          ## ℹ️ Details
+          - **Deposition ID:** ${{ steps.zenodo.outputs.deposition_id }}
+          - **Status:** DRAFT (nicht publiziert)
+          - **Version:** ${{ steps.citation.outputs.version }}
+          
+          ## 🚀 Manuelle Publikation erforderlich
+          
+          ### Option 1: Über Zenodo Web-Interface (empfohlen)
+          1. Gehe zu https://zenodo.org/deposit/${{ steps.zenodo.outputs.deposition_id }}
+          2. Überprüfe alle Metadaten und hochgeladene Dateien
+          3. Klicke auf "Publish" um den Draft zu veröffentlichen
+          
+          ### Option 2: Über API
+          \`\`\`bash
+          curl -X POST \\
+            -H "Authorization: Bearer \$ZENODO_ACCESS_TOKEN" \\
+            https://zenodo.org/api/deposit/depositions/${{ steps.zenodo.outputs.deposition_id }}/actions/publish
+          \`\`\`
+          
+          ### Option 3: Draft verwerfen
+          Falls der Draft nicht publiziert werden soll:
+          \`\`\`bash
+          curl -X DELETE \\
+            -H "Authorization: Bearer \$ZENODO_ACCESS_TOKEN" \\
+            https://zenodo.org/api/deposit/depositions/${{ steps.zenodo.outputs.deposition_id }}
+          \`\`\`
+          
+          ## 📝 Nach Publikation
+          1. Kopiere die DOI von Zenodo
+          2. Füge die DOI in CITATION.cff ein:
+             \`\`\`yaml
+             doi: 10.5281/zenodo.XXXXXXX
+             \`\`\`
+          3. Füge DOI-Badge in README.md ein:
+             \`\`\`markdown
+             [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+             \`\`\`
+          EOF
+          
+          cat zenodo-instructions.md
+      
+      - name: Comment on Release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const instructions = fs.readFileSync('zenodo-instructions.md', 'utf8');
+            
+            github.rest.repos.createReleaseComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: context.payload.release.id,
+              body: instructions
+            });
+      
+      - name: Create Issue for manual review
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '📦 Zenodo Draft bereit zur Publikation: ${{ steps.release.outputs.tag }}',
+              body: `Ein neuer Zenodo Draft wurde für Release [\`${{ steps.release.outputs.tag }}\`](https://github.com/${{ github.repository }}/releases/tag/${{ steps.release.outputs.tag }}) erstellt.
+              
+              **Deposition ID:** ${{ steps.zenodo.outputs.deposition_id }}
+              **Status:** DRAFT (nicht publiziert)
+              
+              ## ✅ Nächste Schritte
+              1. Gehe zu [Zenodo Deposition](https://zenodo.org/deposit/${{ steps.zenodo.outputs.deposition_id }})
+              2. Überprüfe Metadaten und Dateien
+              3. Publiziere den Draft oder verwerfe ihn
+              4. Schließe dieses Issue nach Publikation/Verwerfung
+              
+              ## 📋 Checkliste nach Publikation
+              - [ ] DOI in CITATION.cff eintragen
+              - [ ] DOI-Badge in README.md einfügen
+              - [ ] Issue schließen
+              `,
+              labels: ['zenodo', 'release', 'manual-review']
+            });
+            
+            console.log('Issue created: #' + issue.data.number);

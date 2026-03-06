@@ -47,7 +47,7 @@ jobs:
 
       - name: Build software
         run: |
-          ant -lib scripts/libs -Dproject.status=development dist
+          ant -lib scripts/libs dist
           echo "Build finished, listing dist:"
           ls -la dist || true
 
