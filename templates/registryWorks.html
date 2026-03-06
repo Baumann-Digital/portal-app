@@ -3,16 +3,16 @@
     data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
     <div data-template="i18n:translate" data-template-lang="en"
         data-template-catalogues="/db/apps/baudiApp/catalogues">
-        <div class="container" style="max-width: 90%;">
-            <br/>
-            <div class="page-header">
-                <h1><i18n:text key="baudi.registry.works"/></h1>
-            </div>
-            <hr/>
-            <div data-template="app:registryFilterBar"/>
-            <hr/>
-            <div>
-                <div data-template="app:registryWorks"/>
+        <div data-template="app:load-registry-works">
+            <div class="container" style="max-width: 90%;">
+                <br/>
+                <div class="page-header">
+                    <h1><i18n:text key="baudi.registry.works"/></h1>
+                </div>
+                <hr/>
+                <div data-template="app:registryFilterBar"/>
+                <hr/>
+                <div data-template="app:registry-works-content"/>
             </div>
         </div>
     </div>

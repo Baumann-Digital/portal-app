@@ -51,55 +51,68 @@ declare function app:langSwitch($node as node(), $model as map(*)) {
             </li>
 };
 
-declare function app:registryDocuments($node as node(), $model as map(*)) {
+(:~
+ : Loads documents collection into the model map for registry view.
+ :)
+declare function app:load-registry-documents($node as node(), $model as map(*)) {
+    map:merge((
+        $model,
+        map {
+            "documents": $app:collectionDocuments
+        }
+    ))
+};
 
-let $lang := baudiShared:get-lang()
-let $documents := $app:collectionDocuments
-
-let $content :=  <div class="container">
-                    <div class="container  overflow-auto" style="max-height: 500px;">
-                        <div class="tab-content">
-                            {let $cards := for $document in $documents
-                                            
-                                            let $id := $document/@xml:id/string()
-                                            let $docType := if($document//tei:correspDesc) then('letter') else('document')
-                                            let $titel := $document//tei:fileDesc/tei:titleStmt/tei:title/data()
-                                            let $datumSent := $document//tei:correspAction[@type="sent"]/tei:date/@when
-                                            let $status := $document/@status/string()
-                                            let $statusSymbol := baudiShared:get-status-symbol($status)
-                                                                  
-                                            order by $titel
-                                            return
-                                                 <div class="card bg-light mb-3">
-                                                     <div class="card-body">
-                                                       <div class="row justify-content-between">
-                                                            <div class="col">
-                                                                {if($datumSent)
-                                                                then(<h6 class="card-subtitle mb-2 text-muted">{format-date($datumSent, '[D]. [M]. [Y]', $lang, (), ())}</h6>)
-                                                                else()}
-                                                                <h5 class="card-title">{$titel}</h5>
-                                                                <!--<h6 class="card-subtitle mb-2 text-muted"></h6>-->
-                                                            </div>
-                                                            <div class="col-2">
-                                                                <p class="text-right">{$statusSymbol}</p>
-                                                            </div>
-                                                       </div>
-                                                       <p class="card-text"/>
-                                                       <a href="/{$id}" class="card-link">{$id}</a>
-                                                       <hr/>
-                                                       <p>Tags</p>
-                                                     </div>
-                                                 </div>
-                           
-                                return
-                                    $cards}
+(:~
+ : Outputs the list of document cards for the registry.
+ :)
+declare function app:registry-documents-list($node as node(), $model as map(*)) {
+    let $lang := baudiShared:get-lang()
+    let $cards := for $document in $model?documents
+                    let $id := $document/@xml:id/string()
+                    let $docType := if($document//tei:correspDesc) then('letter') else('document')
+                    let $titel := $document//tei:fileDesc/tei:titleStmt/tei:title/data()
+                    let $datumSent := $document//tei:correspAction[@type="sent"]/tei:date/@when
+                    let $status := $document/@status/string()
+                    let $statusSymbol := baudiShared:get-status-symbol($status)
+                                          
+                    order by $titel
+                    return
+                         <div class="card bg-light mb-3">
+                             <div class="card-body">
+                               <div class="row justify-content-between">
+                                    <div class="col">
+                                        {if($datumSent)
+                                        then(<h6 class="card-subtitle mb-2 text-muted">{format-date($datumSent, '[D]. [M]. [Y]', $lang, (), ())}</h6>)
+                                        else()}
+                                        <h5 class="card-title">{$titel}</h5>
+                                    </div>
+                                    <div class="col-2">
+                                        <p class="text-right">{$statusSymbol}</p>
+                                    </div>
+                               </div>
+                               <p class="card-text"/>
+                               <a href="/{$id}" class="card-link">{$id}</a>
+                               <hr/>
+                               <p>Tags</p>
+                             </div>
                          </div>
-                        <br/>
-                    </div>
-                 </div>
-       
-return
-   $content
+    return
+        $cards
+};
+
+(: DEPRECATED - kept for backward compatibility :)
+declare function app:registryDocuments($node as node(), $model as map(*)) {
+    let $model-with-data := app:load-registry-documents($node, $model)
+    return
+        <div class="container">
+            <div class="container  overflow-auto" style="max-height: 500px;">
+                <div class="tab-content">
+                    {app:registry-documents-list($node, $model-with-data)}
+                </div>
+                <br/>
+            </div>
+        </div>
 };
 
 (:~
@@ -315,46 +328,61 @@ return
 )
 };
 
-declare function app:registryPersons($node as node(), $model as map(*)) {
-    
-    let $lang := baudiShared:get-lang()
-      
-    let $content := <div class="container  overflow-auto" style="max-height: 500px;">
-                            {let $cards := for $person in $app:collectionPersons
-                                            let $id := $person/@xml:id/string()
-                                            let $name := baudiShared:getPersName($id, 'reversed', 'no')
-                                            let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
-                                            let $status := $person/@status/string()
-                                            let $statusSymbol := baudiShared:get-status-symbol($status)
-                                            
-                                            where $referencesCount gt 0
-                                            order by $name
-                                             
-                                            return
-                                                 <div class="card bg-light mb-3" name="{$status}">
-                                                     <div class="card-body">
-                                                       <div class="row">
-                                                            <div class="col-6">
-                                                                <h5 class="card-title">{$name}</h5>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <span class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
-                                                            </div>
-                                                            <div class="col-2">
-                                                                <p class="text-right">{$statusSymbol}</p>
-                                                            </div>
-                                                       </div>
-                                                       <a href="/{$id}" class="card-link">{$id}</a>
-                                                     </div>
-                                                 </div>
-                                return
-                                    $cards
-                            }
-                        </div>
-       
-       return
-        $content
+(:~
+ : Loads persons collection into the model map for registry view.
+ :)
+declare function app:load-registry-persons($node as node(), $model as map(*)) {
+    map:merge((
+        $model,
+        map {
+            "persons": $app:collectionPersons
+        }
+    ))
+};
 
+(:~
+ : Outputs the list of person cards for the registry.
+ :)
+declare function app:registry-persons-list($node as node(), $model as map(*)) {
+    let $lang := baudiShared:get-lang()
+    let $cards := for $person in $model?persons
+                    let $id := $person/@xml:id/string()
+                    let $name := baudiShared:getPersName($id, 'reversed', 'no')
+                    let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
+                    let $status := $person/@status/string()
+                    let $statusSymbol := baudiShared:get-status-symbol($status)
+                    
+                    where $referencesCount gt 0
+                    order by $name
+                     
+                    return
+                         <div class="card bg-light mb-3" name="{$status}">
+                             <div class="card-body">
+                               <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="card-title">{$name}</h5>
+                                    </div>
+                                    <div class="col-4">
+                                        <span class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <p class="text-right">{$statusSymbol}</p>
+                                    </div>
+                               </div>
+                               <a href="/{$id}" class="card-link">{$id}</a>
+                             </div>
+                         </div>
+    return
+        $cards
+};
+
+(: DEPRECATED - kept for backward compatibility :)
+declare function app:registryPersons($node as node(), $model as map(*)) {
+    let $model-with-data := app:load-registry-persons($node, $model)
+    return
+        <div class="container  overflow-auto" style="max-height: 500px;">
+            {app:registry-persons-list($node, $model-with-data)}
+        </div>
 };
 
 (:~
@@ -480,54 +508,68 @@ declare function app:person-xml($node as node(), $model as map(*)) {
     )
 };
 
-declare function app:registryLoci($node as node(), $model as map(*)) {
+(:~
+ : Loads loci collection into the model map for registry view.
+ :)
+declare function app:load-registry-loci($node as node(), $model as map(*)) {
+    map:merge((
+        $model,
+        map {
+            "loci": $app:collectionLoci
+        }
+    ))
+};
 
+(:~
+ : Outputs the list of locus cards for the registry.
+ :)
+declare function app:registry-loci-list($node as node(), $model as map(*)) {
     let $lang := baudiShared:get-lang()
-    let $loci := $app:collectionLoci
-
-let $content := 
-    <div class="container">
-        <div class="container  overflow-auto" style="max-height: 500px;">
-            <div class="tab-content">
-                {let $cards := for $locus in $loci
-                                let $name := $locus/tei:placeName[1]
-                                let $id := $locus/@xml:id/string()
-                                let $status := $locus/@status/string()
-                                let $statusSymbol := baudiShared:get-status-symbol($status)
-                                let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
-                                let $tags := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.registry.loci.tag.',$locus/@type))}</label>
-                                
-                                where $referencesCount gt 0
-                                order by $name
-                                return
-                                     <div class="card bg-light mb-3" name="{$status}">
-                                         <div class="card-body">
-                                           <div class="row">
-                                                <div class="col-6">
-                                                    <h5 class="card-title">{$name}</h5>
-                                                </div>
-                                                <div class="col-4">
-                                                    <span class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
-                                                </div>
-                                                <div class="col-2">
-                                                    <p class="text-right">{$statusSymbol}</p>
-                                                </div>
-                                           </div>
-                                           <a href="/{$id}" class="card-link">{$id}</a>
-                                           <hr/>
-                                           {$tags}
-                                         </div>
-                                     </div>
-               
+    let $cards := for $locus in $model?loci
+                    let $name := $locus/tei:placeName[1]
+                    let $id := $locus/@xml:id/string()
+                    let $status := $locus/@status/string()
+                    let $statusSymbol := baudiShared:get-status-symbol($status)
+                    let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
+                    let $tags := <label class="btn btn-outline-primary btn-sm disabled">{baudiShared:translate(concat('baudi.registry.loci.tag.',$locus/@type))}</label>
+                    
+                    where $referencesCount gt 0
+                    order by $name
                     return
-                        $cards}
-             </div>
-          </div>
-   <br/>
-   </div>
-       
-return
-   $content
+                         <div class="card bg-light mb-3" name="{$status}">
+                             <div class="card-body">
+                               <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="card-title">{$name}</h5>
+                                    </div>
+                                    <div class="col-4">
+                                        <span class="text-muted">{baudiShared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <p class="text-right">{$statusSymbol}</p>
+                                    </div>
+                               </div>
+                               <a href="/{$id}" class="card-link">{$id}</a>
+                               <hr/>
+                               {$tags}
+                             </div>
+                         </div>
+    return
+        $cards
+};
+
+(: DEPRECATED - kept for backward compatibility :)
+declare function app:registryLoci($node as node(), $model as map(*)) {
+    let $model-with-data := app:load-registry-loci($node, $model)
+    return
+        <div class="container">
+            <div class="container  overflow-auto" style="max-height: 500px;">
+                <div class="tab-content">
+                    {app:registry-loci-list($node, $model-with-data)}
+                </div>
+            </div>
+            <br/>
+        </div>
 };
 
 (:~
@@ -595,14 +637,24 @@ declare function app:locus-xml($node as node(), $model as map(*)) {
     )
 };
 
-declare function app:registryInstitutions($node as node(), $model as map(*)) {
+(:~
+ : Loads institutions collection into the model map for registry view.
+ :)
+declare function app:load-registry-institutions($node as node(), $model as map(*)) {
+    map:merge((
+        $model,
+        map {
+            "institutions": $app:collectionInstitutions
+        }
+    ))
+};
+
+(:~
+ : Outputs the list of institution cards for the registry.
+ :)
+declare function app:registry-institutions-list($node as node(), $model as map(*)) {
     let $lang := baudiShared:get-lang()
-    let $orgs := $app:collectionInstitutions
-      
-    let $content := <div class="container">
-    <div class="container  overflow-auto" style="max-height: 500px;">
-    <div class="tab-content">
-    {let $cards := for $org in $orgs
+    let $cards := for $org in $model?institutions
                     let $name := baudiShared:getOrgNameFull($org)
                     let $id := $org/@xml:id/string()
                     let $referencesCount := count(baudiShared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
@@ -628,17 +680,22 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
                                <a href="/{$id}" class="card-link">{$id}</a>
                              </div>
                          </div>
-   
-        return
-            $cards}
-        </div>
-      </div>
-   <br/>
-   </div>
-       
-       return
-        $content
+    return
+        $cards
+};
 
+(: DEPRECATED - kept for backward compatibility :)
+declare function app:registryInstitutions($node as node(), $model as map(*)) {
+    let $model-with-data := app:load-registry-institutions($node, $model)
+    return
+        <div class="container">
+            <div class="container  overflow-auto" style="max-height: 500px;">
+                <div class="tab-content">
+                    {app:registry-institutions-list($node, $model-with-data)}
+                </div>
+            </div>
+            <br/>
+        </div>
 };
 
 (:~
@@ -732,14 +789,29 @@ declare function app:institution-xml($node as node(), $model as map(*)) {
     )
 };
 
-declare function app:registrySources($node as node(), $model as map(*)) {
-    
+(:~
+ : Loads sources collection into the model map for registry view.
+ :)
+declare function app:load-registry-sources($node as node(), $model as map(*)) {
+    map:merge((
+        $model,
+        map {
+            "sources": $app:collectionSourcesMusic//mei:manifestationList/mei:manifestation,
+            "genres": distinct-values($app:collectionSourcesMusic//mei:term[@type="source"])
+        }
+    ))
+};
+
+(:~
+ : Outputs the complete sources registry content with tabs.
+ :)
+declare function app:registry-sources-content($node as node(), $model as map(*)) {
     let $lang := baudiShared:get-lang()
-    let $sources := $app:collectionSourcesMusic//mei:manifestationList/mei:manifestation (:[1]/ancestor::mei:mei:)
+    let $sources := $model?sources
+    let $genres := $model?genres
     
-    let $genres := distinct-values($app:collectionSourcesMusic//mei:term[@type="source"])
-    
-    let $content :=<div class="container">
+    return
+    <div class="container">
          <ul class="nav nav-pills" role="tablist">
          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.sources.all')} ({count($sources)})</a></li>
             {for $genre in $genres[not(. = 'part') and not(. = 'collection') and not(. = 'reprint')]
@@ -867,10 +939,13 @@ declare function app:registrySources($node as node(), $model as map(*)) {
       </div>
    <br/>
    </div>
-       
-       return
-        $content
-       };
+};
+
+(: DEPRECATED - kept for backward compatibility :)
+declare function app:registrySources($node as node(), $model as map(*)) {
+    let $model-with-data := app:load-registry-sources($node, $model)
+    return app:registry-sources-content($node, $model-with-data)
+};
 
 declare function app:viewSource($node as node(), $model as map(*)) {
 
@@ -1247,11 +1322,23 @@ return
 )
 };
 
-declare function app:registryPeriodicals($node as node(), $model as map(*)) {
+(:~
+ : Loads periodicals collection into the model map for registry view.
+ :)
+declare function app:load-registry-periodicals($node as node(), $model as map(*)) {
+    map:merge((
+        $model,
+        map {
+            "periodicals": $app:collectionPeriodicals
+        }
+    ))
+};
 
-let $collection := $app:collectionPeriodicals
-
-let $cards := for $item in $collection
+(:~
+ : Outputs the list of periodical cards for the registry.
+ :)
+declare function app:registry-periodicals-list($node as node(), $model as map(*)) {
+    let $cards := for $item in $model?periodicals
                 let $id := $item/@xml:id/string()
                 let $title := $item//tei:sourceDesc//tei:title[@type="main"]/text()
                 let $titleSub := for $each in $item//tei:series/tei:title/text()
@@ -1287,23 +1374,27 @@ let $cards := for $item in $collection
                             <a href="/{$id}" class="card-link">{$id}</a>
                         </div>
                     </div>
-        
-return
-(
-<div class="container">
-        <br/>
-        <div class="page-header">
-            <h1><i18n:text key="baudi.registry.periodocals"/></h1>
-        </div>
-        <hr/>
+    return
+        $cards
+};
+
+(: DEPRECATED - kept for backward compatibility :)
+declare function app:registryPeriodicals($node as node(), $model as map(*)) {
+    let $model-with-data := app:load-registry-periodicals($node, $model)
+    return
         <div class="container">
-            <div class="container  overflow-auto" style="max-height: 500px;">
-                {$cards}
-            </div>
             <br/>
+            <div class="page-header">
+                <h1><i18n:text key="baudi.registry.periodocals"/></h1>
+            </div>
+            <hr/>
+            <div class="container">
+                <div class="container  overflow-auto" style="max-height: 500px;">
+                    {app:registry-periodicals-list($node, $model-with-data)}
+                </div>
+                <br/>
+            </div>
         </div>
-    </div>
-)
 };
 
 declare function app:viewPeriodical($node as node(), $model as map(*)) {
@@ -1365,11 +1456,28 @@ return
 )
 };
 
-declare function app:registryWorks($node as node(), $model as map(*)) {
+(:~
+ : Loads works collection into the model map for registry view.
+ :)
+declare function app:load-registry-works($node as node(), $model as map(*)) {
+    map:merge((
+        $model,
+        map {
+            "works": $app:collectionWorks[not(parent::mei:componentList)],
+            "genres": distinct-values($app:collectionWorks//mei:term[@type="genre"]/text() | $app:collectionWorks//mei:titlePart[@type='main' and not(@class)]/@type)
+        }
+    ))
+};
+
+(:~
+ : Outputs the complete works registry content with tabs.
+ :)
+declare function app:registry-works-content($node as node(), $model as map(*)) {
+    let $works := $model?works
+    let $genres := $model?genres
     
-    let $works := $app:collectionWorks[not(parent::mei:componentList)]
-    let $genres := distinct-values($app:collectionWorks//mei:term[@type="genre"]/text() | $app:collectionWorks//mei:titlePart[@type='main' and not(@class)]/@type)
-    let $content := <div class="container">
+    return
+    <div class="container">
          <ul class="nav nav-pills" role="tablist">
             <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.works.all')} ({count($works)})</a></li>
             {for $genre at $pos in $genres[. != 'main']
@@ -1488,10 +1596,13 @@ declare function app:registryWorks($node as node(), $model as map(*)) {
       </div>
    <br/>
    </div>
-       
-       return
-        $content
-       };
+};
+
+(: DEPRECATED - kept for backward compatibility :)
+declare function app:registryWorks($node as node(), $model as map(*)) {
+    let $model-with-data := app:load-registry-works($node, $model)
+    return app:registry-works-content($node, $model-with-data)
+};
        
 declare function app:viewWork($node as node(), $model as map(*)) {
 
@@ -1769,22 +1880,26 @@ return
 )
 };
 
-declare function app:registryEditions($node as node(), $model as map(*)) {
-    let $editions := $app:collectionEditions//edirom:work
-    let $content := <div class="container">
-         <!--
-         <ul class="nav nav-pills" role="tablist">
-            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.works.all')} ({count($works)})</a></li>
-            {for $genre at $pos in $genres[. != 'main']
-                let $workCount := count($works//mei:term[@type='genre' and . = $genre])
-                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{baudiShared:translate(concat('baudi.registry.works.',$genre))} ({$workCount})</a></li>
-                order by baudiShared:translate(concat('baudi.registry.works.',$genre))
-                return
-                    $nav-itemGenre
-             }
-    </ul>
-    <hr/>
-         -->
+(:~
+ : Loads editions collection into the model map for registry view.
+ :)
+declare function app:load-registry-editions($node as node(), $model as map(*)) {
+    map:merge((
+        $model,
+        map {
+            "editions": $app:collectionEditions//edirom:work
+        }
+    ))
+};
+
+(:~
+ : Outputs the complete editions registry content.
+ :)
+declare function app:registry-editions-content($node as node(), $model as map(*)) {
+    let $editions := $model?editions
+    
+    return
+    <div class="container">
     <br/>
     <!-- Tab panels -->
     <div class="container overflow-auto" style="max-height: 600px;">
@@ -1859,9 +1974,12 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
         <br/>
       </div>
    </div>
-       
-       return
-        $content
+};
+
+(: DEPRECATED - kept for backward compatibility :)
+declare function app:registryEditions($node as node(), $model as map(*)) {
+    let $model-with-data := app:load-registry-editions($node, $model)
+    return app:registry-editions-content($node, $model-with-data)
 };
 
 (:~

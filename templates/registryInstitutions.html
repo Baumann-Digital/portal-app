@@ -1,15 +1,19 @@
 <div xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
     <div data-template="i18n:translate" data-template-lang="en" data-template-catalogues="/db/apps/baudiApp/catalogues">
-        <div class="container" style="max-width: 90%;">
-            <br/>
-            <div class="page-header">
-                <h1><i18n:text key="baudi.registry.institutions"/></h1>
-            </div>
-            <hr/>
-            <div data-template="app:registryFilterBar"/>
-            <hr/>
-            <div>
-                <div data-template="app:registryInstitutions"/>
+        <div data-template="app:load-registry-institutions">
+            <div class="container" style="max-width: 90%;">
+                <br/>
+                <div class="page-header">
+                    <h1><i18n:text key="baudi.registry.institutions"/></h1>
+                </div>
+                <hr/>
+                <div data-template="app:registryFilterBar"/>
+                <hr/>
+                <div class="container overflow-auto" style="max-height: 500px;">
+                    <div class="tab-content">
+                        <div data-template="app:registry-institutions-list"/>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
