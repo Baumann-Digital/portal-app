@@ -75,6 +75,12 @@
         <property name="project.status" value="production"/>
     </target>
     
+    <target name="-set-status-flags" depends="-check-project-status">
+        <condition property="project.status.is.development">
+            <equals arg1="${project.status}" arg2="development"/>
+        </condition>
+    </target>
+    
     <target name="yarn" depends="init">
         <description>Update javascript libraries via yarn</description>
         <exec executable="${yarn.cmd}" failonerror="yes">
@@ -82,11 +88,22 @@
         </exec>
     </target>
     
-    <target name="sass" depends="init">
-        <description>Create CSS files via sass</description>
+    <target name="sass-dev" depends="init" if="project.status.is.development">
+        <description>Create CSS files via sass (development mode with sourcemaps)</description>
         <exec executable="${sass.cmd}" failonerror="yes">
-            <arg line="--silence-deprecation=import,color-functions,global-builtin,abs-percent resources/sass/main.scss ${dist.dir}/resources/css/main.css"/>
+            <arg line="--style expanded --source-map --silence-deprecation=import,color-functions,global-builtin,abs-percent resources/sass/main.scss ${dist.dir}/resources/css/main.css"/>
         </exec>
+    </target>
+    
+    <target name="sass-prod" depends="init" unless="project.status.is.development">
+        <description>Create CSS files via sass (production mode compressed)</description>
+        <exec executable="${sass.cmd}" failonerror="yes">
+            <arg line="--style compressed --no-source-map --silence-deprecation=import,color-functions,global-builtin,abs-percent resources/sass/main.scss ${dist.dir}/resources/css/main.css"/>
+        </exec>
+    </target>
+    
+    <target name="sass" depends="-set-status-flags, sass-dev, sass-prod">
+        <description>Create CSS files via sass (calls dev or prod target based on project.status)</description>
     </target>
 
     <target name="dist" depends="init, yarn, sass">

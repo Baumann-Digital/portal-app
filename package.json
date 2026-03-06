@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "frontend-dependencies": "^0.4.0",
-    "minify": "^15.0.1",
     "sass": "^1.70.0"
   },
   "frontendDependencies": {
