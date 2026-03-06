@@ -1608,31 +1608,36 @@ declare function app:viewWork($node as node(), $model as map(*)) {
 
 let $workID := request:get-parameter("work-id", "error")
 let $lang := baudiShared:get-lang()
-let $work := $app:collectionWorks//mei:work[@xml:id=$workID]
+let $work := $app:collectionWorks[@xml:id=$workID]
 let $fileURI := document-uri($work/root())
-let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(.)
-let $subtitle := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/normalize-space(.)
-let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
-let $titlePerfMedium := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'perfmedium']
-let $titleMainAlt := $work//mei:titlePart[@type = 'mainAlt']
-let $titleSubAlt := $work//mei:title[@type='uniform']/mei:titlePart[@type = 'subAlt']
-let $composer := $work//mei:composer
+let $title := $work/mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]
+let $subtitle := $work/mei:title[@type='uniform']/mei:titlePart[@type = 'subordinate']/normalize-space(.)
+let $numberOpus := $work/mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
+let $titlePerfMedium := $work/mei:title[@type='uniform']/mei:titlePart[@type = 'perfmedium']
+let $titleMainAlt := $work/mei:titlePart[@type = 'mainAlt']
+let $titleSubAlt := $work/mei:title[@type='uniform']/mei:titlePart[@type = 'subAlt']
+let $composer := $work/mei:composer
 let $composerID := $composer/mei:persName/@codedval
 let $composerEntry := $app:collectionPersons/id($composerID)
 let $composerName := baudiShared:getPersName($composerID, 'short', 'yes')
 let $composerGender := if($composerEntry[@sex="female"]) then('composer.female') else('composer')
-let $lyricist := $work//mei:lyricist
+let $arranger := $work/mei:arranger
+let $arrangerID := $arranger/mei:persName/@codedval
+let $arrangerEntry := $app:collectionPersons/id($arrangerID)
+let $arrangerName := if($arrangerID)then(baudiShared:getPersName($arrangerID, 'short', 'yes'))else($arranger//text()/normalize-space())
+let $arrangerGender := if($arrangerEntry[@sex="female"]) then('arranger.female') else('arranger')
+let $lyricist := $work/mei:lyricist
 let $lyricistID := $lyricist/mei:persName/@codedval
 let $lyricistEntry := $app:collectionPersons/id($lyricistID)
 let $lyricistName := if($lyricistID)then(baudiShared:getPersName($lyricistID, 'short', 'yes'))else($lyricist//text()/normalize-space())
-let $lyricistGender := if($lyricistEntry)
+let $lyricistGender := if($lyricistEntry[@sex="female"])
                        then('lyricist.female')
                        else('lyricist')
 
-let $usedLang := for $lang in $work//mei:langUsage/mei:language/@codedval
+let $usedLang := for $lang in $work/mei:langUsage/mei:language/@codedval
                     return
                         baudiShared:translate(concat('baudi.lang.',$lang))
-let $key := for $each in $work//mei:key
+let $key := for $each in $work/mei:key
               let $keyPname := $each/@pname
               let $keyMode := $each/@mode
               let $keyAccid := $each/@accid
@@ -1653,7 +1658,7 @@ let $key := for $each in $work//mei:key
                              )
                       )
                   else()
-let $meter := for $each in $work//mei:meter
+let $meter := for $each in $work/mei:meter
                 let $meterCount := $each/@count
                 let $meterUnit := $each/@unit
                 let $meterSym := $each/@sym
@@ -1668,12 +1673,12 @@ let $meter := for $each in $work//mei:meter
                     else if($meterCount and $meterUnit)
                     then(concat($meterCount, '/', $meterUnit))
                     else()
-let $tempo := $work//mei:work/mei:tempo/text()
+let $tempo := $work/mei:tempo/text()
 
-let $incipText := $work//mei:incip/mei:incipText//text() => string-join(' ')
+let $incipText := $work/mei:incip/mei:incipText//text() => string-join(' ')
 
-let $workgroup := $work//mei:term[@type='workGroup']/text()
-let $genre := $work//mei:term[@type='genre']/text()
+let $workgroup := $work/mei:classification/mei:termList/mei:term[@type='workGroup']/text()
+let $genre := $work/mei:classification/mei:termList/mei:term[@type='genre']/text()
 
 let $perfMedium := baudiWork:getPerfRes($work, 'detailShort')
 
@@ -1776,13 +1781,19 @@ return
              else()}
              {if($composerName != '')
              then(<tr>
-                    <td>Musik</td>
+                    <td>{baudiShared:translate($composerGender)}</td>
                     <td>{$composerName}</td>
+                  </tr>)
+             else()}
+             {if($arrangerName != '')
+             then(<tr>
+                    <td>{baudiShared:translate($arrangerGender)}</td>
+                    <td>{$arrangerName}</td>
                   </tr>)
              else()}
              {if($lyricistName != '')
              then(<tr>
-                    <td>Text</td>
+                    <td>{baudiShared:translate($lyricistGender)}</td>
                     <td>{$lyricistName}</td>
                   </tr>)
              else()}
