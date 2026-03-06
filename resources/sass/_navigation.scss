@@ -1,0 +1,87 @@
+// Navigation Styles
+// ==================================================
+
+.navbar-text > a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// Main Navigation - Landing Page Style
+#mainNav {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: $gray-dark !important;
+
+  .navbar-toggler {
+    padding: 0.75rem;
+    font-family: $font-family-headings;
+    font-size: 0.75rem;
+    color: $white;
+    text-transform: uppercase;
+    background-color: $baudi-green;
+    border: 0;
+  }
+
+  .navbar-brand {
+    color: $baudi-green !important;
+    font-family: $font-family-headings;
+    font-weight: 700;
+    letter-spacing: 0.0625em;
+    text-transform: uppercase;
+
+    img {
+      height: 1.5rem;
+    }
+  }
+
+  .navbar-nav {
+    .nav-item .nav-link {
+      font-family: $font-family-headings;
+      font-size: 0.95rem;
+      color: $white !important;
+      letter-spacing: 0.0625em;
+
+      &.active,
+      &:hover {
+        color: $baudi-green !important;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    background-color: $gray-dark;
+
+    .nav-link {
+      color: $white !important;
+
+      &:hover {
+        color: $baudi-green !important;
+        background-color: $baudi-light-green;
+      }
+    }
+  }
+}
+
+// Nav Tabs (Register Pages)
+[role="tablist"] .nav-link {
+  color: $baudi-green !important;
+  border-color: $baudi-green;
+
+  &:hover {
+    color: $baudi-purple !important;
+    border-color: $baudi-purple;
+    transition: all 0.3s ease;
+  }
+
+  &.active {
+    background-color: $gray-dark !important;
+    color: $white !important;
+    border-color: $gray-dark !important;
+
+    &:hover {
+      background-color: $gray-darker !important;
+      color: $white !important;
+      border-color: $gray-darker !important;
+    }
+  }
+}

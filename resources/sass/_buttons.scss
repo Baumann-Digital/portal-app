@@ -1,0 +1,37 @@
+// Button Styles
+// ==================================================
+
+// Primary Buttons - Green Background with Purple Hover
+.btn-primary {
+  @include button-variant($baudi-green, $baudi-green, $baudi-purple, $baudi-purple);
+  transition: all 0.3s ease;
+  
+  &.focus,
+  &:focus,
+  &:not(:disabled):not(.disabled):active:focus,
+  &:not(:disabled):not(.disabled).active:focus,
+  .show > &.dropdown-toggle:focus {
+    @include box-shadow($box-shadow-focus);
+  }
+}
+
+// Custom Controls - Green
+.custom-control-input {
+  &:checked ~ .custom-control-label::before {
+    background-color: $baudi-green !important;
+    border-color: $baudi-green !important;
+  }
+  
+  &:focus ~ .custom-control-label::before {
+    @include box-shadow($box-shadow-focus);
+  }
+  
+  &:focus:not(:checked) ~ .custom-control-label::before {
+    border-color: $baudi-green !important;
+  }
+  
+  &:not(:disabled):active ~ .custom-control-label::before {
+    background-color: $baudi-light-green !important;
+    border-color: $baudi-green !important;
+  }
+}

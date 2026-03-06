@@ -1,0 +1,43 @@
+{
+  "name": "baudiApp",
+  "version": "1.1.0",
+  "description": "Web application for Baumann-Digital Portal",
+  "main": "controller.xql",
+  "repository": "https://github.com/Baumann-Digital/baudiApp.git",
+  "author": "BauDi Team",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "watch": "sass --watch resources/sass/main.scss:resources/css/main.css --style expanded --source-map",
+    "compile": "sass resources/sass/main.scss:resources/css/main.css --style expanded --source-map",
+    "build": "sass resources/sass/main.scss:resources/css/main.css --style compressed --no-source-map",
+    "build:dev": "sass resources/sass/main.scss:resources/css/main.css --style expanded --source-map",
+    "postinstall": "./node_modules/.bin/frontend-dependencies"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.0.0",
+    "bootstrap": "^4.5.3",
+    "jquery": "^3.5.0",
+    "waypoints": "^4.0.1"
+  },
+  "devDependencies": {
+    "frontend-dependencies": "^0.4.0",
+    "minify": "^15.0.1",
+    "sass": "^1.70.0"
+  },
+  "frontendDependencies": {
+    "target": "libs",
+    "packages": [
+      "@fortawesome/fontawesome-free",
+      "bootstrap/{js,scss,dist}",
+      "jquery/dist/",
+      "waypoints/lib"
+    ]
+  },
+  "keywords": [
+    "sass",
+    "css",
+    "baumann-digital",
+    "exist-db"
+  ]
+}

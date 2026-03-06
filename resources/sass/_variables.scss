@@ -1,0 +1,89 @@
+// BauDi Color System
+// ==================================================
+
+// Primary Colors
+$baudi-green: #00AE00;
+$baudi-green-rgba: rgba(0, 174, 0, 0.9);
+$baudi-dark-green: #2B8E00;
+$baudi-light-green: rgba(0, 174, 0, 0.1);
+
+// Accent Colors
+$baudi-purple: #AE0062;
+$baudi-light-purple: rgba(174, 0, 98, 0.1);
+$baudi-purple-muted: rgba(174, 0, 98, 0.8);
+
+// Secondary Colors (for larger surfaces)
+$baudi-orange: #D96200;
+$baudi-light-orange: rgba(217, 98, 0, 0.08);
+$baudi-orange-muted: rgba(217, 98, 0, 0.15);
+
+// Gray Scale
+$gray-dark: #212529;
+$gray-darker: #1a1d20;
+$gray: #6c757d;
+$gray-light: #f8f9fa;
+$gray-lighter: #f0f0f0;
+$gray-lightest: #f8f8f8;
+
+// Bootstrap Color Overrides
+$primary: $baudi-green;
+$secondary: $gray;
+$dark: $gray-dark;
+$light: $gray-light;
+
+// Additional Colors
+$purple: #641a85;
+$navy: navy;
+$black: #000;
+$white: #fff;
+
+// Border Colors
+$border-color: #ddd;
+$border-color-light: lightgray;
+
+// Typography
+// ==================================================
+$font-family-base: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-family-headings: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+// Spacing
+// ==================================================
+$spacer: 1rem;
+$spacer-x: $spacer;
+$spacer-y: $spacer;
+
+// Layout
+// ==================================================
+$container-max-width: 90%;
+$footer-height: 60px;
+
+// Borders & Radii
+// ==================================================
+$border-radius-sm: 4px;
+$border-radius: 6px;
+$border-width: 1px;
+$border-width-thick: 1.5px;
+$border-width-thicker: 2px;
+
+// Z-Index Scale
+// ==================================================
+$zindex-dropdown: 1000;
+$zindex-sticky: 1020;
+$zindex-fixed: 1030;
+$zindex-modal-backdrop: 1040;
+$zindex-modal: 1050;
+$zindex-popover: 1060;
+$zindex-tooltip: 1070;
+
+// Transitions
+// ==================================================
+$transition-base: all 0.3s ease-in-out;
+$transition-fast: all 0.15s ease-in-out;
+$transition-slow: all 0.5s ease;
+
+// Shadows
+// ==================================================
+$box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+$box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+$box-shadow-focus: 0 0 0 0.2rem rgba(0, 174, 0, 0.25);

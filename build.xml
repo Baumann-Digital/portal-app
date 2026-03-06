@@ -16,6 +16,7 @@
     <description>Delete build and dist directories</description>
         <delete dir="${dist.dir}"/>
         <delete dir="${build.dir}"/>
+        <delete dir="${frontend_libs.dir}"/>
     </target>
     
     <target name="clean">
@@ -74,7 +75,21 @@
         <property name="project.status" value="production"/>
     </target>
     
-    <target name="dist" depends="init">
+    <target name="yarn" depends="init">
+        <description>Update javascript libraries via yarn</description>
+        <exec executable="${yarn.cmd}" failonerror="yes">
+            <arg line="install --check-files"/>
+        </exec>
+    </target>
+    
+    <target name="sass" depends="init">
+        <description>Create CSS files via sass</description>
+        <exec executable="${sass.cmd}" failonerror="yes">
+            <arg line="--silence-deprecation=import,color-functions,global-builtin,abs-percent resources/sass/main.scss ${dist.dir}/resources/css/main.css"/>
+        </exec>
+    </target>
+
+    <target name="dist" depends="init, yarn, sass">
         <description>Build the distribution package</description>
         <property name="project.app.pkg.name" value="${project.app}-${project.version}-${local.revision}.xar"/>
         <!-- Copy files to build directory-->
@@ -95,6 +110,38 @@
                 <exclude name="scripts/**"/>
                 <exclude name="blob/"/>
                 <exclude name="**/__contents__.xml"/>
+                <exclude name="node_modules/**"/>
+                <exclude name="libs/**"/>
+                <exclude name="resources/sass/**"/>
+                <exclude name="resources/lib/**"/>
+                <exclude name="package.json"/>
+                <exclude name="package-lock.json"/>
+                <exclude name="yarn.lock"/>
+                <exclude name="watch-sass.sh"/>
+                <exclude name="*.md"/>
+            </fileset>
+        </copy>
+        
+        <!-- Copy libs from ${frontend_libs.dir} -->
+        <copy todir="${build.dir}/resources/lib" failonerror="false">
+            <fileset dir="${frontend_libs.dir}">
+                <include name="**/*.js"/>
+                <include name="**/*.css"/>
+                <include name="**/*.woff"/>
+                <include name="**/*.woff2"/>
+                <include name="**/*.ttf"/>
+                <include name="**/*.eot"/>
+                <include name="**/*.svg"/>
+                <include name="**/*.png"/>
+                <include name="**/*.jpg"/>
+                <include name="**/*.gif"/>
+                <!-- exclude unnecessary directories -->
+                <exclude name="**/node_modules/"/>
+                <exclude name="**/test/**"/>
+                <exclude name="**/tests/**"/>
+                <exclude name="**/docs/**"/>
+                <exclude name="**/examples/**"/>
+                <exclude name="**/*.html"/>
             </fileset>
         </copy>
         

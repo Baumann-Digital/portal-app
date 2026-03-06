@@ -645,11 +645,11 @@ declare function baudiShared:getReferences($id) {
 
 declare function baudiShared:get-status-symbol($status as xs:string?) as node()? {
     if($status='proposed')
-    then(<img src="/resources/img/ampel_rot.png" alt="{$status}" width="10px"/>)
+    then(<img src="$resources/img/ampel_rot.svg" title="Status:{$status}, (Traffic Light SVG Vector from https://www.svgrepo.com/svg/500083/traffic-light)" alt="Traffic Light SVG Vector from https://www.svgrepo.com/svg/500083/traffic-light" width="40px"/>)
     else if($status='candidate')
-    then(<img src="/resources/img/ampel_gelb.png" alt="{$status}" width="10px"/>)
+    then(<img src="$resources/img/ampel_gelb.svg" title="Status:{$status}, (Traffic Light SVG Vector from https://www.svgrepo.com/svg/500083/traffic-light)" alt="Traffic Light SVG Vector from https://www.svgrepo.com/svg/500083/traffic-light" width="40px"/>)
     else if($status='approved')
-    then(<img src="/resources/img/ampel_gruen.png" alt="{$status}" width="10px"/>)
+    then(<img src="$resources/img/ampel_gruen.svg" title="Status:{$status}, (Traffic Light SVG Vector from https://www.svgrepo.com/svg/500083/traffic-light)" alt="Traffic Light SVG Vector from https://www.svgrepo.com/svg/500083/traffic-light" width="40px"/>)
     else(<span>no status</span>)
 };
 

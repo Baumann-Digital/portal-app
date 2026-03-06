@@ -31,10 +31,23 @@ jobs:
           mv saxon-he-12.9.jar scripts/libs/
           mv lib scripts/libs/
           rm saxon.zip
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install frontend dependencies
+        run: |
+          corepack enable
+          yarn install --frozen-lockfile
+          echo "Frontend dependencies installed:"
+          ls -la libs/ || echo "libs directory not created yet"
 
       - name: Build software
         run: |
-          ant -verbose -lib scripts/libs dist
+          ant -lib scripts/libs dist
           echo "Build finished, listing dist:"
           ls -la dist || true
 

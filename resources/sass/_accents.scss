@@ -1,0 +1,50 @@
+// Additional Accent Classes
+// ==================================================
+// Use these classes for special UI elements with the new accent colors
+
+// Purple Accent Badge
+.badge-accent {
+  background-color: $baudi-purple;
+  color: $white;
+  
+  &:hover {
+    background-color: $baudi-purple-muted;
+  }
+}
+
+// Orange Background Panel
+.panel-orange {
+  background-color: $baudi-light-orange;
+  border-left: 4px solid $baudi-orange;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+// Purple Highlight
+.highlight-purple {
+  background-color: $baudi-light-purple;
+  color: $baudi-purple;
+  padding: 2px 6px;
+  border-radius: $border-radius-sm;
+  font-weight: 500;
+}
+
+// Status Indicators with Accent Colors
+.status-accent {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  
+  &.purple {
+    background-color: $baudi-purple;
+  }
+  
+  &.orange {
+    background-color: $baudi-orange;
+  }
+  
+  &.green {
+    background-color: $baudi-green;
+  }
+}

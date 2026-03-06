@@ -15,3 +15,11 @@ local.build.properties
 dist
 CITATION.cff
 *.code-workspace
+
+# Frontend dependencies
+node_modules/
+libs/
+package-lock.json
+# Note: yarn.lock MUST be committed for reproducible builds!
+resources/css/main.css
+resources/css/main.css.map

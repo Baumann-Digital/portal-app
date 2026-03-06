@@ -1,0 +1,34 @@
+/*!
+ * Baumann-Digital Portal Styles
+ * Built with SASS
+ */
+
+// Core Variables and Mixins
+@import "variables";
+@import "mixins";
+
+// Component Styles
+@import "navigation";
+@import "buttons";
+@import "tables";
+@import "registry";
+@import "components";
+@import "document";
+@import "sticky-footer";
+@import "links";
+@import "accents";
+
+// CSS Custom Properties for Runtime Compatibility
+:root {
+  --baudi-green: #{$baudi-green};
+  --baudi-dark-green: #{$baudi-dark-green};
+  --baudi-purple: #{$baudi-purple};
+  --baudi-orange: #{$baudi-orange};
+  --darkgreen: #{$baudi-dark-green};
+  --primary: #{$baudi-green};
+  --accent: #{$baudi-purple};
+  --blue: #007bff;
+  --green: #{$baudi-green};
+  --yellow: #{$baudi-green};
+  --warning: #{$baudi-green};
+}
