@@ -102,6 +102,10 @@ return
    $content
 };
 
+(:~
+ : Route function that determines if document is a letter or not.
+ : Delegates to viewLetter or load-document.
+ :)
 declare function app:viewDocument($node as node(), $model as map(*)) {
     let $id := request:get-parameter("document-id", "error")
     let $doc := $app:collectionDocuments[@xml:id=$id]
@@ -109,40 +113,87 @@ declare function app:viewDocument($node as node(), $model as map(*)) {
     return
         if($isLetter)
         then(app:viewLetter($node, $model))
-        else(app:viewDoc($node, $model))
+        else($node)
 };
 
-declare function app:viewDoc($node as node(), $model as map(*)) {
-let $id := request:get-parameter("document-id", "error")
-let $doc := $app:collectionDocuments[@xml:id=$id]
-let $pages := $doc/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
+(:~
+ : Loads document data into the model map.
+ : This is the main data loading function for the document view.
+ :)
+declare function app:load-document($node as node(), $model as map(*)) {
+    let $id := request:get-parameter("document-id", "error")
+    let $doc := $app:collectionDocuments[@xml:id=$id]
+    
+    return
+        if ($doc) then
+            map:merge((
+                $model,
+                map {
+                    "document-id": $id,
+                    "document": $doc,
+                    "document-title": $doc//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.)),
+                    "document-content": transform:transform($doc//tei:text, doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())
+                }
+            ))
+        else
+            $model
+};
 
-return
-(
-<div class="container">
-    <div class="page-header">
-            <h1>{$doc//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.))}</h1>
-            <h5>{$id}</h5>
-    </div>
-    <ul class="nav nav-pills" role="tablist">
-<!--        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#datenblatt">Datenblatt</a></li>  -->
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#inhalt">Inhalt</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#daten">Daten</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#personen">Personen</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#institutionen">Institutionen</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#orte">Orte</a></li>
-    </ul>
-    <!-- Tab panels -->
-    <div class="tab-content">
-      <!--  <div class="tab-pane fade show active" id="datenblatt" >
-        {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/dokumentDatenblatt.xsl"), ())}
-        </div>-->
-        <div class="tab-pane fade show active" id="inhalt" >
-        {transform:transform($doc//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())}
+(:~
+ : Outputs the document's title.
+ :)
+declare function app:document-title($node as node(), $model as map(*)) {
+    $model?document-title
+};
+
+(:~
+ : Outputs the document's ID.
+ :)
+declare function app:document-id($node as node(), $model as map(*)) {
+    $model?document-id
+};
+
+(:~
+ : Outputs the document's transformed content.
+ :)
+declare function app:document-content($node as node(), $model as map(*)) {
+    $model?document-content
+};
+
+(:~ 
+ : DEPRECATED - kept for viewLetter compatibility
+ :)
+declare function app:viewDoc($node as node(), $model as map(*)) {
+    let $id := request:get-parameter("document-id", "error")
+    let $doc := $app:collectionDocuments[@xml:id=$id]
+    let $pages := $doc/tei:text/tei:body/tei:div[@type='page']/@n/normalize-space(data(.))
+    
+    return
+    (
+    <div class="container">
+        <div class="page-header">
+                <h1>{$doc//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.))}</h1>
+                <h5>{$id}</h5>
         </div>
-   </div>
-</div>
-)
+        <ul class="nav nav-pills" role="tablist">
+    <!--        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#datenblatt">Datenblatt</a></li>  -->
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#inhalt">Inhalt</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#daten">Daten</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#personen">Personen</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#institutionen">Institutionen</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#orte">Orte</a></li>
+        </ul>
+        <!-- Tab panels -->
+        <div class="tab-content">
+          <!--  <div class="tab-pane fade show active" id="datenblatt" >
+            {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/dokumentDatenblatt.xsl"), ())}
+            </div>-->
+            <div class="tab-pane fade show active" id="inhalt" >
+            {transform:transform($doc//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())}
+            </div>
+       </div>
+    </div>
+    )
 };
 
 declare function app:viewLetter($node as node(), $model as map(*)) {
@@ -306,111 +357,127 @@ declare function app:registryPersons($node as node(), $model as map(*)) {
 
 };
 
-declare %private function app:viewPersonDetail($when, $label, $value, $otherwise as xs:string?) {
-    if($when)
-    then(<div class="row">
-            <div class="col-5">{baudiShared:translate('baudi.person.' || $label)}</div>
-            <div class="col">{$value}</div>
-         </div>)
-    else($otherwise)
+(:~
+ : Loads person data into the model map.
+ : This is the main data loading function for the person view.
+ :)
+declare function app:load-person($node as node(), $model as map(*)) {
+    let $id := request:get-parameter("person-id", "error")
+    let $person := $app:collectionPersons/id($id)
+    
+    return
+        if ($person) then
+            map:merge((
+                $model,
+                map {
+                    "person-id": $id,
+                    "person": $person,
+                    "person-name": baudiShared:getPersName($id, 'reversed', 'no'),
+                    "person-references": baudiShared:getReferences($id),
+                    "person-title": baudiPersons:getTitle($id),
+                    "person-name-full": baudiPersons:getName($id, 'full'),
+                    "person-forenames": baudiPersons:getForenames($id),
+                    "person-epithet": baudiPersons:getEpithet($id),
+                    "person-namelink": baudiPersons:getNameLink($id),
+                    "person-surname-birth": baudiPersons:getSurnames($id, 'birth'),
+                    "person-surname-married": baudiPersons:getSurnames($id, 'married'),
+                    "person-surname": baudiPersons:getSurnames($id, ''),
+                    "person-genname": baudiPersons:getGenName($id),
+                    "person-nickname": baudiPersons:getNickName($id),
+                    "person-unspec": baudiPersons:getNameUnspec($id),
+                    "person-pseudonym": baudiPersons:getPseudonym($id),
+                    "person-rolename": baudiPersons:getRoleName($id),
+                    "person-occupation": baudiPersons:getOccupation($id),
+                    "person-affiliation": baudiPersons:getAffiliations($id),
+                    "person-residences": baudiPersons:getResidences($id),
+                    "person-annotation": baudiPersons:getAnnotation($id),
+                    "person-lifedata": baudiPersons:getLifeData($id),
+                    "person-gnd": baudiShared:getNormDataIdentifier($person, 'gnd', true()),
+                    "person-viaf": baudiShared:getNormDataIdentifier($person, 'viaf', true())
+                }
+            ))
+        else
+            $model
 };
 
-declare function app:viewPerson($node as node(), $model as map(*)) {
- 
-let $id := request:get-parameter("person-id", "error")
-let $person := $app:collectionPersons/id($id)
+(:~
+ : Outputs the person's name.
+ :)
+declare function app:person-name($node as node(), $model as map(*)) {
+    $model?person-name
+};
 
-let $nameHead := baudiShared:getPersName($id, 'reversed', 'no')
-let $references := baudiShared:getReferences($id)
+(:~
+ : Outputs the person's ID.
+ :)
+declare function app:person-id($node as node(), $model as map(*)) {
+    $model?person-id
+};
 
-let $unknown := baudiShared:translate('baudi.notKnown')
-let $persTitle := baudiPersons:getTitle($id)
-let $persNameFull := baudiPersons:getName($id,'full')
-let $persForenames := baudiPersons:getForenames($id)
-let $persEpithet := baudiPersons:getEpithet($id)
-let $persNameLink := baudiPersons:getNameLink($id)
-let $persSurnameBirth := baudiPersons:getSurnames($id, 'birth')
-let $persSurnameMarried := baudiPersons:getSurnames($id, 'married')
-let $persSurname := baudiPersons:getSurnames($id, '')
-let $persGenName := baudiPersons:getGenName($id)
-let $persNickName := baudiPersons:getNickName($id)
-let $persUnSpec := baudiPersons:getNameUnspec($id)
-let $persPseudonym := baudiPersons:getPseudonym($id)
-let $persRoleName := baudiPersons:getRoleName($id)
-let $persOccupation := baudiPersons:getOccupation($id)
-let $persAffiliation := baudiPersons:getAffiliations($id)
-let $persResidences := baudiPersons:getResidences($id)
-let $persAnnotation := baudiPersons:getAnnotation($id)
-let $persLifeData := baudiPersons:getLifeData($id)
-
-let $gnd := baudiShared:getNormDataIdentifier($person,'gnd',true())
-let $viaf := baudiShared:getNormDataIdentifier($person,'viaf',true())
-
-return
-(
-<div class="container">
-    <br/>
-    <div class="page-header">
-        <h3>{$nameHead}</h3>
-        <h5>{$id}</h5>
-    </div>
-    <br/>
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-       <li class="nav-item">
-         <a class="nav-link active" data-toggle="pill" href="#pills-main-tab" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
-       </li>
-       <li class="nav-item">
-         <a class="nav-link" data-toggle="pill" href="#pills-xml-tab" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
-       </li>
-    </ul>
-    <hr/>
-    <!-- Tab panels -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="pills-main-tab" role="tabpanel" aria-labelledby="pills-main-tab">
-            <div class="row" style="margin-bottom: 3em;">
-                <div class="col">
-                <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
-                <hr/>
-                <div class="overflow-auto baudi-container">
-                        {app:viewPersonDetail($persTitle, 'title', $persTitle, ()),
-                        app:viewPersonDetail($persNameFull, ('name.full'), $persNameFull, ()),
-                        if($persNameFull) then() else(app:viewPersonDetail($persForenames, (if(count(tokenize($persForenames,' ')) gt 1) then('forenames') else('forename')), $persForenames, $unknown)),
-                        app:viewPersonDetail($persEpithet, ('epithet'), $persEpithet, ()),
-                        app:viewPersonDetail($persNameLink, ('nameLink'), $persNameLink, ()),
-                        if($persNameFull) then() else(app:viewPersonDetail($persSurname, ('surname'), $persSurname, ())),
-                        app:viewPersonDetail($persSurnameBirth, ('surname.birth'), $persSurnameBirth, ()),
-                        app:viewPersonDetail($persSurnameMarried, ('surname.marriage'), $persSurnameMarried, ()),
-                        app:viewPersonDetail($persGenName, ('genName'), $persGenName, ()),
-                        app:viewPersonDetail($persPseudonym, ('pseudonym'), $persPseudonym, ()),
-                        app:viewPersonDetail($persNickName, ('nickName'), $persNickName, ()),
-                        app:viewPersonDetail($persUnSpec, ('unSpec'), $persUnSpec, ()),
-                        app:viewPersonDetail($persRoleName, ('roleName'), $persRoleName, ()),
-                        app:viewPersonDetail($persOccupation, ('occupation'), $persOccupation, ()),
-                        app:viewPersonDetail($persLifeData, ('lifeData'), $persLifeData, ()),
-                        app:viewPersonDetail($persAffiliation, ('affiliation'), $persAffiliation, ()),
-                        app:viewPersonDetail($persResidences, ('residences'), $persResidences, ()),
-                        app:viewPersonDetail($persAnnotation, ('annotation'), $persAnnotation, ()),
-                        app:viewPersonDetail($gnd != '', 'normDataGND', $gnd, ()),
-                        app:viewPersonDetail($viaf  != '', 'normDataVIAF', $viaf, ())}
-                    </div>
-                </div>
-                <div class="col-7">
-                    <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
-                    <hr/>
-                    <div class="overflow-auto baudi-container">{$references}</div>
-                </div>
+(:~
+ : Outputs person details as a list of rows.
+ :)
+declare function app:person-details($node as node(), $model as map(*)) {
+    let $details := (
+        map { "key": "title", "value": $model?person-title },
+        map { "key": "name.full", "value": $model?person-name-full },
+        (: Only show forenames/surname if full name is not available :)
+        if (not($model?person-name-full)) then (
+            map { 
+                "key": if (count(tokenize($model?person-forenames, ' ')) gt 1) then 'forenames' else 'forename', 
+                "value": $model?person-forenames 
+            },
+            map { "key": "surname", "value": $model?person-surname }
+        ) else (),
+        map { "key": "epithet", "value": $model?person-epithet },
+        map { "key": "nameLink", "value": $model?person-namelink },
+        map { "key": "surname.birth", "value": $model?person-surname-birth },
+        map { "key": "surname.marriage", "value": $model?person-surname-married },
+        map { "key": "genName", "value": $model?person-genname },
+        map { "key": "pseudonym", "value": $model?person-pseudonym },
+        map { "key": "nickName", "value": $model?person-nickname },
+        map { "key": "unSpec", "value": $model?person-unspec },
+        map { "key": "roleName", "value": $model?person-rolename },
+        map { "key": "occupation", "value": $model?person-occupation },
+        map { "key": "lifeData", "value": $model?person-lifedata },
+        map { "key": "affiliation", "value": $model?person-affiliation },
+        map { "key": "residences", "value": $model?person-residences },
+        map { "key": "annotation", "value": $model?person-annotation },
+        map { "key": "normDataGND", "value": $model?person-gnd, "condition": $model?person-gnd != '' },
+        map { "key": "normDataVIAF", "value": $model?person-viaf, "condition": $model?person-viaf != '' }
+    )
+    
+    return
+        for $detail in $details
+        let $value := $detail?value
+        let $condition := if (exists($detail?condition)) then $detail?condition else exists($value) and $value != ''
+        where $condition
+        return
+            <div class="row">
+                <div class="col-5">{baudiShared:translate('baudi.person.' || $detail?key)}</div>
+                <div class="col">{$value}</div>
             </div>
-        </div>
-        <div class="tab-pane fade" id="pills-xml-tab" role="tabpanel" aria-labelledby="pills-xml-tab">
-            <div class="card" style="background: aliceblue;">
-                <div class="card-body">
-                    <pre><code>{serialize(app:process-xml-for-display($person), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-)
+};
+
+(:~
+ : Outputs the person's references.
+ :)
+declare function app:person-references($node as node(), $model as map(*)) {
+    $model?person-references
+};
+
+(:~
+ : Outputs the person's XML data.
+ :)
+declare function app:person-xml($node as node(), $model as map(*)) {
+    serialize(
+        app:process-xml-for-display($model?person), 
+        <output:serialization-parameters>
+            <output:method>xml</output:method>
+            <output:media-type>application/xml</output:media-type>
+            <output:indent>no</output:indent>
+        </output:serialization-parameters>
+    )
 };
 
 declare function app:registryLoci($node as node(), $model as map(*)) {
@@ -463,60 +530,69 @@ return
    $content
 };
 
-declare function app:viewLocus($node as node(), $model as map(*)) {
+(:~
+ : Loads locus data into the model map.
+ : This is the main data loading function for the locus view.
+ :)
+declare function app:load-locus($node as node(), $model as map(*)) {
+    let $id := request:get-parameter("locus-id", "error")
+    let $locus := $app:collectionLoci/id($id)
+    
+    return
+        if ($locus) then
+            map:merge((
+                $model,
+                map {
+                    "locus-id": $id,
+                    "locus": $locus,
+                    "locus-name": baudiLocus:getLocusName($id),
+                    "locus-references": baudiShared:getReferences($id)
+                }
+            ))
+        else
+            $model
+};
 
-let $id := request:get-parameter("locus-id", "error")
-let $locus := $app:collectionLoci/id($id)
-let $nameHead := baudiLocus:getLocusName($id)
+(:~
+ : Outputs the locus's name.
+ :)
+declare function app:locus-name($node as node(), $model as map(*)) {
+    $model?locus-name
+};
 
-let $references := baudiShared:getReferences($id)
+(:~
+ : Outputs the locus's ID.
+ :)
+declare function app:locus-id($node as node(), $model as map(*)) {
+    $model?locus-id
+};
 
-return
-(
-<div class="container">
-    <br/>
-    <div class="page-header">
-        <h3>{$nameHead}</h3>
-        <h5>{$id}</h5>
-    </div>
-    <br/>
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-       <li class="nav-item">
-         <a class="nav-link active" data-toggle="pill" href="#pills-main-tab" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
-       </li>
-       <li class="nav-item">
-         <a class="nav-link" data-toggle="pill" href="#pills-xml-tab" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
-       </li>
-    </ul>
-    <hr/>
-    <!-- Tab panels -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="pills-main-tab" role="tabpanel" aria-labelledby="pills-main-tab">
-            <div class="row" style="margin-bottom: 3em;">
-                <div class="col">
-                <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
-                <hr/>
-                <div class="overflow-auto baudi-container">
-                        {baudiLocus:getOpenStreetMap($id)}
-                    </div>
-                </div>
-                <div class="col-7">
-                    <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
-                    <hr/>
-                    <div class="overflow-auto baudi-container">{$references}</div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="pills-xml-tab" role="tabpanel" aria-labelledby="pills-xml-tab">
-            <div class="card" style="background: aliceblue;">
-                <div class="card-body">
-                    <pre><code>{serialize(app:process-xml-for-display($locus), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-)
+(:~
+ : Outputs the OpenStreetMap for the locus.
+ :)
+declare function app:locus-map($node as node(), $model as map(*)) {
+    baudiLocus:getOpenStreetMap($model?locus-id)
+};
+
+(:~
+ : Outputs the locus's references.
+ :)
+declare function app:locus-references($node as node(), $model as map(*)) {
+    $model?locus-references
+};
+
+(:~
+ : Outputs the locus's XML data.
+ :)
+declare function app:locus-xml($node as node(), $model as map(*)) {
+    serialize(
+        app:process-xml-for-display($model?locus), 
+        <output:serialization-parameters>
+            <output:method>xml</output:method>
+            <output:media-type>application/xml</output:media-type>
+            <output:indent>no</output:indent>
+        </output:serialization-parameters>
+    )
 };
 
 declare function app:registryInstitutions($node as node(), $model as map(*)) {
@@ -565,79 +641,95 @@ declare function app:registryInstitutions($node as node(), $model as map(*)) {
 
 };
 
-declare %private function app:viewInstitutionDetail($when, $label, $value, $otherwise as xs:string?) {
-    if($when)
-    then(<div class="row">
-            <div class="col-5">{baudiShared:translate('baudi.institution.' || $label)}</div>
-            <div class="col">{$value}</div>
-         </div>)
-    else($otherwise)
+(:~
+ : Loads institution data into the model map.
+ : This is the main data loading function for the institution view.
+ :)
+declare function app:load-institution($node as node(), $model as map(*)) {
+    let $id := request:get-parameter("institution-id", "error")
+    let $org := $app:collectionInstitutions[@xml:id=$id]
+    
+    return
+        if ($org) then
+            let $orgName := baudiShared:getOrgNameFull($org)
+            let $place := if($org/tei:location/tei:settlement/@key)
+                          then(<a href="/{$org/tei:location/tei:settlement/@key/string()}">{$org/tei:location/tei:settlement/text()}</a>)
+                          else($org/tei:location/tei:settlement/text())
+            return
+                map:merge((
+                    $model,
+                    map {
+                        "institution-id": $id,
+                        "institution": $org,
+                        "institution-name": $orgName,
+                        "institution-place": $place,
+                        "institution-affiliates": baudiPersons:getAffiliates($id),
+                        "institution-references": baudiShared:getReferences($id),
+                        "institution-gnd": baudiShared:getNormDataIdentifier($org, 'gnd', true()),
+                        "institution-viaf": baudiShared:getNormDataIdentifier($org, 'viaf', true())
+                    }
+                ))
+        else
+            $model
 };
 
-declare function app:viewInstitution($node as node(), $model as map(*)) {
+(:~
+ : Outputs the institution's name.
+ :)
+declare function app:institution-name($node as node(), $model as map(*)) {
+    $model?institution-name
+};
 
-let $id := request:get-parameter("institution-id", "error")
-let $org := $app:collectionInstitutions[@xml:id=$id]
-let $orgName := if($org) then(baudiShared:getOrgNameFull($org)) else('N.N.')
-let $nameHead := $orgName
-let $place := if($org/tei:location/tei:settlement/@key)
-              then(<a href="/{$org/tei:location/tei:settlement/@key/string()}">{$org/tei:location/tei:settlement/text()}</a>)
-              else($org/tei:location/tei:settlement/text())
-let $affiliates := baudiPersons:getAffiliates($id)
-let $references := baudiShared:getReferences($id)
-let $gnd := baudiShared:getNormDataIdentifier($org,'gnd',true())
-let $viaf := baudiShared:getNormDataIdentifier($org,'viaf',true())
+(:~
+ : Outputs the institution's ID.
+ :)
+declare function app:institution-id($node as node(), $model as map(*)) {
+    $model?institution-id
+};
 
-return
-(
-    <div class="container">
-    <br/>
-    <div class="page-header">
-        <h3>{$nameHead}</h3>
-        <h5>{$id}</h5>
-    </div>
-    <br/>
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-       <li class="nav-item">
-         <a class="nav-link active" data-toggle="pill" href="#pills-main-tab" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
-       </li>
-       <li class="nav-item">
-         <a class="nav-link" data-toggle="pill" href="#pills-xml-tab" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
-       </li>
-    </ul>
-    <hr/>
-    <!-- Tab panels -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="pills-main-tab" role="tabpanel" aria-labelledby="pills-main-tab">
-            <div class="row" style="margin-bottom: 3em;">
-                <div class="col">
-                <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.general')}</h5>
-                <hr/>
-                <div class="overflow-auto baudi-container">
-                        {app:viewInstitutionDetail($orgName, 'name', $orgName, ()),
-                         app:viewInstitutionDetail($affiliates, 'affiliates', $affiliates, ()),
-                         app:viewInstitutionDetail($place, 'place', $place, ()),
-                         app:viewInstitutionDetail($gnd != '', 'normDataGND', $gnd, ()),
-                         app:viewInstitutionDetail($viaf  != '', 'normDataVIAF', $viaf, ())}
-                    </div>
-                </div>
-                <div class="col-7">
-                    <h5 class="text-center">{baudiShared:translate('baudi.registry.persons.references')}</h5>
-                    <hr/>
-                    <div class="overflow-auto baudi-container">{$references}</div>
-                </div>
+(:~
+ : Outputs institution details as a list of rows.
+ :)
+declare function app:institution-details($node as node(), $model as map(*)) {
+    let $details := (
+        map { "key": "name", "value": $model?institution-name },
+        map { "key": "affiliates", "value": $model?institution-affiliates },
+        map { "key": "place", "value": $model?institution-place },
+        map { "key": "normDataGND", "value": $model?institution-gnd, "condition": $model?institution-gnd != '' },
+        map { "key": "normDataVIAF", "value": $model?institution-viaf, "condition": $model?institution-viaf != '' }
+    )
+    
+    return
+        for $detail in $details
+        let $value := $detail?value
+        let $condition := if (exists($detail?condition)) then $detail?condition else exists($value) and $value != ''
+        where $condition
+        return
+            <div class="row">
+                <div class="col-5">{baudiShared:translate('baudi.institution.' || $detail?key)}</div>
+                <div class="col">{$value}</div>
             </div>
-        </div>
-        <div class="tab-pane fade" id="pills-xml-tab" role="tabpanel" aria-labelledby="pills-xml-tab">
-            <div class="card" style="background: aliceblue;">
-                <div class="card-body">
-                    <pre><code>{serialize(app:process-xml-for-display($org), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-)
+};
+
+(:~
+ : Outputs the institution's references.
+ :)
+declare function app:institution-references($node as node(), $model as map(*)) {
+    $model?institution-references
+};
+
+(:~
+ : Outputs the institution's XML data.
+ :)
+declare function app:institution-xml($node as node(), $model as map(*)) {
+    serialize(
+        app:process-xml-for-display($model?institution), 
+        <output:serialization-parameters>
+            <output:method>xml</output:method>
+            <output:media-type>application/xml</output:media-type>
+            <output:indent>no</output:indent>
+        </output:serialization-parameters>
+    )
 };
 
 declare function app:registrySources($node as node(), $model as map(*)) {
@@ -1772,120 +1864,106 @@ declare function app:registryEditions($node as node(), $model as map(*)) {
         $content
 };
 
-declare function app:viewEdition($node as node(), $model as map(*)) {
+(:~
+ : Loads edition data into the model map.
+ : This is the main data loading function for the edition view.
+ :)
+declare function app:load-edition($node as node(), $model as map(*)) {
     let $editionID := request:get-parameter("edition-id", "error")
-    let $lang := baudiShared:get-lang()
     let $edition := $app:collectionEditions[@xml:id=$editionID]
-    let $fileURI := document-uri($edition/root())
-    let $editionTitle := $edition//edirom:editionName//text()
-    let $editionWorks := $edition//edirom:work
     
     return
-(
-    <div class="container">
-        <br/>
-        <div class="page-header">
-            <h1>{$editionTitle}</h1>
-            <h5>{$editionID}</h5>
-        </div>
-        <br/>
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-       <li class="nav-item">
-         <a class="nav-link active" id="pills-main-tab" data-toggle="pill" href="#pills-main" role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
-       </li>
-       <li class="nav-item">
-         <a class="nav-link" id="pills-xml-tab" data-toggle="pill" href="#pills-xml" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
-       </li>
-    </ul>
-    <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
-            <div class="container">
-                <div class="card-deck">
-                    <div class="card bg-light col-3 mb-3">
-                        <div class="mx-auto d-block" style="height: 150px; width: 150px;">
-                            <img class="card-img-top" src="/$resources/img/logo_edirom.png" alt="Preview Edirom Online"/>
-                        </div>
-                            <hr/>
-                            <div class="card-body">
-                                <a href="Edirom-Online/index.html" target="_blank" class="card-link">Zur Edirom</a>
-                            </div>
-                    </div>
-                    <div class="card bg-light col-3 mb-3">
-                        <div class="mx-auto d-block" style="height: 150px; width: 150px;">
-                            <img class="card-img-top" src="/$resources/img/logo_crapp.png" width="50px" alt="Preview crApp"/>
-                        </div>
-                            <hr/>
-                            <div class="card-body">
-                                <a href="crApp/index.html" target="_blank" class="card-link">Zum den kritischen Anmerkungen</a>
-                            </div>
-                    </div>
-                </div>
-            </div>
-            <div class="page-header">
-                <h3>{baudiShared:translate('baudi.registry.works.components')}</h3>
-                <hr/>
-            </div>
-            <div class="container">
-                {
-                for $work in $editionWorks
-                    let $workID := $work/@xml:id/string()
-                    let $workFile := $app:collectionWorks//mei:work[@xml:id=$workID]
-                    let $title := baudiWork:getWorkTitle($workFile)
-                    let $composerID := $workFile//mei:composer//@codedval
-                    let $composer := if($workFile//mei:composer//@codedval)
-                                      then(baudiShared:getPersName($composerID, 'short', 'yes'))
-                                      else($workFile//mei:composer/string())
-                     let $arrangerID := $workFile//mei:arranger//@codedval
-                     let $arranger := if($workFile//mei:arranger//@codedval)
-                                      then(baudiShared:getPersName($arrangerID, 'short', 'yes'))
-                                      else($workFile//mei:arranger/string())
-                     let $lyricistID := $workFile//mei:lyricist//@codedval
-                     let $lyricist := if($workFile//mei:lyricist//@codedval)
-                                      then(baudiShared:getPersName($lyricistID, 'short', 'yes'))
-                                      else($workFile//mei:lyricist/string())
-                     let $editorID := $workFile//mei:editor//@codedval
-                     let $editor := if($editorID)
-                                    then(baudiShared:getPersName($editorID, 'short', 'yes'))
-                                    else($workFile//mei:editor/string())
-                        return
-                             <div class="card bg-light mb-3">
-                                 <div class="card-body">
-                                    <div class="row justify-content-between">
-                                        <div class="col">
-                                            <h5 class="card-title">{$title}</h5>
-                                        </div>
-                                    </div>
-                                    <p class="card-text">
-                                        {if($composer)
-                                         then(baudiShared:translate(concat('baudi.registry.works.composer',baudiShared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
-                                         else()}
-                                         {if($arranger)
-                                         then(baudiShared:translate(concat('baudi.registry.works.arranger',baudiShared:checkGenderforLangValues($arrangerID))),': ',$arranger,<br/>)
-                                         else()}
-                                        {if($lyricist)
-                                         then(baudiShared:translate(concat('baudi.registry.works.lyricist',baudiShared:checkGenderforLangValues($lyricistID))),': ',$lyricist,<br/>)
-                                         else()}
-                                         {if($editor)
-                                         then(baudiShared:translate(concat('baudi.registry.works.editor',baudiShared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
-                                         else()}
-                                    </p>
-                                   <a href="/{$workID}" class="card-link">{$workID}</a>
-                                 </div>
-                             </div>
+        if ($edition) then
+            map:merge((
+                $model,
+                map {
+                    "edition-id": $editionID,
+                    "edition": $edition,
+                    "edition-title": $edition//edirom:editionName//text(),
+                    "edition-works": $edition//edirom:work
                 }
-            </div>
-        </div>
-        <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
-            <div class="card" style="background: aliceblue;">
-                <div class="card-body">
-                    <pre><code>{serialize(app:process-xml-for-display($edition), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-)
+            ))
+        else
+            $model
+};
 
+(:~
+ : Outputs the edition's title.
+ :)
+declare function app:edition-title($node as node(), $model as map(*)) {
+    $model?edition-title
+};
+
+(:~
+ : Outputs the edition's ID.
+ :)
+declare function app:edition-id($node as node(), $model as map(*)) {
+    $model?edition-id
+};
+
+(:~
+ : Outputs the edition's works as cards.
+ :)
+declare function app:edition-works($node as node(), $model as map(*)) {
+    for $work in $model?edition-works
+        let $workID := $work/@xml:id/string()
+        let $workFile := $app:collectionWorks//mei:work[@xml:id=$workID]
+        let $title := baudiWork:getWorkTitle($workFile)
+        let $composerID := $workFile//mei:composer//@codedval
+        let $composer := if($workFile//mei:composer//@codedval)
+                          then(baudiShared:getPersName($composerID, 'short', 'yes'))
+                          else($workFile//mei:composer/string())
+         let $arrangerID := $workFile//mei:arranger//@codedval
+         let $arranger := if($workFile//mei:arranger//@codedval)
+                          then(baudiShared:getPersName($arrangerID, 'short', 'yes'))
+                          else($workFile//mei:arranger/string())
+         let $lyricistID := $workFile//mei:lyricist//@codedval
+         let $lyricist := if($workFile//mei:lyricist//@codedval)
+                          then(baudiShared:getPersName($lyricistID, 'short', 'yes'))
+                          else($workFile//mei:lyricist/string())
+         let $editorID := $workFile//mei:editor//@codedval
+         let $editor := if($editorID)
+                        then(baudiShared:getPersName($editorID, 'short', 'yes'))
+                        else($workFile//mei:editor/string())
+            return
+                 <div class="card bg-light mb-3">
+                     <div class="card-body">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <h5 class="card-title">{$title}</h5>
+                            </div>
+                        </div>
+                        <p class="card-text">
+                            {if($composer)
+                             then(baudiShared:translate(concat('baudi.registry.works.composer',baudiShared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
+                             else()}
+                             {if($arranger)
+                             then(baudiShared:translate(concat('baudi.registry.works.arranger',baudiShared:checkGenderforLangValues($arrangerID))),': ',$arranger,<br/>)
+                             else()}
+                            {if($lyricist)
+                             then(baudiShared:translate(concat('baudi.registry.works.lyricist',baudiShared:checkGenderforLangValues($lyricistID))),': ',$lyricist,<br/>)
+                             else()}
+                             {if($editor)
+                             then(baudiShared:translate(concat('baudi.registry.works.editor',baudiShared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
+                             else()}
+                        </p>
+                       <a href="/{$workID}" class="card-link">{$workID}</a>
+                     </div>
+                 </div>
+};
+
+(:~
+ : Outputs the edition's XML data.
+ :)
+declare function app:edition-xml($node as node(), $model as map(*)) {
+    serialize(
+        app:process-xml-for-display($model?edition), 
+        <output:serialization-parameters>
+            <output:method>xml</output:method>
+            <output:media-type>application/xml</output:media-type>
+            <output:indent>no</output:indent>
+        </output:serialization-parameters>
+    )
 };
 
 declare function local:getPeriodicals($model) {
