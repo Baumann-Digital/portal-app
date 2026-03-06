@@ -71,7 +71,7 @@
     </target>
     
     <target name="-check-project-status" unless="${project.status}">
-        <property name="project.status" value="development"/>
+        <property name="project.status" value="production"/>
     </target>
     
     <target name="dist" depends="init">
