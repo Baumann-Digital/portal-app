@@ -1,9 +1,10 @@
 // Button Styles
 // ==================================================
 
-// Primary Buttons - Green Background
+// Primary Buttons - Green Background with Purple Hover
 .btn-primary {
-  @include button-variant($baudi-green, $baudi-green);
+  @include button-variant($baudi-green, $baudi-green, $baudi-purple, $baudi-purple);
+  transition: all 0.3s ease;
   
   &.focus,
   &:focus,
@@ -30,7 +31,7 @@
   }
   
   &:not(:disabled):active ~ .custom-control-label::before {
-    background-color: rgba(0, 174, 0, 0.3) !important;
+    background-color: $baudi-light-green !important;
     border-color: $baudi-green !important;
   }
 }

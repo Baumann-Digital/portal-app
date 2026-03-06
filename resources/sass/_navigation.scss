@@ -68,8 +68,9 @@
   border-color: $baudi-green;
 
   &:hover {
-    color: darken($baudi-green, 10%) !important;
-    border-color: darken($baudi-green, 10%);
+    color: $baudi-purple !important;
+    border-color: $baudi-purple;
+    transition: all 0.3s ease;
   }
 
   &.active {

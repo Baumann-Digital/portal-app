@@ -2,9 +2,20 @@
 // ==================================================
 
 // Primary Colors
-$baudi-green: rgba(0, 174, 0, 0.9);
+$baudi-green: #00AE00;
+$baudi-green-rgba: rgba(0, 174, 0, 0.9);
 $baudi-dark-green: #2B8E00;
 $baudi-light-green: rgba(0, 174, 0, 0.1);
+
+// Accent Colors
+$baudi-purple: #AE0062;
+$baudi-light-purple: rgba(174, 0, 98, 0.1);
+$baudi-purple-muted: rgba(174, 0, 98, 0.8);
+
+// Secondary Colors (for larger surfaces)
+$baudi-orange: #D96200;
+$baudi-light-orange: rgba(217, 98, 0, 0.08);
+$baudi-orange-muted: rgba(217, 98, 0, 0.15);
 
 // Gray Scale
 $gray-dark: #212529;

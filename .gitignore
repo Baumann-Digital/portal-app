@@ -21,3 +21,5 @@ node_modules/
 libs/
 yarn.lock
 package-lock.json
+resources/css/main.css
+resources/css/main.css.map

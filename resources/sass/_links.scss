@@ -4,8 +4,10 @@
 // Links outside navigation
 main a:not(.nav-link):not(.btn) {
   color: $baudi-green !important;
+  transition: color 0.2s ease;
   
   &:hover {
-    color: darken($baudi-green, 10%) !important;
+    color: $baudi-purple !important;
+    text-decoration: underline;
   }
 }
