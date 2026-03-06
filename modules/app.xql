@@ -1060,7 +1060,7 @@ return
                {if(exists($source//mei:facsimile/mei:surface))
                then(baudiSource:getFacsimilePreview($id))
                 else()}
-            <div class="col">
+            <div class="{if(exists($source//mei:facsimile/mei:surface)) then 'col-md-8 col-lg-8' else 'col-12'}">
               <ul class="nav nav-pills" role="tablist">
                   <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{baudiShared:translate('baudi.registry.sources.tab.main')}</a></li>  
                   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">{baudiShared:translate('baudi.registry.sources.tab.detail')}</a></li>
@@ -1240,7 +1240,7 @@ return
                       </div>
                   </div>-->
                   <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
-                    <div class="card" style="background: aliceblue;">
+                    <div class="card xml-view-card">
                         <div class="card-body">
                             <pre><code>{serialize(app:process-xml-for-display($source), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
                         </div>
@@ -1880,7 +1880,7 @@ return
         </div>)
         else()}
         <div class="tab-pane fade" id="pills-xml" role="tabpanel" aria-labelledby="pills-xml-tab">
-            <div class="card" style="background: aliceblue;">
+            <div class="card xml-view-card">
                 <div class="card-body">
                     <pre><code>{serialize(app:process-xml-for-display($work), <output:serialization-parameters><output:method>xml</output:method><output:media-type>application/xml</output:media-type><output:indent>no</output:indent></output:serialization-parameters>)}</code></pre>
                 </div>

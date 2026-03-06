@@ -38,6 +38,21 @@
   text-align: center;
 }
 
+// XML View Card
+.xml-view-card {
+  background-color: $baudi-light-orange;
+  border-left: 4px solid $baudi-orange;
+  
+  pre {
+    margin-bottom: 0;
+    background-color: transparent;
+  }
+  
+  code {
+    color: $gray-dark;
+  }
+}
+
 .counter-num .counter {
   font-size: 1.25rem;
   margin-bottom: 0;

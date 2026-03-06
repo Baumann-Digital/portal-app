@@ -555,7 +555,7 @@ let $graphicBLBLabel := <div>
                         </div>
 
 return
-    <div class="col">
+    <div class="col-md-4 col-lg-4">
         {if($graphicLocal) then($graphicLocal)
          else if($graphicBLB) then($graphicBLB, $graphicBLBLabel)
          else(baudiShared:translate('baudi.noGraphic'))}
