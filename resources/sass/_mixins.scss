@@ -1,0 +1,83 @@
+// Mixins
+// ==================================================
+
+// Border Radius
+@mixin border-radius($radius) {
+  border-radius: $radius;
+}
+
+// Box Shadow
+@mixin box-shadow($shadow) {
+  box-shadow: $shadow;
+}
+
+// Transition
+@mixin transition($transition) {
+  transition: $transition;
+}
+
+// Clearfix
+@mixin clearfix {
+  &::after {
+    display: block;
+    clear: both;
+    content: "";
+  }
+}
+
+// Text Truncate
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Center Block
+@mixin center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Table Border Helper
+@mixin table-border($color: $border-color, $width: $border-width) {
+  width: 100%;
+  border-top: $width solid $color;
+  border-bottom: $width solid $color;
+  
+  tr td:first-of-type {
+    vertical-align: top;
+  }
+}
+
+// Button Variant
+@mixin button-variant($background, $border, $hover-background: darken($background, 7.5%), $hover-border: darken($border, 10%)) {
+  background-color: $background;
+  border-color: $border;
+  
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $hover-background;
+    border-color: $hover-border;
+  }
+}
+
+// Responsive breakpoint helper
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == "xs" {
+    @media (max-width: 575px) { @content; }
+  }
+  @else if $breakpoint == "sm" {
+    @media (min-width: 576px) { @content; }
+  }
+  @else if $breakpoint == "md" {
+    @media (min-width: 768px) { @content; }
+  }
+  @else if $breakpoint == "lg" {
+    @media (min-width: 992px) { @content; }
+  }
+  @else if $breakpoint == "xl" {
+    @media (min-width: 1200px) { @content; }
+  }
+}

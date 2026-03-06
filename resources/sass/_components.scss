@@ -1,0 +1,87 @@
+// Component Styles
+// ==================================================
+
+// Baudi Container
+.baudi-container {
+  min-height: 300px;
+  max-height: 500px;
+}
+
+// Abbreviation
+.abk {
+  color: $navy;
+}
+
+// Card Subtitle
+.card-subtitle-baudi {
+  margin-top: -0.255rem !important;
+}
+
+// Line Divider
+.line-mf {
+  width: 90%;
+  height: 2.5px;
+  background-color: $black;
+  @include center-block;
+}
+
+// Lists
+.baudiListItem {
+  margin-left: -1.25em;
+}
+
+// Counter Box
+.counter-box {
+  display: inline-block;
+  color: $black;
+  font-style: normal;
+  text-align: center;
+}
+
+.counter-num .counter {
+  font-size: 1.25rem;
+  margin-bottom: 0;
+}
+
+.counter {
+  &:before {
+    content: '(';
+  }
+  
+  &:after {
+    content: ')';
+  }
+}
+
+// Overlay for Portfolio Items
+.overlay {
+  position: absolute;
+  top: 0;
+  background: rgba(0, 0, 0, 0.7);
+  width: 93.5%;
+  height: 100%;
+  @include transition($transition-slow);
+  opacity: 0;
+  color: rgba(0, 200, 0, 0.9);
+  font-size: 24px;
+  font-weight: bold;
+  padding-top: 35%;
+  text-align: center;
+  align-items: center;
+}
+
+.portfolio-item:hover .overlay {
+  opacity: 1 !important;
+}
+
+// Letter Content Full View
+div.letterContentFullView {
+  font-size: 1em;
+  color: $black;
+  text-align: left;
+  margin: 2em;
+  padding: 1em;
+  background-color: $gray-lightest;
+  border: $border-width-thick solid $purple;
+  @include border-radius($border-radius);
+}

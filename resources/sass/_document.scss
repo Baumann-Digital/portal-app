@@ -1,0 +1,50 @@
+// Document Styles
+// ==================================================
+
+.boxed {
+  margin: auto;
+  width: 75%;
+  border: $border-width-thicker solid $gray;
+  padding: 5px;
+}
+
+div.page {
+  margin: auto;
+  width: 80%;
+  border: $border-width-thicker solid $gray;
+  padding: 5px;
+}
+
+div.titlepage {
+  margin: auto;
+  width: 80%;
+  border: $border-width-thicker solid $gray;
+  padding: 5px;
+}
+
+table {
+  border: 0 solid $black;
+  margin: auto;
+  width: 500px;
+  padding: 8px;
+  position: relative;
+}
+
+td.rowspanned {
+  // background-color: green;
+}
+
+td span {
+  background-color: $white;
+}
+
+td.role:before {
+  clip: rect(0px, 400px, 20px, 0px);
+  content: " ....................................................................................................................................................................................................................................................................................... ";
+  position: absolute;
+  z-index: -1;
+}
+
+td.name {
+  text-align: right;
+}

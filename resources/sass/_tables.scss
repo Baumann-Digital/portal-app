@@ -1,0 +1,70 @@
+// Table Styles
+// ==================================================
+
+// Work View Table
+table.workView {
+  @include table-border($border-color, $border-width);
+  
+  tr td:first-of-type {
+    width: 30%;
+  }
+}
+
+// Person View Table
+table.personView {
+  @include table-border($border-color, $border-width);
+  
+  tr td:first-of-type {
+    width: 30%;
+  }
+}
+
+// Letter View Table
+table.letterView {
+  @include table-border($border-color, $border-width);
+  
+  tr td:first-of-type {
+    width: 20%;
+  }
+}
+
+// Institution View Table
+table.institutionView {
+  @include table-border($border-color, $border-width);
+  
+  tr td:first-of-type {
+    width: 30%;
+  }
+}
+
+// Letter Content View Table
+table.letterContentView {
+  @include table-border($border-color, $border-width);
+  
+  tr td:first-of-type {
+    width: 20%;
+  }
+}
+
+// Letter Content Regeste Table
+table.letterContentRegeste {
+  @include table-border($border-color, $border-width);
+  
+  tr td:first-of-type {
+    width: 10%;
+  }
+}
+
+// Source View Table
+table.sourceView {
+  @include table-border($border-color, $border-width);
+  vertical-align: top;
+  
+  tr td {
+    vertical-align: top;
+    
+    &:first-of-type {
+      width: 30%;
+    }
+  }
+}

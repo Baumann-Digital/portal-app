@@ -1,0 +1,11 @@
+// Link Styles
+// ==================================================
+
+// Links outside navigation
+main a:not(.nav-link):not(.btn) {
+  color: $baudi-green !important;
+  
+  &:hover {
+    color: darken($baudi-green, 10%) !important;
+  }
+}

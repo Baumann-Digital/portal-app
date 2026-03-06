@@ -15,3 +15,9 @@ local.build.properties
 dist
 CITATION.cff
 *.code-workspace
+
+# Frontend dependencies
+node_modules/
+libs/
+yarn.lock
+package-lock.json
