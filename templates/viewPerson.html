@@ -17,6 +17,10 @@
                             role="tab" aria-controls="pills-main" aria-selected="true">Überblick</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#pills-references-tab" role="tab"
+                            aria-controls="pills-references" aria-selected="false">Referenzen</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" data-toggle="pill" href="#pills-xml-tab" role="tab"
                             aria-controls="pills-xml" aria-selected="false">XML</a>
                     </li>
@@ -26,22 +30,26 @@
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="pills-main-tab" role="tabpanel"
                         aria-labelledby="pills-main-tab">
-                        <div class="row" style="margin-bottom: 3em;">
-                            <div class="col">
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="$resources/img/iconPerson.svg" alt="Person" class="img-fluid"/>
+                            </div>
+                            <div class="col-8">
                                 <h5 class="text-center"><i18n:text
                                         key="baudi.registry.persons.general"/></h5>
                                 <hr/>
                                 <div class="overflow-auto baudi-container"
                                     data-template="app:person-details"/>
                             </div>
-                            <div class="col-7">
-                                <h5 class="text-center"><i18n:text
-                                        key="baudi.registry.persons.references"/></h5>
-                                <hr/>
-                                <div class="overflow-auto baudi-container"
-                                    data-template="app:person-references"/>
-                            </div>
                         </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-references-tab" role="tabpanel"
+                        aria-labelledby="pills-references-tab">
+                        <h5 class="text-center"><i18n:text
+                                key="baudi.registry.persons.references"/></h5>
+                        <hr/>
+                        <div class="overflow-auto baudi-container"
+                            data-template="app:person-references"/>
                     </div>
                     <div class="tab-pane fade" id="pills-xml-tab" role="tabpanel"
                         aria-labelledby="pills-xml-tab">
