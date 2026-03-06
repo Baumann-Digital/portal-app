@@ -1,7 +1,11 @@
 
 :root {
   --darkgreen: #2B8E00;
-  --primary: #007bff;
+  --primary: rgba(0, 174, 0, 0.9);
+  --blue: #007bff;
+  --green: rgba(0, 174, 0, 0.9);
+  --yellow: rgba(0, 174, 0, 0.9);
+  --warning: rgba(0, 174, 0, 0.9);
 }
 
 .navbar-text > a {
