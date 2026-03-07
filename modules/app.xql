@@ -486,6 +486,18 @@ declare function app:person-xml($node as node(), $model as map(*)) {
 };
 
 (:~
+ : Fetches and displays GND information for a person.
+ :)
+declare function app:person-gnd-info($node as node(), $model as map(*)) {
+    let $person := $model?person
+    let $gndId := $person//tei:idno[@type='gnd']/string()
+    return
+        if ($gndId and $gndId != '') then
+            er:get-gnd-info($gndId)
+        else ()
+};
+
+(:~
  : Loads loci collection into the model map for registry view.
  :)
 declare function app:load-registry-loci($node as node(), $model as map(*)) {
@@ -736,6 +748,18 @@ declare function app:institution-xml($node as node(), $model as map(*)) {
             <output:indent>no</output:indent>
         </output:serialization-parameters>
     )
+};
+
+(:~
+ : Fetches and displays GND information for an institution.
+ :)
+declare function app:institution-gnd-info($node as node(), $model as map(*)) {
+    let $institution := $model?institution
+    let $gndId := $institution//tei:idno[@type='gnd']/string()
+    return
+        if ($gndId and $gndId != '') then
+            er:get-gnd-info($gndId)
+        else ()
 };
 
 (:~

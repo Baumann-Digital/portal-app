@@ -11,6 +11,8 @@ module namespace er="http://baumann-digital.de/portal-app/ns/external-requests";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
+declare namespace rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+declare namespace gndo="https://d-nb.info/standards/elementset/gnd#";
 
 import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
 import module namespace functx="http://www.functx.com";
@@ -85,6 +87,135 @@ declare function er:get-letter-thumbnail-url($id as xs:string, $page as xs:strin
 declare function er:get-source-url($sourceId as xs:string) as xs:string {
     concat(config:get-option('digilibPath'), $sourceId)
 };
+
+(:~
+ : Fetch GND data from d-nb.info as RDF/XML
+ : 
+ : @param $gndId the GND identifier (without prefix)
+ : @return the RDF/XML document or empty sequence on error
+ :)
+declare function er:fetch-gnd-data($gndId as xs:string) as document-node()? {
+    let $url := 'https://d-nb.info/gnd/' || $gndId || '/about/lds.rdf'
+    return
+        try {
+            doc($url)
+        } catch * {
+            ()
+        }
+};
+
+(:~
+ : Parse GND data and extract relevant information
+ : 
+ : @param $gndDoc the GND RDF/XML document
+ : @return a map with structured GND information
+ :)
+declare function er:parse-gnd-data($gndDoc as document-node()?) as map(*)? {
+    if (not($gndDoc)) then ()
+    else
+        let $desc := $gndDoc//rdf:Description[1]
+        return map {
+            'preferredName': $desc/gndo:preferredNameForThePerson/string(),
+            'variantNames': $desc/gndo:variantNameForThePerson/string(),
+            'dateOfBirth': $desc/gndo:dateOfBirth/string(),
+            'dateOfDeath': $desc/gndo:dateOfDeath/string(),
+            'placeOfBirth': $desc/gndo:placeOfBirth/*/gndo:preferredNameForThePlaceOrGeographicName/string(),
+            'placeOfDeath': $desc/gndo:placeOfDeath/*/gndo:preferredNameForThePlaceOrGeographicName/string(),
+            'professions': $desc/gndo:professionOrOccupation/*/gndo:preferredNameForTheSubjectHeading/string(),
+            'gender': $desc/gndo:gender/@rdf:resource/string(),
+            'biographicalInfo': $desc/gndo:biographicalOrHistoricalInformation/string(),
+            'sameAs': $desc/gndo:sameAs/@rdf:resource/string()
+        }
+};
+
+(:~
+ : Get formatted GND information for display
+ : 
+ : @param $gndId the GND identifier
+ : @return HTML div with GND information
+ :)
+declare function er:get-gnd-info($gndId as xs:string) as element(div)? {
+    let $gndDoc := er:fetch-gnd-data($gndId)
+    let $data := er:parse-gnd-data($gndDoc)
+    return
+        if ($data) then
+            <div class="gnd-info" xmlns="http://www.w3.org/1999/xhtml">
+                <h4>GND-Informationen</h4>
+                {
+                    if ($data?preferredName) then
+                        <div class="row">
+                            <div class="col-sm-3"><strong>Bevorzugter Name:</strong></div>
+                            <div class="col-sm-9">{$data?preferredName}</div>
+                        </div>
+                    else ()
+                }
+                {
+                    if (exists($data?variantNames) and $data?variantNames != '') then
+                        <div class="row">
+                            <div class="col-sm-3"><strong>Variante Namen:</strong></div>
+                            <div class="col-sm-9">{string-join($data?variantNames, '; ')}</div>
+                        </div>
+                    else ()
+                }
+                {
+                    if ($data?dateOfBirth or $data?dateOfDeath) then
+                        <div class="row">
+                            <div class="col-sm-3"><strong>Lebensdaten:</strong></div>
+                            <div class="col-sm-9">
+                                {$data?dateOfBirth}
+                                {if ($data?dateOfBirth and $data?dateOfDeath) then ' – ' else ()}
+                                {$data?dateOfDeath}
+                            </div>
+                        </div>
+                    else ()
+                }
+                {
+                    if ($data?placeOfBirth or $data?placeOfDeath) then
+                        <div class="row">
+                            <div class="col-sm-3"><strong>Lebensstationen:</strong></div>
+                            <div class="col-sm-9">
+                                {if ($data?placeOfBirth) then concat('* ', $data?placeOfBirth) else ()}
+                                {if ($data?placeOfBirth and $data?placeOfDeath) then ', ' else ()}
+                                {if ($data?placeOfDeath) then concat('† ', $data?placeOfDeath) else ()}
+                            </div>
+                        </div>
+                    else ()
+                }
+                {
+                    if (exists($data?professions) and $data?professions != '') then
+                        <div class="row">
+                            <div class="col-sm-3"><strong>Berufe:</strong></div>
+                            <div class="col-sm-9">{string-join($data?professions, ', ')}</div>
+                        </div>
+                    else ()
+                }
+                {
+                    if (exists($data?biographicalInfo) and $data?biographicalInfo != '') then
+                        <div class="row">
+                            <div class="col-sm-3"><strong>Biographische Info:</strong></div>
+                            <div class="col-sm-9">{string-join($data?biographicalInfo, ' ')}</div>
+                        </div>
+                    else ()
+                }
+                {
+                    let $wikiLinks := $data?sameAs[contains(., 'wikipedia.org')]
+                    return
+                        if (exists($wikiLinks) and $wikiLinks != '') then
+                            <div class="row">
+                                <div class="col-sm-3"><strong>Wikipedia:</strong></div>
+                                <div class="col-sm-9">
+                                {
+                                    for $link in $wikiLinks
+                                    return <a href="{$link}" target="_blank">{$link}</a>
+                                }
+                                </div>
+                            </div>
+                        else ()
+                }
+            </div>
+        else ()
+};
+
 (:~
  : Get facsimile preview for a source
  : 
