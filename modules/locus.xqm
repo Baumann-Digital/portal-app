@@ -1,13 +1,13 @@
 xquery version "3.1";
 
-module namespace baudiLocus="http://baumann-digital.de/portal-app/ns/locus";
+module namespace locus="http://baumann-digital.de/portal-app/ns/locus";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace http="http://expath.org/ns/http-client";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
-import module namespace baudiPersons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace request="http://exist-db.org/xquery/request";
@@ -27,7 +27,7 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baud
  : @author Dennis Ried
  : @see http://openlayers.org/
  :)
-declare function baudiLocus:getOpenStreetMap($id as xs:string) {
+declare function locus:getOpenStreetMap($id as xs:string) {
     let $locus := $app:collectionLoci/id($id)
     let $geonamesID := $locus//tei:idno[@type="geonames"]/text()
     let $geonamesURL := concat('https://sws.geonames.org/', $geonamesID, '/about.rdf')
@@ -72,7 +72,7 @@ declare function baudiLocus:getOpenStreetMap($id as xs:string) {
  : @return The name of the locus.
  : @author Dennis Ried
  :)
-declare function baudiLocus:getLocusName($locusID as xs:string) {
+declare function locus:getLocusName($locusID as xs:string) {
     let $locus := $app:collectionLoci/id($locusID)
     let $locusName := $locus/tei:placeName[1]/text()
     return

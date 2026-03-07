@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace baudiShared="http://baumann-digital.de/portal-app/ns/shared";
+module namespace shared="http://baumann-digital.de/portal-app/ns/shared";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
@@ -8,7 +8,7 @@ declare namespace mei="http://www.music-encoding.org/ns/mei";
 import module namespace console="http://exist-db.org/xquery/console";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
-import module namespace baudiPersons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
@@ -22,9 +22,9 @@ import module namespace jsonp="http://www.jsonp.org";
 
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules//db/apps/baudiApp/modules/i18n.xql";
 
-declare variable $baudiShared:xsltTEI as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/tei/html5/html5.xsl');
-declare variable $baudiShared:xsltFormattingText as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingText.xsl');
-declare variable $baudiShared:xsltFormattingTextWithoutLinks as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingTextWithoutLinks.xsl');
+declare variable $shared:xsltTEI as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/tei/html5/html5.xsl');
+declare variable $shared:xsltFormattingText as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingText.xsl');
+declare variable $shared:xsltFormattingTextWithoutLinks as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingTextWithoutLinks.xsl');
 (:~ 
 : MRP Main Nav lang switch
 :
@@ -34,7 +34,7 @@ declare variable $baudiShared:xsltFormattingTextWithoutLinks as document-node() 
 : @return html <li/>-Elements
 :)
 
-declare function baudiShared:get-lang() as xs:string? {
+declare function shared:get-lang() as xs:string? {
   let $lang := if(string-length(request:get-parameter("lang", "")) gt 0) then
       (: use http parameter lang as selected language :)
       request:get-parameter("lang", "")
@@ -42,7 +42,7 @@ declare function baudiShared:get-lang() as xs:string? {
      if(string-length(request:get-cookie-value("forceLang")) gt 0) then
        request:get-cookie-value("forceLang")
      else
-       baudiShared:get-browser-lang()
+       shared:get-browser-lang()
   (: limit to de and en; en default :)
   return if($lang != "en" and $lang != "de") then "en" else $lang
 };
@@ -56,8 +56,8 @@ declare function baudiShared:get-lang() as xs:string? {
 : @return html
 :)
 
-declare function baudiShared:getI18nText($doc as node()) {
-    let $lang := baudiShared:get-lang()
+declare function shared:getI18nText($doc as node()) {
+    let $lang := shared:get-lang()
     let $log := console:log(concat('lang: ', $lang))
     return
             if (exists($doc//tei:text/tei:body/tei:div[@xml:lang]))
@@ -70,7 +70,7 @@ declare function baudiShared:getI18nText($doc as node()) {
 };
 
 
-declare function baudiShared:translate($content) {
+declare function shared:translate($content) {
     let $content := element i18n:text {
                         attribute key {$content}
                     }
@@ -92,8 +92,8 @@ declare function baudiShared:translate($content) {
 :
 :)
 
-declare function baudiShared:monthName($monthNo as xs:integer) as xs:string {
-    let $lang := baudiShared:get-lang()
+declare function shared:monthName($monthNo as xs:integer) as xs:string {
+    let $lang := shared:get-lang()
 
     return
     if ($lang = 'de')
@@ -115,7 +115,7 @@ declare function baudiShared:monthName($monthNo as xs:integer) as xs:string {
 :
 :)
 
-declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
+declare function shared:customDate($dateVal as xs:string) as xs:string {
     let $dateValT := tokenize($dateVal, '-')
     let $hasDay := if (number($dateValT[3]) > 0)
                     then (number($dateValT[3]))
@@ -132,13 +132,13 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
         else if ($hasMonth and $hasYear)
         then (
             concat(
-                baudiShared:monthName($dateValT[2]),
+                shared:monthName($dateValT[2]),
                 ' ',
                 $dateValT[1],
                 ' [',
-                baudiShared:translate('mriCat.entry.postalObject.date.day'),
+                shared:translate('mriCat.entry.postalObject.date.day'),
                 ' ',
-                baudiShared:translate('unknown'),
+                shared:translate('unknown'),
                 ']'
             )
         )
@@ -147,24 +147,24 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
             concat(
                 format-number($dateValT[3], '0'),
                 '.&#160;',
-                baudiShared:monthName($dateValT[2]),
+                shared:monthName($dateValT[2]),
                 ', [',
-                baudiShared:translate('mriCat.entry.postalObject.date.year'),
+                shared:translate('mriCat.entry.postalObject.date.year'),
                 ' ',
-                baudiShared:translate('unknown'),
+                shared:translate('unknown'),
                 ']'
             )
         )
         else if ($hasMonth)
         then (
             concat(
-                baudiShared:monthName($dateValT[2]),
+                shared:monthName($dateValT[2]),
                 ', [',
-                baudiShared:translate('mriCat.entry.postalObject.date.day'),
+                shared:translate('mriCat.entry.postalObject.date.day'),
                 '/',
-                baudiShared:translate('mriCat.entry.postalObject.date.year'),
+                shared:translate('mriCat.entry.postalObject.date.year'),
                 ' ',
-                baudiShared:translate('unknown'),
+                shared:translate('unknown'),
                 ']'
             )
         )
@@ -173,11 +173,11 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
             concat(
                 format-number($dateValT[3], '0'),
                 '., [',
-                baudiShared:translate('mriCat.entry.postalObject.date.month'),
+                shared:translate('mriCat.entry.postalObject.date.month'),
                 '/',
-                baudiShared:translate('mriCat.entry.postalObject.date.year'),
+                shared:translate('mriCat.entry.postalObject.date.year'),
                 ' ',
-                baudiShared:translate('unknown'),
+                shared:translate('unknown'),
                 ']'
             )
         )
@@ -186,15 +186,15 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
             concat(
                 $dateValT[1],
                 ', [',
-                baudiShared:translate('mriCat.entry.postalObject.date.day'),
+                shared:translate('mriCat.entry.postalObject.date.day'),
                 '/',
-                baudiShared:translate('mriCat.entry.postalObject.date.month'),
+                shared:translate('mriCat.entry.postalObject.date.month'),
                 ' ',
-                baudiShared:translate('unknown'),
+                shared:translate('unknown'),
                 ']'
             )
         )
-        else (baudiShared:translate('mriCat.entry.postalObject.date.type.undated'))
+        else (shared:translate('mriCat.entry.postalObject.date.type.undated'))
 
 };
 
@@ -208,11 +208,11 @@ declare function baudiShared:customDate($dateVal as xs:string) as xs:string {
 :
 : @return a i18n date string.
 :
-: ToDo: find the right type of $date for baudiShared:getBirthDeathDates
+: ToDo: find the right type of $date for shared:getBirthDeathDates
 :
 :)
 
-declare function baudiShared:formatDate($dateRaw, $formation as xs:string, $lang as xs:string) as xs:string {
+declare function shared:formatDate($dateRaw, $formation as xs:string, $lang as xs:string) as xs:string {
     let $form := if ($formation = 'full')
                  then ('[D].&#160;[MNn,*-3].&#160;[Y]')
                  else if ($formation = 'short')
@@ -221,7 +221,7 @@ declare function baudiShared:formatDate($dateRaw, $formation as xs:string, $lang
     let $date :=  if(string-length($dateRaw)=10 and not(contains($dateRaw,'-00')) and not(contains($dateRaw,'0000-')))
                   then(format-date(xs:date($dateRaw),$form,$lang,(),()))
                   else if($dateRaw =('0000','0000-00','0000-00-00'))
-                  then('[' || baudiShared:translate('undated') || ']')
+                  then('[' || shared:translate('undated') || ']')
                   else if(string-length($dateRaw)=7 and not(contains($dateRaw,'00')))
                   then (concat(upper-case(substring(format-date(xs:date(concat($dateRaw,'-01')),'[Mn,*-3]. [Y]',$lang,(),()),1,1)),substring(format-date(xs:date(concat($dateRaw,'-01')),'[Mn,*-3]. [Y]',$lang,(),()),2)))
                   else if(contains($dateRaw,'0000-') and contains($dateRaw,'-00'))
@@ -246,11 +246,11 @@ declare function baudiShared:formatDate($dateRaw, $formation as xs:string, $lang
 :
 : @return a i18n date string.
 :
-: ToDo: find the right type of $date for baudiShared:getBirthDeathDates
+: ToDo: find the right type of $date for shared:getBirthDeathDates
 :
 :)
 
-declare function baudiShared:shortenAndFormatDates($dateFrom, $dateTo, $form as xs:string, $lang as xs:string) as xs:string {
+declare function shared:shortenAndFormatDates($dateFrom, $dateTo, $form as xs:string, $lang as xs:string) as xs:string {
     if ($form = 'full' and (month-from-date($dateFrom) = month-from-date($dateTo)) and (year-from-date($dateFrom) = year-from-date($dateTo)))
     then (
         concat(
@@ -285,9 +285,9 @@ declare function baudiShared:shortenAndFormatDates($dateFrom, $dateTo, $form as 
 };
 
 
-declare function baudiShared:getBirthDeathDates($dates, $lang) {
+declare function shared:getBirthDeathDates($dates, $lang) {
     let $date := if ($dates/tei:date)
-                        then (baudiShared:formatDate($dates/tei:date, 'full', $lang))
+                        then (shared:formatDate($dates/tei:date, 'full', $lang))
                         else ()
     let $datePlace := if ($dates/tei:placeName/text())
                         then (normalize-space($dates/tei:placeName/text()))
@@ -298,13 +298,13 @@ declare function baudiShared:getBirthDeathDates($dates, $lang) {
         else if ($date)
         then ($date)
         else if ($date = '' and $datePlace = '')
-        then (baudiShared:translate('unknown'))
+        then (shared:translate('unknown'))
         else if ($datePlace)
-        then (concat($datePlace, ', ', baudiShared:translate('dateUnknown')))
-        else (baudiShared:translate('unknown'))
+        then (concat($datePlace, ', ', shared:translate('dateUnknown')))
+        else (shared:translate('unknown'))
 };
 
-declare function baudiShared:any-equals-any($args as xs:string*, $searchStrings as xs:string*) as xs:boolean {
+declare function shared:any-equals-any($args as xs:string*, $searchStrings as xs:string*) as xs:boolean {
     some $arg in $args
     satisfies
         some $searchString in $searchStrings
@@ -312,27 +312,27 @@ declare function baudiShared:any-equals-any($args as xs:string*, $searchStrings 
             $arg = $searchString
 };
 
-declare function baudiShared:queryKey() {
+declare function shared:queryKey() {
   functx:substring-before-if-contains(concat(request:get-uri(), request:get-query-string()), "firstRecord")
 };
 
 
-declare %templates:wrap function baudiShared:readCache($node as node(), $model as map(*), $cacheName as xs:string) {
+declare %templates:wrap function shared:readCache($node as node(), $model as map(*), $cacheName as xs:string) {
     doc(concat('xmldb:exist:///db/apps/mriCat/caches/', $cacheName, '.xml'))/*
 };
 
 
 (: Patrick integrates https://jaketrent.com/post/xquery-browser-language-detection/ :)
 
-declare function baudiShared:get-browser-lang() as xs:string? {
+declare function shared:get-browser-lang() as xs:string? {
   let $header := request:get-header("Accept-Language")
   return if (fn:exists($header)) then
-    baudiShared:get-top-supported-lang(baudiShared:get-browser-langs($header), ("de", "en"))
+    shared:get-top-supported-lang(shared:get-browser-langs($header), ("de", "en"))
   else
     ()
 };
 
-(:declare function baudiShared:get-lang() as xs:string? {
+(:declare function shared:get-lang() as xs:string? {
   let $lang := if(string-length(request:get-parameter("lang", "")) gt 0) then
       (\: use http parameter lang as selected language :\)
       request:get-parameter("lang", "")
@@ -340,12 +340,12 @@ declare function baudiShared:get-browser-lang() as xs:string? {
      if(string-length(request:get-cookie-value("forceLang")) gt 0) then
        request:get-cookie-value("forceLang")
      else
-       baudiShared:get-browser-lang()
+       shared:get-browser-lang()
   (\: limit to de and en; en default :\)
   return if($lang != "en" and $lang != "de") then "en" else $lang
 };:)
 
-declare function baudiShared:get-top-supported-lang($ordered-langs as xs:string*, $translations as xs:string*) as xs:string? {
+declare function shared:get-top-supported-lang($ordered-langs as xs:string*, $translations as xs:string*) as xs:string? {
   if (fn:empty($ordered-langs)) then
     ()
   else
@@ -353,12 +353,12 @@ declare function baudiShared:get-top-supported-lang($ordered-langs as xs:string*
     return if ($lang = $translations) then
       $lang
     else
-      baudiShared:get-top-supported-lang(fn:subsequence($ordered-langs, 2), $translations)
+      shared:get-top-supported-lang(fn:subsequence($ordered-langs, 2), $translations)
 };
 
-declare function baudiShared:get-browser-langs($header as xs:string) as xs:string* {
+declare function shared:get-browser-langs($header as xs:string) as xs:string* {
   let $langs :=
-    for $entry in fn:tokenize(baudiShared:parse-header($header), ",")
+    for $entry in fn:tokenize(shared:parse-header($header), ",")
     let $data := fn:tokenize($entry, "q=")
     let $quality := $data[2]
     order by
@@ -371,7 +371,7 @@ declare function baudiShared:get-browser-langs($header as xs:string) as xs:strin
   return $langs
 };
 
-declare function baudiShared:parse-header($header as xs:string) as xs:string {
+declare function shared:parse-header($header as xs:string) as xs:string {
   let $regex := "(([a-z]{1,8})(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?"
   let $flags := "i"
   let $format := "$2q=$5"
@@ -379,12 +379,12 @@ declare function baudiShared:parse-header($header as xs:string) as xs:string {
 };
 
 
-declare function baudiShared:getSelectedLanguage($node as node()*,$selectedLang as xs:string) {
-    baudiShared:get-lang()
+declare function shared:getSelectedLanguage($node as node()*,$selectedLang as xs:string) {
+    shared:get-lang()
 };
 
 
-declare function baudiShared:stringJoinAll($node as node()) {
+declare function shared:stringJoinAll($node as node()) {
     string-join($node/string(),' | ')
 };
 
@@ -396,7 +396,7 @@ declare function baudiShared:stringJoinAll($node as node()) {
  : @return If linking than node(), else string
  :)
 
-declare function baudiShared:getPersName($personID, $param as xs:string, $linking as xs:string?) {
+declare function shared:getPersName($personID, $param as xs:string, $linking as xs:string?) {
 let $person :=$app:collectionPersons/id($personID)
 let $linkToRecord := '/' || $personID
 let $persName := if($person/tei:persName[@role='uniform'])
@@ -432,14 +432,14 @@ let $nameStrings := if($param = "full")
                             then($nameRoleName)
                             else if($nameAddNameNick)
                             then($nameAddNameNick)
-                            else(baudiShared:translate('baudi.registry.persons.unknown'))
+                            else(shared:translate('baudi.registry.persons.unknown'))
                         )
                     else if($param = 'short')
                     then(if($nameForename or $nameNameLink or $nameSurname)
                          then(string-join(($nameForename, $nameNameLink, $nameSurname, if($nameGenName) then(concat(' (',$nameGenName,')')) else()), ' '))
                          else if($persName/text() !='')
                           then(string-join($persName/text(), ' '))
-                         else(baudiShared:translate('baudi.registry.persons.unknown')))
+                         else(shared:translate('baudi.registry.persons.unknown')))
                     else if($param = 'reversed')
                     then(
                         if($nameSurname)
@@ -455,10 +455,10 @@ let $nameStrings := if($param = "full")
                         then($nameRoleName)
                         else if($nameAddNameNick)
                         then($nameAddNameNick)
-                        else(baudiShared:translate('baudi.registry.persons.unknown'))
+                        else(shared:translate('baudi.registry.persons.unknown'))
                     )
                     
-                    else (baudiShared:translate('baudi.registry.persons.unknown'))
+                    else (shared:translate('baudi.registry.persons.unknown'))
                     
     return
         if($linking = 'yes')
@@ -467,7 +467,7 @@ let $nameStrings := if($param = "full")
 };
 
 
-declare function baudiShared:getPersonaLinked($id as xs:string) {
+declare function shared:getPersonaLinked($id as xs:string) {
     
     let $personRecord := $app:collectionPersons[@xml:id = $id]
     let $personLink := concat('/', $id)
@@ -484,10 +484,10 @@ declare function baudiShared:getPersonaLinked($id as xs:string) {
     return
         if($name)
         then(<a href="{$personLink}">{$name}</a>)
-        else (baudiShared:translate('baudi.registry.persons.unknown'))
+        else (shared:translate('baudi.registry.persons.unknown'))
 };
 
-declare function baudiShared:getOrgNameFull($org as node()) {
+declare function shared:getOrgNameFull($org as node()) {
 
     let $name := string-join($org/tei:orgName[1]//text(), ' ')
     
@@ -495,17 +495,17 @@ declare function baudiShared:getOrgNameFull($org as node()) {
         $name
 };
 
-declare function baudiShared:getOrgNameFullLinked($org as node()) {
+declare function shared:getOrgNameFullLinked($org as node()) {
 
     let $orgID := $org/@xml:id
     let $orgUri := concat('/', $orgID)
-    let $name := baudiShared:getOrgNameFull($org)
+    let $name := shared:getOrgNameFull($org)
     
     return
         <a href="{$orgUri}">{$name}</a>
 };
 
-declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
+declare function shared:getCorpNameFullLinked($corpName as node()) {
 
     let $corpID := $corpName/@codedval/string()
     let $corpUri := concat('/', $corpID)
@@ -517,11 +517,11 @@ declare function baudiShared:getCorpNameFullLinked($corpName as node()) {
 };
 
 
-declare function baudiShared:linkAll($node as node()){
+declare function shared:linkAll($node as node()){
     transform:transform($node,doc('/db/apps/baudiApp/resources/xslt/linking.xsl'),())
 };
 
-declare function baudiShared:checkGenderforLangValues($persID){
+declare function shared:checkGenderforLangValues($persID){
     let $person := $app:collectionPersons[@xml:id=$persID]
     let $gender := $person//tei:sex/string(@type)
     return
@@ -533,7 +533,7 @@ declare function baudiShared:checkGenderforLangValues($persID){
 };
 
 
-declare function baudiShared:getReferences($id) {
+declare function shared:getReferences($id) {
     let $collectionReference := ($app:collectionPersons[matches(.//@key,$id)],
                                  $app:collectionInstitutions[matches(.//@key,$id)],
                                  $app:collectionPeriodicals[matches(.//@key,$id)],
@@ -548,20 +548,20 @@ declare function baudiShared:getReferences($id) {
                           let $docID := $doc/@xml:id
                           let $docIDStart := substring($docID,1,8)
                           let $docInfo := if($docIDStart = 'baudi-01')
-                                          then(baudiShared:translate('baudi.registry.persons.references.sources.music'))
+                                          then(shared:translate('baudi.registry.persons.references.sources.music'))
                                           else if ($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
-                                          then (baudiShared:translate('baudi.registry.persons.references.works'))
+                                          then (shared:translate('baudi.registry.persons.references.works'))
                                           else if($docIDStart = 'baudi-04')
-                                          then(baudiShared:translate('baudi.registry.persons.references.persons'))
+                                          then(shared:translate('baudi.registry.persons.references.persons'))
                                           else if($docIDStart = 'baudi-05')
-                                          then(baudiShared:translate('baudi.registry.persons.references.institutions'))
+                                          then(shared:translate('baudi.registry.persons.references.institutions'))
                                           else if($docIDStart = 'baudi-06')
-                                          then(baudiShared:translate('baudi.registry.persons.references.loci'))
+                                          then(shared:translate('baudi.registry.persons.references.loci'))
                                           else if($docIDStart = 'baudi-07')
-                                          then(baudiShared:translate('baudi.registry.persons.references.sources.text'))
+                                          then(shared:translate('baudi.registry.persons.references.sources.text'))
                                           else if($docIDStart = 'baudi-09')
-                                          then(baudiShared:translate('baudi.registry.persons.references.periodicals'))
-                                          else(baudiShared:translate('baudi.registry.persons.references.other'))
+                                          then(shared:translate('baudi.registry.persons.references.periodicals'))
+                                          else(shared:translate('baudi.registry.persons.references.other'))
                           let $entryOrder := if($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
                                           then('002')
                                           else if ($docIDStart = 'baudi-01')
@@ -577,8 +577,8 @@ declare function baudiShared:getReferences($id) {
                                           else('007')
                           let $correspActionSent := $doc//tei:correspAction[@type="sent"]
                           let $correspActionReceived := $doc//tei:correspAction[@type="received"]
-                          let $correspSentTurned := baudiShared:getPersName($correspActionSent/tei:persName/@key, 'short','yes')
-                          let $correspReceivedTurned := baudiShared:getPersName($correspActionReceived/tei:persName/@key, 'short','yes')
+                          let $correspSentTurned := shared:getPersName($correspActionSent/tei:persName/@key, 'short','yes')
+                          let $correspReceivedTurned := shared:getPersName($correspActionReceived/tei:persName/@key, 'short','yes')
                           let $docDate := if($correspActionSent)
                                           then('DATUM')
                                           else(<br/>)
@@ -623,14 +623,14 @@ declare function baudiShared:getReferences($id) {
                               let $groupName := $groups/@groupName
                               let $order := $groups/@order
                               let $registerSortEntryLabel := switch ($groupName/string())
-                                                               case 'baudi-01' return baudiShared:translate('baudi.registry.persons.references.sources.music')
-                                                               case 'baudi-02' return baudiShared:translate('baudi.registry.persons.references.works')
-                                                               case 'baudi-04' return baudiShared:translate('baudi.registry.persons.references.persons')
-                                                               case 'baudi-05' return baudiShared:translate('baudi.registry.persons.references.institutions')
-                                                               case 'baudi-06' return baudiShared:translate('baudi.registry.persons.references.loci')
-                                                               case 'baudi-07' return baudiShared:translate('baudi.registry.persons.references.sources.text')
-                                                               case 'baudi-09' return baudiShared:translate('baudi.registry.persons.references.periodicals')
-                                                               default return baudiShared:translate('baudi.registry.persons.references.other')
+                                                               case 'baudi-01' return shared:translate('baudi.registry.persons.references.sources.music')
+                                                               case 'baudi-02' return shared:translate('baudi.registry.persons.references.works')
+                                                               case 'baudi-04' return shared:translate('baudi.registry.persons.references.persons')
+                                                               case 'baudi-05' return shared:translate('baudi.registry.persons.references.institutions')
+                                                               case 'baudi-06' return shared:translate('baudi.registry.persons.references.loci')
+                                                               case 'baudi-07' return shared:translate('baudi.registry.persons.references.sources.text')
+                                                               case 'baudi-09' return shared:translate('baudi.registry.persons.references.periodicals')
+                                                               default return shared:translate('baudi.registry.persons.references.other')
                                 order by $order
                                 return
                                  <div class="RegisterSortBox" xmlns="http://www.w3.org/1999/xhtml">
@@ -643,7 +643,7 @@ declare function baudiShared:getReferences($id) {
     $entryGroupsShow
 };
 
-declare function baudiShared:get-status-symbol($status as xs:string?) as node()? {
+declare function shared:get-status-symbol($status as xs:string?) as node()? {
     if($status='proposed')
     then(<img src="$resources/img/ampel_rot.svg" title="Status:{$status}, (Traffic Light SVG Vector from https://www.svgrepo.com/svg/500083/traffic-light)" alt="Traffic Light SVG Vector from https://www.svgrepo.com/svg/500083/traffic-light" width="40px"/>)
     else if($status='candidate')
@@ -653,7 +653,7 @@ declare function baudiShared:get-status-symbol($status as xs:string?) as node()?
     else(<span>no status</span>)
 };
 
-declare function baudiShared:getNormDataIdentifier($object as node(), $identifierType as xs:string, $linking as xs:boolean) {
+declare function shared:getNormDataIdentifier($object as node(), $identifierType as xs:string, $linking as xs:boolean) {
     
     let $idno := $object//tei:idno[@type=$identifierType]/text()
     let $idnoLinked := if($identifierType = 'gnd')

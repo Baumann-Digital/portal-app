@@ -7,7 +7,7 @@ module namespace i18n = 'http://exist-db.org/xquery/i18n';
     : @author Tobias Krebs <tobi.krebs@betterform.de>
 :)
 
-import module namespace baudiShared = "http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
+import module namespace shared = "http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
 
 (:~
  : Start processing the provided content using the modules defined by $modules. $modules should
@@ -196,5 +196,5 @@ declare function i18n:getPathToCatalogues($node as node()*,$pathToCatalogues as 
 };
 
 declare function i18n:getSelectedLanguage($node as node()*,$selectedLang as xs:string) {
-    baudiShared:get-lang()
+    shared:get-lang()
 };

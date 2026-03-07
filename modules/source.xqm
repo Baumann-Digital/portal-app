@@ -1,14 +1,14 @@
 xquery version "3.1";
 
-module namespace baudiSource="http://baumann-digital.de/portal-app/ns/source";
+module namespace source="http://baumann-digital.de/portal-app/ns/source";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
-import module namespace baudiShared="http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
-import module namespace baudiWork="http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xqm";
-import module namespace baudiPersons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
+import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
+import module namespace work="http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
@@ -29,7 +29,7 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
  : @param $param The specified format. Values are 'full', 'short', 'uniform' or self-defined
  : @return The first match of 1. the title in a specified format, or 2. the title from an element called by an self-defined type, or 3. an empty sequence if not available.
  :)
-declare function baudiSource:getManifestationTitle($manifestation as node()*, $param as xs:string) {
+declare function source:getManifestationTitle($manifestation as node()*, $param as xs:string) {
   
   let $source := $manifestation
   let $sourceTitleFull := string-join(($source//mei:titlePart[@type='main'], $source//mei:titlePart[@type='subordinate'], $source//mei:titlePart[@type='perf']), ' ')
@@ -54,13 +54,13 @@ return
  : Retrieves the persona of a manifestation.
  : @param $sourceID The xml:id of an MEI file.
  : @param $param The name of the container element the persona is named (e.g., 'composer').
- : @return The name of a persona entity 1. as HTML-fragments (output of baudiShared:getPersonaLinked) if @codededval is present, or 2. the name (text node) if @codededval is not present, or 3. an empty sequence if no element is found.
+ : @return The name of a persona entity 1. as HTML-fragments (output of shared:getPersonaLinked) if @codededval is present, or 2. the name (text node) if @codededval is not present, or 3. an empty sequence if no element is found.
  :)
-declare function baudiSource:getManifestationPersona($sourceID as xs:string, $param as xs:string) {
+declare function source:getManifestationPersona($sourceID as xs:string, $param as xs:string) {
     let $source := $app:collectionSourcesMusic[@xml:id=$sourceID]
     let $sourceManifestation := $source//mei:manifestation
     let $sourceManifestationPersona := if ($sourceManifestation//node()[name() = $param]/mei:persName/@codedval)
-                                       then (baudiShared:getPersonaLinked($sourceManifestation//node()[name() = $param]/mei:persName/@codedval))
+                                       then (shared:getPersonaLinked($sourceManifestation//node()[name() = $param]/mei:persName/@codedval))
                                        else if ($sourceManifestation//node()[name() = $param]/mei:persName)
                                        then ($sourceManifestation//node()[name() = $param]/mei:persName/text()[1])
                                        else ()
@@ -70,23 +70,23 @@ declare function baudiSource:getManifestationPersona($sourceID as xs:string, $pa
 };
 
 
-declare function baudiSource:getManifestationPerfRes($sourceFile as node()*) {
+declare function source:getManifestationPerfRes($sourceFile as node()*) {
     let $perfResLists := $sourceFile//mei:perfResList
     let $perfResList := for $list in $perfResLists
                         let $perfResListName := $list/@codedval
                         let $perfRess := $list//mei:perfRes/@codedval
                         return
                             if($perfResListName)
-                            then(baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfResListName)))
+                            then(shared:translate(concat('baudi.registry.works.perfRes.',$perfResListName)))
                             else(string-join(for $perfRes in $perfRess
                                         return
-                                            baudiShared:translate(concat('baudi.registry.works.perfRes.',$perfRes)),' | ')
+                                            shared:translate(concat('baudi.registry.works.perfRes.',$perfRes)),' | ')
                                 )
     return
         $perfResList
 };
 
-declare function baudiSource:getAmbPitch($ambNote as node()*) {
+declare function source:getAmbPitch($ambNote as node()*) {
   let $ambPname := $ambNote/@pname/string()
   let $ambAccid := $ambNote/@accid/string()
   let $ambOct := $ambNote/@oct/number()
@@ -94,14 +94,14 @@ declare function baudiSource:getAmbPitch($ambNote as node()*) {
   return
       if($ambOct < 3)
       then(
-            (<i>{functx:capitalize-first(baudiShared:translate(concat('baudi.registry.works.pname.',$ambNoteFull))),
+            (<i>{functx:capitalize-first(shared:translate(concat('baudi.registry.works.pname.',$ambNoteFull))),
             if($ambOct - 2 = 0)
             then()
             else(<sup>{($ambOct - 2) * -1}</sup>)}</i>)
             )
       else if($ambOct >= 3)
       then(
-            (<i>{baudiShared:translate(concat('baudi.registry.works.pname.',$ambNoteFull)),
+            (<i>{shared:translate(concat('baudi.registry.works.pname.',$ambNoteFull)),
             if($ambOct - 3 = 0)
             then()
             else(<sup>{$ambOct - 3}</sup>)}</i>)
@@ -109,11 +109,11 @@ declare function baudiSource:getAmbPitch($ambNote as node()*) {
       else()
 };
 
-declare function baudiSource:getAmbitus($ambitus as node()*) as xs:string{
-    let $lowest := if($ambitus/mei:ambNote[@type='lowest']) then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='lowest'])) else()
-    let $lowestAlt := if($ambitus/mei:ambNote[@type='lowestAlt']) then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='lowestAlt'])) else()
-    let $highest := if($ambitus/mei:ambNote[@type='highest'])then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='highest']))else()
-    let $highestAlt := if($ambitus/mei:ambNote[@type='highestAlt'])then(baudiSource:getAmbPitch($ambitus/mei:ambNote[@type='highestAlt']))else()
+declare function source:getAmbitus($ambitus as node()*) as xs:string{
+    let $lowest := if($ambitus/mei:ambNote[@type='lowest']) then(source:getAmbPitch($ambitus/mei:ambNote[@type='lowest'])) else()
+    let $lowestAlt := if($ambitus/mei:ambNote[@type='lowestAlt']) then(source:getAmbPitch($ambitus/mei:ambNote[@type='lowestAlt'])) else()
+    let $highest := if($ambitus/mei:ambNote[@type='highest'])then(source:getAmbPitch($ambitus/mei:ambNote[@type='highest']))else()
+    let $highestAlt := if($ambitus/mei:ambNote[@type='highestAlt'])then(source:getAmbPitch($ambitus/mei:ambNote[@type='highestAlt']))else()
     return
             concat('[',
             if($lowestAlt)
@@ -126,20 +126,20 @@ declare function baudiSource:getAmbitus($ambitus as node()*) as xs:string{
             ']')
 };
 
-declare function baudiSource:getManifestationPerfResWithAmbitus($sourceFile as node()*, $param as xs:string) {
+declare function source:getManifestationPerfResWithAmbitus($sourceFile as node()*, $param as xs:string) {
     let $param2 := switch ($param) case 'short' return '.short' default return ''
     let $sourceWork := $sourceFile//mei:work
-    let $perfResLabelString := baudiWork:getPerfRes($sourceWork,$param2)
+    let $perfResLabelString := work:getPerfRes($sourceWork,$param2)
     
     return
         string-join($perfResLabelString, ', ')
 };
 
-declare function baudiSource:getManifestationIdentifiers($sourceID as xs:string) {
+declare function source:getManifestationIdentifiers($sourceID as xs:string) {
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 
 let $msRepository := if($source//mei:physLoc/mei:repository/mei:corpName[@codedval])
-                     then(baudiShared:getCorpNameFullLinked($source//mei:physLoc/mei:repository/mei:corpName))
+                     then(shared:getCorpNameFullLinked($source//mei:physLoc/mei:repository/mei:corpName))
                      else($source//mei:physLoc/mei:repository/string())
 let $msRepositorySiglum := $source//mei:physLoc/mei:repository/mei:corpName/@label/string()
 let $msRepositoryShelfmark := $source//mei:physLoc/mei:repository/mei:identifier[@type="shelfmark"] | $source//mei:manifestation/mei:identifier[@type="shelfmark"]
@@ -151,20 +151,20 @@ let $table := <table class="sourceView">
                       <th/>
                   </tr>
                   <tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.repository')}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.repository')}</td>
                      <td>{$msRepository}</td>
                   </tr>
                   {if($msRepositoryShelfmark)
                   then(
                   <tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.shelfmark')}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.shelfmark')}</td>
                      <td>{$msRepositoryShelfmark}</td>
                   </tr>)
                   else()}
                   {if($msRismNo)
                   then(
                   <tr>
-                     <td>RISM-{baudiShared:translate('baudi.registry.sources.opus.no')}</td>
+                     <td>RISM-{shared:translate('baudi.registry.sources.opus.no')}</td>
                      <td>{$msRismNo}</td>
                   </tr>)
                   else()}
@@ -173,7 +173,7 @@ return
     $table
 };
 
-declare function baudiSource:getManifestationPaperSpecs($sourceID  as xs:string) {
+declare function source:getManifestationPaperSpecs($sourceID  as xs:string) {
 
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 let $sourceType := string-join($source//mei:term[@type='source']/string(),'_')
@@ -189,22 +189,22 @@ let $msPaperDimensions := if($height or $width)
                                       ' (',
                                       string-join( (
                                       if($height)
-                                      then(baudiShared:translate('baudi.registry.sources.msDesc.paper.dimensions.height.short'))
+                                      then(shared:translate('baudi.registry.sources.msDesc.paper.dimensions.height.short'))
                                       else(),
                                       if($width)
-                                      then(baudiShared:translate('baudi.registry.sources.msDesc.paper.dimensions.width.short'))
+                                      then(shared:translate('baudi.registry.sources.msDesc.paper.dimensions.width.short'))
                                       else()), 'x'),
                                       ')'))
                           else()
 
 let $msPaperOrientation := $source//mei:extent[@label="orientation"]/text()
 let $prPaperFormat := if($msPaperOrientation and $msPaperDimensionsHeight and $msPaperDimensionsHeightUnit and $msPaperDimensionsWidth and $msPaperDimensionsWidthUnit)
-                      then(baudiSource:getPrintPaperFormat($msPaperOrientation,$msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit))
+                      then(source:getPrintPaperFormat($msPaperOrientation,$msPaperDimensionsHeight, $msPaperDimensionsHeightUnit, $msPaperDimensionsWidth, $msPaperDimensionsWidthUnit))
                       else('Dimensions not recorded')
 
 let $msPaperFolii := $source//mei:extent[@label="folium"]/text() | $source//mei:extent[@unit="folio"]/text()
 let $msPaperPages := $source//mei:extent[@label="pages"]/text() | $source//mei:extent[@unit="page"]/text()
-let $msPaperPagination := baudiShared:translate(concat('baudi.registry.sources.msDesc.paper.pagination.', $source//mei:extent[@label="pagination"]/text()))
+let $msPaperPagination := shared:translate(concat('baudi.registry.sources.msDesc.paper.pagination.', $source//mei:extent[@label="pagination"]/text()))
 
 let $table := <table class="sourceView">
                   <tr>
@@ -213,36 +213,36 @@ let $table := <table class="sourceView">
                   </tr>
                   {if($msPaperOrientation)
                   then(<tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.orientation')}</td>
-                     <td>{baudiShared:translate(concat('baudi.registry.sources.msDesc.paper.orientation.', $msPaperOrientation))}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.paper.orientation')}</td>
+                     <td>{shared:translate(concat('baudi.registry.sources.msDesc.paper.orientation.', $msPaperOrientation))}</td>
                   </tr>)
                   else()}
                   {if($msPaperDimensions)
                   then(<tr>
-                         <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.dimensions')}</td>
+                         <td>{shared:translate('baudi.registry.sources.msDesc.paper.dimensions')}</td>
                          <td>{$msPaperDimensions}</td>
                        </tr>)
                   else if(contains($sourceType,'print'))
                   then(<tr>
-                         <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.format')}</td>
+                         <td>{shared:translate('baudi.registry.sources.msDesc.paper.format')}</td>
                          <td>{$prPaperFormat}</td>
                        </tr>)
                   else('–')}
                   {if($msPaperFolii)
                   then(<tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.folii')}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.paper.folii')}</td>
                      <td>{$msPaperFolii}</td>
                   </tr>)
                   else()}
                   {if($msPaperPages)
                   then(<tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.pages')}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.paper.pages')}</td>
                      <td>{$msPaperPages}</td>
                   </tr>)
                   else()}
                   {if($msPaperPagination)
                   then(<tr>
-                         <td>{baudiShared:translate('baudi.registry.sources.msDesc.paper.pagination')}</td>
+                         <td>{shared:translate('baudi.registry.sources.msDesc.paper.pagination')}</td>
                          <td>{$msPaperPagination}</td>
                        </tr>)
                   else()}
@@ -251,14 +251,14 @@ return
     $table
 };
 
-declare function  baudiSource:getManifestationHands($sourceID as xs:string) {
+declare function  source:getManifestationHands($sourceID as xs:string) {
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 
 let $hands := $source//mei:handList/mei:hand
 let $listOfHands := for $hand in $hands
                     
-                    let $type := baudiShared:translate(concat('baudi.registry.sources.msDesc.hands.',$hand/@type))
-                    let $medium := baudiShared:translate(concat('baudi.registry.sources.msDesc.hands.medium.',$hand/@medium))
+                    let $type := shared:translate(concat('baudi.registry.sources.msDesc.hands.',$hand/@type))
+                    let $medium := shared:translate(concat('baudi.registry.sources.msDesc.hands.medium.',$hand/@medium))
                     let $text := $hand//text() => string-join(' ')
                     return
                         <li>{if($type) then($type || ', ') else(), $medium, if($text) then(' (' || $text || ')') else()}</li>
@@ -268,7 +268,7 @@ let $table := <table class="sourceView">
                       <th/>
                   </tr>
                   <tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.hands')}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.hands')}</td>
                      <td>
                         <ol>
                             {$listOfHands}
@@ -280,18 +280,18 @@ return
     if($source//mei:handList/mei:hand) then($table) else()
 };
 
-declare function  baudiSource:getManifestationPaperNotes($sourceID as xs:string) {
+declare function  source:getManifestationPaperNotes($sourceID as xs:string) {
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 
 let $paperNote := $source//mei:annot[@type="paperNote"]
 let $paperNotePlace:= tokenize($paperNote/@place, ' ')
 let $paperNotePlaceTranslated := for $token in $paperNotePlace
-                                  let $i18n := baudiShared:translate(concat('baudi.registry.mei.annot.place.', $token))
+                                  let $i18n := shared:translate(concat('baudi.registry.mei.annot.place.', $token))
                                   return
                                     $i18n
 let $tableRow := 
                   <tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.paperNotes')}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.paperNotes')}</td>
                      <td>{concat($paperNote, ' (', string-join($paperNotePlaceTranslated, ' '), ')')}</td>
                   </tr>
 return
@@ -299,12 +299,12 @@ return
 };
 
 
-declare function  baudiSource:getManifestationStamps($stampNotes as node()*) {
+declare function  source:getManifestationStamps($stampNotes as node()*) {
 
 let $listOfStamps := for $stamp in $stampNotes
                         let $stampPlace:= tokenize($stamp/@place, ' ')
                         let $stampPlaceTranslated := for $token in $stampPlace
-                                                        let $i18n := baudiShared:translate(concat('baudi.registry.mei.annot.place.', $token))
+                                                        let $i18n := shared:translate(concat('baudi.registry.mei.annot.place.', $token))
                                                         return
                                                            $i18n
                         let $stampPositions := for $stampPos in tokenize($stamp/@data, ' ')
@@ -320,7 +320,7 @@ let $table := <table class="sourceView">
                       <th/>
                   </tr>
                   <tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.stamps')}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.stamps')}</td>
                      <td><ul style="list-style-type: square;">{$listOfStamps}</ul></td>
                   </tr>
               </table>
@@ -328,13 +328,13 @@ return
     $table
 };
 
-declare function  baudiSource:getManifestationNotes($sourceID as xs:string) {
+declare function  source:getManifestationNotes($sourceID as xs:string) {
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 let $notes := $source//mei:annot[not(@type)]
 let $listOfNotes := for $note in $notes
                         let $notePlace:= tokenize($note/@place, ' ')
                         let $notePlaceTranslated := for $token in $notePlace
-                                                          let $i18n := baudiShared:translate(concat('baudi.registry.mei.annot.place.', $token))
+                                                          let $i18n := shared:translate(concat('baudi.registry.mei.annot.place.', $token))
                                                           return
                                                             $i18n
                         let $noteData := substring-after($note/@data, '#')
@@ -350,7 +350,7 @@ let $table := <table class="sourceView">
                       <th/>
                   </tr>
                   <tr>
-                     <td>{baudiShared:translate('baudi.registry.sources.msDesc.notes')}</td>
+                     <td>{shared:translate('baudi.registry.sources.msDesc.notes')}</td>
                      <td>
                         <ul style="list-style-type: square;">
                             {$listOfNotes}
@@ -362,7 +362,7 @@ return
     $table
 };
 
-declare function  baudiSource:getLyrics($sourceID as xs:string) {
+declare function  source:getLyrics($sourceID as xs:string) {
 let $source := $app:collectionSourcesMusic[@xml:id = $sourceID]
 let $lyrics := $source//mei:div[@type="songtext"]
 let $title := $lyrics//mei:l[@label='title']/text()
@@ -386,7 +386,7 @@ return
 };
 
 
-declare function baudiSource:getPrintPaperFormat($orientation as xs:string, $paperDimensionsHeight as xs:string, $paperDimensionsHeightUnit as xs:string, $paperDimensionsWidth as xs:string, $paperDimensionsWidthUnit as xs:string) as xs:string {
+declare function source:getPrintPaperFormat($orientation as xs:string, $paperDimensionsHeight as xs:string, $paperDimensionsHeightUnit as xs:string, $paperDimensionsWidth as xs:string, $paperDimensionsWidthUnit as xs:string) as xs:string {
 
 let $height := if($paperDimensionsHeightUnit = 'mm')
                then (number($paperDimensionsHeight))
@@ -424,7 +424,7 @@ return
             then('2° (Folio)')
             else if(450 < $height and $height)
             then('Gr.-2° (Groß-Folio)')
-            else(baudiShared:translate('baudi.registry.sources.msDesc.paper.format.unknown')))
+            else(shared:translate('baudi.registry.sources.msDesc.paper.format.unknown')))
     else if ($orientation = 'landscape')
     then(if($width < 100)
             then('16° (Quer-Sedez)')
@@ -444,21 +444,21 @@ return
             then('2° (Quer-Folio)')
             else if(450 < $width and $width)
             then('Gr.-2° (Quer-Groß-Folio)')
-            else(baudiShared:translate('baudi.registry.sources.msDesc.paper.format.unknown')))
-    else(baudiShared:translate('baudi.registry.sources.msDesc.paper.format.unknown'))
+            else(shared:translate('baudi.registry.sources.msDesc.paper.format.unknown')))
+    else(shared:translate('baudi.registry.sources.msDesc.paper.format.unknown'))
 };
 
-declare function baudiSource:getSourceEditionStmt($id, $lang) {
+declare function source:getSourceEditionStmt($id, $lang) {
     let $source := $app:collectionSourcesMusic[@xml:id=$id]
     let $edition := $source//mei:editionStmt//mei:edition
     let $editionTitle := $edition/mei:title/text()
     let $editionPublisher := if($edition//mei:publisher/mei:corpName/@codedval)
-                             then(baudiShared:getCorpNameFullLinked($edition//mei:publisher/mei:corpName))
+                             then(shared:getCorpNameFullLinked($edition//mei:publisher/mei:corpName))
                              else($edition//mei:publisher/mei:corpName)
     let $editionPubPlace := $edition//mei:pubPlace
-    let $editionDate := if($edition//mei:bibl/mei:date/@*)then(baudiShared:formatDate($edition//mei:date,'full',$lang))else()
+    let $editionDate := if($edition//mei:bibl/mei:date/@*)then(shared:formatDate($edition//mei:date,'full',$lang))else()
     let $editionDedicatee := if($edition//mei:dedicatee/data())
-                             then(baudiShared:linkAll($edition//mei:dedicatee))
+                             then(shared:linkAll($edition//mei:dedicatee))
                              else()
     
     return
@@ -472,35 +472,35 @@ declare function baudiSource:getSourceEditionStmt($id, $lang) {
                 {if($editionTitle)
                 then(
                 <tr>
-                    <td>{baudiShared:translate('baudi.registry.sources.editionStmt.title')}</td>
+                    <td>{shared:translate('baudi.registry.sources.editionStmt.title')}</td>
                     <td>{$editionTitle}</td>
                 </tr>)
                 else()}
                 {if($editionPublisher)
                 then(
                 <tr>
-                    <td>{baudiShared:translate('baudi.registry.sources.editionStmt.publisher')}</td>
+                    <td>{shared:translate('baudi.registry.sources.editionStmt.publisher')}</td>
                     <td>{$editionPublisher}</td>
                 </tr>)
                 else()}
                 {if($editionDate)
                 then(
                 <tr>
-                    <td>{baudiShared:translate('baudi.registry.sources.editionStmt.pubDate')}</td>
+                    <td>{shared:translate('baudi.registry.sources.editionStmt.pubDate')}</td>
                     <td>{$editionDate}</td>
                 </tr>)
                 else()}
                 {if($editionPubPlace)
                 then(
                 <tr>
-                    <td>{baudiShared:translate('baudi.registry.sources.editionStmt.pubPlace')}</td>
+                    <td>{shared:translate('baudi.registry.sources.editionStmt.pubPlace')}</td>
                     <td>{$editionPubPlace}</td>
                 </tr>)
                 else()}
                 {if($editionDedicatee)
                 then(
                 <tr>
-                    <td>{baudiShared:translate('baudi.registry.sources.editionStmt.dedication')}</td>
+                    <td>{shared:translate('baudi.registry.sources.editionStmt.dedication')}</td>
                     <td>{$editionDedicatee}</td>
                 </tr>)
                 else()}
@@ -509,7 +509,7 @@ declare function baudiSource:getSourceEditionStmt($id, $lang) {
         else()
 };
 
-declare function baudiSource:renderTitlePage($source as node()*) {
+declare function source:renderTitlePage($source as node()*) {
 let $titlePage := $source//mei:titlePage
 
 return
@@ -517,7 +517,7 @@ return
 
 };
 
-declare function baudiSource:getFacsimilePreview($id as xs:string) {
+declare function source:getFacsimilePreview($id as xs:string) {
 
 let $sourceChiffre := subsequence(tokenize($id, '-'), 2, 1)
 
@@ -551,14 +551,14 @@ let $graphicBLB := if($source//mei:graphic[@targettype="blb-vlid"] or starts-wit
                    else()
 let $graphicBLBLabel := <div>
                             <br/>
-                            {baudiShared:translate('baudi.registry.sources.facsimile.source')}: Badische Landesbibliothek Karlsruhe
+                            {shared:translate('baudi.registry.sources.facsimile.source')}: Badische Landesbibliothek Karlsruhe
                         </div>
 
 return
     <div class="col-md-4 col-lg-4">
         {if($graphicLocal) then($graphicLocal)
          else if($graphicBLB) then($graphicBLB, $graphicBLBLabel)
-         else(baudiShared:translate('baudi.noGraphic'))}
+         else(shared:translate('baudi.noGraphic'))}
         
     </div>
 };

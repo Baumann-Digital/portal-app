@@ -1,15 +1,15 @@
 xquery version "3.1";
 
-module namespace baudiWork="http://baumann-digital.de/portal-app/ns/work";
+module namespace work="http://baumann-digital.de/portal-app/ns/work";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace edirom="http://www.edirom.de/ns/1.3";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
-import module namespace baudiShared="http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
-import module namespace baudiSource="http://baumann-digital.de/portal-app/ns/source" at "/db/apps/baudiApp/modules/source.xqm";
-import module namespace baudiPersons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
+import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
+import module namespace source="http://baumann-digital.de/portal-app/ns/source" at "/db/apps/baudiApp/modules/source.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
@@ -25,19 +25,19 @@ import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
 
 
-declare function baudiWork:getWorkTitle($work as node()*){
+declare function work:getWorkTitle($work as node()*){
     let $title := $work//mei:title[@type='uniform']/mei:titlePart[@type='main' and not(@class)]/normalize-space(text()[1])
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[range:field-eq("titlePart-main", 'main') and @class='sort']/text()
                          let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
-                                                   then(concat(' ',baudiShared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
+                                                   then(concat(' ',shared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
     return
         if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)
 };
 
-(:declare function baudiWork:getLyricist($work as node()) {
+(:declare function work:getLyricist($work as node()) {
   let $collectionPersons := $app:collectionPersons
   let $lyricists := $work//mei:lyricist/mei:persName
   return
@@ -67,7 +67,7 @@ declare function baudiWork:getWorkTitle($work as node()*){
  : @param $param2 the output style ('short','full')
  : @return transformed nodes (string)
 ~:)
-declare %private function baudiWork:processPerfResList($perfResList as node(), $param as xs:string, $param2 as xs:string) {
+declare %private function work:processPerfResList($perfResList as node(), $param as xs:string, $param2 as xs:string) {
         let $list := $perfResList
         let $listName := switch ($list/@codedval)
                             case 'choirMen' return 'choirMale'
@@ -77,7 +77,7 @@ declare %private function baudiWork:processPerfResList($perfResList as node(), $
                             case 'woodwinds' return 'wood'
                             default return $list/@codedval
         let $listType := $list/@type
-        let $listContent := baudiWork:processPerfRes($list, $param, $param2)
+        let $listContent := work:processPerfRes($list, $param, $param2)
         let $perfResLabelsDistCount := for $each in distinct-values($listContent)
                                         let $count := count($listContent[.=$each])
                                         let $countLabel := if($count > 1) then($count) else()
@@ -86,14 +86,14 @@ declare %private function baudiWork:processPerfResList($perfResList as node(), $
                                             $label
         return
             if($listName != '')
-            then(baudiShared:translate('baudi.registry.works.perfRes.' || $listName || $param2) ||
+            then(shared:translate('baudi.registry.works.perfRes.' || $listName || $param2) ||
                  (if(string-join($perfResLabelsDistCount,'') != '')
                   then(' [' || string-join($perfResLabelsDistCount, ', ') || ']')
                   else()
                  )
                 )
             else if ($list/@type = 'choose')
-            then(string-join($listContent, concat(' ', baudiShared:translate(concat('baudi.conjunction.or', $param2)))))
+            then(string-join($listContent, concat(' ', shared:translate(concat('baudi.conjunction.or', $param2)))))
             else(string-join($listContent, ', '))
 };
 
@@ -106,7 +106,7 @@ declare %private function baudiWork:processPerfResList($perfResList as node(), $
  : @param $param2 the output style ('short','full')
  : @return transformed nodes (string)
 ~:)
-declare %private function baudiWork:processPerfRes($perfResList as node()*, $param as xs:string, $param2 as xs:string) {
+declare %private function work:processPerfRes($perfResList as node()*, $param as xs:string, $param2 as xs:string) {
     let $perfRes :=
     for $perfRes in $perfResList/mei:perfRes
          let $perfResAuth := switch ($perfRes/@codedval)
@@ -121,13 +121,13 @@ declare %private function baudiWork:processPerfRes($perfResList as node()*, $par
                                   else if(matches($perfResAuth,'.iv'))
                                   then(substring-before($perfResAuth,'.iv'))
                                   else($perfResAuth)
-          let $ambitus := if($perfRes/mei:ambitus) then(baudiSource:getAmbitus($perfRes/mei:ambitus)) else()
+          let $ambitus := if($perfRes/mei:ambitus) then(source:getAmbitus($perfRes/mei:ambitus)) else()
           let $perfResAuth := if($ambitus and $param != 'short')
-                              then(concat(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)), ' ', $ambitus))
-                              else(baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)))
-          let $perfResAuthShort := baudiShared:translate(concat('baudi.registry.works.perfRes.', $perfResAuthShorted, '.short'))
-          let $perfResSolo := if($perfRes/@solo) then(baudiShared:translate('baudi.registry.works.perfRes.solo')) else()
-          let $perfResAdLib := if($perfRes/@adLib) then(baudiShared:translate('baudi.registry.works.perfRes.adLib')) else()
+                              then(concat(shared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)), ' ', $ambitus))
+                              else(shared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)))
+          let $perfResAuthShort := shared:translate(concat('baudi.registry.works.perfRes.', $perfResAuthShorted, '.short'))
+          let $perfResSolo := if($perfRes/@solo) then(shared:translate('baudi.registry.works.perfRes.solo')) else()
+          let $perfResAdLib := if($perfRes/@adLib) then(shared:translate('baudi.registry.works.perfRes.adLib')) else()
           let $perfResOption := if($perfResSolo or $perfResAdLib) then(concat('(',string-join(($perfResSolo, $perfResAdLib), ', '),')')) else()
           return
             if($param2 = 'short')
@@ -135,40 +135,40 @@ declare %private function baudiWork:processPerfRes($perfResList as node()*, $par
             else(string-join(($perfResAuth, $perfResOption), ' '))
     let $perfResList := if($perfResList/mei:perfResList)
                         then(for $list in $perfResList/mei:perfResList
-                                return baudiWork:processPerfResList($list, $param, $param2)
+                                return work:processPerfResList($list, $param, $param2)
                             )
                         else()
     return
         string-join(($perfRes, $perfResList),', ')
 };
 
-declare function baudiWork:getPerfRes($work as node()*, $param as xs:string) {
+declare function work:getPerfRes($work as node()*, $param as xs:string) {
     let $param2 := switch ($param) case 'short' return '.short' default return ''
     let $perfMedium := $work//mei:perfMedium
     let $perfResList := $perfMedium/mei:perfResList
     return
         if($perfResList)
-        then(baudiWork:processPerfResList($perfResList, $param, $param2))else()};
+        then(work:processPerfResList($perfResList, $param, $param2))else()};
 
-declare function baudiWork:hasStemma($workID as xs:string){
+declare function work:hasStemma($workID as xs:string){
     let $stemmaImg := $app:collectionWorks[@xml:id=$workID]//mei:annot[@type="stemma"]
     return
         exists($stemmaImg)
 };
 
-declare function baudiWork:getStemma($workID as xs:string, $height as xs:string?, $width as xs:string?) {
+declare function work:getStemma($workID as xs:string, $height as xs:string?, $width as xs:string?) {
     <img src="{concat('https://digilib.baumann-digital.de/BauDi/02/', $workID, '_stemma.png?dh=2000')}" class="img-fluid" alt="Responsive image" height="{$height}" width="{$width}"/>
 };
 
 
-declare function baudiWork:hasIncipitMusic($workID as xs:string){
+declare function work:hasIncipitMusic($workID as xs:string){
 let $workFile := $app:collectionWorks[@xml:id=$workID]
 let $incipit := $workFile//mei:incip[.//mei:score]/node()
 return
     exists($incipit)
 };
 
-declare function baudiWork:getIncipitMusic($workID as xs:string){
+declare function work:getIncipitMusic($workID as xs:string){
 let $workFile := $app:collectionWorks[@xml:id=$workID]
 let $workFileName := concat($workID, '_incip.mei')
 let $incipit := $workFile//mei:incip/node()

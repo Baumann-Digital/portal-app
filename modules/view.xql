@@ -15,11 +15,11 @@ import module namespace config="https://exist-db.org/xquery/config" at "/db/apps
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
-import module namespace baudiShared = "http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
-import module namespace baudiWork = "http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xqm";
-import module namespace baudiSource = "http://baumann-digital.de/portal-app/ns/source" at "/db/apps/baudiApp/modules/source.xqm";
-import module namespace baudiLocus = "http://baumann-digital.de/portal-app/ns/locus" at "/db/apps/baudiApp/modules/locus.xqm";
-import module namespace baudiPersons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
+import module namespace shared = "http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
+import module namespace work = "http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xqm";
+import module namespace source = "http://baumann-digital.de/portal-app/ns/source" at "/db/apps/baudiApp/modules/source.xqm";
+import module namespace locus = "http://baumann-digital.de/portal-app/ns/locus" at "/db/apps/baudiApp/modules/locus.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
 
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";

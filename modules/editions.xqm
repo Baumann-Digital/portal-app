@@ -1,14 +1,14 @@
 xquery version "3.1";
 
-module namespace baudiEditions="http://baumann-digital.de/portal-app/ns/editions";
+module namespace editions="http://baumann-digital.de/portal-app/ns/editions";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace edirom="http://www.edirom.de/ns/1.3";
-declare namespace baudiAnnots="http://baumann-digital.de/portal-app/ns/annots";
+declare namespace annots="http://baumann-digital.de/portal-app/ns/annots";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
-import module namespace baudiWork="http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xql";
+import module namespace work="http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xql";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace request="http://exist-db.org/xquery/request";
@@ -26,7 +26,7 @@ import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baud
  : @return true() if editions exist for the work, otherwise false().
  : @author Dennis Ried
  :)
-declare function baudiEditions:hasEditions($workID as xs:string){
+declare function editions:hasEditions($workID as xs:string){
     let $editions := $app:collectionEditions//edirom:work[@xml:id=$workID]
     return
         exists($editions)
@@ -39,7 +39,7 @@ declare function baudiEditions:hasEditions($workID as xs:string){
  : @return -- not developed --
  : @author Dennis Ried
  :)
-declare function baudiEditions:hasRemarks($workID as xs:string){};
+declare function editions:hasRemarks($workID as xs:string){};
 
 (:~
  : Returns the remarks from an edition.
@@ -48,4 +48,4 @@ declare function baudiEditions:hasRemarks($workID as xs:string){};
  : @return -- not developed --
  : @author Dennis Ried
  :)
-declare function baudiEditions:getRemarks($editionID as xs:string){};
+declare function editions:getRemarks($editionID as xs:string){};
