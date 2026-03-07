@@ -531,8 +531,29 @@ declare function shared:checkGenderforLangValues($persID){
         else('')
 };
 
+(:~
+ : Get the length of a prefix from options.xml
+ : 
+ : @param $key the key of the prefix option (e.g. 'works', 'persons', 'loci')
+ : @return the length of the prefix string
+ :)
+declare function shared:prefix-length($key as xs:string) as xs:integer {
+    string-length(config:get-option($key))
+};
 
 declare function shared:getReferences($id) {
+    (: Load prefixes from options :)
+    let $prefixSourcesMusic := config:get-option('sourcesMusic')
+    let $prefixWorks := config:get-option('works')
+    let $prefixExpressions := config:get-option('expressions')
+    let $prefixPersons := config:get-option('persons')
+    let $prefixInstitutions := config:get-option('institutions')
+    let $prefixLoci := config:get-option('loci')
+    let $prefixSourcesDocs := config:get-option('sourcesDocs')
+    
+    (: Get prefix length - all prefixes must have the same length! :)
+    let $prefixLength := string-length($prefixSourcesMusic)
+    
     let $collectionReference := ($app:collectionPersons[matches(.//@key,$id)],
                                  $app:collectionInstitutions[matches(.//@key,$id)],
                                  $app:collectionPeriodicals[matches(.//@key,$id)],
@@ -545,33 +566,31 @@ declare function shared:getReferences($id) {
     
     let $entryGroups := for $doc in $collectionReference
                           let $docID := $doc/@xml:id
-                          let $docIDStart := substring($docID,1,8)
-                          let $docInfo := if($docIDStart = 'baudi-01')
+                          let $docIDStart := substring($docID, 1, $prefixLength)
+                          let $docInfo := if($docIDStart = $prefixSourcesMusic)
                                           then(shared:translate('registry.persons.references.sources.music'))
-                                          else if ($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
+                                          else if ($docIDStart = $prefixWorks or $docIDStart = $prefixExpressions)
                                           then (shared:translate('registry.persons.references.works'))
-                                          else if($docIDStart = 'baudi-04')
+                                          else if($docIDStart = $prefixPersons)
                                           then(shared:translate('registry.persons.references.persons'))
-                                          else if($docIDStart = 'baudi-05')
+                                          else if($docIDStart = $prefixInstitutions)
                                           then(shared:translate('registry.persons.references.institutions'))
-                                          else if($docIDStart = 'baudi-06')
+                                          else if($docIDStart = $prefixLoci)
                                           then(shared:translate('registry.persons.references.loci'))
-                                          else if($docIDStart = 'baudi-07')
+                                          else if($docIDStart = $prefixSourcesDocs)
                                           then(shared:translate('registry.persons.references.sources.text'))
-                                          else if($docIDStart = 'baudi-09')
-                                          then(shared:translate('registry.persons.references.periodicals'))
                                           else(shared:translate('registry.persons.references.other'))
-                          let $entryOrder := if($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
+                          let $entryOrder := if($docIDStart = $prefixWorks or $docIDStart = $prefixExpressions)
                                           then('002')
-                                          else if ($docIDStart = 'baudi-01')
+                                          else if ($docIDStart = $prefixSourcesMusic)
                                           then ('001')
-                                          else if($docIDStart = 'baudi-07')
+                                          else if($docIDStart = $prefixSourcesDocs)
                                           then('003')
-                                          else if($docIDStart = 'baudi-04')
+                                          else if($docIDStart = $prefixPersons)
                                           then('004')
-                                          else if($docIDStart = 'baudi-05')
+                                          else if($docIDStart = $prefixInstitutions)
                                           then('005')
-                                          else if($docIDStart = 'baudi-06')
+                                          else if($docIDStart = $prefixLoci)
                                           then('006')
                                           else('007')
                           let $correspActionSent := $doc//tei:correspAction[@type="sent"]
@@ -583,15 +602,15 @@ declare function shared:getReferences($id) {
                                           else(<br/>)
                           let $docTitle := if($correspActionSent)
                                            then($correspSentTurned,' an ',$correspReceivedTurned)
-                                           else if($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
+                                           else if($docIDStart = $prefixWorks or $docIDStart = $prefixExpressions)
                                            then($doc//(mei:work//mei:titlePart[@type="main"])[1]/text())
-                                           else if($docIDStart = 'baudi-01') 
+                                           else if($docIDStart = $prefixSourcesMusic) 
                                            then($doc//(mei:manifestation//mei:titlePart[@type="main"])[1]/text())
-                                           else if($docIDStart = 'baudi-04') 
+                                           else if($docIDStart = $prefixPersons) 
                                            then($doc/tei:persName[1]//text())
-                                           else if($docIDStart = 'baudi-05') 
+                                           else if($docIDStart = $prefixInstitutions) 
                                            then($doc/tei:orgName[1]//text())
-                                           else if($docIDStart = 'baudi-06')
+                                           else if($docIDStart = $prefixLoci)
                                            then($doc/tei:placeName[1]//text())
                                            else if($doc/name()='TEI')
                                            then($doc//tei:titleStmt/tei:title/string())
@@ -622,13 +641,13 @@ declare function shared:getReferences($id) {
                               let $groupName := $groups/@groupName
                               let $order := $groups/@order
                               let $registerSortEntryLabel := switch ($groupName/string())
-                                                               case 'baudi-01' return shared:translate('registry.persons.references.sources.music')
-                                                               case 'baudi-02' return shared:translate('registry.persons.references.works')
-                                                               case 'baudi-04' return shared:translate('registry.persons.references.persons')
-                                                               case 'baudi-05' return shared:translate('registry.persons.references.institutions')
-                                                               case 'baudi-06' return shared:translate('registry.persons.references.loci')
-                                                               case 'baudi-07' return shared:translate('registry.persons.references.sources.text')
-                                                               case 'baudi-09' return shared:translate('registry.persons.references.periodicals')
+                                                               case $prefixSourcesMusic return shared:translate('registry.persons.references.sources.music')
+                                                               case $prefixWorks return shared:translate('registry.persons.references.works')
+                                                               case $prefixExpressions return shared:translate('registry.persons.references.works')
+                                                               case $prefixPersons return shared:translate('registry.persons.references.persons')
+                                                               case $prefixInstitutions return shared:translate('registry.persons.references.institutions')
+                                                               case $prefixLoci return shared:translate('registry.persons.references.loci')
+                                                               case $prefixSourcesDocs return shared:translate('registry.persons.references.sources.text')
                                                                default return shared:translate('registry.persons.references.other')
                                 order by $order
                                 return

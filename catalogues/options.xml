@@ -12,4 +12,14 @@
 		<entry xml:id="BLBfacPath">https://digital.blb-karlsruhe.de/blbihd/content/pageview/</entry>
 		<entry xml:id="BLBfacPathImage">https://digital.blb-karlsruhe.de/blbihd/image/view/</entry>
 	</div>
+	<div xml:id="prefixes">
+		<entry xml:id="institutions">baudi-05</entry>
+		<entry xml:id="persons">baudi-04</entry>
+		<entry xml:id="loci">baudi-06</entry>
+		<entry xml:id="editions">baudi-14</entry>
+		<entry xml:id="sourcesDocs">baudi-07</entry>
+		<entry xml:id="sourcesMusic">baudi-01</entry>
+		<entry xml:id="works">baudi-02</entry>
+		<entry xml:id="expressions">baudi-13</entry>
+	</div>
 </dictionary>
