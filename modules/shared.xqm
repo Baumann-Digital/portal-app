@@ -653,7 +653,7 @@ declare function shared:build-reference-data($id as xs:string) as map(*) {
     )
     
     let $entries := for $doc in $collectionReference
-                    let $docID := $doc/@xml:id/string()
+                    let $docID := string($doc/@xml:id)
                     let $docType := shared:get-doc-type($docID)
                     let $typeInfo := shared:get-type-info($docType)
                     let $title := shared:get-doc-title($doc, $docType)
