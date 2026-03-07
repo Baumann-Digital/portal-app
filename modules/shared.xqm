@@ -531,16 +531,6 @@ declare function shared:checkGenderforLangValues($persID){
         else('')
 };
 
-(:~
- : Get the length of a prefix from options.xml
- : 
- : @param $key the key of the prefix option (e.g. 'works', 'persons', 'loci')
- : @return the length of the prefix string
- :)
-declare function shared:prefix-length($key as xs:string) as xs:integer {
-    string-length(config:get-option($key))
-};
-
 declare function shared:getReferences($id) {
     (: Load ID patterns from options :)
     let $patternSourcesMusic := config:get-option('sourcesMusicIDs')
@@ -553,7 +543,6 @@ declare function shared:getReferences($id) {
     
     let $collectionReference := ($app:collectionPersons[matches(.//@key,$id)],
                                  $app:collectionInstitutions[matches(.//@key,$id)],
-                                 $app:collectionPeriodicals[matches(.//@key,$id)],
                                  $app:collectionLoci[matches(.//@key,$id)],
                                  $app:collectionDocuments[matches(.//@key,$id)],
                                  $app:collectionSourcesMusic[matches(.//@codedval,$id)],
