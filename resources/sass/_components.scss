@@ -100,3 +100,8 @@ div.letterContentFullView {
   border: $border-width-thick solid $purple;
   @include border-radius($border-radius);
 }
+
+// SMUFL Glyph
+.smufl-glyph {
+  height: 1em;
+}

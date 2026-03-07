@@ -636,3 +636,20 @@ declare function er:get-facsimile-preview(
         }
         </div>
 };
+
+(:~
+ : Get SMUFL character from SMUFL-browser (https://smufl-browser.edirom.de/index.html)
+ : 
+ : @param $characterName the character name
+ : @return HTML img with the image
+ : @author Dennis Ried
+ :)
+declare function er:get-smufl-char($characterName as xs:string) as element() {
+let $smuflUrl := concat('https://smufl-browser.edirom.de/', $characterName, '.xml')
+let $smuflDoc := doc($smuflUrl)
+let $title := concat('SMUFL ',$smuflDoc//tei:desc/text())
+let $alt := concat('SMUFL-browser ', $characterName)
+let $url := $smuflDoc//tei:graphic/@url/data()
+return
+    <img src="{$url}" title="{$title}" alt="{$alt}" class="smufl-glyph" xmlns="http://www.w3.org/1999/xhtml"/>
+};

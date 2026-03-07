@@ -1003,9 +1003,9 @@ return
                         let $meterUnit := $each/@unit
                         let $meterSym := $each/@sym
                         let $meterSymbol := if($meterSym = 'common')
-                                           then(<img src="/resources/img/timeSignature_common.png" width="20px"/>)
+                                           then(er:get-smufl-char('timeSigCommon'))
                                            else if($meterSym = 'cut')
-                                           then(<img src="/resources/img/timeSignature_cut.png" width="20px"/>)
+                                           then(er:get-smufl-char('timeSigCutCommon'))
                                            else()
                         return
                             if($meterSymbol)
@@ -1526,10 +1526,10 @@ let $meter := for $each in $work/mei:meter
                 let $meterUnit := $each/@unit
                 let $meterSym := $each/@sym
                 let $meterSymbol := if($meterSym = 'common')
-                                   then(<img src="/resources/img/timeSignature_common.png" width="20px"/>)
-                                   else if($meterSym = 'cut')
-                                   then(<img src="/resources/img/timeSignature_cut.png" width="20px"/>)
-                                   else()
+                                           then(er:get-smufl-char('timeSigCommon'))
+                                           else if($meterSym = 'cut')
+                                           then(er:get-smufl-char('timeSigCutCommon'))
+                                           else()
                 return
                     if($meterSymbol)
                     then($meterSymbol)
