@@ -1385,7 +1385,7 @@ declare function app:registryPeriodicals($node as node(), $model as map(*)) {
         <div class="container">
             <br/>
             <div class="page-header">
-                <h1><i18n:text key=""registry.periodocals"/></h1>
+                <h1><i18n:text key="registry.periodocals"/></h1>
             </div>
             <hr/>
             <div class="container">

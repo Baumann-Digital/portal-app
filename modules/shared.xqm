@@ -528,7 +528,7 @@ declare function shared:checkGenderforLangValues($persID){
         then()
         else if ($gender = 'female')
         then('.female')
-        else('
+        else('')
 };
 
 
@@ -596,7 +596,7 @@ declare function shared:getReferences($id) {
                                            else if($doc/name()='TEI')
                                            then($doc//tei:titleStmt/tei:title/string())
                                            else('noTitle')
-                          let $docTitle := $docTitle => string-join(' => normalize-space()
+                          let $docTitle := $docTitle => string-join(' => normalize-space() ')
                           let $workSortValue := string-join($docTitle,' ') => replace('»','') => replace('«','')
                           let $entry := <div class="row RegisterEntry" xmlns="http://www.w3.org/1999/xhtml">
                                           <div class="col-3" dateToSort="{$docDate}" workSort="{$workSortValue}">
