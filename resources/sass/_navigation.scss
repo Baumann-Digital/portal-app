@@ -18,7 +18,7 @@
     font-size: 0.75rem;
     color: $white;
     text-transform: uppercase;
-    background-color: $baudi-green;
+    background-color: $baudi-green-rgba;
     border: 0;
   }
 
@@ -43,7 +43,7 @@
 
       &.active,
       &:hover {
-        color: $baudi-green !important;
+        color: $baudi-green-rgba !important;
       }
     }
   }
@@ -55,7 +55,7 @@
       color: $white !important;
 
       &:hover {
-        color: $baudi-green !important;
+        color: $baudi-green-rgba !important;
         background-color: $baudi-light-green;
       }
     }
@@ -64,13 +64,12 @@
 
 // Nav Tabs (Register Pages)
 [role="tablist"] .nav-link {
-  color: $baudi-green !important;
-  border-color: $baudi-green;
+  color: $baudi-green-rgba !important;
+  border-color: $baudi-green-rgba;
 
   &:hover {
-    color: $baudi-purple !important;
-    border-color: $baudi-purple;
-    transition: all 0.3s ease;
+    color: rgba(0, 150, 0, 0.9) !important;
+    border-color: rgba(0, 150, 0, 0.9);
   }
 
   &.active {
