@@ -343,7 +343,7 @@ let $listOfNotes := for $note in $notes
                         let $correspHand := if($source//mei:hand[@xml:id = $noteCorresp]) then(functx:index-of-node($source//mei:hand, $source//mei:hand[@xml:id = $noteCorresp])) else()
                         return
                             if($correspHand) then(<li><i>{$note/text()}</i>{concat(' [Hand ', $correspHand, ', ', $notePage, ' ', string-join($notePlaceTranslated, ' '), '] ')}</li>)
-                            else(<li><i>{$note//text() => string-join('}</i></li>)
+                            else(<li><i>{$note//text() => string-join('')}</i></li>)
 let $table := <table class="sourceView">
                   <tr>
                       <th/>
