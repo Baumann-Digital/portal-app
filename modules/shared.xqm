@@ -542,17 +542,14 @@ declare function shared:prefix-length($key as xs:string) as xs:integer {
 };
 
 declare function shared:getReferences($id) {
-    (: Load prefixes from options :)
-    let $prefixSourcesMusic := config:get-option('sourcesMusic')
-    let $prefixWorks := config:get-option('works')
-    let $prefixExpressions := config:get-option('expressions')
-    let $prefixPersons := config:get-option('persons')
-    let $prefixInstitutions := config:get-option('institutions')
-    let $prefixLoci := config:get-option('loci')
-    let $prefixSourcesDocs := config:get-option('sourcesDocs')
-    
-    (: Get prefix length - all prefixes must have the same length! :)
-    let $prefixLength := string-length($prefixSourcesMusic)
+    (: Load ID patterns from options :)
+    let $patternSourcesMusic := config:get-option('sourcesMusicIDs')
+    let $patternWorks := config:get-option('workIDs')
+    let $patternExpressions := config:get-option('expressionIDs')
+    let $patternPersons := config:get-option('personIDs')
+    let $patternInstitutions := config:get-option('institutionIDs')
+    let $patternLoci := config:get-option('lociIDs')
+    let $patternSourcesDocs := config:get-option('sourcesDocIDs')
     
     let $collectionReference := ($app:collectionPersons[matches(.//@key,$id)],
                                  $app:collectionInstitutions[matches(.//@key,$id)],
@@ -566,31 +563,46 @@ declare function shared:getReferences($id) {
     
     let $entryGroups := for $doc in $collectionReference
                           let $docID := $doc/@xml:id
-                          let $docIDStart := substring($docID, 1, $prefixLength)
-                          let $docInfo := if($docIDStart = $prefixSourcesMusic)
+                          (: Match ID against patterns to determine type :)
+                          let $docType := if(matches($docID, $patternSourcesMusic))
+                                          then('sourcesMusic')
+                                          else if(matches($docID, $patternWorks))
+                                          then('works')
+                                          else if(matches($docID, $patternExpressions))
+                                          then('expressions')
+                                          else if(matches($docID, $patternPersons))
+                                          then('persons')
+                                          else if(matches($docID, $patternInstitutions))
+                                          then('institutions')
+                                          else if(matches($docID, $patternLoci))
+                                          then('loci')
+                                          else if(matches($docID, $patternSourcesDocs))
+                                          then('sourcesDocs')
+                                          else('other')
+                          let $docInfo := if($docType = 'sourcesMusic')
                                           then(shared:translate('registry.persons.references.sources.music'))
-                                          else if ($docIDStart = $prefixWorks or $docIDStart = $prefixExpressions)
+                                          else if ($docType = 'works' or $docType = 'expressions')
                                           then (shared:translate('registry.persons.references.works'))
-                                          else if($docIDStart = $prefixPersons)
+                                          else if($docType = 'persons')
                                           then(shared:translate('registry.persons.references.persons'))
-                                          else if($docIDStart = $prefixInstitutions)
+                                          else if($docType = 'institutions')
                                           then(shared:translate('registry.persons.references.institutions'))
-                                          else if($docIDStart = $prefixLoci)
+                                          else if($docType = 'loci')
                                           then(shared:translate('registry.persons.references.loci'))
-                                          else if($docIDStart = $prefixSourcesDocs)
+                                          else if($docType = 'sourcesDocs')
                                           then(shared:translate('registry.persons.references.sources.text'))
                                           else(shared:translate('registry.persons.references.other'))
-                          let $entryOrder := if($docIDStart = $prefixWorks or $docIDStart = $prefixExpressions)
+                          let $entryOrder := if($docType = 'works' or $docType = 'expressions')
                                           then('002')
-                                          else if ($docIDStart = $prefixSourcesMusic)
+                                          else if ($docType = 'sourcesMusic')
                                           then ('001')
-                                          else if($docIDStart = $prefixSourcesDocs)
+                                          else if($docType = 'sourcesDocs')
                                           then('003')
-                                          else if($docIDStart = $prefixPersons)
+                                          else if($docType = 'persons')
                                           then('004')
-                                          else if($docIDStart = $prefixInstitutions)
+                                          else if($docType = 'institutions')
                                           then('005')
-                                          else if($docIDStart = $prefixLoci)
+                                          else if($docType = 'loci')
                                           then('006')
                                           else('007')
                           let $correspActionSent := $doc//tei:correspAction[@type="sent"]
@@ -602,15 +614,15 @@ declare function shared:getReferences($id) {
                                           else(<br/>)
                           let $docTitle := if($correspActionSent)
                                            then($correspSentTurned,' an ',$correspReceivedTurned)
-                                           else if($docIDStart = $prefixWorks or $docIDStart = $prefixExpressions)
+                                           else if($docType = 'works' or $docType = 'expressions')
                                            then($doc//(mei:work//mei:titlePart[@type="main"])[1]/text())
-                                           else if($docIDStart = $prefixSourcesMusic) 
+                                           else if($docType = 'sourcesMusic') 
                                            then($doc//(mei:manifestation//mei:titlePart[@type="main"])[1]/text())
-                                           else if($docIDStart = $prefixPersons) 
+                                           else if($docType = 'persons') 
                                            then($doc/tei:persName[1]//text())
-                                           else if($docIDStart = $prefixInstitutions) 
+                                           else if($docType = 'institutions') 
                                            then($doc/tei:orgName[1]//text())
-                                           else if($docIDStart = $prefixLoci)
+                                           else if($docType = 'loci')
                                            then($doc/tei:placeName[1]//text())
                                            else if($doc/name()='TEI')
                                            then($doc//tei:titleStmt/tei:title/string())
@@ -627,9 +639,9 @@ declare function shared:getReferences($id) {
                                          <div class="col" docTitle="{$docTitle}">{$docTitle}</div>
                                          <div class="col-3" docID="{$docID}"><a href="/{$docID}">{$docID/string()}</a></div>
                                        </div>
-                          group by $docIDStart
+                          group by $docType
                           return
-                              (<div xmlns="http://www.w3.org/1999/xhtml" groupName="{$docIDStart}" order="{distinct-values($entryOrder)}">{for $each in $entry
+                              (<div xmlns="http://www.w3.org/1999/xhtml" groupName="{$docType}" order="{distinct-values($entryOrder)}">{for $each in $entry
                                     order by if($each/div/@dateToSort !='')
                                              then($each/div/@dateToSort)
                                              else if($each/div/@workSort)
@@ -641,13 +653,13 @@ declare function shared:getReferences($id) {
                               let $groupName := $groups/@groupName
                               let $order := $groups/@order
                               let $registerSortEntryLabel := switch ($groupName/string())
-                                                               case $prefixSourcesMusic return shared:translate('registry.persons.references.sources.music')
-                                                               case $prefixWorks return shared:translate('registry.persons.references.works')
-                                                               case $prefixExpressions return shared:translate('registry.persons.references.works')
-                                                               case $prefixPersons return shared:translate('registry.persons.references.persons')
-                                                               case $prefixInstitutions return shared:translate('registry.persons.references.institutions')
-                                                               case $prefixLoci return shared:translate('registry.persons.references.loci')
-                                                               case $prefixSourcesDocs return shared:translate('registry.persons.references.sources.text')
+                                                               case 'sourcesMusic' return shared:translate('registry.persons.references.sources.music')
+                                                               case 'works' return shared:translate('registry.persons.references.works')
+                                                               case 'expressions' return shared:translate('registry.persons.references.works')
+                                                               case 'persons' return shared:translate('registry.persons.references.persons')
+                                                               case 'institutions' return shared:translate('registry.persons.references.institutions')
+                                                               case 'loci' return shared:translate('registry.persons.references.loci')
+                                                               case 'sourcesDocs' return shared:translate('registry.persons.references.sources.text')
                                                                default return shared:translate('registry.persons.references.other')
                                 order by $order
                                 return
