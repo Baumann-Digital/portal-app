@@ -100,20 +100,6 @@ declare function app:registry-documents-list($node as node(), $model as map(*)) 
         $cards
 };
 
-(: DEPRECATED - kept for backward compatibility :)
-declare function app:registryDocuments($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-documents($node, $model)
-    return
-        <div class="container">
-            <div class="container  overflow-auto" style="max-height: 500px;">
-                <div class="tab-content">
-                    {app:registry-documents-list($node, $model-with-data)}
-                </div>
-                <br/>
-            </div>
-        </div>
-};
-
 (:~
  : Route function that determines if document is a letter or not.
  : Delegates to viewLetter or load-document.
@@ -375,15 +361,6 @@ declare function app:registry-persons-list($node as node(), $model as map(*)) {
         $cards
 };
 
-(: DEPRECATED - kept for backward compatibility :)
-declare function app:registryPersons($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-persons($node, $model)
-    return
-        <div class="container  overflow-auto" style="max-height: 500px;">
-            {app:registry-persons-list($node, $model-with-data)}
-        </div>
-};
-
 (:~
  : Loads person data into the model map.
  : This is the main data loading function for the person view.
@@ -557,20 +534,6 @@ declare function app:registry-loci-list($node as node(), $model as map(*)) {
         $cards
 };
 
-(: DEPRECATED - kept for backward compatibility :)
-declare function app:registryLoci($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-loci($node, $model)
-    return
-        <div class="container">
-            <div class="container  overflow-auto" style="max-height: 500px;">
-                <div class="tab-content">
-                    {app:registry-loci-list($node, $model-with-data)}
-                </div>
-            </div>
-            <br/>
-        </div>
-};
-
 (:~
  : Loads locus data into the model map.
  : This is the main data loading function for the locus view.
@@ -681,20 +644,6 @@ declare function app:registry-institutions-list($node as node(), $model as map(*
                          </div>
     return
         $cards
-};
-
-(: DEPRECATED - kept for backward compatibility :)
-declare function app:registryInstitutions($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-institutions($node, $model)
-    return
-        <div class="container">
-            <div class="container  overflow-auto" style="max-height: 500px;">
-                <div class="tab-content">
-                    {app:registry-institutions-list($node, $model-with-data)}
-                </div>
-            </div>
-            <br/>
-        </div>
 };
 
 (:~
@@ -938,12 +887,6 @@ declare function app:registry-sources-content($node as node(), $model as map(*))
       </div>
    <br/>
    </div>
-};
-
-(: DEPRECATED - kept for backward compatibility :)
-declare function app:registrySources($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-sources($node, $model)
-    return app:registry-sources-content($node, $model-with-data)
 };
 
 declare function app:viewSource($node as node(), $model as map(*)) {
@@ -1496,12 +1439,6 @@ declare function app:registry-works-content($node as node(), $model as map(*)) {
    <br/>
    </div>
 };
-
-(: DEPRECATED - kept for backward compatibility :)
-declare function app:registryWorks($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-works($node, $model)
-    return app:registry-works-content($node, $model-with-data)
-};
        
 declare function app:viewWork($node as node(), $model as map(*)) {
 
@@ -1884,12 +1821,6 @@ declare function app:registry-editions-content($node as node(), $model as map(*)
         <br/>
       </div>
    </div>
-};
-
-(: DEPRECATED - kept for backward compatibility :)
-declare function app:registryEditions($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-editions($node, $model)
-    return app:registry-editions-content($node, $model-with-data)
 };
 
 (:~
