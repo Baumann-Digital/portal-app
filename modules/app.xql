@@ -14,6 +14,7 @@ import module namespace source = "http://baumann-digital.de/portal-app/ns/source
 import module namespace locus = "http://baumann-digital.de/portal-app/ns/locus" at "locus.xqm";
 import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "persons.xqm";
 import module namespace editions="http://baumann-digital.de/portal-app/ns/editions" at "editions.xqm";
+import module namespace er="http://baumann-digital.de/portal-app/ns/external-requests" at "external-requests.xqm";
 import module namespace functx = "http://www.functx.com" at "functx.xqm";
 import module namespace console="http://exist-db.org/xquery/console";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
@@ -265,8 +266,8 @@ return
     )
     else(
         for $page at $pos in $pages
-        let $letterOrigFacs := concat(config:get-option('digilibPath'),'/BauDi/07/',$letter//tei:div[@type='page' and @n=$page]/@facs)
-        let $letterOrigLink := concat(config:get-option('digilibPath'),'/BauDi/07/',$id,'-',$page,'?dw=500')
+        let $letterOrigFacs := er:get-letter-facsimile-url($letter, $page)
+        let $letterOrigLink := er:get-letter-thumbnail-url($id, $page)
      
         return
         
@@ -901,7 +902,7 @@ return
         let $fileURI := document-uri($source/root())
         let $sourceType := $source//mei:term[@type='source'][1]/string()
         let $sourceWorkGroup := $source//mei:term[@type='workGroup'][1]/string()
-        let $sourceOrig := concat(config:get-option('digilibPath'),$source/@xml:id)
+        let $sourceOrig := er:get-source-url($source/@xml:id)
         let $sourceTitleUniform := source:getManifestationTitle($manifestation,'uniform')
         let $sourceTitleMain := source:getManifestationTitle($manifestation,'main')
         let $sourceTitleSub := source:getManifestationTitle($manifestation,'sub')

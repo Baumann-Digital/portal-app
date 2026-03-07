@@ -18,8 +18,7 @@ import module namespace transform="http://exist-db.org/xquery/transform";
 import module namespace functx="http://www.functx.com";
 import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
-
-
+import module namespace er="http://baumann-digital.de/portal-app/ns/external-requests" at "external-requests.xqm";
 
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
@@ -517,48 +516,13 @@ return
 
 };
 
+(:~
+ : Get facsimile preview - delegates to external-requests module
+ : 
+ : @param $id the document ID
+ : @return HTML div with facsimile preview
+ : @deprecated Use er:get-facsimile-preview() directly
+ :)
 declare function source:getFacsimilePreview($id as xs:string) {
-
-let $sourceChiffre := subsequence(tokenize($id, '-'), 2, 1)
-
-let $source := if($sourceChiffre = '01')
-               then($app:collectionSourcesMusic[@xml:id= $id])
-               else if($sourceChiffre = '07')
-               then($app:collectionDocuments[@xml:id= $id])
-               else('no source found')
-
-let $digilibBasicPath := concat(config:get-option('digilibPath'), '/BauDi/', $sourceChiffre, '/')
-
-let $facsimileTarget := if($sourceChiffre = '01')
-                        then($app:collectionSourcesMusic[@xml:id= $id]//mei:facsimile[1]/mei:surface[if(@n='1')then(@n='1')else(1)][1]/mei:graphic/@target)
-                        else if($sourceChiffre = '07')
-                        then($app:collectionDocuments[@xml:id= $id]//tei:div[@type='page' and @n='1']/@facs)
-                        else('no facsimile found')
-
-let $facsimileTargetPath := if(starts-with($facsimileTarget, 'https://digital.blb-karlsruhe.de')) then(functx:substring-after-last($facsimileTarget,'/')) else($facsimileTarget)
-let $digilibFacPath := concat($digilibBasicPath, $facsimileTargetPath)
-
-let $BLBfacPath := concat(config:get-option('BLBfacPath'), $facsimileTargetPath)
-let $BLBfacPathImage := concat(config:get-option('BLBfacPathImage'), $facsimileTargetPath)
-
-let $graphicLocal := if(starts-with($facsimileTargetPath, 'baudi-'))
-                     then(<img src="{concat($digilibFacPath, '?dw=500')}" class="img-thumbnail" width="400"/>)
-                     else()
-let $graphicBLB := if($source//mei:graphic[@targettype="blb-vlid"] or starts-with($facsimileTarget, 'https://digital.blb-karlsruhe.de'))
-                   then(<a href="{$BLBfacPath}" target="_blank" data-toggle="tooltip" data-placement="top" title="Zum vollständigen Digitalisat unter digital.blb-karlsruhe.de">
-                            <img class="img-thumbnail" src="{$BLBfacPathImage}" width="400"/>
-                        </a>)
-                   else()
-let $graphicBLBLabel := <div>
-                            <br/>
-                            {shared:translate('registry.sources.facsimile.source')}: Badische Landesbibliothek Karlsruhe
-                        </div>
-
-return
-    <div class="col-md-4 col-lg-4">
-        {if($graphicLocal) then($graphicLocal)
-         else if($graphicBLB) then($graphicBLB, $graphicBLBLabel)
-         else(shared:translate('noGraphic'))}
-        
-    </div>
+    er:get-facsimile-preview($id, $app:collectionSourcesMusic, $app:collectionDocuments)
 };

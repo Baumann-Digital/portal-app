@@ -19,6 +19,7 @@ import module namespace transform="http://exist-db.org/xquery/transform";
 import module namespace functx="http://www.functx.com";
 import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
+import module namespace er="http://baumann-digital.de/portal-app/ns/external-requests" at "external-requests.xqm";
 
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
@@ -734,16 +735,15 @@ declare function shared:get-status-symbol($status as xs:string?) as node()? {
     else(<span>no status</span>)
 };
 
+(:~
+ : Get norm data identifier - delegates to external-requests module
+ : 
+ : @param $object the TEI/MEI node containing idno elements
+ : @param $identifierType the type of identifier ('gnd' or 'viaf')
+ : @param $linking whether to return a linked HTML anchor element
+ : @return linked anchor element or plain string identifier
+ : @deprecated Use er:get-norm-data-link() directly
+ :)
 declare function shared:getNormDataIdentifier($object as node(), $identifierType as xs:string, $linking as xs:boolean) {
-    
-    let $idno := $object//tei:idno[@type=$identifierType]/text()
-    let $idnoLinked := if($identifierType = 'gnd')
-        then(<a href="https://d-nb.info/gnd/{$idno}" target="_blank">{$idno}</a>)
-        else if($identifierType = 'viaf')
-        then(<a href="http://viaf.org/viaf/{$idno}" target="_blank">{$idno}</a>)
-        else()
-    return
-    if($linking = true())
-    then($idnoLinked)
-    else($idno)
+    er:get-norm-data-link($object, $identifierType, $linking)
 };
