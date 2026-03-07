@@ -1460,21 +1460,18 @@ return
  : Loads works collection into the model map for registry view.
  :)
 declare function app:load-registry-works($node as node(), $model as map(*)) {
-    map:merge((
-        $model,
-        map {
-            "works": $app:collectionWorks[not(parent::mei:componentList)],
-            "genres": distinct-values($app:collectionWorks//mei:term[@type="genre"]/text() | $app:collectionWorks//mei:titlePart[@type='main' and not(@class)]/@type)
-        }
-    ))
+    (: Deprecated - kept for backward compatibility, now just passes through :)
+    app:registry-works-content($node, $model)
 };
 
 (:~
  : Outputs the complete works registry content with tabs.
+ : Works directly with XML nodes instead of JSON maps.
  :)
 declare function app:registry-works-content($node as node(), $model as map(*)) {
-    let $works := $model?works
-    let $genres := $model?genres
+    (: Load XML data directly :)
+    let $works := $app:collectionWorks[not(parent::mei:componentList)]
+    let $genres := distinct-values($app:collectionWorks//mei:term[@type="genre"]/text() | $app:collectionWorks//mei:titlePart[@type='main' and not(@class)]/@type)
     
     return
     <div class="container">
@@ -1600,8 +1597,8 @@ declare function app:registry-works-content($node as node(), $model as map(*)) {
 
 (: DEPRECATED - kept for backward compatibility :)
 declare function app:registryWorks($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-works($node, $model)
-    return app:registry-works-content($node, $model-with-data)
+    (: Directly call content generation - no need for intermediate map wrapper :)
+    app:registry-works-content($node, $model)
 };
        
 declare function app:viewWork($node as node(), $model as map(*)) {
