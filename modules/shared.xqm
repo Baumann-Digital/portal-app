@@ -7,11 +7,11 @@ declare namespace mei="http://www.music-encoding.org/ns/mei";
 
 import module namespace console="http://exist-db.org/xquery/console";
 
-import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
-import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
+import module namespace app="http://baumann-digital.de/ns/templates" at $config:app-root ||"/modules/app.xql";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at $config:app-root ||"/modules/persons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
-import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
+import module namespace config="https://exist-db.org/xquery/config" at $config:app-root ||"/modules/config.xqm";
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace range="http://exist-db.org/xquery/range";
 import module namespace transform="http://exist-db.org/xquery/transform";
@@ -20,10 +20,10 @@ import module namespace functx="http://www.functx.com";
 import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
 
-import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules//db/apps/baudiApp/modules/i18n.xql";
+import module namespace i18n="http://exist-db.org/xquery/i18n" at $config:app-root ||"/modules/i18n.xql";
 
-declare variable $shared:xsltFormattingText as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingText.xsl');
-declare variable $shared:xsltFormattingTextWithoutLinks as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingTextWithoutLinks.xsl');
+declare variable $shared:xsltFormattingText as document-node() := doc($config:app-root || '/resources/xslt/formattingText.xsl');
+declare variable $shared:xsltFormattingTextWithoutLinks as document-node() := doc($config:app-root || '/resources/xslt/formattingTextWithoutLinks.xsl');
 (:~ 
 : MRP Main Nav lang switch
 :
@@ -74,7 +74,7 @@ declare function shared:translate($content) {
                         attribute key {$content}
                     }
     return
-        i18n:process($content, '', '/db/apps/baudiApp/catalogues', 'en')
+        i18n:process($content, '', $config:app-root || '/catalogues', 'en')
 };
 
 
@@ -517,7 +517,7 @@ declare function shared:getCorpNameFullLinked($corpName as node()) {
 
 
 declare function shared:linkAll($node as node()){
-    transform:transform($node,doc('/db/apps/baudiApp/resources/xslt/linking.xsl'),())
+    transform:transform($node,doc($config:app-root || '/resources/xslt/linking.xsl'),())
 };
 
 declare function shared:checkGenderforLangValues($persID){

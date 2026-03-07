@@ -5,9 +5,9 @@ module namespace persons="http://baumann-digital.de/portal-app/ns/persons";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 
-import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
+import module namespace app="http://baumann-digital.de/ns/templates" at $config:app-root ||"/modules/app.xql";
 
-import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
+import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at $config:app-root ||"/modules/shared.xqm";
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace request="http://exist-db.org/xquery/request";
 
@@ -15,7 +15,7 @@ import module namespace functx="http://www.functx.com";
 import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
 
-import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
+import module namespace i18n="http://exist-db.org/xquery/i18n" at $config:app-root ||"/modules/i18n.xql";
 
 (:~
  : Returns the name of a person in a specified format.
@@ -255,7 +255,7 @@ declare function persons:getAnnotation($persId as xs:string) {
         if(exists($person//tei:note[. != '']))
         then(<ul>{for $note in $person//tei:note[. != '']
                                 return
-                                    <li class="baudiListItem">{transform:transform($note,doc("/db/apps/baudiApp/resources/xslt/linking.xsl"), ())}</li>
+                                    <li class="baudiListItem">{transform:transform($note,doc($config:app-root || "/resources/xslt/linking.xsl"), ())}</li>
                               }</ul>)
         else()
 };

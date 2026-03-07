@@ -6,20 +6,20 @@
 xquery version "3.0";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
-import module namespace i18n="http://exist-db.org/xquery/i18n-templates" at "/db/apps/baudiApp/modules/i18n-templates.xql";
+import module namespace i18n="http://exist-db.org/xquery/i18n-templates" at $config:app-root ||"/modules/i18n-templates.xql";
 (: 
  : The following modules provide functions which will be called by the 
  : templating.
  :)
-import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
-import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
+import module namespace config="https://exist-db.org/xquery/config" at $config:app-root ||"/modules/config.xqm";
+import module namespace app="http://baumann-digital.de/ns/templates" at $config:app-root ||"/modules/app.xql";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
-import module namespace shared = "http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
-import module namespace work = "http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xqm";
-import module namespace source = "http://baumann-digital.de/portal-app/ns/source" at "/db/apps/baudiApp/modules/source.xqm";
-import module namespace locus = "http://baumann-digital.de/portal-app/ns/locus" at "/db/apps/baudiApp/modules/locus.xqm";
-import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
+import module namespace shared = "http://baumann-digital.de/portal-app/ns/shared" at $config:app-root ||"/modules/shared.xqm";
+import module namespace work = "http://baumann-digital.de/portal-app/ns/work" at $config:app-root ||"/modules/work.xqm";
+import module namespace source = "http://baumann-digital.de/portal-app/ns/source" at $config:app-root ||"/modules/source.xqm";
+import module namespace locus = "http://baumann-digital.de/portal-app/ns/locus" at $config:app-root ||"/modules/locus.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at $config:app-root ||"/modules/persons.xqm";
 
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";

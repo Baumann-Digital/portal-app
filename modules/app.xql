@@ -3,18 +3,18 @@ xquery version "3.1";
 module namespace app = "http://baumann-digital.de/ns/templates";
 
 import module namespace templates = "http://exist-db.org/xquery/html-templating";
-import module namespace config = "https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
-import module namespace crud = "http://baumann-digital.de/ns/crud" at "/db/apps/baudiApp/modules/crud.xqm";
+import module namespace config = "https://exist-db.org/xquery/config" at $config:app-root ||"/modules/config.xqm";
+import module namespace crud = "http://baumann-digital.de/ns/crud" at $config:app-root ||"/modules/crud.xqm";
 (:import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";:)
 import module namespace xmldb = "http://exist-db.org/xquery/xmldb";
-import module namespace i18n = "http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
-import module namespace shared = "http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
-import module namespace work = "http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xqm";
-import module namespace source = "http://baumann-digital.de/portal-app/ns/source" at "/db/apps/baudiApp/modules/source.xqm";
-import module namespace locus = "http://baumann-digital.de/portal-app/ns/locus" at "/db/apps/baudiApp/modules/locus.xqm";
-import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
-import module namespace editions="http://baumann-digital.de/portal-app/ns/editions" at "/db/apps/baudiApp/modules/editions.xqm";
-import module namespace functx = "http://www.functx.com" at "/db/apps/baudiApp/modules/functx.xqm";
+import module namespace i18n = "http://exist-db.org/xquery/i18n" at $config:app-root ||"/modules/i18n.xql";
+import module namespace shared = "http://baumann-digital.de/portal-app/ns/shared" at $config:app-root ||"/modules/shared.xqm";
+import module namespace work = "http://baumann-digital.de/portal-app/ns/work" at $config:app-root ||"/modules/work.xqm";
+import module namespace source = "http://baumann-digital.de/portal-app/ns/source" at $config:app-root ||"/modules/source.xqm";
+import module namespace locus = "http://baumann-digital.de/portal-app/ns/locus" at $config:app-root ||"/modules/locus.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at $config:app-root ||"/modules/persons.xqm";
+import module namespace editions="http://baumann-digital.de/portal-app/ns/editions" at $config:app-root ||"/modules/editions.xqm";
+import module namespace functx = "http://www.functx.com" at $config:app-root ||"/modules/functx.xqm";
 import module namespace console="http://exist-db.org/xquery/console";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare namespace mei = "http://www.music-encoding.org/ns/mei";
@@ -145,7 +145,7 @@ declare function app:load-document($node as node(), $model as map(*)) {
                     "document-id": $id,
                     "document": $doc,
                     "document-title": $doc//tei:fileDesc/tei:titleStmt/tei:title/normalize-space(data(.)),
-                    "document-content": transform:transform($doc//tei:text, doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())
+                    "document-content": transform:transform($doc//tei:text, doc($config:app-root || "/resources/xslt/contentDocument.xsl"), ())
                 }
             ))
         else
@@ -199,10 +199,10 @@ declare function app:viewDoc($node as node(), $model as map(*)) {
         <!-- Tab panels -->
         <div class="tab-content">
           <!--  <div class="tab-pane fade show active" id="datenblatt" >
-            {transform:transform($dokument,doc("/db/apps/baudiApp/resources/xslt/dokumentDatenblatt.xsl"), ())}
+            {transform:transform($dokument,doc($config:app-root || "/resources/xslt/dokumentDatenblatt.xsl"), ())}
             </div>-->
             <div class="tab-pane fade show active" id="inhalt" >
-            {transform:transform($doc//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentDocument.xsl"), ())}
+            {transform:transform($doc//tei:text,doc($config:app-root || "/resources/xslt/contentDocument.xsl"), ())}
             </div>
        </div>
     </div>
@@ -236,7 +236,7 @@ return
     <!-- Tab panels -->
     <div class="tab-content">
     <div class="tab-pane fade" id="datenblatt" role="tabpanel">
-        {transform:transform($letter//tei:teiHeader,doc("/db/apps/baudiApp/resources/xslt/metadataLetter.xsl"), ())}
+        {transform:transform($letter//tei:teiHeader,doc($config:app-root || "/resources/xslt/metadataLetter.xsl"), ())}
     </div>
     
     {if (count($pages)=1)
@@ -257,7 +257,7 @@ return
                 <br/>
                 <strong>Transkription</strong>
                 <br/><br/>
-                {transform:transform($letter//tei:text,doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
+                {transform:transform($letter//tei:text,doc($config:app-root || "/resources/xslt/contentLetter.xsl"), ())}
         </div>
         <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="bigPicture" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -301,7 +301,7 @@ return
                 <br/>
                 <strong>Transkription</strong>
                 <br/><br/>
-                {transform:transform($letter//tei:div[@type='page' and @n=$page],doc("/db/apps/baudiApp/resources/xslt/contentLetter.xsl"), ())}
+                {transform:transform($letter//tei:div[@type='page' and @n=$page],doc($config:app-root || "/resources/xslt/contentLetter.xsl"), ())}
        </div>
 <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="{concat('bigPicture',$page)}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -1264,7 +1264,7 @@ return
 (
     <div class="container">
     <br/>
-        {transform:transform(shared:getI18nText($doc), doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+        {transform:transform(shared:getI18nText($doc), doc($config:app-root || "/resources/xslt/formattingText.xsl"), ())}
     </div>
 )
 };
@@ -1280,7 +1280,7 @@ return
             <h1>Ludwig Baumann <span class="text-muted" style="font-size: x-large;">(1866–1944)</span></h1>
         <hr/>
         </div>
-            {transform:transform(shared:getI18nText($doc), doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+            {transform:transform(shared:getI18nText($doc), doc($config:app-root || "/resources/xslt/formattingText.xsl"), ())}
     </div>
 };
 
@@ -1297,7 +1297,7 @@ return
         </div>
         <hr/>
         <div class="container">
-            {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+            {transform:transform($text,doc($config:app-root || "/resources/xslt/formattingText.xsl"), ())}
         </div>
     </div>
 )
@@ -1316,7 +1316,7 @@ return
         </div>
         <hr/>
         <div class="container">
-            {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+            {transform:transform($text,doc($config:app-root || "/resources/xslt/formattingText.xsl"), ())}
         </div>
     </div>
 )
@@ -1420,7 +1420,7 @@ return
       <div class="tab-content">
           <div class="tab-pane fade show active" id="tab1">
               <br/>
-              {transform:transform($text,doc("/db/apps/baudiApp/resources/xslt/formattingText.xsl"), ())}
+              {transform:transform($text,doc($config:app-root || "/resources/xslt/formattingText.xsl"), ())}
           </div>
       </div>
   </div>
@@ -1443,13 +1443,13 @@ return
     <!-- Tab panels -->
     <div class="tab-content">
         <div class="tab-pane fade show active" id="coding" >
-        {transform:transform($codingGuidelines,doc("/db/apps/baudiApp/resources/xslt/contentCodingGuidelines.xsl"), ())}
+        {transform:transform($codingGuidelines,doc($config:app-root || "/resources/xslt/contentCodingGuidelines.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="edition" >
-        {transform:transform($editiorialGuidelines,doc("/db/apps/baudiApp/resources/xslt/contentEditorialGuidelines.xsl"), ())}
+        {transform:transform($editiorialGuidelines,doc($config:app-root || "/resources/xslt/contentEditorialGuidelines.xsl"), ())}
         </div>
         <div class="tab-pane fade" id="sourceDesc" >
-        {transform:transform($sourceDescGuidelines,doc("/db/apps/baudiApp/resources/xslt/contentSourceDescGuidelines.xsl"), ())}
+        {transform:transform($sourceDescGuidelines,doc($config:app-root || "/resources/xslt/contentSourceDescGuidelines.xsl"), ())}
         </div>
    </div>
     </div>
@@ -2105,7 +2105,7 @@ declare function local:getPeriodicals($model) {
 
 declare %templates:wrap function app:getPeriodicalsSummary($node as node(), $model as map(*)) {
     let $periodical := local:getPeriodicals($model)//tei:body/node()
-    let $xslt := doc('/db/apps/baudiApp/resources/xslt/contentLetter.xsl')
+    let $xslt := doc($config:app-root || '/resources/xslt/contentLetter.xsl')
     return
         transform:transform($periodical, $xslt, ())
 };
@@ -2157,7 +2157,7 @@ return
 };
 
 declare function app:portalVersion($node as node(), $model as map(*)){
- let $package := doc('/db/apps/baudiApp/expath-pkg.xml')
+ let $package := doc($config:app-root || '/expath-pkg.xml')
  let $version := $package//pkg:package/@version/string()
  let $versionStr := substring-before($version, '-')
  let $versionHash := substring-after($version, '-')

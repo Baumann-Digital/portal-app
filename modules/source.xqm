@@ -5,13 +5,13 @@ module namespace source="http://baumann-digital.de/portal-app/ns/source";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 
-import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
-import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
-import module namespace work="http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xqm";
-import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "/db/apps/baudiApp/modules/persons.xqm";
+import module namespace app="http://baumann-digital.de/ns/templates" at $config:app-root ||"/modules/app.xql";
+import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at $config:app-root ||"/modules/shared.xqm";
+import module namespace work="http://baumann-digital.de/portal-app/ns/work" at $config:app-root ||"/modules/work.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at $config:app-root ||"/modules/persons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
-import module namespace config="https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
+import module namespace config="https://exist-db.org/xquery/config" at $config:app-root ||"/modules/config.xqm";
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace transform="http://exist-db.org/xquery/transform";
 
@@ -513,7 +513,7 @@ declare function source:renderTitlePage($source as node()*) {
 let $titlePage := $source//mei:titlePage
 
 return
-    transform:transform($titlePage,doc('/db/apps/baudiApp/resources/xslt/formattingTitlePage.xsl'),())
+    transform:transform($titlePage,doc($config:app-root || '/resources/xslt/formattingTitlePage.xsl'),())
 
 };
 
