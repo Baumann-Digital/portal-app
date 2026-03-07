@@ -22,7 +22,6 @@ import module namespace jsonp="http://www.jsonp.org";
 
 import module namespace i18n="http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules//db/apps/baudiApp/modules/i18n.xql";
 
-declare variable $shared:xsltTEI as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/tei/html5/html5.xsl');
 declare variable $shared:xsltFormattingText as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingText.xsl');
 declare variable $shared:xsltFormattingTextWithoutLinks as document-node() := doc('xmldb:exist:///db/apps/baudiApp/resources/xslt/formattingTextWithoutLinks.xsl');
 (:~ 
