@@ -136,6 +136,7 @@
                 <exclude name="yarn.lock"/>
                 <exclude name="watch-sass.sh"/>
                 <exclude name="*.md"/>
+                <exclude name="saxon*.jar"/>
             </fileset>
         </copy>
         
@@ -159,6 +160,7 @@
                 <exclude name="**/docs/**"/>
                 <exclude name="**/examples/**"/>
                 <exclude name="**/*.html"/>
+                <exclude name="saxon*.jar"/>
             </fileset>
         </copy>
         
