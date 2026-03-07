@@ -761,6 +761,11 @@ header.masthead .masthead-heading {
 }
 
 section#contact {
+  height: 20em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: #212529;
   background-image: url("/resources/js/assets/img/map-image.png");
   background-repeat: no-repeat;
@@ -768,6 +773,10 @@ section#contact {
 }
 section#contact .section-heading {
   color: #fff;
+}
+section#contact h2,
+section#contact h3 {
+  text-align: center;
 }
 section#contact form#contactForm .form-group {
   margin-bottom: 1.5rem;

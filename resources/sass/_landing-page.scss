@@ -376,6 +376,11 @@ header.masthead {
 
 // Contact Section
 section#contact {
+  height: 20em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: $gray-dark;
   background-image: url("/resources/js/assets/img/map-image.png");
   background-repeat: no-repeat;
@@ -383,6 +388,11 @@ section#contact {
 
   .section-heading {
     color: $white;
+  }
+
+  h2,
+  h3 {
+    text-align: center;
   }
 
   form#contactForm {
