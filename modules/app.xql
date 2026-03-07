@@ -32,7 +32,6 @@ declare variable $app:collectionWorks := crud:data-collection('works')//mei:work
 declare variable $app:collectionSourcesMusic := crud:data-collection('sources/music')//mei:mei[@status];
 declare variable $app:collectionPersons := crud:data-collection('persons')//tei:person;
 declare variable $app:collectionInstitutions := crud:data-collection('institutions')//tei:org;
-declare variable $app:collectionPeriodicals := crud:data-collection('periodicals')//tei:TEI;
 declare variable $app:collectionLoci := crud:data-collection('loci')//tei:place;
 declare variable $app:collectionGalleryItems := 0 (:collection($config:data-collection-path || '/galleryItems/data')//tei:TEI:);
 declare variable $app:collectionDocuments := crud:data-collection('sources/documents')//tei:TEI;
@@ -1322,110 +1321,6 @@ return
 )
 };
 
-(:~
- : Loads periodicals collection into the model map for registry view.
- :)
-declare function app:load-registry-periodicals($node as node(), $model as map(*)) {
-    map:merge((
-        $model,
-        map {
-            "periodicals": $app:collectionPeriodicals
-        }
-    ))
-};
-
-(:~
- : Outputs the list of periodical cards for the registry.
- :)
-declare function app:registry-periodicals-list($node as node(), $model as map(*)) {
-    let $cards := for $item in $model?periodicals
-                let $id := $item/@xml:id/string()
-                let $title := $item//tei:sourceDesc//tei:title[@type="main"]/text()
-                let $titleSub := for $each in $item//tei:series/tei:title/text()
-                                    return
-                                        ($each,<br/>)
-                let $titleIssue := $item//tei:fileDesc/tei:titleStmt/tei:title/text()
-                let $publisher := $item//tei:sourceDesc//tei:publisher/text()
-                let $pubPlace := $item//tei:sourceDesc//tei:pubPlace/text()
-                let $pubDate := $item//tei:sourceDesc//tei:date/text()
-                let $volume := $item//tei:sourceDesc//tei:biblScope[@unit="volume"]/text()
-                let $issue := $item//tei:sourceDesc//tei:biblScope[@unit="issue"]/text()
-                let $status := $item//tei:publicationStmt/tei:p
-                let $statusSymbol := shared:get-status-symbol($status)
-
-                return
-                    <div class="card bg-light mb-3">
-                        <div class="card-body">
-                            <div class="row justify-content-between">
-                                <div class="col">
-                                    <h5 class="card-title">{$title}</h5>
-                                    {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
-                                </div>
-                                <div class="col-2">
-                                    <p class="text-right">{$statusSymbol}</p>
-                                </div>
-                            </div>
-                            <p class="card-text">
-                                {concat($publisher, ' ', $pubPlace, ' (', $pubDate, ')')}
-                                <br/>
-                                {concat('Jg. ', $volume, ' H. ', $issue)}
-                            </p>
-                            <hr/>
-                            <a href="/{$id}" class="card-link">{$id}</a>
-                        </div>
-                    </div>
-    return
-        $cards
-};
-
-(: DEPRECATED - kept for backward compatibility :)
-declare function app:registryPeriodicals($node as node(), $model as map(*)) {
-    let $model-with-data := app:load-registry-periodicals($node, $model)
-    return
-        <div class="container">
-            <br/>
-            <div class="page-header">
-                <h1><i18n:text key="registry.periodocals"/></h1>
-            </div>
-            <hr/>
-            <div class="container">
-                <div class="container  overflow-auto" style="max-height: 500px;">
-                    {app:registry-periodicals-list($node, $model-with-data)}
-                </div>
-                <br/>
-            </div>
-        </div>
-};
-
-declare function app:viewPeriodical($node as node(), $model as map(*)) {
- 
-let $id := request:get-parameter("periodical-id", "error")
-let $issue := $app:collectionPeriodicals[@xml:id=$id]
-let $titleIssue := $issue//tei:fileDesc/tei:titleStmt/tei:title/text()
-let $text := $issue//tei:body
-
-return
-  <div class="container">
-      <br/>
-      <div class="page-header">
-          <h3>{$titleIssue}</h3>
-          <h5>{$id}</h5>
-      </div>
-      <hr/>
-  
-      <ul class="nav nav-pills" role="tablist">
-          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab1">Inhalt</a></li>  
-          <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab2">Erwähnungen</a></li>-->
-      </ul>
-      <div class="tab-content">
-          <div class="tab-pane fade show active" id="tab1">
-              <br/>
-              {transform:transform($text,doc($config:app-root || "/resources/xslt/formattingText.xsl"), ())}
-          </div>
-      </div>
-  </div>
-};
-
 declare function app:guidelines($node as node(), $model as map(*)) {
 
 let $codingGuidelines := doc(concat($app:collStrTexts,'/documentation/codingGuidelines.xml'))
@@ -2099,17 +1994,6 @@ declare function app:edition-xml($node as node(), $model as map(*)) {
     )
 };
 
-declare function local:getPeriodicals($model) {
-    collection($periodicalsCollectionURI)/id($model('docID'))
-};
-
-declare %templates:wrap function app:getPeriodicalsSummary($node as node(), $model as map(*)) {
-    let $periodical := local:getPeriodicals($model)//tei:body/node()
-    let $xslt := doc($config:app-root || '/resources/xslt/contentLetter.xsl')
-    return
-        transform:transform($periodical, $xslt, ())
-};
-
 declare function app:countSources($node as node(), $model as map(*)){
 let $count := count($app:collectionSourcesMusic)
 return
@@ -2130,12 +2014,8 @@ let $count := count($app:collectionInstitutions)
 return
     (<span class="badge badge-light">{$count}</span>)
 };
-declare function app:countPeriodicals($node as node(), $model as map(*)){
-let $count := count($app:collectionPeriodicals)
-return
-    (<span class="badge badge-light">{$count}</span>)
-};
-declare function app:countDocuments($node as node(), $model as map(*)){
+
+declare function app:countDocuments($node as node(), $model as map(*){
 let $count := count($app:collectionDocuments)
 return
     (<span class="badge badge-light">{$count}</span>)
