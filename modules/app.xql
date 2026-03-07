@@ -1946,7 +1946,7 @@ return
     (<span class="badge badge-light">{$count}</span>)
 };
 
-declare function app:countDocuments($node as node(), $model as map(*){
+declare function app:countDocuments($node as node(), $model as map(*)){
 let $count := count($app:collectionDocuments)
 return
     (<span class="badge badge-light">{$count}</span>)
