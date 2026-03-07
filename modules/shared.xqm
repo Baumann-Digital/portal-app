@@ -531,135 +531,197 @@ declare function shared:checkGenderforLangValues($persID){
         else('')
 };
 
+(:~
+ : Determine document type based on ID patterns from options.xml
+ : 
+ : @param $docID the document ID to check
+ : @return string identifier for the document type (e.g. 'persons', 'works', 'other')
+ :)
+declare function shared:get-doc-type($docID as xs:string) as xs:string {
+    let $patterns := map {
+        'sourcesMusic': config:get-option('sourcesMusicIDs'),
+        'works': config:get-option('workIDs'),
+        'expressions': config:get-option('expressionIDs'),
+        'persons': config:get-option('personIDs'),
+        'institutions': config:get-option('institutionIDs'),
+        'loci': config:get-option('lociIDs'),
+        'sourcesDocs': config:get-option('sourcesDocIDs')
+    }
+    return
+        if (matches($docID, $patterns?sourcesMusic)) then 'sourcesMusic'
+        else if (matches($docID, $patterns?works)) then 'works'
+        else if (matches($docID, $patterns?expressions)) then 'expressions'
+        else if (matches($docID, $patterns?persons)) then 'persons'
+        else if (matches($docID, $patterns?institutions)) then 'institutions'
+        else if (matches($docID, $patterns?loci)) then 'loci'
+        else if (matches($docID, $patterns?sourcesDocs)) then 'sourcesDocs'
+        else 'other'
+};
+
+(:~
+ : Get label and order for a document type
+ : 
+ : @param $docType the document type identifier
+ : @return map with 'label' and 'order' keys
+ :)
+declare function shared:get-type-info($docType as xs:string) as map(*) {
+    switch ($docType)
+        case 'sourcesMusic' return map {
+            'label': shared:translate('registry.persons.references.sources.music'),
+            'order': '001'
+        }
+        case 'works' return map {
+            'label': shared:translate('registry.persons.references.works'),
+            'order': '002'
+        }
+        case 'expressions' return map {
+            'label': shared:translate('registry.persons.references.works'),
+            'order': '002'
+        }
+        case 'sourcesDocs' return map {
+            'label': shared:translate('registry.persons.references.sources.text'),
+            'order': '003'
+        }
+        case 'persons' return map {
+            'label': shared:translate('registry.persons.references.persons'),
+            'order': '004'
+        }
+        case 'institutions' return map {
+            'label': shared:translate('registry.persons.references.institutions'),
+            'order': '005'
+        }
+        case 'loci' return map {
+            'label': shared:translate('registry.persons.references.loci'),
+            'order': '006'
+        }
+        default return map {
+            'label': shared:translate('registry.persons.references.other'),
+            'order': '007'
+        }
+};
+
+(:~
+ : Extract title from document based on type
+ : 
+ : @param $doc the document node
+ : @param $docType the document type
+ : @return the document title as string
+ :)
+declare function shared:get-doc-title($doc as node(), $docType as xs:string) as xs:string {
+    let $correspActionSent := $doc//tei:correspAction[@type="sent"]
+    let $correspActionReceived := $doc//tei:correspAction[@type="received"]
+    
+    let $title := if($correspActionSent)
+                  then(
+                      let $sent := shared:getPersName($correspActionSent/tei:persName/@key, 'short','yes')
+                      let $received := shared:getPersName($correspActionReceived/tei:persName/@key, 'short','yes')
+                      return ($sent, ' an ', $received)
+                  )
+                  else if($docType = 'works' or $docType = 'expressions')
+                  then($doc//(mei:work//mei:titlePart[@type="main"])[1]/text())
+                  else if($docType = 'sourcesMusic')
+                  then($doc//(mei:manifestation//mei:titlePart[@type="main"])[1]/text())
+                  else if($docType = 'persons')
+                  then($doc/tei:persName[1]//text())
+                  else if($docType = 'institutions')
+                  then($doc/tei:orgName[1]//text())
+                  else if($docType = 'loci')
+                  then($doc/tei:placeName[1]//text())
+                  else if($doc/name()='TEI')
+                  then($doc//tei:titleStmt/tei:title/string())
+                  else('noTitle')
+    
+    return string-join($title, ' ') => normalize-space()
+};
+
+(:~
+ : Build reference data structure for a person/institution/locus
+ : 
+ : @param $id the ID to find references for
+ : @return map with grouped reference data
+ :)
+declare function shared:build-reference-data($id as xs:string) as map(*) {
+    let $collectionReference := (
+        $app:collectionPersons[matches(.//@key,$id)],
+        $app:collectionInstitutions[matches(.//@key,$id)],
+        $app:collectionLoci[matches(.//@key,$id)],
+        $app:collectionDocuments[matches(.//@key,$id)],
+        $app:collectionSourcesMusic[matches(.//@codedval,$id)],
+        $app:collectionWorks[matches(.//@codedval,$id)],
+        $app:collectionEditions[matches(.//@key,$id)],
+        $app:collectionTexts[matches(.//@key,$id)]
+    )
+    
+    let $entries := for $doc in $collectionReference
+                    let $docID := $doc/@xml:id/string()
+                    let $docType := shared:get-doc-type($docID)
+                    let $typeInfo := shared:get-type-info($docType)
+                    let $title := shared:get-doc-title($doc, $docType)
+                    let $sortValue := $title => replace('»','') => replace('«','')
+                    return map {
+                        'id': $docID,
+                        'type': $docType,
+                        'typeLabel': $typeInfo?label,
+                        'order': $typeInfo?order,
+                        'title': $title,
+                        'sortValue': $sortValue
+                    }
+    
+    (: Group by type :)
+    let $grouped := map:merge(
+        for $entry in $entries
+        let $type := $entry?type
+        group by $type
+        return map:entry($type, array { $entry })
+    )
+    
+    return map {
+        'total': count($entries),
+        'groups': $grouped
+    }
+};
+
+(:~
+ : Format reference data as HTML (legacy function)
+ : 
+ : @param $data the reference data map from build-reference-data()
+ : @return HTML elements
+ :)
+declare function shared:format-references-html($data as map(*)) {
+    for $groupKey in map:keys($data?groups)
+    let $entries := $data?groups($groupKey)?*
+    let $firstEntry := $entries[1]
+    let $typeInfo := shared:get-type-info($groupKey)
+    order by $typeInfo?order
+    return
+        <div class="RegisterSortBox" xmlns="http://www.w3.org/1999/xhtml">
+            <div class="RegisterSortEntry">{$typeInfo?label}</div>
+            {
+                for $entry in $entries
+                order by $entry?sortValue
+                return
+                    <div class="row RegisterEntry">
+                        <div class="col-3">
+                            {$entry?typeLabel}
+                        </div>
+                        <div class="col" docTitle="{$entry?title}">{$entry?title}</div>
+                        <div class="col-3" docID="{$entry?id}">
+                            <a href="/{$entry?id}">{$entry?id}</a>
+                        </div>
+                    </div>
+            }
+        </div>
+};
+
+(:~
+ : Main entry point - get references and return as HTML (backward compatible)
+ : 
+ : @param $id the ID to find references for
+ : @return HTML representation of references
+ :)
 declare function shared:getReferences($id) {
-    (: Load ID patterns from options :)
-    let $patternSourcesMusic := config:get-option('sourcesMusicIDs')
-    let $patternWorks := config:get-option('workIDs')
-    let $patternExpressions := config:get-option('expressionIDs')
-    let $patternPersons := config:get-option('personIDs')
-    let $patternInstitutions := config:get-option('institutionIDs')
-    let $patternLoci := config:get-option('lociIDs')
-    let $patternSourcesDocs := config:get-option('sourcesDocIDs')
-    
-    let $collectionReference := ($app:collectionPersons[matches(.//@key,$id)],
-                                 $app:collectionInstitutions[matches(.//@key,$id)],
-                                 $app:collectionLoci[matches(.//@key,$id)],
-                                 $app:collectionDocuments[matches(.//@key,$id)],
-                                 $app:collectionSourcesMusic[matches(.//@codedval,$id)],
-                                 $app:collectionWorks[matches(.//@codedval,$id)],
-                                 $app:collectionEditions[matches(.//@key,$id)],
-                                 $app:collectionTexts[matches(.//@key,$id)])
-    
-    let $entryGroups := for $doc in $collectionReference
-                          let $docID := $doc/@xml:id
-                          (: Match ID against patterns to determine type :)
-                          let $docType := if(matches($docID, $patternSourcesMusic))
-                                          then('sourcesMusic')
-                                          else if(matches($docID, $patternWorks))
-                                          then('works')
-                                          else if(matches($docID, $patternExpressions))
-                                          then('expressions')
-                                          else if(matches($docID, $patternPersons))
-                                          then('persons')
-                                          else if(matches($docID, $patternInstitutions))
-                                          then('institutions')
-                                          else if(matches($docID, $patternLoci))
-                                          then('loci')
-                                          else if(matches($docID, $patternSourcesDocs))
-                                          then('sourcesDocs')
-                                          else('other')
-                          let $docInfo := if($docType = 'sourcesMusic')
-                                          then(shared:translate('registry.persons.references.sources.music'))
-                                          else if ($docType = 'works' or $docType = 'expressions')
-                                          then (shared:translate('registry.persons.references.works'))
-                                          else if($docType = 'persons')
-                                          then(shared:translate('registry.persons.references.persons'))
-                                          else if($docType = 'institutions')
-                                          then(shared:translate('registry.persons.references.institutions'))
-                                          else if($docType = 'loci')
-                                          then(shared:translate('registry.persons.references.loci'))
-                                          else if($docType = 'sourcesDocs')
-                                          then(shared:translate('registry.persons.references.sources.text'))
-                                          else(shared:translate('registry.persons.references.other'))
-                          let $entryOrder := if($docType = 'works' or $docType = 'expressions')
-                                          then('002')
-                                          else if ($docType = 'sourcesMusic')
-                                          then ('001')
-                                          else if($docType = 'sourcesDocs')
-                                          then('003')
-                                          else if($docType = 'persons')
-                                          then('004')
-                                          else if($docType = 'institutions')
-                                          then('005')
-                                          else if($docType = 'loci')
-                                          then('006')
-                                          else('007')
-                          let $correspActionSent := $doc//tei:correspAction[@type="sent"]
-                          let $correspActionReceived := $doc//tei:correspAction[@type="received"]
-                          let $correspSentTurned := shared:getPersName($correspActionSent/tei:persName/@key, 'short','yes')
-                          let $correspReceivedTurned := shared:getPersName($correspActionReceived/tei:persName/@key, 'short','yes')
-                          let $docDate := if($correspActionSent)
-                                          then('DATUM')
-                                          else(<br/>)
-                          let $docTitle := if($correspActionSent)
-                                           then($correspSentTurned,' an ',$correspReceivedTurned)
-                                           else if($docType = 'works' or $docType = 'expressions')
-                                           then($doc//(mei:work//mei:titlePart[@type="main"])[1]/text())
-                                           else if($docType = 'sourcesMusic') 
-                                           then($doc//(mei:manifestation//mei:titlePart[@type="main"])[1]/text())
-                                           else if($docType = 'persons') 
-                                           then($doc/tei:persName[1]//text())
-                                           else if($docType = 'institutions') 
-                                           then($doc/tei:orgName[1]//text())
-                                           else if($docType = 'loci')
-                                           then($doc/tei:placeName[1]//text())
-                                           else if($doc/name()='TEI')
-                                           then($doc//tei:titleStmt/tei:title/string())
-                                           else('noTitle')
-                          let $docTitle := $docTitle => string-join(' => normalize-space() ')
-                          let $workSortValue := string-join($docTitle,' ') => replace('»','') => replace('«','')
-                          let $entry := <div class="row RegisterEntry" xmlns="http://www.w3.org/1999/xhtml">
-                                          <div class="col-3" dateToSort="{$docDate}" workSort="{$workSortValue}">
-                                              {$docInfo}
-                                              {if($docDate and starts-with($docID,'A'))
-                                              then(' vom ','DATUM')
-                                              else()}
-                                         </div>
-                                         <div class="col" docTitle="{$docTitle}">{$docTitle}</div>
-                                         <div class="col-3" docID="{$docID}"><a href="/{$docID}">{$docID/string()}</a></div>
-                                       </div>
-                          group by $docType
-                          return
-                              (<div xmlns="http://www.w3.org/1999/xhtml" groupName="{$docType}" order="{distinct-values($entryOrder)}">{for $each in $entry
-                                    order by if($each/div/@dateToSort !='')
-                                             then($each/div/@dateToSort)
-                                             else if($each/div/@workSort)
-                                             then($each/div/@workSort)
-                                             else ($each/div/@docTitle)
-                                    return
-                                        $each}</div>)
-   let $entryGroupsShow := for $groups in $entryGroups
-                              let $groupName := $groups/@groupName
-                              let $order := $groups/@order
-                              let $registerSortEntryLabel := switch ($groupName/string())
-                                                               case 'sourcesMusic' return shared:translate('registry.persons.references.sources.music')
-                                                               case 'works' return shared:translate('registry.persons.references.works')
-                                                               case 'expressions' return shared:translate('registry.persons.references.works')
-                                                               case 'persons' return shared:translate('registry.persons.references.persons')
-                                                               case 'institutions' return shared:translate('registry.persons.references.institutions')
-                                                               case 'loci' return shared:translate('registry.persons.references.loci')
-                                                               case 'sourcesDocs' return shared:translate('registry.persons.references.sources.text')
-                                                               default return shared:translate('registry.persons.references.other')
-                                order by $order
-                                return
-                                 <div class="RegisterSortBox" xmlns="http://www.w3.org/1999/xhtml">
-                                          <div class="RegisterSortEntry">{$registerSortEntryLabel}</div>
-                                          {for $group in $groups
-                                              return
-                                                  $group}
-                                 </div>
-   return
-    $entryGroupsShow
+    let $data := shared:build-reference-data($id)
+    return shared:format-references-html($data)
 };
 
 declare function shared:get-status-symbol($status as xs:string?) as node()? {
