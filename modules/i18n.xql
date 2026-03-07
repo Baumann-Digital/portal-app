@@ -7,7 +7,7 @@ module namespace i18n = 'http://exist-db.org/xquery/i18n';
     : @author Tobias Krebs <tobi.krebs@betterform.de>
 :)
 
-import module namespace baudiShared = "http://baumann-digital.de/ns/baudiShared" at "/db/apps/baudiApp/modules/baudiShared.xqm";
+import module namespace baudiShared = "http://baumann-digital.de/portal-app/ns/shared" at "/db/apps/baudiApp/modules/shared.xqm";
 
 (:~
  : Start processing the provided content using the modules defined by $modules. $modules should

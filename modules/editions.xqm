@@ -1,14 +1,14 @@
 xquery version "3.1";
 
-module namespace baudiEditions="http://baumann-digital.de/ns/baudiEditions";
+module namespace baudiEditions="http://baumann-digital.de/portal-app/ns/editions";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace edirom="http://www.edirom.de/ns/1.3";
-declare namespace baudiAnnots="http://baumann-digital.de/ns/baudiAnnots";
+declare namespace baudiAnnots="http://baumann-digital.de/portal-app/ns/annots";
 
 import module namespace app="http://baumann-digital.de/ns/templates" at "/db/apps/baudiApp/modules/app.xql";
-import module namespace baudiWork="http://baumann-digital.de/ns/baudiWork" at "/db/apps/baudiApp/modules/baudiWork.xql";
+import module namespace baudiWork="http://baumann-digital.de/portal-app/ns/work" at "/db/apps/baudiApp/modules/work.xql";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace request="http://exist-db.org/xquery/request";
