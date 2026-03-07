@@ -8,8 +8,8 @@
 
 // Main Navigation - Landing Page Style
 #mainNav {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
   background-color: $gray-dark !important;
 
   .navbar-toggler {

@@ -1,0 +1,451 @@
+// Landing Page Styles
+// ==================================================
+// Based on Start Bootstrap - Agency Template
+
+// Masthead / Hero Section
+header.masthead {
+  padding-top: 10.5rem;
+  padding-bottom: 6rem;
+  text-align: center;
+  color: $white;
+  background-image: url("$resources/img/Portrait-Signatur-ante-1926-SSZ-18-1926_06-09.png");
+  background-position: center center;
+  background-size: contain;
+
+  .masthead-subheading {
+    font-size: 1.5rem;
+    font-style: italic;
+    line-height: 1.5rem;
+    margin-bottom: 25px;
+    font-family: $font-family-base;
+  }
+
+  .masthead-heading {
+    font-size: 3.25rem;
+    font-weight: 700;
+    line-height: 3.25rem;
+    margin-bottom: 2rem;
+    font-family: $font-family-headings;
+  }
+
+  @media (min-width: 768px) {
+    padding-top: 17rem;
+    padding-bottom: 12.5rem;
+
+    .masthead-subheading {
+      font-size: 2.25rem;
+      line-height: 2.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .masthead-heading {
+      font-size: 4.5rem;
+      line-height: 4.5rem;
+      margin-bottom: 4rem;
+    }
+  }
+}
+
+// Portfolio Section
+#portfolio {
+  .portfolio-item {
+    max-width: 25rem;
+    aspect-ratio: 1 / 1;
+    margin-left: auto;
+    margin-right: auto;
+
+    .portfolio-link {
+      position: relative;
+      display: block;
+      margin: 0 auto;
+
+      .portfolio-hover {
+        display: flex;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: $baudi-green-rgba;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity ease-in-out 0.25s;
+
+        .portfolio-hover-content {
+          font-size: 1.25rem;
+          color: $white;
+        }
+      }
+
+      &:hover .portfolio-hover {
+        opacity: 1;
+      }
+    }
+
+    .portfolio-caption {
+      padding: 1.5rem;
+      text-align: center;
+      background-color: $white;
+
+      .portfolio-caption-heading {
+        font-size: 1.5rem;
+        font-family: $font-family-headings;
+        font-weight: 700;
+        margin-bottom: 0;
+      }
+
+      .portfolio-caption-subheading {
+        font-style: italic;
+        font-family: $font-family-base;
+      }
+    }
+  }
+}
+
+// Portfolio Modal
+.portfolio-modal {
+  .modal-dialog {
+    margin: 1rem;
+    max-width: 100vw;
+  }
+
+  .modal-content {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    text-align: center;
+
+    h2 {
+      font-size: 3rem;
+      line-height: 3rem;
+    }
+
+    p.item-intro {
+      font-style: italic;
+      margin-bottom: 2rem;
+      font-family: $font-family-base;
+    }
+
+    p {
+      margin-bottom: 2rem;
+    }
+
+    ul.list-inline {
+      margin-bottom: 2rem;
+    }
+
+    img {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    cursor: pointer;
+    background-color: transparent;
+
+    &:hover {
+      opacity: 0.3;
+    }
+  }
+}
+
+// Timeline
+.timeline {
+  position: relative;
+  padding: 0;
+  list-style: none;
+
+  &:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 40px;
+    width: 2px;
+    margin-left: -1.5px;
+    content: "";
+    background-color: $baudi-green-rgba;
+  }
+
+  > li {
+    position: relative;
+    min-height: 50px;
+    margin-bottom: 50px;
+
+    &:after,
+    &:before {
+      display: table;
+      content: " ";
+    }
+
+    &:after {
+      clear: both;
+    }
+
+    .timeline-panel {
+      position: relative;
+      float: right;
+      width: 100%;
+      padding: 0 20px 0 100px;
+      text-align: left;
+
+      &:before {
+        right: auto;
+        left: -15px;
+        border-right-width: 15px;
+        border-left-width: 0;
+      }
+
+      &:after {
+        right: auto;
+        left: -14px;
+        border-right-width: 14px;
+        border-left-width: 0;
+      }
+    }
+
+    .timeline-image {
+      position: absolute;
+      z-index: 100;
+      left: 0;
+      width: 80px;
+      height: 80px;
+      margin-left: 0;
+      text-align: center;
+      color: $white;
+      border: 7px solid $gray-light;
+      border-radius: 100%;
+      background-color: $baudi-green-rgba;
+
+      h4 {
+        font-size: 10px;
+        line-height: 14px;
+        margin-top: 12px;
+      }
+    }
+
+    &.timeline-inverted > .timeline-panel {
+      float: right;
+      padding: 0 20px 0 100px;
+      text-align: left;
+
+      &:before {
+        right: auto;
+        left: -15px;
+        border-right-width: 15px;
+        border-left-width: 0;
+      }
+
+      &:after {
+        right: auto;
+        left: -14px;
+        border-right-width: 14px;
+        border-left-width: 0;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .timeline-heading {
+    h4 {
+      margin-top: 0;
+      color: inherit;
+
+      &.subheading {
+        text-transform: none;
+      }
+    }
+  }
+
+  .timeline-body {
+    > ul,
+    > p {
+      margin-bottom: 0;
+    }
+  }
+
+  @media (min-width: 768px) {
+    &:before {
+      left: 50%;
+    }
+
+    > li {
+      min-height: 100px;
+      margin-bottom: 100px;
+
+      .timeline-panel {
+        float: left;
+        width: 41%;
+        padding: 0 20px 20px 30px;
+        text-align: right;
+      }
+
+      .timeline-image {
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        margin-left: -50px;
+
+        h4 {
+          font-size: 13px;
+          line-height: 18px;
+          margin-top: 16px;
+        }
+      }
+
+      &.timeline-inverted > .timeline-panel {
+        float: right;
+        padding: 0 30px 20px 20px;
+        text-align: left;
+      }
+    }
+  }
+
+  @media (min-width: 992px) {
+    > li {
+      min-height: 150px;
+
+      .timeline-panel {
+        padding: 0 20px 20px;
+      }
+
+      .timeline-image {
+        width: 150px;
+        height: 150px;
+        margin-left: -75px;
+
+        h4 {
+          font-size: 18px;
+          line-height: 26px;
+          margin-top: 30px;
+        }
+      }
+
+      &.timeline-inverted > .timeline-panel {
+        padding: 0 20px 20px;
+      }
+    }
+  }
+
+  @media (min-width: 1200px) {
+    > li {
+      min-height: 170px;
+
+      .timeline-panel {
+        padding: 0 20px 20px 100px;
+      }
+
+      .timeline-image {
+        width: 170px;
+        height: 170px;
+        margin-left: -85px;
+
+        h4 {
+          margin-top: 40px;
+        }
+      }
+
+      &.timeline-inverted > .timeline-panel {
+        padding: 0 100px 20px 20px;
+      }
+    }
+  }
+}
+
+// Team Section
+.team-member {
+  margin-bottom: 3rem;
+  text-align: center;
+
+  img {
+    width: 14rem;
+    height: 14rem;
+    border: 0.5rem solid rgba(0, 0, 0, 0.1);
+  }
+
+  h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+  }
+}
+
+// Contact Section
+section#contact {
+  background-color: $gray-dark;
+  background-image: url("/resources/js/assets/img/map-image.png");
+  background-repeat: no-repeat;
+  background-position: center;
+
+  .section-heading {
+    color: $white;
+  }
+
+  form#contactForm {
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      input,
+      textarea {
+        padding: 1.25rem;
+      }
+
+      input.form-control {
+        height: auto;
+      }
+    }
+
+    .form-group-textarea {
+      height: 100%;
+
+      textarea {
+        height: 100%;
+        min-height: 10rem;
+      }
+    }
+
+    p.help-block {
+      margin: 0;
+    }
+
+    .form-control:focus {
+      border-color: $baudi-green-rgba;
+      box-shadow: none;
+    }
+
+    ::-webkit-input-placeholder {
+      font-family: $font-family-headings;
+      font-weight: 700;
+      color: #ced4da;
+    }
+
+    :-moz-placeholder {
+      font-family: $font-family-headings;
+      font-weight: 700;
+      color: #ced4da;
+    }
+
+    ::-moz-placeholder {
+      font-family: $font-family-headings;
+      font-weight: 700;
+      color: #ced4da;
+    }
+
+    :-ms-input-placeholder {
+      font-family: $font-family-headings;
+      font-weight: 700;
+      color: #ced4da;
+    }
+  }
+}
+
+// Footer
+.footer {
+  text-align: center;
+  font-size: 0.9rem;
+  font-family: $font-family-headings;
+}
