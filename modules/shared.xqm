@@ -7,11 +7,11 @@ declare namespace mei="http://www.music-encoding.org/ns/mei";
 
 import module namespace console="http://exist-db.org/xquery/console";
 
-import module namespace app="http://baumann-digital.de/ns/templates" at $config:app-root ||"/modules/app.xql";
-import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at $config:app-root ||"/modules/persons.xqm";
+import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "persons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
-import module namespace config="https://exist-db.org/xquery/config" at $config:app-root ||"/modules/config.xqm";
+import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace range="http://exist-db.org/xquery/range";
 import module namespace transform="http://exist-db.org/xquery/transform";
@@ -20,7 +20,7 @@ import module namespace functx="http://www.functx.com";
 import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
 
-import module namespace i18n="http://exist-db.org/xquery/i18n" at $config:app-root ||"/modules/i18n.xql";
+import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
 declare variable $shared:xsltFormattingText as document-node() := doc($config:app-root || '/resources/xslt/formattingText.xsl');
 declare variable $shared:xsltFormattingTextWithoutLinks as document-node() := doc($config:app-root || '/resources/xslt/formattingTextWithoutLinks.xsl');

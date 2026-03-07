@@ -7,7 +7,7 @@ module namespace i18n = 'http://exist-db.org/xquery/i18n';
     : @author Tobias Krebs <tobi.krebs@betterform.de>
 :)
 
-import module namespace shared = "http://baumann-digital.de/portal-app/ns/shared" at $config:app-root ||"/modules/shared.xqm";
+import module namespace shared = "http://baumann-digital.de/portal-app/ns/shared" at "shared.xqm";
 
 (:~
  : Start processing the provided content using the modules defined by $modules. $modules should

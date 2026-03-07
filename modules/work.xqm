@@ -6,13 +6,13 @@ declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace edirom="http://www.edirom.de/ns/1.3";
 
-import module namespace app="http://baumann-digital.de/ns/templates" at $config:app-root ||"/modules/app.xql";
-import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at $config:app-root ||"/modules/shared.xqm";
-import module namespace source="http://baumann-digital.de/portal-app/ns/source" at $config:app-root ||"/modules/source.xqm";
-import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at $config:app-root ||"/modules/persons.xqm";
+import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql";
+import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at "shared.xqm";
+import module namespace source="http://baumann-digital.de/portal-app/ns/source" at "source.xqm";
+import module namespace persons="http://baumann-digital.de/portal-app/ns/persons" at "persons.xqm";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
-import module namespace config="https://exist-db.org/xquery/config" at $config:app-root ||"/modules/config.xqm";
+import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace transform="http://exist-db.org/xquery/transform";
 import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
@@ -22,7 +22,7 @@ import module namespace json="http://www.json.org";
 import module namespace jsonp="http://www.jsonp.org";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
-import module namespace i18n="http://exist-db.org/xquery/i18n" at $config:app-root ||"/modules/i18n.xql";
+import module namespace i18n="http://exist-db.org/xquery/i18n" at "i18n.xql";
 
 
 declare function work:getWorkTitle($work as node()*){

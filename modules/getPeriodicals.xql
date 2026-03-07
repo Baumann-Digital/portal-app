@@ -5,9 +5,9 @@ declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace request="http://exist-db.org/xquery/request";
 declare namespace xmldb="http://exist-db.org/xquery/xmldb";
 
-import module namespace app="http://baumann-digital.de/ns/templates" at $config:app-root ||"/modules/app.xql";
-import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at $config:app-root ||"/modules/shared.xqm";
-import module namespace config="https://exist-db.org/xquery/config" at $config:app-root ||"/modules/config.xqm";
+import module namespace app="http://baumann-digital.de/ns/templates" at "app.xql";
+import module namespace shared="http://baumann-digital.de/portal-app/ns/shared" at "shared.xqm";
+import module namespace config="https://exist-db.org/xquery/config" at "config.xqm";
 
 (:declare option exist:serialize "method=json media-type=application/json omit-xml-declaration=yes";:)
 
