@@ -114,7 +114,7 @@
             <fileset dir=".">
                 <include name="**/*.*"/>
                 <exclude name="build.xml"/>
-                <exclude name=".existdb.json"/>
+                <exclude name="*.code-workspace"/>
                 <exclude name=".git*"/>
                 <exclude name=".github/"/>
                 <exclude name="*.tmpl"/>
@@ -122,9 +122,12 @@
                 <exclude name="*.code-workspace"/>
                 <exclude name="**/.DS_Store"/>
                 <exclude name="*.properties"/>
-                <exclude name="build/**"/>
                 <exclude name="${build.dir}/**"/>
+                <exclude name="${dist.dir}/**"/>
                 <exclude name="scripts/**"/>
+                <exclude name="saxon-*.jar"/>
+                <exclude name="doc/"/>
+                <exclude name="notices/"/>
                 <exclude name="blob/"/>
                 <exclude name="**/__contents__.xml"/>
                 <exclude name="node_modules/**"/>
@@ -194,7 +197,6 @@
                 <filter token="release.date" value="${release.date}"/>
             </filterset>
         </copy>
-        <copy file="${build.dir}/CITATION.cff" tofile="CITATION.cff"></copy>
 
         <!-- Create .xar package by zipping the date in ${build.dir} -->
         <zip destfile="${dist.dir}/${project.app.pkg.name}">
