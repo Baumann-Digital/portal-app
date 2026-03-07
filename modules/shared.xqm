@@ -431,14 +431,14 @@ let $nameStrings := if($param = "full")
                             then($nameRoleName)
                             else if($nameAddNameNick)
                             then($nameAddNameNick)
-                            else(shared:translate('baudi.registry.persons.unknown'))
+                            else(shared:translate('registry.persons.unknown'))
                         )
                     else if($param = 'short')
                     then(if($nameForename or $nameNameLink or $nameSurname)
                          then(string-join(($nameForename, $nameNameLink, $nameSurname, if($nameGenName) then(concat(' (',$nameGenName,')')) else()), ' '))
                          else if($persName/text() !='')
                           then(string-join($persName/text(), ' '))
-                         else(shared:translate('baudi.registry.persons.unknown')))
+                         else(shared:translate('registry.persons.unknown')))
                     else if($param = 'reversed')
                     then(
                         if($nameSurname)
@@ -454,10 +454,10 @@ let $nameStrings := if($param = "full")
                         then($nameRoleName)
                         else if($nameAddNameNick)
                         then($nameAddNameNick)
-                        else(shared:translate('baudi.registry.persons.unknown'))
+                        else(shared:translate('registry.persons.unknown'))
                     )
                     
-                    else (shared:translate('baudi.registry.persons.unknown'))
+                    else (shared:translate('registry.persons.unknown'))
                     
     return
         if($linking = 'yes')
@@ -483,7 +483,7 @@ declare function shared:getPersonaLinked($id as xs:string) {
     return
         if($name)
         then(<a href="{$personLink}">{$name}</a>)
-        else (shared:translate('baudi.registry.persons.unknown'))
+        else (shared:translate('registry.persons.unknown'))
 };
 
 declare function shared:getOrgNameFull($org as node()) {
@@ -528,7 +528,7 @@ declare function shared:checkGenderforLangValues($persID){
         then()
         else if ($gender = 'female')
         then('.female')
-        else('')
+        else('
 };
 
 
@@ -547,20 +547,20 @@ declare function shared:getReferences($id) {
                           let $docID := $doc/@xml:id
                           let $docIDStart := substring($docID,1,8)
                           let $docInfo := if($docIDStart = 'baudi-01')
-                                          then(shared:translate('baudi.registry.persons.references.sources.music'))
+                                          then(shared:translate('registry.persons.references.sources.music'))
                                           else if ($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
-                                          then (shared:translate('baudi.registry.persons.references.works'))
+                                          then (shared:translate('registry.persons.references.works'))
                                           else if($docIDStart = 'baudi-04')
-                                          then(shared:translate('baudi.registry.persons.references.persons'))
+                                          then(shared:translate('registry.persons.references.persons'))
                                           else if($docIDStart = 'baudi-05')
-                                          then(shared:translate('baudi.registry.persons.references.institutions'))
+                                          then(shared:translate('registry.persons.references.institutions'))
                                           else if($docIDStart = 'baudi-06')
-                                          then(shared:translate('baudi.registry.persons.references.loci'))
+                                          then(shared:translate('registry.persons.references.loci'))
                                           else if($docIDStart = 'baudi-07')
-                                          then(shared:translate('baudi.registry.persons.references.sources.text'))
+                                          then(shared:translate('registry.persons.references.sources.text'))
                                           else if($docIDStart = 'baudi-09')
-                                          then(shared:translate('baudi.registry.persons.references.periodicals'))
-                                          else(shared:translate('baudi.registry.persons.references.other'))
+                                          then(shared:translate('registry.persons.references.periodicals'))
+                                          else(shared:translate('registry.persons.references.other'))
                           let $entryOrder := if($docIDStart = 'baudi-02' or $docIDStart = 'baudi-13')
                                           then('002')
                                           else if ($docIDStart = 'baudi-01')
@@ -596,7 +596,7 @@ declare function shared:getReferences($id) {
                                            else if($doc/name()='TEI')
                                            then($doc//tei:titleStmt/tei:title/string())
                                            else('noTitle')
-                          let $docTitle := $docTitle => string-join('') => normalize-space()
+                          let $docTitle := $docTitle => string-join(' => normalize-space()
                           let $workSortValue := string-join($docTitle,' ') => replace('»','') => replace('«','')
                           let $entry := <div class="row RegisterEntry" xmlns="http://www.w3.org/1999/xhtml">
                                           <div class="col-3" dateToSort="{$docDate}" workSort="{$workSortValue}">
@@ -622,14 +622,14 @@ declare function shared:getReferences($id) {
                               let $groupName := $groups/@groupName
                               let $order := $groups/@order
                               let $registerSortEntryLabel := switch ($groupName/string())
-                                                               case 'baudi-01' return shared:translate('baudi.registry.persons.references.sources.music')
-                                                               case 'baudi-02' return shared:translate('baudi.registry.persons.references.works')
-                                                               case 'baudi-04' return shared:translate('baudi.registry.persons.references.persons')
-                                                               case 'baudi-05' return shared:translate('baudi.registry.persons.references.institutions')
-                                                               case 'baudi-06' return shared:translate('baudi.registry.persons.references.loci')
-                                                               case 'baudi-07' return shared:translate('baudi.registry.persons.references.sources.text')
-                                                               case 'baudi-09' return shared:translate('baudi.registry.persons.references.periodicals')
-                                                               default return shared:translate('baudi.registry.persons.references.other')
+                                                               case 'baudi-01' return shared:translate('registry.persons.references.sources.music')
+                                                               case 'baudi-02' return shared:translate('registry.persons.references.works')
+                                                               case 'baudi-04' return shared:translate('registry.persons.references.persons')
+                                                               case 'baudi-05' return shared:translate('registry.persons.references.institutions')
+                                                               case 'baudi-06' return shared:translate('registry.persons.references.loci')
+                                                               case 'baudi-07' return shared:translate('registry.persons.references.sources.text')
+                                                               case 'baudi-09' return shared:translate('registry.persons.references.periodicals')
+                                                               default return shared:translate('registry.persons.references.other')
                                 order by $order
                                 return
                                  <div class="RegisterSortBox" xmlns="http://www.w3.org/1999/xhtml">

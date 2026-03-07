@@ -31,7 +31,7 @@ declare function work:getWorkTitle($work as node()*){
                          let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
-                                                   then(concat(' ',shared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
+                                                   then(concat(' ',shared:translate('registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
     return
         if($numberOpus)then(concat($title,' op. ',$numberOpus,$numberOpusCounter))else($title)
@@ -86,14 +86,14 @@ declare %private function work:processPerfResList($perfResList as node(), $param
                                             $label
         return
             if($listName != '')
-            then(shared:translate('baudi.registry.works.perfRes.' || $listName || $param2) ||
+            then(shared:translate('registry.works.perfRes.' || $listName || $param2) ||
                  (if(string-join($perfResLabelsDistCount,'') != '')
                   then(' [' || string-join($perfResLabelsDistCount, ', ') || ']')
                   else()
                  )
                 )
             else if ($list/@type = 'choose')
-            then(string-join($listContent, concat(' ', shared:translate(concat('baudi.conjunction.or', $param2)))))
+            then(string-join($listContent, concat(' ', shared:translate(concat('conjunction.or', $param2)))))
             else(string-join($listContent, ', '))
 };
 
@@ -123,11 +123,11 @@ declare %private function work:processPerfRes($perfResList as node()*, $param as
                                   else($perfResAuth)
           let $ambitus := if($perfRes/mei:ambitus) then(source:getAmbitus($perfRes/mei:ambitus)) else()
           let $perfResAuth := if($ambitus and $param != 'short')
-                              then(concat(shared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)), ' ', $ambitus))
-                              else(shared:translate(concat('baudi.registry.works.perfRes.', $perfResAuth, $param2)))
-          let $perfResAuthShort := shared:translate(concat('baudi.registry.works.perfRes.', $perfResAuthShorted, '.short'))
-          let $perfResSolo := if($perfRes/@solo) then(shared:translate('baudi.registry.works.perfRes.solo')) else()
-          let $perfResAdLib := if($perfRes/@adLib) then(shared:translate('baudi.registry.works.perfRes.adLib')) else()
+                              then(concat(shared:translate(concat('registry.works.perfRes.', $perfResAuth, $param2)), ' ', $ambitus))
+                              else(shared:translate(concat('registry.works.perfRes.', $perfResAuth, $param2)))
+          let $perfResAuthShort := shared:translate(concat('registry.works.perfRes.', $perfResAuthShorted, '.short'))
+          let $perfResSolo := if($perfRes/@solo) then(shared:translate('registry.works.perfRes.solo')) else()
+          let $perfResAdLib := if($perfRes/@adLib) then(shared:translate('registry.works.perfRes.adLib')) else()
           let $perfResOption := if($perfResSolo or $perfResAdLib) then(concat('(',string-join(($perfResSolo, $perfResAdLib), ', '),')')) else()
           return
             if($param2 = 'short')

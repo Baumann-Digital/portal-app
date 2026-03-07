@@ -363,7 +363,7 @@ declare function app:registry-persons-list($node as node(), $model as map(*)) {
                                         <h5 class="card-title">{$name}</h5>
                                     </div>
                                     <div class="col-4">
-                                        <span class="text-muted">{shared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
+                                        <span class="text-muted">{shared:translate('registry.persons.references') || ': ' || $referencesCount}</span>
                                     </div>
                                     <div class="col-2">
                                         <p class="text-right">{$statusSymbol}</p>
@@ -482,7 +482,7 @@ declare function app:person-details($node as node(), $model as map(*)) {
         where $condition
         return
             <div class="row">
-                <div class="col-5">{shared:translate('baudi.person.' || $detail?key)}</div>
+                <div class="col-5">{shared:translate('person.' || $detail?key)}</div>
                 <div class="col">{$value}</div>
             </div>
 };
@@ -531,7 +531,7 @@ declare function app:registry-loci-list($node as node(), $model as map(*)) {
                     let $status := $locus/@status/string()
                     let $statusSymbol := shared:get-status-symbol($status)
                     let $referencesCount := count(shared:getReferences($id)//xhtml:div[matches(@class,'RegisterEntry')])
-                    let $tags := <label class="btn btn-outline-primary btn-sm disabled">{shared:translate(concat('baudi.registry.loci.tag.',$locus/@type))}</label>
+                    let $tags := <label class="btn btn-outline-primary btn-sm disabled">{shared:translate(concat('registry.loci.tag.',$locus/@type))}</label>
                     
                     where $referencesCount gt 0
                     order by $name
@@ -543,7 +543,7 @@ declare function app:registry-loci-list($node as node(), $model as map(*)) {
                                         <h5 class="card-title">{$name}</h5>
                                     </div>
                                     <div class="col-4">
-                                        <span class="text-muted">{shared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
+                                        <span class="text-muted">{shared:translate('registry.persons.references') || ': ' || $referencesCount}</span>
                                     </div>
                                     <div class="col-2">
                                         <p class="text-right">{$statusSymbol}</p>
@@ -671,7 +671,7 @@ declare function app:registry-institutions-list($node as node(), $model as map(*
                                         <h5 class="card-title">{$name}</h5>
                                     </div>
                                     <div class="col-4">
-                                        <span class="text-muted">{shared:translate('baudi.registry.persons.references') || ': ' || $referencesCount}</span>
+                                        <span class="text-muted">{shared:translate('registry.persons.references') || ': ' || $referencesCount}</span>
                                     </div>
                                     <div class="col-2">
                                         <p class="text-right">{$statusSymbol}</p>
@@ -763,7 +763,7 @@ declare function app:institution-details($node as node(), $model as map(*)) {
         where $condition
         return
             <div class="row">
-                <div class="col-5">{shared:translate('baudi.institution.' || $detail?key)}</div>
+                <div class="col-5">{shared:translate('institution.' || $detail?key)}</div>
                 <div class="col">{$value}</div>
             </div>
 };
@@ -813,11 +813,11 @@ declare function app:registry-sources-content($node as node(), $model as map(*))
     return
     <div class="container">
          <ul class="nav nav-pills" role="tablist">
-         <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{shared:translate('baudi.registry.sources.all')} ({count($sources)})</a></li>
+         <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{shared:translate('registry.sources.all')} ({count($sources)})</a></li>
             {for $genre in $genres[not(. = 'part') and not(. = 'collection') and not(. = 'reprint')]
                 let $genreCount := count($sources[.//mei:term[@type='source'][. = $genre]])
-                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{shared:translate(concat('baudi.registry.sources.',$genre))} ({$genreCount})</a></li>
-                order by shared:translate(concat('baudi.registry.sources.',$genre))
+                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{shared:translate(concat('registry.sources.',$genre))} ({$genreCount})</a></li>
+                order by shared:translate(concat('registry.sources.',$genre))
                 return
                     $nav-itemGenre
              }
@@ -838,7 +838,7 @@ declare function app:registry-sources-content($node as node(), $model as map(*))
                          let $numberOpus := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $source/ancestor::mei:mei//mei:title[@type='uniform' and @xml:lang=$lang]/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
-                                                   then(concat(' ',shared:translate('baudi.registry.sources.opus.no'),' ',$numberOpusCount))
+                                                   then(concat(' ',shared:translate('registry.sources.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $perfMedium := source:getManifestationPerfResWithAmbitus($source, 'full')
                          let $composer := $source//mei:composer
@@ -849,13 +849,13 @@ declare function app:registry-sources-content($node as node(), $model as map(*))
                                                         $componentId
                          let $sourceRelationID := $source//mei:relation[not(@type='edirom')]/@corresp
                          let $termWorkGroup := for $tag in $source//mei:term[@type='workGroup']/string()
-                                                let $label := <label class="btn btn-outline-primary btn-sm disabled">{shared:translate(concat('baudi.registry.tag.',$tag))}</label>
+                                                let $label := <label class="btn btn-outline-primary btn-sm disabled">{shared:translate(concat('registry.tag.',$tag))}</label>
                                                 return $label
                          let $termGenre := for $tag in $source//mei:term[@type='genre']/string()
-                                               let $label := <label class="btn btn-outline-secondary btn-sm disabled">{shared:translate(concat('baudi.registry.tag.',$tag))}</label>
+                                               let $label := <label class="btn btn-outline-secondary btn-sm disabled">{shared:translate(concat('registry.tag.',$tag))}</label>
                                                return $label
                          let $termSource := for $tag in $source//mei:term[@type='source']/string()
-                                                let $label := <label class="btn btn-outline-danger btn-sm disabled">{shared:translate(concat('baudi.registry.tag.',$tag))}</label>
+                                                let $label := <label class="btn btn-outline-danger btn-sm disabled">{shared:translate(concat('registry.tag.',$tag))}</label>
                                                 return $label
                          let $tags := for $each in ($termSource|$termGenre|$termWorkGroup)
                                         order by $each
@@ -879,7 +879,7 @@ declare function app:registry-sources-content($node as node(), $model as map(*))
                                         </div>
                                    </div>
                                     {if(count($componentSources)>=1)
-                                     then(<p class="card-text"><i>{shared:translate('baudi.registry.sources.components'), concat(' (', count($componentSources), ')')}</i></p>)
+                                     then(<p class="card-text"><i>{shared:translate('registry.sources.components'), concat(' (', count($componentSources), ')')}</i></p>)
                                      else()}
                                    <a href="{concat('/source/', $id)}" class="card-link">{$id}</a>
                                    <hr/>
@@ -906,13 +906,13 @@ declare function app:registry-sources-content($node as node(), $model as map(*))
                                    </div>
                                    <p class="card-text">
                                     {if($composer)
-                                     then(shared:translate('baudi.registry.sources.composer'),': ',$composer,<br/>)
+                                     then(shared:translate('registry.sources.composer'),': ',$composer,<br/>)
                                      else()}
                                     {if($lyricist)
-                                     then(shared:translate('baudi.registry.sources.lyricist'),': ',$lyricist)
+                                     then(shared:translate('registry.sources.lyricist'),': ',$lyricist)
                                      else()}
                                     {if(count($componentSources)>=1)
-                                     then(<i>{shared:translate('baudi.registry.sources.components'), concat(' (', count($componentSources), ')')}</i>)
+                                     then(<i>{shared:translate('registry.sources.components'), concat(' (', count($componentSources), ')')}</i>)
                                      else()}
                                    </p>
                                    {if(count($source/ancestor::mei:mei//mei:manifestation) gt 1)
@@ -1000,14 +1000,14 @@ return
         let $msScoreFormat := $source//mei:scoreFormat/text()
         let $sourcePlateNum := if($source//mei:plateNum/text())
                                then(<tr>
-                                        <td>{shared:translate('baudi.registry.sources.msDesc.plateNum')}</td>
+                                        <td>{shared:translate('registry.sources.msDesc.plateNum')}</td>
                                         <td>{$source//mei:plateNum/text()}</td>
                                     </tr>)
                                 else()
         
         let $usedLang := for $lang in $source//mei:langUsage/mei:language/@codedval
                             return
-                                shared:translate(concat('baudi.lang.',$lang))
+                                shared:translate(concat('lang.',$lang))
         let $key := for $each in $source//mei:key
                       let $keyPname := $each/@pname
                       let $keyMode := $each/@mode
@@ -1016,16 +1016,16 @@ return
                       return
                           if($keyMode = 'major')
                           then(concat(
-                                        functx:capitalize-first(shared:translate(concat('baudi.registry.works.pname.',$keyPnameFull))),
-                                        shared:translate('baudi.registry.delimiter.key'),
-                                        shared:translate(concat('baudi.registry.works.',$keyMode))
+                                        functx:capitalize-first(shared:translate(concat('registry.works.pname.',$keyPnameFull))),
+                                        shared:translate('registry.delimiter.key'),
+                                        shared:translate(concat('registry.works.',$keyMode))
                                      )
                                 )
                           else if($keyMode = 'minor')
                           then(concat(
-                                        shared:translate(concat('baudi.registry.works.pname.',$keyPnameFull)),
-                                        shared:translate('baudi.registry.delimiter.key'),
-                                        shared:translate(concat('baudi.registry.works.',$keyMode))
+                                        shared:translate(concat('registry.works.pname.',$keyPnameFull)),
+                                        shared:translate('registry.delimiter.key'),
+                                        shared:translate(concat('registry.works.',$keyMode))
                                      )
                               )
                           else()
@@ -1062,9 +1062,9 @@ return
                 else()}
             <div class="{if(exists($source//mei:facsimile/mei:surface)) then 'col-md-8 col-lg-8' else 'col-12'}">
               <ul class="nav nav-pills" role="tablist">
-                  <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{shared:translate('baudi.registry.sources.tab.main')}</a></li>  
-                  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">{shared:translate('baudi.registry.sources.tab.detail')}</a></li>
-                  {if($sourceHasLyrics)then(<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">{shared:translate('baudi.registry.sources.tab.lyrics')}</a></li>)else()}
+                  <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{shared:translate('registry.sources.tab.main')}</a></li>  
+                  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#detail">{shared:translate('registry.sources.tab.detail')}</a></li>
+                  {if($sourceHasLyrics)then(<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lyrics">{shared:translate('registry.sources.tab.lyrics')}</a></li>)else()}
                   <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#verovio">Verovio</a></li>-->
                   <li class="nav-item">
                  <a class="nav-link" id="pills-edition-tab" data-toggle="pill" href="#pills-xml" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
@@ -1081,18 +1081,18 @@ return
                                 <th/>
                             </tr>
                             <tr>
-                               <td>{shared:translate('baudi.registry.sources.sourceType')}</td>
-                               <td>{shared:translate(concat('baudi.registry.sources.',$sourceType))}</td>
+                               <td>{shared:translate('registry.sources.sourceType')}</td>
+                               <td>{shared:translate(concat('registry.sources.',$sourceType))}</td>
                             </tr>
                              {if($sourceTitleMain != '')
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.sources.titleMain')}</td>
+                                    <td>{shared:translate('registry.sources.titleMain')}</td>
                                     <td>{$sourceTitleMain}</td>
                                   </tr>)
                              else()}
                              {if($sourceTitleSub != '')
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.sources.titleSub')}</td>
+                                    <td>{shared:translate('registry.sources.titleSub')}</td>
                                     <td>{$sourceTitleSub}</td>
                                   </tr>)
                              else()}
@@ -1100,32 +1100,32 @@ return
                              <table class="sourceView">
                                 {if(exists($relatedWorkID))
                                 then(<tr>
-                                       <td>{shared:translate('baudi.registry.sources.relation')}</td>
-                                       <td>{if(exists($relatedWorkID))then(<a href="{$relatedWorkID}">{$relatedWorkTitle}</a>)else(shared:translate('baudi.unknown'))}</td>
+                                       <td>{shared:translate('registry.sources.relation')}</td>
+                                       <td>{if(exists($relatedWorkID))then(<a href="{$relatedWorkID}">{$relatedWorkTitle}</a>)else(shared:translate('unknown'))}</td>
                                      </tr>)
                                 else()}
                              {if($sourceComposer)
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.sources.composer')}</td>
+                                    <td>{shared:translate('registry.sources.composer')}</td>
                                     <td>{$sourceComposer}</td>
                                   </tr>)
                              else()}
                              {if($sourceArranger)
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.sources.arranger')}</td>
+                                    <td>{shared:translate('registry.sources.arranger')}</td>
                                     <td>{$sourceArranger}</td>
                                   </tr>)
                              else()}
                              {if($sourceLyricist or $sourceWorkGroup = 'vocal')
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.sources.lyricist')}</td>
+                                    <td>{shared:translate('registry.sources.lyricist')}</td>
                                     <td>{if($sourceLyricist) then($sourceLyricist)
-                                        else if ($source//mei:manifestation//mei:lyricist/text() != '') then($source//mei:manifestation//mei:lyricist/text()) else(shared:translate('baudi.unknown'))}</td>
+                                        else if ($source//mei:manifestation//mei:lyricist/text() != '') then($source//mei:manifestation//mei:lyricist/text()) else(shared:translate('unknown'))}</td>
                                   </tr>)
                              else()}
                              {if($sourceEditor)
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.sources.editor')}</td>
+                                    <td>{shared:translate('registry.sources.editor')}</td>
                                     <td>{$sourceEditor}</td>
                                   </tr>)
                              else()}
@@ -1134,9 +1134,9 @@ return
                              {if(not($usedLang/data(.) = ''))
                              then(<tr>
                                     <td>{if(count($usedLang) = 1)
-                                         then(shared:translate('baudi.registry.works.langUsed'))
+                                         then(shared:translate('registry.works.langUsed'))
                                          else if(count($usedLang) > 1)
-                                         then(shared:translate('baudi.registry.works.langsUsed'))
+                                         then(shared:translate('registry.works.langsUsed'))
                                          else()}</td>
                                     <td>{string-join($usedLang,', ')}</td>
                                   </tr>)
@@ -1144,25 +1144,25 @@ return
                              
                              {if(count($key) > 0)
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.works.key')}</td>
+                                    <td>{shared:translate('registry.works.key')}</td>
                                     <td>{normalize-space(string-join($key, ' | '))}</td>
                                   </tr>)
                              else()}
                              {if(count($meter) > 0)
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.works.meter')}</td>
+                                    <td>{shared:translate('registry.works.meter')}</td>
                                     <td>{$meter}</td>
                                   </tr>)
                              else()}
                              {if($tempo)
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.works.tempo')}</td>
+                                    <td>{shared:translate('registry.works.tempo')}</td>
                                     <td><i>{normalize-space($tempo)}</i></td>
                                   </tr>)
                              else()}
                              {if($sourcePerfRes)
                              then(<tr>
-                                    <td>{shared:translate('baudi.registry.sources.perfRes')}</td>
+                                    <td>{shared:translate('registry.sources.perfRes')}</td>
                                     <td>{$sourcePerfRes}</td>
                                   </tr>)
                              else()}
@@ -1206,7 +1206,7 @@ return
                                      <th/>
                                    </tr>
                                    <tr>
-                                     <td>{shared:translate('baudi.registry.sources.msDesc.condition')}</td>
+                                     <td>{shared:translate('registry.sources.msDesc.condition')}</td>
                                      <td>
                                        {$msCondition}
                                      </td>
@@ -1385,7 +1385,7 @@ declare function app:registryPeriodicals($node as node(), $model as map(*)) {
         <div class="container">
             <br/>
             <div class="page-header">
-                <h1><i18n:text key="baudi.registry.periodocals"/></h1>
+                <h1><i18n:text key=""registry.periodocals"/></h1>
             </div>
             <hr/>
             <div class="container">
@@ -1483,11 +1483,11 @@ declare function app:registry-works-content($node as node(), $model as map(*)) {
     return
     <div class="container">
          <ul class="nav nav-pills" role="tablist">
-            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{shared:translate('baudi.registry.works.all')} ({count($works)})</a></li>
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#main">{shared:translate('registry.works.all')} ({count($works)})</a></li>
             {for $genre at $pos in $genres[. != 'main']
                 let $workCount := count($works//mei:term[@type='genre' and . = $genre])
-                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{shared:translate(concat('baudi.registry.works.',$genre))} ({$workCount})</a></li>
-                order by shared:translate(concat('baudi.registry.works.',$genre))
+                let $nav-itemGenre := <li class="nav-item"><a class="nav-link" data-toggle="tab" href="{concat('#',$genre)}">{shared:translate(concat('registry.works.',$genre))} ({$workCount})</a></li>
+                order by shared:translate(concat('registry.works.',$genre))
                 return
                     $nav-itemGenre
              }
@@ -1505,7 +1505,7 @@ declare function app:registry-works-content($node as node(), $model as map(*)) {
                          let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
-                                                   then(concat(' ',shared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
+                                                   then(concat(' ',shared:translate('registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $workID := $work/@xml:id/string()
                          let $composerID := $work//mei:composer//@codedval
@@ -1535,10 +1535,10 @@ declare function app:registry-works-content($node as node(), $model as map(*)) {
                                                 return
                                                     $app:collectionSourcesMusic[range:field-eq("relation-target", @xml:id)]:)
                          let $termWorkGroup := for $tag in $work//mei:term[@type='workGroup']/text()
-                                                let $label := <label class="btn btn-outline-primary btn-sm disabled">{shared:translate(concat('baudi.registry.works.',$tag))}</label>
+                                                let $label := <label class="btn btn-outline-primary btn-sm disabled">{shared:translate(concat('registry.works.',$tag))}</label>
                                                 return $label
                          let $termGenre := for $tag in $work//mei:term[@type='genre']/text()
-                                               let $label := <label class="btn btn-outline-secondary btn-sm disabled">{shared:translate(concat('baudi.registry.works.',$tag))}</label>
+                                               let $label := <label class="btn btn-outline-secondary btn-sm disabled">{shared:translate(concat('registry.works.',$tag))}</label>
                                                return $label
                          let $tags := for $each in ($termGenre|$termWorkGroup)
                                         return ($each,'&#160;')
@@ -1553,30 +1553,30 @@ declare function app:registry-works-content($node as node(), $model as map(*)) {
                                         <div class="col">
                                             <h5 class="card-title">{work:getWorkTitle($work)}</h5>
                                             {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
-                                            <h6 class="card-subtitle-baudi text-muted">{shared:translate('baudi.conjunction.for'), ' ', work:getPerfRes($work, 'short')}</h6>
+                                            <h6 class="card-subtitle-baudi text-muted">{shared:translate('conjunction.for'), ' ', work:getPerfRes($work, 'short')}</h6>
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
                                         </div>
                                     </div>
                                     <p class="card-text">{if($composer)
-                                                         then(shared:translate(concat('baudi.registry.works.composer',shared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
+                                                         then(shared:translate(concat('registry.works.composer',shared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
                                                          else()}
                                                          {if($arranger)
-                                                         then(shared:translate(concat('baudi.registry.works.arranger',shared:checkGenderforLangValues($arrangerID))),': ',$arranger,<br/>)
+                                                         then(shared:translate(concat('registry.works.arranger',shared:checkGenderforLangValues($arrangerID))),': ',$arranger,<br/>)
                                                          else()}
                                                         {if($lyricist)
-                                                         then(shared:translate(concat('baudi.registry.works.lyricist',shared:checkGenderforLangValues($lyricistID))),': ',$lyricist,<br/>)
+                                                         then(shared:translate(concat('registry.works.lyricist',shared:checkGenderforLangValues($lyricistID))),': ',$lyricist,<br/>)
                                                          else()}
                                                          {if($editor)
-                                                         then(shared:translate(concat('baudi.registry.works.editor',shared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
+                                                         then(shared:translate(concat('registry.works.editor',shared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
                                                          else()}
                                                         {if($componentWorksCount >= 1)
-                                                         then(concat(shared:translate('baudi.registry.works.components'),': ',
+                                                         then(concat(shared:translate('registry.works.components'),': ',
                                                                 $componentWorksCount),<br/>)
                                                          else()}
                                                          {if($relatedItemsCount >= 1)
-                                                         then(concat(shared:translate('baudi.registry.works.relSources'), ': ',
+                                                         then(concat(shared:translate('registry.works.relSources'), ': ',
                                                                 $relatedItemsCount),<br/>)
                                                          else()}</p>
                                    <a href="/{$workID}" class="card-link">{$workID}</a>
@@ -1640,7 +1640,7 @@ let $lyricistGender := if($lyricistEntry[@sex="female"])
 
 let $usedLang := for $lang in $work/mei:langUsage/mei:language/@codedval
                     return
-                        shared:translate(concat('baudi.lang.',$lang))
+                        shared:translate(concat('lang.',$lang))
 let $key := for $each in $work/mei:key
               let $keyPname := $each/@pname
               let $keyMode := $each/@mode
@@ -1649,16 +1649,16 @@ let $key := for $each in $work/mei:key
               return
                   if($keyMode = 'major')
                   then(concat(
-                                functx:capitalize-first(shared:translate(concat('baudi.registry.works.pname.',$keyPnameFull))),
-                                shared:translate('baudi.registry.delimiter.key'),
-                                shared:translate(concat('baudi.registry.works.',$keyMode))
+                                functx:capitalize-first(shared:translate(concat('registry.works.pname.',$keyPnameFull))),
+                                shared:translate('registry.delimiter.key'),
+                                shared:translate(concat('registry.works.',$keyMode))
                              )
                         )
                   else if($keyMode = 'minor')
                   then(concat(
-                                shared:translate(concat('baudi.registry.works.pname.',$keyPnameFull)),
-                                shared:translate('baudi.registry.delimiter.key'),
-                                shared:translate(concat('baudi.registry.works.',$keyMode))
+                                shared:translate(concat('registry.works.pname.',$keyPnameFull)),
+                                shared:translate('registry.delimiter.key'),
+                                shared:translate(concat('registry.works.',$keyMode))
                              )
                       )
                   else()
@@ -1689,7 +1689,7 @@ let $perfMedium := work:getPerfRes($work, 'detailShort')
 let $relatedSourcesCards := for $source in $app:collectionSourcesMusic
                 let $sourceId := $source/@xml:id/string()
                 let $sourceType := $source//mei:term[@type='source'][1]/string()
-                let $sourceTypeTranslated := shared:translate(concat('baudi.registry.sources.',$sourceType))
+                let $sourceTypeTranslated := shared:translate(concat('registry.sources.',$sourceType))
                 let $sort := switch ($sourceType)
                                 case 'manuscript' return '01'
                                 case 'msCopy' return '02'
@@ -1767,19 +1767,19 @@ return
             </tr>
             {if($titlePerfMedium != '')
              then(<tr>
-                    <td>{shared:translate('baudi.registry.works.perfmedium')}</td>
+                    <td>{shared:translate('registry.works.perfmedium')}</td>
                     <td>{normalize-space($titlePerfMedium)}</td>
                   </tr>)
              else()}
              {if($titleMainAlt)
              then(<tr>
-                    <td>{shared:translate('baudi.registry.works.titleAlt')}</td>
+                    <td>{shared:translate('registry.works.titleAlt')}</td>
                     <td>{normalize-space($titleMainAlt)}</td>
                   </tr>)
              else()}
              {if($titleSubAlt)
              then(<tr>
-                    <td>{shared:translate('baudi.registry.works.subtitleAlt')}</td>
+                    <td>{shared:translate('registry.works.subtitleAlt')}</td>
                     <td>{normalize-space($titleSubAlt)}</td>
                   </tr>)
              else()}
@@ -1804,59 +1804,59 @@ return
              {if($usedLang/data(.) != '')
              then(<tr>
                     <td>{if(count($usedLang) = 1)
-                         then(shared:translate('baudi.registry.works.langUsed'))
+                         then(shared:translate('registry.works.langUsed'))
                          else if(count($usedLang) > 1)
-                         then(shared:translate('baudi.registry.works.langsUsed'))
+                         then(shared:translate('registry.works.langsUsed'))
                          else()}</td>
                     <td>{string-join($usedLang,', ')}</td>
                   </tr>)
              else()}
              <!-- {if($incipText != '')
              then(<tr>
-                    <td>{shared:translate('baudi.registry.works.incipit.text')}</td>
+                    <td>{shared:translate('registry.works.incipit.text')}</td>
                     <td><em>{$incipText}</em></td>
                   </tr>)
              else()} -->
              {if(exists($key))
              then(<tr>
-                    <td>{shared:translate('baudi.registry.works.key')}</td>
+                    <td>{shared:translate('registry.works.key')}</td>
                     <td>{normalize-space(string-join($key, ' | '))}</td>
                   </tr>)
              else()}
              {if($meter)
              then(<tr>
-                    <td>{shared:translate('baudi.registry.works.meter')}</td>
+                    <td>{shared:translate('registry.works.meter')}</td>
                     <td>{$meter}</td>
                   </tr>)
              else()}
              {if($tempo)
              then(<tr>
-                    <td>{shared:translate('baudi.registry.works.tempo')}</td>
+                    <td>{shared:translate('registry.works.tempo')}</td>
                     <td><i>{normalize-space($tempo)}</i></td>
                   </tr>)
              else()}
              {if($workgroup)
              then(<tr>
                     <td>Werkklasse</td>
-                    <td>{string-join(for $each in $workgroup return shared:translate(concat('baudi.registry.works.',$each)),' | ')}</td>
+                    <td>{string-join(for $each in $workgroup return shared:translate(concat('registry.works.',$each)),' | ')}</td>
                   </tr>)
              else()}
              {if($genre)
              then(<tr>
                     <td>Werkgruppe</td>
-                    <td>{shared:translate(concat('baudi.registry.works.',$genre))}</td>
+                    <td>{shared:translate(concat('registry.works.',$genre))}</td>
                   </tr>)
              else()}
              {if($perfMedium != '')
              then(<tr>
-                    <td style="vertical-align: top;">{shared:translate('baudi.registry.works.perfRes')}</td>
+                    <td style="vertical-align: top;">{shared:translate('registry.works.perfRes')}</td>
                     <td>{work:getPerfRes($work,'detailShort')}</td>
                   </tr>)
              else()}
              </table>
          <!--{if(work:hasIncipitMusic($workID))
          then(<br/>,
-              <h4>{shared:translate('baudi.registry.works.incipit')}</h4>,
+              <h4>{shared:translate('registry.works.incipit')}</h4>,
               <br/>,
               work:getIncipitMusic($workID))
          else()}-->
@@ -1864,7 +1864,7 @@ return
         then(
         <div>
            <br/>
-           <h4>{shared:translate('baudi.registry.works.relSources')}</h4>
+           <h4>{shared:translate('registry.works.relSources')}</h4>
            <br/>
            <div class="container overflow-auto" style="max-height: 500px;">
             {$relatedSourcesCards}
@@ -1930,7 +1930,7 @@ declare function app:registry-editions-content($node as node(), $model as map(*)
                          let $numberOpus := $work//mei:title[@type='uniform']/mei:titlePart[@type='number' and @codedval='opus']
                          let $numberOpusCount := $work//mei:title[@type='uniform']/mei:titlePart[@type='counter']/text()
                          let $numberOpusCounter := if($numberOpusCount)
-                                                   then(concat(' ',shared:translate('baudi.registry.works.opus.no'),' ',$numberOpusCount))
+                                                   then(concat(' ',shared:translate('registry.works.opus.no'),' ',$numberOpusCount))
                                                    else()
                          let $composer := if($work//mei:composer//@codedval)
                                           then(shared:getPersName($work//mei:composer//@codedval, 'short', 'yes'))
@@ -1955,23 +1955,23 @@ declare function app:registry-editions-content($node as node(), $model as map(*)
                                         <div class="col">
                                             <h5 class="card-title">{work:getWorkTitle($work)}</h5>
                                             {if($titleSub !='')then(<h6>{$titleSub}</h6>)else()}
-                                          <h6 class="card-subtitle-baudi text-muted">{shared:translate('baudi.conjunction.for'), ' ', work:getPerfRes($work, 'short')}</h6>
+                                          <h6 class="card-subtitle-baudi text-muted">{shared:translate('conjunction.for'), ' ', work:getPerfRes($work, 'short')}</h6>
                                         </div>
                                         <div class="col-2">
                                             <p class="text-right">{$statusSymbol}</p>
                                         </div>
                                     </div>
                                     <p class="card-text">{if($composer)
-                                                         then(shared:translate('baudi.registry.works.composer'),': ',$composer,<br/>)
+                                                         then(shared:translate('registry.works.composer'),': ',$composer,<br/>)
                                                          else()}
                                                          {if($arranger)
-                                                         then(shared:translate('baudi.registry.works.arranger'),': ',$arranger,<br/>)
+                                                         then(shared:translate('registry.works.arranger'),': ',$arranger,<br/>)
                                                          else()}
                                                         {if($lyricist)
-                                                         then(shared:translate('baudi.registry.works.lyricist'),': ',$lyricist,<br/>)
+                                                         then(shared:translate('registry.works.lyricist'),': ',$lyricist,<br/>)
                                                          else()}
                                                          {if($editor)
-                                                         then(shared:translate('baudi.registry.works.editor'),': ',$editor,<br/>)
+                                                         then(shared:translate('registry.works.editor'),': ',$editor,<br/>)
                                                          else()}
                                    <hr/>
                                    <a class="card-link" href="/{$editionID}">{$editionID}</a></p>
@@ -2068,16 +2068,16 @@ declare function app:edition-works($node as node(), $model as map(*)) {
                         </div>
                         <p class="card-text">
                             {if($composer)
-                             then(shared:translate(concat('baudi.registry.works.composer',shared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
+                             then(shared:translate(concat('registry.works.composer',shared:checkGenderforLangValues($composerID))),': ',$composer,<br/>)
                              else()}
                              {if($arranger)
-                             then(shared:translate(concat('baudi.registry.works.arranger',shared:checkGenderforLangValues($arrangerID))),': ',$arranger,<br/>)
+                             then(shared:translate(concat('registry.works.arranger',shared:checkGenderforLangValues($arrangerID))),': ',$arranger,<br/>)
                              else()}
                             {if($lyricist)
-                             then(shared:translate(concat('baudi.registry.works.lyricist',shared:checkGenderforLangValues($lyricistID))),': ',$lyricist,<br/>)
+                             then(shared:translate(concat('registry.works.lyricist',shared:checkGenderforLangValues($lyricistID))),': ',$lyricist,<br/>)
                              else()}
                              {if($editor)
-                             then(shared:translate(concat('baudi.registry.works.editor',shared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
+                             then(shared:translate(concat('registry.works.editor',shared:checkGenderforLangValues($editorID))),': ',$editor,<br/>)
                              else()}
                         </p>
                        <a href="/{$workID}" class="card-link">{$workID}</a>
