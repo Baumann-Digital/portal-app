@@ -538,8 +538,8 @@ let $facsimileTarget := if($sourceChiffre = '01')
 let $facsimileTargetPath := if(starts-with($facsimileTarget, 'https://digital.blb-karlsruhe.de')) then(functx:substring-after-last($facsimileTarget,'/')) else($facsimileTarget)
 let $digilibFacPath := concat($digilibBasicPath, $facsimileTargetPath)
 
-let $BLBfacPath := concat($app:BLBfacPath, $facsimileTargetPath)
-let $BLBfacPathImage := concat($app:BLBfacPathImage, $facsimileTargetPath)
+let $BLBfacPath := concat(config:get-option('BLBfacPath'), $facsimileTargetPath)
+let $BLBfacPathImage := concat(config:get-option('BLBfacPathImage'), $facsimileTargetPath)
 
 let $graphicLocal := if(starts-with($facsimileTargetPath, 'baudi-'))
                      then(<img src="{concat($digilibFacPath, '?dw=500')}" class="img-thumbnail" width="400"/>)

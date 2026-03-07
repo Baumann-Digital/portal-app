@@ -4,6 +4,7 @@ module namespace app = "http://baumann-digital.de/ns/templates";
 
 import module namespace templates = "http://exist-db.org/xquery/html-templating";
 import module namespace config = "https://exist-db.org/xquery/config" at "/db/apps/baudiApp/modules/config.xqm";
+import module namespace crud = "http://baumann-digital.de/ns/crud" at "/db/apps/baudiApp/modules/crud.xqm";
 (:import module namespace baudiVersions="http://baumann-digital.de/ns/versions" at "versions.xqm";:)
 import module namespace xmldb = "http://exist-db.org/xquery/xmldb";
 import module namespace i18n = "http://exist-db.org/xquery/i18n" at "/db/apps/baudiApp/modules/i18n.xql";
@@ -23,23 +24,22 @@ declare namespace crapp = "http://www.baumann-digital.de/ns/criticalReport";
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace xhtml="http://www.w3.org/1999/xhtml";
 
-declare variable $app:digilibPath as xs:string := config:get-option('digilibPath');
-declare variable $app:geonames as xs:string := config:get-option('geonames');
-declare variable $app:BLBfacPath as xs:string := config:get-option('BLBfacPath');
-declare variable $app:BLBfacPathImage as xs:string := config:get-option('BLBfacPathImage');
-
-declare variable $app:collectionWorks := collection($config:data-collection-path || '/works')//mei:work;
-declare variable $app:collectionSourcesMusic := collection($config:data-collection-path || '/sources/music')//mei:mei[@status];
-declare variable $app:collectionPersons := collection($config:data-collection-path || '/persons')//tei:person;
-declare variable $app:collectionInstitutions := collection($config:data-collection-path || '/institutions')//tei:org;
-declare variable $app:collectionPeriodicals := collection($config:data-collection-path || '/periodicals')//tei:TEI;
-declare variable $app:collectionLoci := collection($config:data-collection-path || '/loci')//tei:place;
+(:~
+ : Collection variables using dynamic CRUD pattern
+ : Collections are loaded on-demand via crud:data-collection()
+ :)
+declare variable $app:collectionWorks := crud:data-collection('works')//mei:work;
+declare variable $app:collectionSourcesMusic := crud:data-collection('sources/music')//mei:mei[@status];
+declare variable $app:collectionPersons := crud:data-collection('persons')//tei:person;
+declare variable $app:collectionInstitutions := crud:data-collection('institutions')//tei:org;
+declare variable $app:collectionPeriodicals := crud:data-collection('periodicals')//tei:TEI;
+declare variable $app:collectionLoci := crud:data-collection('loci')//tei:place;
 declare variable $app:collectionGalleryItems := 0 (:collection($config:data-collection-path || '/galleryItems/data')//tei:TEI:);
-declare variable $app:collectionDocuments := collection($config:data-collection-path || '/sources/documents')//tei:TEI;
-declare variable $app:collectionEditions := collection($config:data-collection-path || '/editions')//edirom:edition;
-declare variable $app:collectionEditionsPath := collection($config:data-collection-path || '/editions');
-declare variable $app:collectionTexts := collection($config:data-collection-path || '/texts')//tei:TEI;
-declare variable $app:collStrTexts := $config:data-collection-path || '/texts';
+declare variable $app:collectionDocuments := crud:data-collection('sources/documents')//tei:TEI;
+declare variable $app:collectionEditions := crud:data-collection('editions')//edirom:edition;
+declare variable $app:collectionEditionsPath := crud:get-collection-path('editions');
+declare variable $app:collectionTexts := crud:data-collection('texts')//tei:TEI;
+declare variable $app:collStrTexts := crud:get-collection-path('texts');
 
 
 declare function app:langSwitch($node as node(), $model as map(*)) {
@@ -959,7 +959,7 @@ return
         let $fileURI := document-uri($source/root())
         let $sourceType := $source//mei:term[@type='source'][1]/string()
         let $sourceWorkGroup := $source//mei:term[@type='workGroup'][1]/string()
-        let $sourceOrig := concat($app:digilibPath,$source/@xml:id)
+        let $sourceOrig := concat(config:get-option('digilibPath'),$source/@xml:id)
         let $sourceTitleUniform := baudiSource:getManifestationTitle($manifestation,'uniform')
         let $sourceTitleMain := baudiSource:getManifestationTitle($manifestation,'main')
         let $sourceTitleSub := baudiSource:getManifestationTitle($manifestation,'sub')
@@ -1460,18 +1460,25 @@ return
  : Loads works collection into the model map for registry view.
  :)
 declare function app:load-registry-works($node as node(), $model as map(*)) {
-    (: Deprecated - kept for backward compatibility, now just passes through :)
-    app:registry-works-content($node, $model)
+    (: Loads XML data and returns map for template engine.
+       The map serves only as transport - all processing works with XML nodes. :)
+    map:merge((
+        $model,
+        map {
+            "works": $app:collectionWorks[not(parent::mei:componentList)],
+            "genres": distinct-values($app:collectionWorks//mei:term[@type="genre"]/text() | $app:collectionWorks//mei:titlePart[@type='main' and not(@class)]/@type)
+        }
+    ))
 };
 
 (:~
  : Outputs the complete works registry content with tabs.
- : Works directly with XML nodes instead of JSON maps.
+ : Works with XML nodes from the model map.
  :)
 declare function app:registry-works-content($node as node(), $model as map(*)) {
-    (: Load XML data directly :)
-    let $works := $app:collectionWorks[not(parent::mei:componentList)]
-    let $genres := distinct-values($app:collectionWorks//mei:term[@type="genre"]/text() | $app:collectionWorks//mei:titlePart[@type='main' and not(@class)]/@type)
+    (: Extract XML data from model :)
+    let $works := $model?works
+    let $genres := $model?genres
     
     return
     <div class="container">
@@ -1597,8 +1604,8 @@ declare function app:registry-works-content($node as node(), $model as map(*)) {
 
 (: DEPRECATED - kept for backward compatibility :)
 declare function app:registryWorks($node as node(), $model as map(*)) {
-    (: Directly call content generation - no need for intermediate map wrapper :)
-    app:registry-works-content($node, $model)
+    let $model-with-data := app:load-registry-works($node, $model)
+    return app:registry-works-content($node, $model-with-data)
 };
        
 declare function app:viewWork($node as node(), $model as map(*)) {
