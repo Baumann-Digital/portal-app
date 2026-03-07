@@ -91,14 +91,14 @@
     <target name="sass-dev" depends="init" if="project.status.is.development">
         <description>Create CSS files via sass (development mode with sourcemaps)</description>
         <exec executable="${sass.cmd}" failonerror="yes">
-            <arg line="--style expanded --source-map --silence-deprecation=import,color-functions,global-builtin,abs-percent resources/sass/main.scss ${dist.dir}/resources/css/main.css"/>
+            <arg line="--style expanded --source-map --silence-deprecation=import,color-functions,global-builtin,abs-percent resources/sass/main.scss ${dist.dir}/resources/css/theme.css"/>
         </exec>
     </target>
     
     <target name="sass-prod" depends="init" unless="project.status.is.development">
         <description>Create CSS files via sass (production mode compressed)</description>
         <exec executable="${sass.cmd}" failonerror="yes">
-            <arg line="--style compressed --no-source-map --silence-deprecation=import,color-functions,global-builtin,abs-percent resources/sass/main.scss ${dist.dir}/resources/css/main.css"/>
+            <arg line="--style compressed --no-source-map --silence-deprecation=import,color-functions,global-builtin,abs-percent resources/sass/main.scss ${dist.dir}/resources/css/theme.css"/>
         </exec>
     </target>
     

@@ -8,10 +8,10 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "watch": "sass --watch resources/sass/main.scss:resources/css/main.css --style expanded --source-map",
-    "compile": "sass resources/sass/main.scss:resources/css/main.css --style expanded --source-map",
-    "build": "sass resources/sass/main.scss:resources/css/main.css --style compressed --no-source-map",
-    "build:dev": "sass resources/sass/main.scss:resources/css/main.css --style expanded --source-map",
+    "watch": "sass --watch resources/sass/main.scss:resources/css/theme.css --style expanded --source-map",
+    "compile": "sass resources/sass/main.scss:resources/css/theme.css --style expanded --source-map",
+    "build": "sass resources/sass/main.scss:resources/css/theme.css --style compressed --no-source-map",
+    "build:dev": "sass resources/sass/main.scss:resources/css/theme.css --style expanded --source-map",
     "postinstall": "./node_modules/.bin/frontend-dependencies"
   },
   "dependencies": {
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "frontend-dependencies": "^0.4.0",
-    "sass": "^1.70.0"
+    "sass": "^1.97.3"
   },
   "frontendDependencies": {
     "target": "libs",
