@@ -16,6 +16,9 @@
                     <a class="nav-link" data-toggle="pill" href="#pills-references-tab" role="tab" aria-controls="pills-references" aria-selected="false">Referenzen</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#pills-authority-tab" role="tab" aria-controls="pills-authority" aria-selected="false">Normdaten</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" data-toggle="pill" href="#pills-xml-tab" role="tab" aria-controls="pills-xml" aria-selected="false">XML</a>
                 </li>
             </ul>
@@ -38,6 +41,11 @@
                     <h5 class="text-center"><i18n:text key="registry.persons.references"/></h5>
                     <hr/>
                     <div class="overflow-auto baudi-container" data-template="app:institution-references"/>
+                </div>
+                <div class="tab-pane fade" id="pills-authority-tab" role="tabpanel" aria-labelledby="pills-authority-tab">
+                    <h5 class="text-center">Normdaten (GND, VIAF, Wikidata)</h5>
+                    <hr/>
+                    <div class="overflow-auto baudi-container" data-template="app:institution-gnd-info"/>
                 </div>
                 <div class="tab-pane fade" id="pills-xml-tab" role="tabpanel" aria-labelledby="pills-xml-tab">
                     <div class="card xml-view-card">

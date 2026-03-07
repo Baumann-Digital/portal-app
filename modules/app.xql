@@ -486,14 +486,15 @@ declare function app:person-xml($node as node(), $model as map(*)) {
 };
 
 (:~
- : Fetches and displays GND information for a person.
+ : Fetches and displays GND/VIAF/Wikidata information for a person.
  :)
 declare function app:person-gnd-info($node as node(), $model as map(*)) {
     let $person := $model?person
     let $gndId := $person//tei:idno[@type='gnd']/string()
+    let $viafId := $person//tei:idno[@type='viaf']/string()
     return
-        if ($gndId and $gndId != '') then
-            er:get-gnd-info($gndId)
+        if (($gndId and $gndId != '') or ($viafId and $viafId != '')) then
+            er:get-authority-info($gndId, $viafId)
         else ()
 };
 
@@ -751,14 +752,15 @@ declare function app:institution-xml($node as node(), $model as map(*)) {
 };
 
 (:~
- : Fetches and displays GND information for an institution.
+ : Fetches and displays GND/VIAF/Wikidata information for an institution.
  :)
 declare function app:institution-gnd-info($node as node(), $model as map(*)) {
     let $institution := $model?institution
     let $gndId := $institution//tei:idno[@type='gnd']/string()
+    let $viafId := $institution//tei:idno[@type='viaf']/string()
     return
-        if ($gndId and $gndId != '') then
-            er:get-gnd-info($gndId)
+        if (($gndId and $gndId != '') or ($viafId and $viafId != '')) then
+            er:get-authority-info($gndId, $viafId)
         else ()
 };
 
