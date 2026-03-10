@@ -12,7 +12,8 @@
     "compile": "sass resources/sass/main.scss:resources/css/theme.css --style expanded --source-map",
     "build": "sass resources/sass/main.scss:resources/css/theme.css --style compressed --no-source-map",
     "build:dev": "sass resources/sass/main.scss:resources/css/theme.css --style expanded --source-map",
-    "postinstall": "./node_modules/.bin/frontend-dependencies"
+    "postinstall": "./node_modules/.bin/frontend-dependencies",
+    "test": "mocha"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.0.0",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "frontend-dependencies": "^0.4.0",
+    "mocha": "^11.7.5",
     "sass": "^1.97.3"
   },
   "frontendDependencies": {
