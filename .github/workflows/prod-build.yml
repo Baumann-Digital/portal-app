@@ -51,6 +51,9 @@ jobs:
           echo "Build finished, listing dist:"
           ls -la dist || true
 
+      - name: Run regression tests
+        run: yarn test
+
       - name: Find artifact
         id: find
         run: |
