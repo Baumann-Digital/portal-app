@@ -1327,13 +1327,19 @@ return
 declare function app:load-registry-works($node as node(), $model as map(*)) {
     (: Loads XML data and returns map for template engine.
        The map serves only as transport - all processing works with XML nodes. :)
-    map:merge((
-        $model,
-        map {
-            "works": $app:collectionWorks[not(parent::mei:componentList)],
-            "genres": distinct-values($app:collectionWorks//mei:term[@type="genre"]/text() | $app:collectionWorks//mei:titlePart[@type='main' and not(@class)]/@type)
-        }
-    ))
+    
+    let $workColl := $app:collectionWorks[not(parent::mei:componentList)]
+    let $genres := for $each in $workColl//mei:term
+                    where $each/@type = 'genre'
+                    return $each/text()
+    return
+        map:merge((
+            $model,
+            map {
+                "works": $workColl,
+                "genres": (distinct-values($genres | $workColl//mei:titlePart[@type='main' and not(@class)]/@type), 'main')
+            }
+        ))
 };
 
 (:~
@@ -1363,7 +1369,7 @@ declare function app:registry-works-content($node as node(), $model as map(*)) {
     <div class="container overflow-auto" style="max-height: 600px;">
     <div class="tab-content">
     {for $genre at $pos in $genres
-        let $cards := for $work in $works[if($pos=1)then(.)else(.//mei:term[@type='genre' and . = $genre])]
+        let $cards := for $work in $works[if($genre = 'main') then(.) else(.//mei:term[@type='genre' and . = $genre])]
                          let $title := $work//mei:title[@type='uniform']/mei:titlePart[range:field-eq("titlePart-main", 'main') and not(@class)]/normalize-space(text()[1])
                          let $titleSort := $work//mei:title[@type='uniform']/mei:titlePart[@type='mainSort']/text()
                          let $titleSub := $work//mei:title[@type='uniform']/mei:titlePart[@type='subordinate']/normalize-space(text()[1])
