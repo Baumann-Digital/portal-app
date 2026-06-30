@@ -75,10 +75,16 @@ jobs:
         run: |
           VERSION=$(grep '^project.version=' build.properties | cut -d'=' -f2)
           if gh release view v$VERSION >/dev/null 2>&1; then
-            echo "Release v$VERSION exists, uploading artifact (clobber)."
+            echo "Release v$VERSION exists, deleting old .xar assets first."
+            EXISTING_XARS=$(gh release view v$VERSION --json assets --jq '.assets[]?.name | select(endswith(".xar"))')
+            if [ -n "$EXISTING_XARS" ]; then
+              while IFS= read -r ASSET; do
+                [ -z "$ASSET" ] && continue
+                gh release delete-asset v$VERSION "$ASSET" --yes
+              done <<< "$EXISTING_XARS"
+            fi
             gh release upload v$VERSION \
-              ${{ steps.find.outputs.artifact }} \
-              --clobber
+              ${{ steps.find.outputs.artifact }}
           else
             gh release create v$VERSION \
               --title "v$VERSION" \
